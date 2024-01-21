@@ -7,10 +7,10 @@ workspace "Project"
 		"Release"
 	}
 
+-- cfg.buildcfg: e.g. debug, release
+-- cfg.system: e.g. windows
+-- cfg.architecture: e.g. x64
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
-
-SHARD_DLL_SRC = ""
-SHARD_DLL_DST = ""
 
 project "Shard"
 	location "Shard"
@@ -80,7 +80,6 @@ project "Game"
 		
 		postbuildcommands
 		{
-			
 			("{COPY} ../bin/" .. outputdir .. "/Shard/Shard.dll" .. " ../bin/" .. outputdir .. "/%{prj.name}")
 		}
 
