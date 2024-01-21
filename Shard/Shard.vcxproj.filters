@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="vendor">
+      <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\SDL2-2.28.5">
+      <UniqueIdentifier>{F1910D23-DD75-CE78-46D6-C8CB32D9B8FA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\SDL2-2.28.5\include">
+      <UniqueIdentifier>{641AC2FF-502A-6ED0-B9E3-D2EEA5125D69}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="test.h" />
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_assert.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_atomic.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_audio.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_bits.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_blendmode.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_clipboard.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_config.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_cpuinfo.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_egl.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_endian.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_error.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_events.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_filesystem.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_gamecontroller.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_gesture.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_guid.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_haptic.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_hidapi.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_hints.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_joystick.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_keyboard.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_keycode.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_loadso.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_locale.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_log.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_main.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_messagebox.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_metal.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_misc.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_mouse.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_mutex.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_name.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_opengl.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_opengl_glext.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_opengles.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_opengles2.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_opengles2_gl2.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_opengles2_gl2ext.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_opengles2_gl2platform.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_opengles2_khrplatform.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_pixels.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_platform.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_power.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_quit.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_rect.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_render.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_revision.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_rwops.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_scancode.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_sensor.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_shape.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_stdinc.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_surface.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_system.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_syswm.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_test.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_test_assert.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_test_common.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_test_compare.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_test_crc32.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_test_font.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_test_fuzzer.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_test_harness.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_test_images.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_test_log.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_test_md5.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_test_memory.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_test_random.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_thread.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_timer.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_touch.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_types.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_version.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_video.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_vulkan.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\begin_code.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\SDL2-2.28.5\include\close_code.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="test.cpp" />
+  </ItemGroup>
+</Project>

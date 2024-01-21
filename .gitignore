@@ -1,2 +1,6 @@
 .vs
-ShardPlusPLus.vcxproj.user
+
+bin
+bin-int
+
+**/*.vcxproj.user
