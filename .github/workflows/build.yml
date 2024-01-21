@@ -1,0 +1,24 @@
+name: Build projects
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up premake
+      run: |
+        premake5 --file=premake5.lua gmake
+
+    - name: Build Shard
+      run: make -C Shard
+
+    - name: Build Game
+      run: make -C Game
