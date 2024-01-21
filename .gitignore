@@ -1,6 +1,7 @@
 .vs
+**/*.vcxproj.user
 
 bin
 bin-int
 
-**/*.vcxproj.user
+Shard/x64
