@@ -1069,6 +1069,7 @@
       <Filter>vendor\glm</Filter>
     </ClInclude>
     <ClInclude Include="include\PhysicsBody.h" />
+    <ClInclude Include="include\Collider.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AssetManager.cpp">
@@ -1093,5 +1094,6 @@
       <Filter>vendor\glm\detail</Filter>
     </ClCompile>
     <ClCompile Include="src\PhysicsBody.cpp" />
+    <ClCompile Include="src\Collider.cpp" />
   </ItemGroup>
 </Project>

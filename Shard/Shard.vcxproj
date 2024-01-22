@@ -101,6 +101,7 @@
   <ItemGroup>
     <ClInclude Include="include\AssetManager.h" />
     <ClInclude Include="include\BaseFunctionality.h" />
+    <ClInclude Include="include\Collider.h" />
     <ClInclude Include="include\PhysicsBody.h" />
     <ClInclude Include="include\Sound.h" />
     <ClInclude Include="include\StringUtility.h" />
@@ -448,6 +449,7 @@
   <ItemGroup>
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\BaseFunctionality.cpp" />
+    <ClCompile Include="src\Collider.cpp" />
     <ClCompile Include="src\PhysicsBody.cpp" />
     <ClCompile Include="src\Sound.cpp" />
     <ClCompile Include="src\dllmain.cpp" />
