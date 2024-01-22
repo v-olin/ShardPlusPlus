@@ -261,6 +261,7 @@
     <ClInclude Include="vendor\SDL2-2.28.5\include\close_code.h">
       <Filter>vendor\SDL2-2.28.5\include</Filter>
     </ClInclude>
+    <ClInclude Include="include\AssetManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\dllmain.cpp">
@@ -272,5 +273,6 @@
     <ClCompile Include="src\test.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\AssetManager.cpp" />
   </ItemGroup>
 </Project>
