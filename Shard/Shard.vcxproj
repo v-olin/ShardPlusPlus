@@ -102,6 +102,7 @@
     <ClInclude Include="include\AssetManager.h" />
     <ClInclude Include="include\framework.h" />
     <ClInclude Include="include\pch.h" />
+    <ClInclude Include="include\Sound.h" />
     <ClInclude Include="include\test.h" />
     <ClInclude Include="vendor\SDL2-2.28.5\include\SDL.h" />
     <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_assert.h" />
@@ -186,6 +187,7 @@
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\pch.cpp" />
+    <ClCompile Include="src\Sound.cpp" />
     <ClCompile Include="src\test.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
