@@ -263,6 +263,8 @@
     </ClInclude>
     <ClInclude Include="include\AssetManager.h" />
     <ClInclude Include="include\Sound.h" />
+    <ClInclude Include="include\BaseFunctionality.h" />
+    <ClInclude Include="include\StringUtility.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\dllmain.cpp">
