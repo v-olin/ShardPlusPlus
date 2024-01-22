@@ -23,12 +23,15 @@ project "Shard"
 	files
 	{
 		"%{prj.name}/**.h",
-		"%{prj.name}/**.cpp"
+		"%{prj.name}/**.cpp",
+		"%{prj.name}/**.hpp",
+		"%{prj.name}/**.inl"
 	}
 	
 	includedirs
 	{
 		"%{prj.name}/vendor/SDL2-2.28.5/include",
+		"%{prj.name}/vendor/glm",
 		"%{prj.name}/include"
 	}
 	
