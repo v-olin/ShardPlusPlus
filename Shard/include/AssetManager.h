@@ -12,7 +12,13 @@
 namespace Shard {
 	class SHARD_API AssetManager {
 	public:
-        AssetManager();
+        static AssetManager& getInstance() {
+            static AssetManager instance;
+            return instance;
+        }
+
+        AssetManager(AssetManager const&) = delete;
+        AssetManager& operator=(AssetManager const&) = delete;
 
         void registerAssets();
         void walkDirectory(std::string directory);
@@ -20,6 +26,8 @@ namespace Shard {
         std::string getAssetPath(std::string asset_name);
 	
     private:
+        AssetManager();
+        
         std::unordered_map<std::string, std::string> assets_;
         std::string asset_path_;
 	};
