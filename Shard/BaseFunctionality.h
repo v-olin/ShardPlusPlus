@@ -1,4 +1,4 @@
-// test.h - Description
+// BaseFunctionality.h - Description
 #pragma once
 
 #ifdef _WINDLL
@@ -9,6 +9,14 @@
 
 namespace Shard {
 
-	extern "C" SHARD_API void PrintMessage();
+	class BaseFunctionality {
+
+	public:
+		
+
+	private:
+
+
+	};
 
 }
