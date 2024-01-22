@@ -58,7 +58,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>vendor\SDL2-2.28.5\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\SDL2-2.28.5\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -77,7 +77,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>vendor\SDL2-2.28.5\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\SDL2-2.28.5\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>None</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -99,9 +99,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h" />
-    <ClInclude Include="pch.h" />
-    <ClInclude Include="test.h" />
+    <ClInclude Include="include\framework.h" />
+    <ClInclude Include="include\pch.h" />
+    <ClInclude Include="include\test.h" />
     <ClInclude Include="vendor\SDL2-2.28.5\include\SDL.h" />
     <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_assert.h" />
     <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_atomic.h" />
@@ -182,9 +182,9 @@
     <ClInclude Include="vendor\SDL2-2.28.5\include\close_code.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="pch.cpp" />
-    <ClCompile Include="test.cpp" />
+    <ClCompile Include="src\dllmain.cpp" />
+    <ClCompile Include="src\pch.cpp" />
+    <ClCompile Include="src\test.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

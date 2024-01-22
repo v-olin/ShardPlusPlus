@@ -28,7 +28,8 @@ project "Shard"
 	
 	includedirs
 	{
-		"%{prj.name}/vendor/SDL2-2.28.5/include"
+		"%{prj.name}/vendor/SDL2-2.28.5/include",
+		"%{prj.name}/include"
 	}
 	
 	libdirs
@@ -70,7 +71,8 @@ project "Game"
 	
 	includedirs
 	{
-		"Shard"
+		"Shard",
+		"Shard/include"
 	}
 	
 	filter "system:windows"
