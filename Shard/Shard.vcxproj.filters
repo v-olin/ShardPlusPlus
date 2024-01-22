@@ -24,9 +24,6 @@
     <ClInclude Include="include\pch.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\test.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="vendor\SDL2-2.28.5\include\SDL.h">
       <Filter>vendor\SDL2-2.28.5\include</Filter>
     </ClInclude>
@@ -261,6 +258,9 @@
     <ClInclude Include="vendor\SDL2-2.28.5\include\close_code.h">
       <Filter>vendor\SDL2-2.28.5\include</Filter>
     </ClInclude>
+    <ClInclude Include="BaseFunctionality.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\dllmain.cpp">
@@ -269,7 +269,7 @@
     <ClCompile Include="src\pch.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\test.cpp">
+    <ClCompile Include="BaseFunctionality.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
