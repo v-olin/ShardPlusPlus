@@ -1,14 +1,18 @@
 #include "PhysicsBody.h"
+#include "GameObject.h"
+#include "ColliderRect.h"
+#include "ColliderCircle.h"
+#include "PhysicsManager.h"
 
 #include <limits>
 
 namespace Shard {
-	PhysicsBody::PhysicsBody() { // PhysicsBody(GameObject obj)
+	PhysicsBody::PhysicsBody(GameObject* game_obj) {
 		debug_color_ = SDL_Color{ 0, 255, 0 }; // green
 
-		// Parent = obj;
-		// Transform = obj.transform;
-		// coll_handler = (CollisionHandler)p;
+		parent = game_obj;
+		trans = game_obj->transform_;
+		coll_handler = game_obj->body_->coll_handler;
 
 		angular_drag = 0.01f;
 		drag = 0.01f;
@@ -19,8 +23,8 @@ namespace Shard {
 		stop_on_collision = true;
 		reflect_on_collision = false;
 
-		// time_interval_ = PhysicsManager.getInstance().TimeInterval;
-		// PhysicsManager.getInstance().addPhysicsObject(this);
+		time_interval_ = PhysicsManager::getInstance().time_interval;
+		PhysicsManager::getInstance().addPhysicsObject(*this);
 	}
 
 	void PhysicsBody::applyGravity(glm::vec2 dir, const float multiplier) {
@@ -29,10 +33,13 @@ namespace Shard {
 		addForce(gf);
 	}
 
-	// TODO: fix this
 	void PhysicsBody::draw() {
-		// foreach (collider in myColliders
-		//		collider.draw(debug_color_);
+		for (auto collider : circ_colliders) {
+			collider->draw(debug_color_);
+		}
+		for (auto collider : rect_colliders) {
+			collider->draw(debug_color_);
+		}
 	}
 
 	glm::vec2 PhysicsBody::getMinAndMax(const bool x) {
@@ -40,24 +47,19 @@ namespace Shard {
 		float max = std::numeric_limits<float>::min();
 		glm::vec2 tmp(min, max);
 
-		/*
-		foreach (collider in myColliders) {
-			if (x)
-				tmp.x = col.minandmaxX
-			else
-				tmp.y = col.minandmaxY
-
-			if (tmp[0] < min)
-				min = tmp[0]
-			if (tmp[1] > max)
-				max = tmp[1]
+		for (auto collider : circ_colliders) {
+			tmp = x ? collider->min_and_max_x : collider->min_and_max_y;
+			min = tmp.x < min ? tmp.x : min;
+			max = tmp.y > max ? tmp.y : max;
 		}
 
-		return Vec2(min, max);
+		for (auto collider : rect_colliders) {
+			tmp = x ? collider->min_and_max_x : collider->min_and_max_y;
+			min = tmp.x < min ? tmp.x : min;
+			max = tmp.y > max ? tmp.y : max;
+		}
 
-		*/
-
-		return tmp;
+		return glm::vec2{ min,max };
 	}
 	void PhysicsBody::addTorque(const float dir) {
 		if (is_kinematic)
@@ -123,13 +125,15 @@ namespace Shard {
 	}
 
 	void PhysicsBody::recalculateColliders() {
-		//foreach(Collider col in getColliders())
-		//{
-		//	col.recalculate();
-		//}
-		//
-		//MinAndMaxX = getMinAndMax(true);
-		//MinAndMaxY = getMinAndMax(false);
+		for (auto collider : circ_colliders) {
+			collider->recalculate();
+		}
+		for (auto collider : rect_colliders) {
+			collider->recalculate();
+		}
+
+		min_and_max_x = getMinAndMax(true);
+		min_and_max_y = getMinAndMax(false);
 	}
 
 	void PhysicsBody::physicsTick() {
@@ -137,7 +141,6 @@ namespace Shard {
 		float force_mag = force_.length();
 		float rot = torque_;
 
-		//Math.Abs(torque) < AngularDrag
 		if (abs(torque_) < angular_drag) {
 			torque_ = 0;
 		}
@@ -146,8 +149,8 @@ namespace Shard {
 			torque_ -= signbit * angular_drag;
 		}
 
-		//trans.rotate(rot);
-		//trans.translate(this.force);
+		trans.rotate(rot);
+		trans.translate(force_);
 
 		if (force_mag < drag) {
 			stopForces();
@@ -155,5 +158,46 @@ namespace Shard {
 		else if (force_mag > 0) {
 			force_ = (force_ / force_mag) * (force_mag - drag);
 		}
+	}
+
+	void PhysicsBody::addRectCollider() {
+		// TODO: research emplace
+		rect_colliders.emplace_back(coll_handler, &parent->transform_);
+	}
+
+	void PhysicsBody::addRectCollider(int x, int y, int w, int h) {
+		// TODO: research emplace
+		rect_colliders.emplace_back(coll_handler, &parent->transform_, x, y, w, h);
+	}
+
+	void PhysicsBody::addCircleCollider() {
+		// TODO: research emplace
+		circ_colliders.emplace_back(coll_handler, &parent->transform_);
+	}
+
+	void PhysicsBody::addCircleCollider(int x, int y, int rad) {
+		// TODO: research emplace
+		circ_colliders.emplace_back(coll_handler, &parent->transform_, x, y, rad);
+	}
+
+	std::optional<glm::vec2> PhysicsBody::checkCollisions(glm::vec2 other) {
+		std::optional<glm::vec2> dir;
+
+		for (ColliderCircle* c : circ_colliders) {
+			dir = c->checkCollision(other);
+
+			if (dir.has_value())
+				return dir.value();
+		}
+
+		for (ColliderRect* c : rect_colliders) {
+			dir = c->checkCollision(other);
+
+			if (dir.has_value())
+				return dir.value();
+		}
+
+
+		return std::nullopt;
 	}
 }

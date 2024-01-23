@@ -1074,8 +1074,10 @@
     <ClInclude Include="include\CollisionHandler.h" />
     <ClInclude Include="include\Transform.h" />
     <ClInclude Include="include\GameObject.h" />
-    <ClInclude Include="include\VectorUtility.h" />
     <ClInclude Include="include\Transform3D.h" />
+    <ClInclude Include="include\CollidingObject.h" />
+    <ClInclude Include="include\SAPEntry.h" />
+    <ClInclude Include="include\PhysicsManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AssetManager.cpp">
@@ -1104,5 +1106,8 @@
     <ClCompile Include="include\ColliderRect.h" />
     <ClCompile Include="src\ColliderCircle.cpp" />
     <ClCompile Include="src\Transform.cpp" />
+    <ClCompile Include="src\GameObject.cpp" />
+    <ClCompile Include="src\PhysicsManager.cpp" />
+    <ClCompile Include="src\Collider.cpp" />
   </ItemGroup>
 </Project>

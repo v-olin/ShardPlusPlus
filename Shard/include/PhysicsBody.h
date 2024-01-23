@@ -10,8 +10,11 @@
 #include <SDL.h>
 #include <glm.hpp>
 
-namespace Shard {
+#include "Collider.h"
+#include "GameObject.h"
 
+namespace Shard {
+	class SHARD_API Transform;
 
 	class SHARD_API PhysicsBody {
 	public:
@@ -28,10 +31,13 @@ namespace Shard {
 		bool stop_on_collision;
 		bool reflect_on_collision;
 		bool impart_force;
-		// vector<Collider> colliders; 
-		// CollisionHandler coll_handler;
+		GameObject* parent;
+		std::vector<ColliderCircle*> circ_colliders; 
+		std::vector<ColliderRect*> rect_colliders; 
+		CollisionHandler *coll_handler;
 
-		PhysicsBody(); // TODO: add gameobject as param
+		PhysicsBody() {}
+		PhysicsBody(GameObject* game_obj);
 
 		// change to Vec3 for 3d
 		void applyGravity(glm::vec2 dir, const float multiplier);
@@ -47,24 +53,23 @@ namespace Shard {
 		void addForce(glm::vec2 dir);
 		void recalculateColliders();
 		void physicsTick();
-		// ColliderRect addRectCollider();
-		// ColliderRect addRectCollider(int x, int y, int rad);
-		// ColliderCircle addCircleCollider();
-		// ColliderCircle addCircleCollider(int x, int y, int rad);
-		// void addCollider(Collider coll);
-		// Vec2 checkCollisions(Vec2 other);
-		// Vec2 checkCollisions(Collider other);
+		void addRectCollider();
+		void addRectCollider(int x, int y, int w, int h);
+		void addCircleCollider();
+		void addCircleCollider(int x, int y, int rad);
+		//void addCollider(Collider coll);
+		std::optional<glm::vec2> checkCollisions(glm::vec2 other);
+
+		bool operator==(const PhysicsBody& other) {
+			return parent == other.parent;
+		}
 
 	private:
 		float torque_;
 		glm::vec2 force_;
 		float time_interval_;
 		SDL_Color debug_color_;
-		/*
-		TODO: implement, some may be public idk
-		GameObject parent
-		Transform trans
-		vector<Collider> collision_candidates;
-		*/
+		Transform3D trans;
+		std::vector<Collider> collision_candidates;
 	};
 }

@@ -1,5 +1,9 @@
+/*
 #include "ColliderCircle.h"
-#include "VectorUtility.h"
+
+#include "Collider.h"
+#include "ColliderRect.h"
+#include "Transform.h"
 
 namespace Shard {
 	ColliderCircle::ColliderCircle(CollisionHandler* game_obj, Transform* transform) 
@@ -51,7 +55,7 @@ namespace Shard {
 		calculateBoundingBox();
 	}
 
-	glm::vec2 ColliderCircle::checkCollision(ColliderRect& other) {
+	std::optional<glm::vec2> ColliderCircle::checkCollision(ColliderRect& other) {
 		double tx = x, ty = y, dx, dy, dist, depth;
 		glm::vec2 dir;
 
@@ -77,17 +81,17 @@ namespace Shard {
 				? dir = glm::normalize(transform->getLastDirection())
 				: dir = glm::normalize(glm::vec2{ dx, dy }) * (float)depth;
 
-			return dir;
+			return std::make_optional<glm::vec2>(dir);
 		}
 
-		return NULL_VECTOR;
+		return std::nullopt;
 	}
 
 	void ColliderCircle::draw(SDL_Color color) {
 		// wait for display
 	}
 
-	glm::vec2 ColliderCircle::checkCollision(ColliderCircle& other) {
+	std::optional<glm::vec2> ColliderCircle::checkCollision(ColliderCircle& other) {
 		double dist, depth, radsq, xpen, ypen;
 		glm::vec2 dir;
 
@@ -98,19 +102,22 @@ namespace Shard {
 		dist = xpen + ypen;
 		depth = other.rad + rad - sqrt(dist);
 
-		if (dist <= radsq)
-			return glm::normalize(glm::vec2{ x - other.x, y - other.y }) * (float)depth;
+		if (dist <= radsq) {
+			auto vec = glm::normalize(glm::vec2{ x - other.x, y - other.y }) * (float)depth;
+			return std::make_optional<glm::vec2>(vec);
+		}
 		
-		return NULL_VECTOR;
+		return std::nullopt;
 	}
 
-	glm::vec2 ColliderCircle::checkCollision(glm::vec2 point) {
+	std::optional<glm::vec2> ColliderCircle::checkCollision(glm::vec2 point) {
 		if (point.x >= min_and_max_x.x && // left
 			point.x <= min_and_max_x.y && // right
 			point.y >= min_and_max_y.x && // top
 			point.y <= min_and_max_x.y) // bottom
-			return glm::vec2{ 0,0 };
+			return std::optional<glm::vec2>(glm::vec2{ 0,0 });
 
-		return NULL_VECTOR;
+		return std::nullopt;
 	}
 }
+*/

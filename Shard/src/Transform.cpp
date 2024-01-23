@@ -1,17 +1,12 @@
 #include "Transform.h"
-#include "VectorUtility.h"
 
 #include <math.h>
 
+// this should be included from math.h but isnt for some reason
+#define M_PI 3.14159265358979323846264338327950288
+
 namespace Shard {
-	Transform::Transform() { }
-
-	Transform::Transform(GameObject* owner) {
-		this->owner = owner;
-		forward = NULL_VECTOR;
-		right = NULL_VECTOR;
-		centre = NULL_VECTOR;
-
+	Transform::Transform() {
 		scale_x = 1.f;
 		scale_y = 1.f;
 
