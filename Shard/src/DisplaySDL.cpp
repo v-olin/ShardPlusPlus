@@ -60,7 +60,8 @@ namespace Shard {
 
 	void DisplaySDL::renderCircle(int centreX, int centreY, int radius) {
 		int dia = (radius * 2);
-		Uint8 r, g, b, a;		int x = (radius - 1);
+		Uint8 r, g, b, a;		
+		int x = (radius - 1);
 		int y = 0;
 		int tx = 1;
 		int ty = 1;
@@ -106,7 +107,7 @@ namespace Shard {
 		c.b = b;
 		c.a = a;
 
-		_circlesToDraw.insert(c);
+		_circlesToDraw.push_back(c);
 
 		
 	}
@@ -123,7 +124,7 @@ namespace Shard {
 		l.b = b;
 		l.a = a;
 
-		_linesToDraw.insert(l);
+		_linesToDraw.push_back(l);
 	}
 
 	void DisplaySDL::display() {
@@ -131,8 +132,8 @@ namespace Shard {
 		SDL_Rect tRect;
 
 		for (const Transform trans : _toDraw) {
-			if (trans.spritePath.empty())
-				continue;
+			//if (trans.spritePath.empty())
+				//continue;
 			SDL_Texture* sprite = loadTexture(trans);
 
 			sRect.x = 0;

@@ -48,8 +48,8 @@ namespace Shard {
 
 	private:
 		std::unordered_set<Transform> _toDraw;
-		std::unordered_set<Line> _linesToDraw;
-		std::unordered_set<Circle> _circlesToDraw;
+		std::vector<Line> _linesToDraw;
+		std::vector<Circle> _circlesToDraw;
 		// TODO: replace 'int' with proper type
 		std::unordered_map<std::string, SDL_Texture*> spriteBuffer;
 	};

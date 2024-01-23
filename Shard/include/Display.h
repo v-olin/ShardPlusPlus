@@ -15,10 +15,7 @@ typedef struct Color {
     int B;
     int A;
 } Color;
-//TODO, begone
-typedef struct GameObject {
-    Transform transform;
-} GameObject;
+//TODO, begone, will not build but no suprise, this is a crazy hack
 typedef class Transform {
 public:
     std::string spritePath;
@@ -26,6 +23,10 @@ public:
     void recalculateCentre();
 } Transform;
 
+
+typedef struct GameObject {
+    Transform transform;
+} GameObject;
 
 namespace Shard {
 	class SHARD_API Display { // this is inherited by DisplaySDL and DisplayText
