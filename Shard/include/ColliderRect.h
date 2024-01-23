@@ -27,7 +27,6 @@ namespace Shard {
 
         // inherited from Collider
         void recalculate();
-        glm::vec2 calculatePenetration(ColliderRect& other) override;
         glm::vec2 checkCollision(ColliderRect& other) override;
         glm::vec2 checkCollision(ColliderCircle& other) override;
         glm::vec2 checkCollision(glm::vec2 point) override;

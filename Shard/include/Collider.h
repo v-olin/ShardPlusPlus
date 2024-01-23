@@ -15,7 +15,6 @@
 #include "ColliderRect.h"
 #include "ColliderCircle.h"
 
-#define NULL_VECTOR glm::vec2{ std::numeric_limits<float>::min(), std::numeric_limits<float>::min()  };
 
 namespace Shard
 {

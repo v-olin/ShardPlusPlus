@@ -3,6 +3,7 @@
 
 #include "Collider.h"
 #include "ColliderRect.h"
+#include "VectorUtility.h"
 
 namespace Shard {
 	ColliderRect::ColliderRect() : Collider(nullptr, nullptr) {
@@ -120,14 +121,12 @@ namespace Shard {
 	}
 
 	glm::vec2 ColliderRect::checkCollision(ColliderCircle& c) {
-		// stinky ugly hack
-		ColliderRect& this_ = *(this);
-
-		glm::vec2 possible_v = c.checkCollision(this_);
+		glm::vec2 possible_v = c.checkCollision(*(this));
 		glm::vec2 null_v = NULL_VECTOR;
-		
+		Vec2Comparator cmp;
+
 		// if not nullvector
-		if (possible_v.x != null_v.x || possible_v.y != null_v.y) {
+		if (cmp(possible_v, null_v)) {
 			possible_v.x *= -1;
 			possible_v.y *= -1;
 			return possible_v;
