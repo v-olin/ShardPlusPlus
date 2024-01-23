@@ -1068,14 +1068,6 @@
     <ClInclude Include="vendor\glm\vector_relational.hpp">
       <Filter>vendor\glm</Filter>
     </ClInclude>
-    <ClInclude Include="include\PhysicsBody.h" />
-    <ClInclude Include="include\Collider.h" />
-    <ClInclude Include="include\ColliderCircle.h" />
-    <ClInclude Include="include\CollisionHandler.h" />
-    <ClInclude Include="include\Transform.h" />
-    <ClInclude Include="include\GameObject.h" />
-    <ClInclude Include="include\VectorUtility.h" />
-    <ClInclude Include="include\Transform3D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AssetManager.cpp">
@@ -1099,10 +1091,5 @@
     <ClCompile Include="vendor\glm\detail\glm.cpp">
       <Filter>vendor\glm\detail</Filter>
     </ClCompile>
-    <ClCompile Include="src\PhysicsBody.cpp" />
-    <ClCompile Include="src\ColliderRect.cpp" />
-    <ClCompile Include="include\ColliderRect.h" />
-    <ClCompile Include="src\ColliderCircle.cpp" />
-    <ClCompile Include="src\Transform.cpp" />
   </ItemGroup>
 </Project>
