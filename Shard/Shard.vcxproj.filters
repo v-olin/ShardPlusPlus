@@ -1090,6 +1090,16 @@
     </ClCompile>
     <ClCompile Include="vendor\glm\detail\glm.cpp">
       <Filter>vendor\glm\detail</Filter>
+    </ClCompile>     
+    <ClCompile Include="src\Sound.cpp">
+      <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\AssetManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BaseFunctionality.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InputManager.cpp" />
   </ItemGroup>
 </Project>
