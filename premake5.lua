@@ -32,12 +32,16 @@ project "Shard"
 	{
 		"%{prj.name}/vendor/SDL2-2.28.5/include",
 		"%{prj.name}/vendor/glm",
+		"%{prj.name}/vendor/stb_image/include",
+		"%{prj.name}/vendor/tiny_obj/include",
+		"%{prj.name}/vendor/glew/include",
 		"%{prj.name}/include"
 	}
 	
 	libdirs
 	{
-		"%{prj.name}/vendor/SDL2-2.28.5/lib/x64"
+		"%{prj.name}/vendor/SDL2-2.28.5/lib/x64",
+		"%{prj.name}/vendor/glew/lib"
 	}
 
 	links
