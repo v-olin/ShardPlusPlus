@@ -16,6 +16,15 @@
     <Filter Include="vendor\SDL2-2.28.5\include">
       <UniqueIdentifier>{641AC2FF-502A-6ED0-B9E3-D2EEA5125D69}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vendor\glew">
+      <UniqueIdentifier>{318F79C1-9D44-F2B6-2639-EC8D92EDE8BA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\glew\include">
+      <UniqueIdentifier>{A457F7F3-10B9-D401-9926-1BB405870BC1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\glew\include\GL">
+      <UniqueIdentifier>{86B6A6B4-72B0-CF06-5B1D-661747B63573}</UniqueIdentifier>
+    </Filter>
     <Filter Include="vendor\SDL2_image-2.8.2">
       <UniqueIdentifier>{7EE913F4-EA20-5C8B-F32A-C0AE5FE18284}</UniqueIdentifier>
     </Filter>
@@ -46,6 +55,18 @@
     <Filter Include="vendor\glm\simd">
       <UniqueIdentifier>{1EFDF202-8A88-60C7-9399-E3BBFFA3BCC7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vendor\stb_image">
+      <UniqueIdentifier>{0DA0BA59-F998-D9AB-22CB-BE300E23B9B7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\stb_image\include">
+      <UniqueIdentifier>{8084391F-6CA9-889F-95F4-6D2F817887BD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\tiny_obj">
+      <UniqueIdentifier>{C074E122-2C00-4FE7-3511-D2DBA11BABE7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\tiny_obj\include">
+      <UniqueIdentifier>{335CF72E-9F93-3FC6-A89D-A3E9145466BF}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AssetManager.h">
@@ -67,6 +88,9 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\InputManager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Model.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\Sound.h">
@@ -320,6 +344,18 @@
     </ClInclude>
     <ClInclude Include="vendor\SDL2_ttf-2.22.0\include\SDL_ttf.h">
       <Filter>vendor\SDL2_ttf-2.22.0\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\glew\include\GL\eglew.h">
+      <Filter>vendor\glew\include\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\glew\include\GL\glew.h">
+      <Filter>vendor\glew\include\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\glew\include\GL\glxew.h">
+      <Filter>vendor\glew\include\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\glew\include\GL\wglew.h">
+      <Filter>vendor\glew\include\GL</Filter>
     </ClInclude>
     <ClInclude Include="vendor\glm\common.hpp">
       <Filter>vendor\glm</Filter>
@@ -1121,6 +1157,12 @@
     <ClInclude Include="include\Bootstrap.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\GameObjectManager.h" />
+    <ClInclude Include="vendor\stb_image\include\stb_image.h">
+      <Filter>vendor\stb_image\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\tiny_obj\include\tiny_obj_loader.h">
+      <Filter>vendor\tiny_obj\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AssetManager.cpp">
@@ -1136,6 +1178,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\InputManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Model.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Sound.cpp">

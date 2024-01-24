@@ -34,6 +34,9 @@ project "Shard"
 		"%{prj.name}/vendor/SDL2_ttf-2.22.0/include",
 		"%{prj.name}/vendor/SDL2_image-2.8.2/include",
 		"%{prj.name}/vendor/glm",
+		"%{prj.name}/vendor/stb_image/include",
+		"%{prj.name}/vendor/tiny_obj/include",
+		"%{prj.name}/vendor/glew/include",
 		"%{prj.name}/include"
 	}
 	
@@ -41,8 +44,8 @@ project "Shard"
 	{
 		"%{prj.name}/vendor/SDL2-2.28.5/lib/x64",
 		"%{prj.name}/vendor/SDL2_ttf-2.22.0/lib/x64",
-		"%{prj.name}/vendor/SDL2_image-2.8.2/lib/x64"
-		
+		"%{prj.name}/vendor/SDL2_image-2.8.2/lib/x64",
+		"%{prj.name}/vendor/glew/lib"
 	}
 
 	links
