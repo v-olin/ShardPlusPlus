@@ -7,6 +7,26 @@
 #include <limits>
 
 namespace Shard {
+	PhysicsBody::PhysicsBody()
+		: 
+		angular_drag(0),
+		drag(0),
+		mass(1),
+		min_and_max_x(0, 0),
+		min_and_max_y(0, 0),
+		max_force(100),
+		max_torque(100),
+		is_kinematic(true),
+		allows_pass_through(false),
+		uses_gravity(true),
+		stop_on_collision(false),
+		reflect_on_collision(true),
+		impart_force(true),
+		parent(nullptr),
+		coll_handler(nullptr)
+	{
+	}
+
 	PhysicsBody::PhysicsBody(GameObject* game_obj) {
 		debug_color_ = SDL_Color{ 0, 255, 0 }; // green
 
@@ -34,10 +54,7 @@ namespace Shard {
 	}
 
 	void PhysicsBody::draw() {
-		for (auto collider : circ_colliders) {
-			collider->draw(debug_color_);
-		}
-		for (auto collider : rect_colliders) {
+		for (auto &collider : colliders) {
 			collider->draw(debug_color_);
 		}
 	}
@@ -47,19 +64,16 @@ namespace Shard {
 		float max = std::numeric_limits<float>::min();
 		glm::vec2 tmp(min, max);
 
-		for (auto collider : circ_colliders) {
+		for (auto &collider : colliders) {
+			tmp = x ? collider->min_and_max_x : collider->min_and_max_y;
+			min = tmp.x < min ? tmp.x : min;
+			max = tmp.y > max ? tmp.y : max;
 			tmp = x ? collider->min_and_max_x : collider->min_and_max_y;
 			min = tmp.x < min ? tmp.x : min;
 			max = tmp.y > max ? tmp.y : max;
 		}
 
-		for (auto collider : rect_colliders) {
-			tmp = x ? collider->min_and_max_x : collider->min_and_max_y;
-			min = tmp.x < min ? tmp.x : min;
-			max = tmp.y > max ? tmp.y : max;
-		}
-
-		return glm::vec2{ min,max };
+		return { min, max };
 	}
 	void PhysicsBody::addTorque(const float dir) {
 		if (is_kinematic)
@@ -125,12 +139,8 @@ namespace Shard {
 	}
 
 	void PhysicsBody::recalculateColliders() {
-		for (auto collider : circ_colliders) {
+		for (auto &collider : colliders)
 			collider->recalculate();
-		}
-		for (auto collider : rect_colliders) {
-			collider->recalculate();
-		}
 
 		min_and_max_x = getMinAndMax(true);
 		min_and_max_y = getMinAndMax(false);
@@ -161,42 +171,33 @@ namespace Shard {
 	}
 
 	void PhysicsBody::addRectCollider() {
-		// TODO: research emplace
-		rect_colliders.emplace_back(coll_handler, &parent->transform_);
+		Collider* col = new ColliderRect( coll_handler, &parent->transform_);
+		colliders.push_back(col);
 	}
 
 	void PhysicsBody::addRectCollider(int x, int y, int w, int h) {
-		// TODO: research emplace
-		rect_colliders.emplace_back(coll_handler, &parent->transform_, x, y, w, h);
+		Collider* col = new ColliderRect(coll_handler, &parent->transform_, x, y, w, h);
+		colliders.push_back(col);
 	}
 
 	void PhysicsBody::addCircleCollider() {
-		// TODO: research emplace
-		circ_colliders.emplace_back(coll_handler, &parent->transform_);
+		Collider* col = new ColliderCircle(coll_handler, &parent->transform_);
+		colliders.push_back(col);
 	}
 
 	void PhysicsBody::addCircleCollider(int x, int y, int rad) {
-		// TODO: research emplace
-		circ_colliders.emplace_back(coll_handler, &parent->transform_, x, y, rad);
+		Collider* col = new ColliderCircle(coll_handler, &parent->transform_, x, y, rad);
+		colliders.push_back(col);
 	}
 
 	std::optional<glm::vec2> PhysicsBody::checkCollisions(glm::vec2 other) {
 		std::optional<glm::vec2> dir;
 
-		for (ColliderCircle* c : circ_colliders) {
-			dir = c->checkCollision(other);
-
+		for (auto& collider : colliders) {
+			dir = collider->checkCollision(other);
 			if (dir.has_value())
 				return dir.value();
 		}
-
-		for (ColliderRect* c : rect_colliders) {
-			dir = c->checkCollision(other);
-
-			if (dir.has_value())
-				return dir.value();
-		}
-
 
 		return std::nullopt;
 	}

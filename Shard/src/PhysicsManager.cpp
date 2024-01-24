@@ -7,10 +7,7 @@
 #include <optional>
 
 namespace Shard {
-	PhysicsManager::PhysicsManager() {
-		
-		sap_x = std::list<SAPEntry>{};
-	}
+	PhysicsManager::PhysicsManager() {}
 
 	PhysicsManager& PhysicsManager::getInstance() {
 		static PhysicsManager instance;
@@ -18,23 +15,30 @@ namespace Shard {
 	}
 
 	void PhysicsManager::addPhysicsObject(PhysicsBody body) {
+		// TODO: Use unordered_set, not vector
+		//all_physics_objects.insert(body);
+		
 		auto iter = std::find(all_physics_objects.begin(), all_physics_objects.end(), body);
 
-		if (iter == all_physics_objects.end()) {
-			all_physics_objects.emplace_back(body);
-		}
+		if (iter == all_physics_objects.end())
+			all_physics_objects.push_back(body);
+		
 	}
 
 	void PhysicsManager::removePhysicsObject(PhysicsBody body) {
+		// TODO: Use unordered_set, not vector
+		//all_physics_objects.erase(body);
+		
 		auto iter = std::find(all_physics_objects.begin(), all_physics_objects.end(), body);
 		
 		if (iter != all_physics_objects.end()) {
 			all_physics_objects.erase(iter);
 		}
+		
 	}
 
 	void PhysicsManager::clearList() {
-		sap_x = std::list<SAPEntry>{};
+		sap_x.clear();
 	}
 
 	void PhysicsManager::addToList(SAPEntry node) {
@@ -48,9 +52,9 @@ namespace Shard {
 	}
 
 	void PhysicsManager::reportCollisionsInAxis() {
-		std::list<SAPEntry> active_objects{};
-		std::list<size_t> to_remove{};
-		CollidingObject col{};
+		std::list<SAPEntry> active_objects;
+		std::list<size_t> to_remove;
+		
 
 		auto equal = [](SAPEntry a, SAPEntry b) {
 			return a.start == b.start && a.end == b.end && a.owner == b.owner;
@@ -63,13 +67,19 @@ namespace Shard {
 			for (size_t i = 1; i < active_objects.size(); i++) {
 				SAPEntry active = *(++iter);
 
+				if (start == active)
+					continue;
+				/*
+				* ^^^^^ should be better
+				// TODO huh?
 				if (equal(start, active))
 					continue;
+				*/
 
 				if (start.start >= active.end)
 					to_remove.push_back(i);
 				else {
-					col = CollidingObject{};
+					CollidingObject col;
 
 					if (start.owner->mass > active.owner->mass) {
 						col.a = *start.owner;
@@ -81,7 +91,7 @@ namespace Shard {
 					}
 
 					if (!findColliding(col.a, col.b))
-						collisions_to_check_.push_back(col);
+						collisions_to_check_.insert(col);
 				}
 			}
 
@@ -96,20 +106,20 @@ namespace Shard {
 	}
 
 	bool PhysicsManager::willTick() {
-		// requires bootstrap
+		// TODO: requires bootstrap
 
 		return false;
 	}
 
 	bool PhysicsManager::update() {
-		std::list<CollidingObject> to_remove{};
+		std::list<CollidingObject> to_remove;
 
-		if (willTick() == false)
+		if (!willTick())
 			return false;
 
-		last_update = 0; // bootstrap get current millis;
+		last_update = 0; // TODO: bootstrap get current millis;
 
-		for (PhysicsBody& body : all_physics_objects) {
+		for (PhysicsBody &body : all_physics_objects) {
 			if (body.uses_gravity)
 				body.applyGravity(gravity_dir, gravity_modifier);
 
@@ -155,27 +165,22 @@ namespace Shard {
 	}
 
 	void PhysicsManager::drawDebugColliders() {
-		for (PhysicsBody& body : all_physics_objects) {
+		for (PhysicsBody &body : all_physics_objects)
 			body.draw();
-		}
 	}
 
 	bool PhysicsManager::findColliding(PhysicsBody& a, PhysicsBody& b) {
-		CollidingObject col{ a,b };
-
+		// TODO: Potentially flawed implementation.
+		CollidingObject col { a, b };
 		return collidings_.contains(col);
 	}
 
 	void PhysicsManager::broadPassSearchAndSweep() {
-		SAPEntry sx, sy;
-		glm::vec2 tmp;
 
-		std::list<PhysicsBody> candidates{};
-
-		for (PhysicsBody& body : all_physics_objects) {
-			sx = SAPEntry();
-
-			tmp = body.min_and_max_x;
+		std::list<PhysicsBody> candidates;
+		for (PhysicsBody &body : all_physics_objects) {
+			SAPEntry sx;
+			glm::vec2 tmp = body.min_and_max_x;
 
 			sx.owner = &body;
 			sx.start = tmp.x;
@@ -199,7 +204,7 @@ namespace Shard {
 
 		float mass_total, mass_a, mass_b, mass_prop = 0.f;
 
-		for (CollidingObject& col_obj : collisions_to_check_) {
+		for (CollidingObject col_obj : collisions_to_check_) {
 			possible_impulse = checkCollisionsBetweenObjects(col_obj.a, col_obj.b);
 
 			if (possible_impulse.has_value()) {
@@ -260,29 +265,13 @@ namespace Shard {
 	}
 
 	std::optional<glm::vec2> PhysicsManager::checkCollisionsBetweenObjects(PhysicsBody& a, PhysicsBody& b) {
+
 		std::optional<glm::vec2> impulse;
-		for (ColliderCircle* a_collider : a.circ_colliders) {
-			for (ColliderCircle* b_collider : b.circ_colliders) {
-				impulse = a_collider->checkCollision(b_collider);
+		for (auto *c1 : a.colliders) {
+			for (auto *c2 : b.colliders) {
+				impulse = c1->checkCollision(c2);
 				if (impulse.has_value())
-					return impulse;
-			}
-			for (ColliderRect* b_collider : b.rect_colliders) {
-				impulse = a_collider->checkCollision(b_collider);
-				if (impulse.has_value())
-					return impulse;
-			}
-		}
-		for (ColliderRect* a_collider : a.rect_colliders) {
-			for (ColliderCircle* b_collider : b.circ_colliders) {
-				impulse = a_collider->checkCollision(b_collider);
-				if (impulse.has_value())
-					return impulse;
-			}
-			for (ColliderRect* b_collider : b.rect_colliders) {
-				impulse = a_collider->checkCollision(b_collider);
-				if (impulse.has_value())
-					return impulse;
+					return impulse.value();
 			}
 		}
 

@@ -9,8 +9,6 @@
 #include <string>
 #include <glm.hpp>
 
-#include "GameObject.h"
-
 namespace Shard {
     class SHARD_API Transform {
     public:

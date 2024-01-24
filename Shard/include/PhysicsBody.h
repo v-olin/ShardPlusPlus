@@ -10,8 +10,8 @@
 #include <SDL.h>
 #include <glm.hpp>
 
-#include "Collider.h"
 #include "GameObject.h"
+#include "Collider.h"
 
 namespace Shard {
 	class SHARD_API Transform;
@@ -32,11 +32,10 @@ namespace Shard {
 		bool reflect_on_collision;
 		bool impart_force;
 		GameObject* parent;
-		std::vector<ColliderCircle*> circ_colliders; 
-		std::vector<ColliderRect*> rect_colliders; 
-		CollisionHandler *coll_handler;
+		std::vector<Collider*> colliders;
+		CollisionHandler* coll_handler;
 
-		PhysicsBody() {}
+		PhysicsBody();
 		PhysicsBody(GameObject* game_obj);
 
 		// change to Vec3 for 3d
@@ -61,6 +60,10 @@ namespace Shard {
 		std::optional<glm::vec2> checkCollisions(glm::vec2 other);
 
 		bool operator==(const PhysicsBody& other) {
+		 	return parent == other.parent;
+		}
+
+		bool equals(const PhysicsBody& other){
 			return parent == other.parent;
 		}
 
@@ -70,6 +73,6 @@ namespace Shard {
 		float time_interval_;
 		SDL_Color debug_color_;
 		Transform3D trans;
-		std::vector<Collider> collision_candidates;
+		std::vector<Collider*> collision_candidates;
 	};
 }

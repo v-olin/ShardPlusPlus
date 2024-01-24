@@ -13,7 +13,7 @@ namespace Shard {
 	}
 
 	void GameObject::addTag(std::string tag) {
-		tags.emplace_back(tag);
+		tags.push_back(tag);
 	}
 
 	void GameObject::removeTag(std::string tag) {

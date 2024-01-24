@@ -6,9 +6,9 @@
 #define SHARD_API __declspec(dllimport)
 #endif
 
-#include "PhysicsBody.h"
-
 namespace Shard {
+    class SHARD_API PhysicsBody;
+
     class SHARD_API CollisionHandler {
     public:
         virtual void onCollisionEnter(PhysicsBody* body) = 0;

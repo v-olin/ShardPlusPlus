@@ -235,20 +235,19 @@ namespace Shard {
 
 		if (cr.left <= 0 && cr.right >= 0 && cr.top <= 0 && cr.bottom >= 0) {
 			glm::vec2 pen = cr.calculatePenetration(glm::vec2{ 0,0 });
-			std::make_optional<glm::vec2>(pen);
+			return std::make_optional<glm::vec2>(pen);
 		}
 
 		return std::nullopt;
 	}
 
 	void ColliderRect::draw(SDL_Color color) {
-		// cannot do until display is finished
+		// TODO: cannot do until display is finished
 	}
 
 	std::optional<glm::vec2> ColliderRect::checkCollision(ColliderCircle* c) {
 		std::optional<glm::vec2> possible_v = checkCollision(c);
 
-		// if not nullvector
 		if (possible_v.has_value()) {
 			possible_v.value().x *= -1;
 			possible_v.value().y *= -1;

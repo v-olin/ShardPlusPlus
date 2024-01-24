@@ -38,14 +38,17 @@ namespace Shard {
 		void broadPass();
 
 	private:
+
 		struct ColObjComparator {
 			bool operator()(CollidingObject& lhs, CollidingObject& rhs) {
-				return (lhs.a == rhs.a) && (lhs.b == rhs.b);
+				return 1;
+				//return (lhs.a.equals(rhs.a)) && (lhs.b.equals(rhs.b));
 			}
 		};
 
-		std::vector<CollidingObject> collisions_to_check_;
-		std::unordered_set<CollidingObject, ColObjComparator> collidings_;
+		std::unordered_set<CollidingObject> collisions_to_check_;
+
+		std::unordered_set<CollidingObject> collidings_;
 		
 		long last_update, last_debug_draw;
 		//SAPEntry sap_x, sap_y;
@@ -54,7 +57,6 @@ namespace Shard {
 		glm::vec2 gravity_dir;
 
 		std::vector<PhysicsBody> all_physics_objects;
-
 
 		PhysicsManager();
 

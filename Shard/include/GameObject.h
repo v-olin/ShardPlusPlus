@@ -39,5 +39,7 @@ namespace Shard {
         virtual void prePhysicsUpdate() = 0;
         virtual void killMe() = 0; // needs physicsManager
 
+
+
     };
 }
