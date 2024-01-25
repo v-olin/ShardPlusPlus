@@ -101,6 +101,7 @@
   <ItemGroup>
     <ClInclude Include="include\AssetManager.h" />
     <ClInclude Include="include\BaseFunctionality.h" />
+    <ClInclude Include="include\Bootstrap.h" />
     <ClInclude Include="include\Display.h" />
     <ClInclude Include="include\DisplaySDL.h" />
     <ClInclude Include="include\DisplayText.h" />
@@ -108,6 +109,8 @@
     <ClInclude Include="include\ColliderCircle.h" />
     <ClInclude Include="include\ColliderRect.h" />
     <ClInclude Include="include\CollisionHandler.h" />
+    <ClInclude Include="include\Game.h" />
+    <ClInclude Include="include\GameObjectManager.h" />
     <ClInclude Include="include\Logger.h" />
     <ClInclude Include="include\framework.h" />
     <ClInclude Include="include\CollidingObject.h" />
@@ -467,8 +470,10 @@
   <ItemGroup>
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\BaseFunctionality.cpp" />
+    <ClCompile Include="src\Bootstrap.cpp" />
     <ClCompile Include="src\DisplaySDL.cpp" />
     <ClCompile Include="src\DisplayText.cpp" />
+    <ClCompile Include="src\GameObjectManager.cpp" />
     <ClCompile Include="src\InputManager.cpp" />
     <ClCompile Include="src\Collider.cpp" />
     <ClCompile Include="src\ColliderCircle.cpp" />
@@ -483,6 +488,9 @@
     <ClCompile Include="src\Transform.cpp" />
     <ClCompile Include="vendor\glm\detail\dummy.cpp" />
     <ClCompile Include="vendor\glm\detail\glm.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="NewFile.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

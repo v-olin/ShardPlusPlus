@@ -18,6 +18,9 @@ namespace Shard {
 	class SHARD_API PhysicsManager {
 	public:
 		long time_interval;
+		float gravity_modifier;
+
+
 
 		static PhysicsManager& getInstance();
 
@@ -46,7 +49,6 @@ namespace Shard {
 		long last_update, last_debug_draw;
 		//SAPEntry sap_x, sap_y;
 		std::list<SAPEntry> sap_x;
-		float gravity_modifier;
 		glm::vec2 gravity_dir;
 
 		std::vector<PhysicsBody> all_physics_objects;

@@ -1118,6 +1118,9 @@
     <ClInclude Include="include\InputEvent.h" />
     <ClInclude Include="include\InputManager.h" />
     <ClInclude Include="include\Logger.h" />
+    <ClInclude Include="include\Bootstrap.h" />
+    <ClInclude Include="include\Game.h" />
+    <ClInclude Include="include\GameObjectManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AssetManager.cpp">
@@ -1168,5 +1171,10 @@
     <ClCompile Include="src\InputManager.cpp" />
     <ClCompile Include="src\Transform.cpp" />
     <ClCompile Include="src\Logger.cpp" />
+    <ClCompile Include="src\Bootstrap.cpp" />
+    <ClCompile Include="src\GameObjectManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="NewFile.txt" />
   </ItemGroup>
 </Project>
