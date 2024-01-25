@@ -119,7 +119,6 @@
     <ClInclude Include="include\SAPEntry.h" />
     <ClInclude Include="include\Sound.h" />
     <ClInclude Include="include\StringUtility.h" />
-    <ClInclude Include="include\framework.h" />
     <ClInclude Include="include\pch.h" />
     <ClInclude Include="include\Transform.h" />
     <ClInclude Include="include\Transform3D.h" />
