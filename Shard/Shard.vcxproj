@@ -101,13 +101,25 @@
   <ItemGroup>
     <ClInclude Include="include\AssetManager.h" />
     <ClInclude Include="include\BaseFunctionality.h" />
+    <ClInclude Include="include\Collider.h" />
+    <ClInclude Include="include\ColliderCircle.h" />
+    <ClInclude Include="include\ColliderRect.h" />
+    <ClInclude Include="include\CollisionHandler.h" />
     <ClInclude Include="include\Logger.h" />
     <ClInclude Include="include\framework.h" />
+    <ClInclude Include="include\CollidingObject.h" />
+    <ClInclude Include="include\GameObject.h" />
     <ClInclude Include="include\InputEvent.h" />
     <ClInclude Include="include\InputManager.h" />
+    <ClInclude Include="include\PhysicsBody.h" />
+    <ClInclude Include="include\PhysicsManager.h" />
+    <ClInclude Include="include\SAPEntry.h" />
     <ClInclude Include="include\Sound.h" />
     <ClInclude Include="include\StringUtility.h" />
     <ClInclude Include="include\pch.h" />
+    <ClInclude Include="include\Transform.h" />
+    <ClInclude Include="include\Transform3D.h" />
+    <ClInclude Include="include\VectorUtility.h" />
     <ClInclude Include="vendor\SDL2-2.28.5\include\SDL.h" />
     <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_assert.h" />
     <ClInclude Include="vendor\SDL2-2.28.5\include\SDL_atomic.h" />
@@ -450,11 +462,18 @@
   <ItemGroup>
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\BaseFunctionality.cpp" />
+    <ClCompile Include="src\Collider.cpp" />
+    <ClCompile Include="src\ColliderCircle.cpp" />
+    <ClCompile Include="src\ColliderRect.cpp" />
+    <ClCompile Include="src\GameObject.cpp" />
+    <ClCompile Include="src\PhysicsBody.cpp" />
+    <ClCompile Include="src\PhysicsManager.cpp" />
     <ClCompile Include="src\Logger.cpp" />
     <ClCompile Include="src\Sound.cpp" />
     <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\InputManager.cpp" />
     <ClCompile Include="src\pch.cpp" />
+    <ClCompile Include="src\Transform.cpp" />
     <ClCompile Include="vendor\glm\detail\dummy.cpp" />
     <ClCompile Include="vendor\glm\detail\glm.cpp" />
   </ItemGroup>
