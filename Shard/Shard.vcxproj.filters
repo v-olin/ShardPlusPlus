@@ -1101,6 +1101,23 @@
     <ClInclude Include="vendor\glm\vector_relational.hpp">
       <Filter>vendor\glm</Filter>
     </ClInclude>
+    <ClInclude Include="include\Transform.h" />
+    <ClInclude Include="include\Transform3D.h" />
+    <ClInclude Include="include\CollidingObject.h" />
+    <ClInclude Include="include\SAPEntry.h" />
+    <ClInclude Include="include\PhysicsManager.h" />
+    <ClInclude Include="include\InputEvent.h" />
+    <ClInclude Include="include\InputManager.h" />
+    <ClInclude Include="include\VectorUtility.h" />
+    <ClInclude Include="include\PhysicsBody.h" />
+    <ClInclude Include="include\GameObject.h" />
+    <ClInclude Include="include\CollisionHandler.h" />
+    <ClInclude Include="include\Collider.h" />
+    <ClInclude Include="include\ColliderCircle.h" />
+    <ClInclude Include="include\ColliderRect.h" />
+    <ClInclude Include="include\InputEvent.h" />
+    <ClInclude Include="include\InputManager.h" />
+    <ClInclude Include="include\Logger.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AssetManager.cpp">
@@ -1133,5 +1150,23 @@
     <ClCompile Include="vendor\glm\detail\glm.cpp">
       <Filter>vendor\glm\detail</Filter>
     </ClCompile>
+    <ClCompile Include="src\Sound.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AssetManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BaseFunctionality.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PhysicsBody.cpp" />
+    <ClCompile Include="src\ColliderRect.cpp" />
+    <ClCompile Include="src\ColliderCircle.cpp" />
+    <ClCompile Include="src\GameObject.cpp" />
+    <ClCompile Include="src\PhysicsManager.cpp" />
+    <ClCompile Include="src\Collider.cpp" />
+    <ClCompile Include="src\InputManager.cpp" />
+    <ClCompile Include="src\Transform.cpp" />
+    <ClCompile Include="src\Logger.cpp" />
   </ItemGroup>
 </Project>
