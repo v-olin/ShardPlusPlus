@@ -1068,6 +1068,9 @@
     <ClInclude Include="vendor\glm\vector_relational.hpp">
       <Filter>vendor\glm</Filter>
     </ClInclude>
+    <ClInclude Include="include\InputEvent.h" />
+    <ClInclude Include="include\InputManager.h" />
+    <ClInclude Include="include\Logger.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AssetManager.cpp">
@@ -1090,7 +1093,7 @@
     </ClCompile>
     <ClCompile Include="vendor\glm\detail\glm.cpp">
       <Filter>vendor\glm\detail</Filter>
-    </ClCompile>     
+    </ClCompile>
     <ClCompile Include="src\Sound.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -1101,5 +1104,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\InputManager.cpp" />
+    <ClCompile Include="src\Logger.cpp" />
   </ItemGroup>
 </Project>

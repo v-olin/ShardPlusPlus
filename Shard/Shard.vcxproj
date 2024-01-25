@@ -101,6 +101,7 @@
   <ItemGroup>
     <ClInclude Include="include\AssetManager.h" />
     <ClInclude Include="include\BaseFunctionality.h" />
+    <ClInclude Include="include\Logger.h" />
     <ClInclude Include="include\framework.h" />
     <ClInclude Include="include\InputEvent.h" />
     <ClInclude Include="include\InputManager.h" />
@@ -449,6 +450,7 @@
   <ItemGroup>
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\BaseFunctionality.cpp" />
+    <ClCompile Include="src\Logger.cpp" />
     <ClCompile Include="src\Sound.cpp" />
     <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\InputManager.cpp" />

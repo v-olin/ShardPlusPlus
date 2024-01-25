@@ -2,10 +2,10 @@
 /// @file glm/glm.cpp
 
 #define GLM_ENABLE_EXPERIMENTAL
-#include <glm/glm.hpp>
-#include <glm/ext/vec1.hpp>
-#include <glm/gtc/quaternion.hpp>
-#include <glm/gtx/dual_quaternion.hpp>
+#include <glm.hpp>
+#include <ext/vec1.hpp>
+#include <gtc/quaternion.hpp>
+#include <gtx/dual_quaternion.hpp>
 
 namespace glm
 {
