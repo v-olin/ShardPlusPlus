@@ -15,39 +15,35 @@
 
 namespace Shard {
 
-	class SHARD_API Line {
+	class Line {
 	public:
 		int sx, sy;
 		int ex, ey;
 		int r, g, b, a;
 	};
 
-	class SHARD_API Circle {
+	class Circle {
 	public:
 		int x, y, radius;
 		int r, g, b, a;
 	};
 
-	class SHARD_API DisplaySDL : public DisplayText {
+	class DisplaySDL : public DisplayText {
 	public:
-		void initialize() override;
-		
-		void addToDraw(GameObject gob) override;
-		void removeToDraw(GameObject gob) override;
-
-		SDL_Texture* loadTexture(Transform trans);
-		SDL_Texture* loadTexture(std::string path);
-
-		void renderCircle(int centreX, int centreY, int radius);
-		
-		void drawCircle(int x, int y, int radius, int r, int g, int b, int a) override;
-		void drawLine(int x, int y, int x2, int y2, int r, int g, int b, int a) override;
-
-		void display() override;
-		void clearDisplay() override;
+		SHARD_API DisplaySDL();
+		SHARD_API void initialize() override;
+		SHARD_API void addToDraw(GameObject gob) override;
+		SHARD_API void removeToDraw(GameObject gob) override;
+		SHARD_API SDL_Texture* loadTexture(Transform trans);
+		SHARD_API SDL_Texture* loadTexture(std::string path);
+		SHARD_API void renderCircle(int centreX, int centreY, int radius);
+		SHARD_API void drawCircle(int x, int y, int radius, int r, int g, int b, int a) override;
+		SHARD_API void drawLine(int x, int y, int x2, int y2, int r, int g, int b, int a) override;
+		SHARD_API void display() override;
+		SHARD_API void clearDisplay() override;
 
 	private:
-		std::unordered_set<Transform> _toDraw;
+		std::vector<Transform> _toDraw;
 		std::vector<Line> _linesToDraw;
 		std::vector<Circle> _circlesToDraw;
 		// TODO: replace 'int' with proper type

@@ -17,16 +17,16 @@ namespace Shard {
 	class BaseFunctionality {
 
 	public:
-		static BaseFunctionality& getInstance()
+		static SHARD_API BaseFunctionality& getInstance()
 		{
 			static BaseFunctionality instance;
 			return instance;
 		}
 
-		BaseFunctionality(BaseFunctionality const&) = delete;
-		void operator=(BaseFunctionality const&) = delete;
+		SHARD_API BaseFunctionality(BaseFunctionality const&) = delete;
+		SHARD_API void operator=(BaseFunctionality const&) = delete;
 
-		std::unordered_map<std::string, std::string> readConfigFile(std::string file);
+		SHARD_API std::unordered_map<std::string, std::string> readConfigFile(std::string file);
 
 
 	private:

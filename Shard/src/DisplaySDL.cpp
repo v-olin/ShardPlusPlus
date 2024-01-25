@@ -21,7 +21,8 @@ namespace Shard {
 
 		trans.ht = h;
 		trans.wid = w;
-		trans.recalculateCentre();
+		//TODO: 
+		//trans.recalculateCentre();
 
 		// TODO: cursed cast that will create a black hole?
 		return ret;
@@ -31,7 +32,8 @@ namespace Shard {
 	SDL_Texture* DisplaySDL::loadTexture(std::string path) {
 		SDL_Surface* img;
 
-		if (spriteBuffer.find(path) != spriteBuffer.end())
+		//if (spriteBuffer.find(path) != spriteBuffer.end())
+		if (spriteBuffer.find(0) != spriteBuffer.end())
 			// TODO, this may very well fuck us later
 			return spriteBuffer[path];
 
@@ -48,14 +50,20 @@ namespace Shard {
 	}
 
 	void DisplaySDL::addToDraw(GameObject gob) {
-		_toDraw.insert(gob.transform);
+		_toDraw.push_back(gob.transform);
 		if (gob.transform.spritePath.empty())
 			return;
 		loadTexture(gob.transform.spritePath);
 	}
 
 	void DisplaySDL::removeToDraw(GameObject gob) {
-		_toDraw.erase(gob.transform);
+		auto iter = _toDraw.begin();
+
+		while (++iter != _toDraw.end()) {
+			if (gob.transform.ht == (*iter).ht)
+				_toDraw.erase(iter);
+			return;
+		}
 	}
 
 	void DisplaySDL::renderCircle(int centreX, int centreY, int radius) {

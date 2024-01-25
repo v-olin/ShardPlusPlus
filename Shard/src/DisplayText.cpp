@@ -70,7 +70,7 @@ namespace Shard {
 		SDL_QueryTexture(lblText, &_format, &_access, &sRect.w, &sRect.h);
 		td.lblText = lblText;
 
-		myTexts.insert(td);
+		myTexts.push_back(td);
 	}
 
 	void DisplayText::update() {

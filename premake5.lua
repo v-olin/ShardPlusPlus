@@ -47,7 +47,9 @@ project "Shard"
 
 	links
 	{
-		"SDL2.lib"
+		"SDL2.lib",
+		"SDL2_ttf.lib",
+		"SDL2_image.lib"
 	}
 	
 	filter "system:windows"

@@ -10,16 +10,16 @@ namespace Shard {
 	class StringUtility {
 
 	public:
-		static StringUtility& getInstance()
+		static SHARD_API StringUtility& getInstance()
 		{
 			static StringUtility instance;
 			return instance;
 		}
 
-		StringUtility(StringUtility const&) = delete;
-		void operator=(StringUtility const&) = delete;
+		SHARD_API StringUtility(StringUtility const&) = delete;
+		SHARD_API void operator=(StringUtility const&) = delete;
 
-		std::vector<std::string> split(std::string s, std::string delimiter) {
+		SHARD_API std::vector<std::string> split(std::string s, std::string delimiter) {
 			size_t pos_start = 0, pos_end, delim_len = delimiter.length();
 			std::string token;
 			std::vector<std::string> res;

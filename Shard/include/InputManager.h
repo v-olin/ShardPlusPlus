@@ -19,16 +19,16 @@ namespace Shard {
 			KeyUp = 5
 		};
 	typedef void (*InputHandler)(InputEvent, EventType);
-	class SHARD_API InputManager {
+	class InputManager {
 	public:
 		
 
 
-		void initialize();
-		void addListeners(InputHandler);
-		void removeListeners(InputHandler);
-		void informListeners(InputEvent, EventType);
-		void getInput();
+		SHARD_API void initialize();
+		SHARD_API void addListeners(InputHandler);
+		SHARD_API void removeListeners(InputHandler);
+		SHARD_API void informListeners(InputEvent, EventType);
+		SHARD_API void getInput();
 	private:
 		std::unordered_set<InputHandler> myListeners;
 		double tick;

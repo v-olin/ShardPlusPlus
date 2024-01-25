@@ -10,20 +10,20 @@
 #include <string>
 
 namespace Shard {
-	class SHARD_API AssetManager {
+	class AssetManager {
 	public:
-        static AssetManager& getInstance() {
+        static SHARD_API AssetManager& getInstance() {
             static AssetManager instance;
             return instance;
         }
 
-        AssetManager(AssetManager const&) = delete;
-        AssetManager& operator=(AssetManager const&) = delete;
-
-        void registerAssets();
-        void walkDirectory(std::string directory);
-        std::string getName(std::string path);
-        std::string getAssetPath(std::string asset_name);
+        SHARD_API AssetManager(AssetManager const&) = delete;
+        SHARD_API AssetManager& operator=(AssetManager const&) = delete;
+        
+        SHARD_API void registerAssets();
+        SHARD_API void walkDirectory(std::string directory);
+        SHARD_API std::string getName(std::string path);
+        SHARD_API std::string getAssetPath(std::string asset_name);
 	
     private:
         AssetManager();
