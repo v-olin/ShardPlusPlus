@@ -1,4 +1,5 @@
 #include "DisplaySDL.h"
+#include "Logger.h"
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -16,31 +17,26 @@ namespace Shard {
 		int access;
 		int w, h;
 
-		ret = loadTexture(trans.spritePath);
+		ret = loadTexture(trans.sprite_path);
 		SDL_QueryTexture(ret, &format, &access, &w, &h);
 
-		trans.ht = h;
-		trans.wid = w;
-		//TODO: 
-		//trans.recalculateCentre();
+		trans.h = h;
+		trans.w = w;
+		trans.recalculateCentre();
 
-		// TODO: cursed cast that will create a black hole?
 		return ret;
 	}
 
-	// TODO: replace return type 'int' with proper type
 	SDL_Texture* DisplaySDL::loadTexture(std::string path) {
 		SDL_Surface* img;
 
-		//if (spriteBuffer.find(path) != spriteBuffer.end())
-		if (spriteBuffer.find(0) != spriteBuffer.end())
+		if (spriteBuffer.find(path) != spriteBuffer.end())
 			// TODO, this may very well fuck us later
 			return spriteBuffer[path];
 
 		img = IMG_Load(path.data());
 	
-		// TODO: Uncomment once Debug module is available
-		// Debug.getInstance().log("IMG_Load: " + IMG_GetError());
+		Logger::log("IMG_Load: " + path, LOG_LEVEL_ALL);
 
 		spriteBuffer[path] = SDL_CreateTextureFromSurface(_rend, img);
 		SDL_SetTextureBlendMode(spriteBuffer[path], SDL_BLENDMODE_BLEND);
@@ -50,17 +46,17 @@ namespace Shard {
 	}
 
 	void DisplaySDL::addToDraw(GameObject gob) {
-		_toDraw.push_back(gob.transform);
-		if (gob.transform.spritePath.empty())
+		_toDraw.push_back(gob.transform_);
+		if (gob.transform_.sprite_path.empty())
 			return;
-		loadTexture(gob.transform.spritePath);
+		loadTexture(gob.transform_.sprite_path);
 	}
 
 	void DisplaySDL::removeToDraw(GameObject gob) {
 		auto iter = _toDraw.begin();
 
 		while (++iter != _toDraw.end()) {
-			if (gob.transform.ht == (*iter).ht)
+			if (gob.transform_.h == (*iter).h)
 				_toDraw.erase(iter);
 			return;
 		}
@@ -140,14 +136,14 @@ namespace Shard {
 		SDL_Rect tRect;
 
 		for (const Transform trans : _toDraw) {
-			//if (trans.spritePath.empty())
-				//continue;
+			if (trans.sprite_path.empty())
+				continue;
 			SDL_Texture* sprite = loadTexture(trans);
 
 			sRect.x = 0;
 			sRect.y = 0;
-			sRect.w = (int)(trans.wid * trans.scalex);
-			sRect.h = (int)(trans.ht * trans.scaley);
+			sRect.w = (int)(trans.w * trans.scale_x);
+			sRect.h = (int)(trans.h * trans.scale_y);
 
 			tRect.x = (int)trans.x;
 			tRect.y = (int)trans.y;

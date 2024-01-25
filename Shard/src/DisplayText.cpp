@@ -1,4 +1,5 @@
 #include "DisplayText.h"
+#include "Logger.h"
 
 namespace Shard {
 
@@ -14,7 +15,15 @@ namespace Shard {
 		if (fontLibrary.find(key) != fontLibrary.end())
 			return fontLibrary.at(key);
 		
-		fontLibrary.at(key) = TTF_OpenFont(path.data(), size);
+		auto font = TTF_OpenFont(path.data(), size);
+
+		if (font == NULL) {
+			Logger::log("DisplayText.cpp loadFont: Could not open font " + path, LOG_LEVEL_ALL);
+			return nullptr;
+		}
+
+		fontLibrary.at(key) = font;
+
 		return fontLibrary.at(key);
 	}
 	
@@ -50,9 +59,7 @@ namespace Shard {
 		col.a = (Uint8)255;
 		TTF_Font* font = loadFont("Fonts/calibri.ttf", size);
 
-		//if(!font)
-			//Debug.getInstance().log("TTF_OpenFont: " + SDL.SDL_GetError());
-
+		
 		TextDetails td = TextDetails(text, x, y, col, 12);
 		td.font = font;
 
