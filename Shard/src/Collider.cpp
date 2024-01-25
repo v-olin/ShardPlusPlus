@@ -90,7 +90,6 @@ namespace Shard {
 
 	std::optional<glm::vec2> ColliderCircle::checkCollision(ColliderCircle* other) {
 		double dist, depth, radsq, xpen, ypen;
-		glm::vec2 dir;
 
 		xpen = pow(other->x - x, 2);
 		ypen = pow(other->y - y, 2);
@@ -115,6 +114,22 @@ namespace Shard {
 			return std::optional<glm::vec2>(glm::vec2{ 0,0 });
 
 		return std::nullopt;
+	}
+
+	std::optional<glm::vec2> ColliderCircle::checkCollision(Collider* other) {
+		ColliderCircle circ;
+		ColliderRect rect;
+
+		if (typeid(circ) == typeid(other)) {
+			ColliderCircle* circ_p = dynamic_cast<ColliderCircle*>(other);
+			return checkCollision(circ_p);
+		}
+		else if (typeid(rect) == typeid(other)) {
+			ColliderRect* rect_p = dynamic_cast<ColliderRect*>(other);
+			return checkCollision(rect_p);
+		}
+		else
+			return std::nullopt;
 	}
 
 	ColliderRect::ColliderRect() : Collider(nullptr, nullptr) {
@@ -190,15 +205,16 @@ namespace Shard {
 
 		l = left - other.right;
 		t = other.top - bottom;
-		w = width + other.width;
-		h = height + other.height;
+		r = right - other.left;
 		b = other.bottom - top;
 
+		w = width + other.width;
+		h = height + other.height;
 		mink.width = w;
 		mink.height = h;
 
-		mink.min_and_max_x = glm::vec2{ left, right };
-		mink.min_and_max_y = glm::vec2{ top, bottom };
+		mink.min_and_max_x = glm::vec2{ l, r };
+		mink.min_and_max_y = glm::vec2{ t, b };
 
 		return mink;
 	}
@@ -230,6 +246,24 @@ namespace Shard {
 		calculateBoundingBox();
 	}
 
+	std::optional<glm::vec2> ColliderRect::checkCollision(Collider* other) {
+		ColliderCircle circ;
+		ColliderRect rect;
+		if (typeid(circ) == typeid(other)) {
+			ColliderCircle* other_circ = dynamic_cast<ColliderCircle*>(other);
+			return checkCollision(other_circ);
+		}
+		else if (typeid(rect) == typeid(other)) {
+			ColliderRect* other_rect = dynamic_cast<ColliderRect*>(other);
+			return checkCollision(other_rect);
+		}
+		else {
+			// TODO: debug.log
+			//oops, this is not good
+			return std::nullopt;
+		}
+	}
+
 	std::optional<glm::vec2> ColliderRect::checkCollision(ColliderRect* other) {
 		ColliderRect cr = calculateMinkowskiDifference(*other);
 
@@ -241,12 +275,8 @@ namespace Shard {
 		return std::nullopt;
 	}
 
-	void ColliderRect::draw(SDL_Color color) {
-		// TODO: cannot do until display is finished
-	}
-
 	std::optional<glm::vec2> ColliderRect::checkCollision(ColliderCircle* c) {
-		std::optional<glm::vec2> possible_v = checkCollision(c);
+		std::optional<glm::vec2> possible_v = c->checkCollision(this);
 
 		if (possible_v.has_value()) {
 			possible_v.value().x *= -1;
@@ -265,5 +295,9 @@ namespace Shard {
 			return std::make_optional<glm::vec2>(glm::vec2{ 0,0 });
 
 		return std::nullopt;
+	}
+
+	void ColliderRect::draw(SDL_Color color) {
+		// TODO: cannot do until display is finished
 	}
 }

@@ -53,24 +53,24 @@ namespace Shard {
 		void recalculateColliders();
 		void physicsTick();
 		void addRectCollider();
-		void addRectCollider(int x, int y, int w, int h);
+		void addRectCollider(float x, float y, float w, float h);
 		void addCircleCollider();
-		void addCircleCollider(int x, int y, int rad);
-		//void addCollider(Collider coll);
+		void addCircleCollider(float x, float y, float rad);
+		//void addCollider(Collider coll);F
 		std::optional<glm::vec2> checkCollisions(glm::vec2 other);
 
-		bool operator==(const PhysicsBody& other) {
-		 	return parent == other.parent;
+		bool operator==(PhysicsBody& other){
+			return parent == other.parent;
 		}
 
-		bool equals(const PhysicsBody& other){
+		bool equals(PhysicsBody& other){
 			return parent == other.parent;
 		}
 
 	private:
 		float torque_;
 		glm::vec2 force_;
-		float time_interval_;
+		long time_interval_;
 		SDL_Color debug_color_;
 		Transform3D trans;
 		std::vector<Collider*> collision_candidates;

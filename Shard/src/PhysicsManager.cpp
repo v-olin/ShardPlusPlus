@@ -15,26 +15,27 @@ namespace Shard {
 	}
 
 	void PhysicsManager::addPhysicsObject(PhysicsBody body) {
-		// TODO: Use unordered_set, not vector
-		//all_physics_objects.insert(body);
-		
-		auto iter = std::find(all_physics_objects.begin(), all_physics_objects.end(), body);
-
-		if (iter == all_physics_objects.end())
+		bool exists = false;
+		for(size_t i = 0; i < all_physics_objects.size(); i++){
+			auto other = all_physics_objects.at(i);
+			if (other.parent == body.parent){
+				exists = true;
+				break;
+			}
+		}
+		if (!exists)
 			all_physics_objects.push_back(body);
-		
 	}
 
 	void PhysicsManager::removePhysicsObject(PhysicsBody body) {
-		// TODO: Use unordered_set, not vector
-		//all_physics_objects.erase(body);
-		
-		auto iter = std::find(all_physics_objects.begin(), all_physics_objects.end(), body);
-		
-		if (iter != all_physics_objects.end()) {
-			all_physics_objects.erase(iter);
+		for(size_t i = 0; i < all_physics_objects.size(); i++){
+			auto other = all_physics_objects.at(i);
+			if(other.parent == body.parent){
+				auto iter = all_physics_objects.begin();
+				std::advance(iter, i);
+				all_physics_objects.erase(iter);
+			}
 		}
-		
 	}
 
 	void PhysicsManager::clearList() {
@@ -44,11 +45,20 @@ namespace Shard {
 	void PhysicsManager::addToList(SAPEntry node) {
 		sap_x.push_back(node);
 
-		auto comparator = [](SAPEntry a, SAPEntry b) {
-			return a.start > b.start;
-		};
+		//hopefully the values in the list dont change, if they do, implement bubble sort.
+		SAPEntry lhs = *(sap_x.begin());
 
-		std::sort(sap_x.begin(), sap_x.end(), comparator);
+		for(size_t i = 0; i < sap_x.size() - 1; ++i){
+			auto iter = sap_x.begin();
+			for (size_t j = 0; j < sap_x.size() - 1 - i; ++j) {
+				auto curr = iter, next = ++iter;
+				if ((*curr).start > (*next).start) {
+					auto tmp = curr;
+					curr = next;
+					next = tmp;
+				}
+			}
+		}
 	}
 
 	void PhysicsManager::reportCollisionsInAxis() {
@@ -66,21 +76,15 @@ namespace Shard {
 			auto iter = active_objects.begin();
 			for (size_t i = 1; i < active_objects.size(); i++) {
 				SAPEntry active = *(++iter);
-
-				if (start == active)
-					continue;
-				/*
-				* ^^^^^ should be better
-				// TODO huh?
+				
 				if (equal(start, active))
 					continue;
-				*/
-
+				
 				if (start.start >= active.end)
 					to_remove.push_back(i);
 				else {
 					CollidingObject col;
-
+				
 					if (start.owner->mass > active.owner->mass) {
 						col.a = *start.owner;
 						col.b = *active.owner;
@@ -89,16 +93,17 @@ namespace Shard {
 						col.a = *active.owner;
 						col.b = *start.owner;
 					}
-
-					if (!findColliding(col.a, col.b))
-						collisions_to_check_.insert(col);
+				
+					if (!findColliding(col.a, col.b)) {
+						collisions_to_check_.push_back(col);
+					}
 				}
 			}
 
-			for (size_t i = to_remove.size(); i >= 0; i--) {
-				auto iter = active_objects.begin();
-				std::advance(iter, i);
-				active_objects.erase(iter);
+			for (auto riter = to_remove.rbegin(); riter != to_remove.rend(); ++riter) {
+				auto act_iter = active_objects.begin();
+				std::advance(act_iter, *riter);
+				active_objects.erase(act_iter);
 			}
 
 			to_remove.clear();
@@ -112,12 +117,13 @@ namespace Shard {
 	}
 
 	bool PhysicsManager::update() {
-		std::list<CollidingObject> to_remove;
+		std::list<size_t> to_remove;
 
 		if (!willTick())
 			return false;
 
-		last_update = 0; // TODO: bootstrap get current millis;
+		// TODO: bootstrap get current millis;
+		last_update = 0;
 
 		for (PhysicsBody &body : all_physics_objects) {
 			if (body.uses_gravity)
@@ -127,18 +133,21 @@ namespace Shard {
 			body.recalculateColliders();
 		}
 
-		for (CollidingObject col : collidings_) {
+		// for (CollidingObject col : collidings_) {
+		for (size_t i = collidings_.size() - 1; i >= 0; --i) {
+			CollidingObject col = collidings_.at(i);
+
 			auto a_handler = col.a.coll_handler;
 			auto b_handler = col.b.coll_handler;
 
 			if (col.a.parent->to_be_destroyed_) {
 				b_handler->onCollisionExit(nullptr);
-				to_remove.push_back(col);
+				to_remove.push_back(i);
 			}
 
 			if (col.b.parent->to_be_destroyed_) {
 				a_handler->onCollisionExit(nullptr);
-				to_remove.push_back(col);
+				to_remove.push_back(i);
 			}
 
 			std::optional<glm::vec2> impulse = checkCollisionsBetweenObjects(col.a, col.b);
@@ -150,12 +159,14 @@ namespace Shard {
 			else {
 				a_handler->onCollisionExit(&col.b);
 				b_handler->onCollisionExit(&col.a);
-				to_remove.push_back(col);
+				to_remove.push_back(i);
 			}
 		}
 
-		for (CollidingObject& col_obj : to_remove) {
-			collidings_.erase(col_obj);
+		for (size_t idx : to_remove) {
+			auto iter = collidings_.begin();
+			std::advance(iter, idx);
+			collidings_.erase(iter);
 		}
 
 		to_remove.clear();
@@ -172,7 +183,13 @@ namespace Shard {
 	bool PhysicsManager::findColliding(PhysicsBody& a, PhysicsBody& b) {
 		// TODO: Potentially flawed implementation.
 		CollidingObject col { a, b };
-		return collidings_.contains(col);
+
+		for (auto col_ : collidings_) {
+			if (col == col_)
+				return true;
+		}
+
+		return false;
 	}
 
 	void PhysicsManager::broadPassSearchAndSweep() {
@@ -247,7 +264,7 @@ namespace Shard {
 				col_obj.a.coll_handler->onCollisionEnter(&col_obj.b);
 				col_obj.b.coll_handler->onCollisionEnter(&col_obj.a);
 
-				collidings_.insert(col_obj);
+				collidings_.push_back(col_obj);
 
 				if (col_obj.a.reflect_on_collision)
 					col_obj.a.reflectForces(impulse);

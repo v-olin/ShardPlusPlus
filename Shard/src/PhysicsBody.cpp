@@ -108,8 +108,8 @@ namespace Shard {
 	void PhysicsBody::reflectForces(glm::vec2 impulse) {
 		glm::vec2 reflect(0,0);
 
-		reflect.x = impulse.x > 0 ? 1 : -1;
-		reflect.y = impulse.y > 0 ? 1 : -1;
+		reflect.x = impulse.x > 0 ? 1.f : -1.f;
+		reflect.y = impulse.y > 0 ? 1.f : -1.f;
 
 		force_ *= reflect;
 	}
@@ -175,7 +175,7 @@ namespace Shard {
 		colliders.push_back(col);
 	}
 
-	void PhysicsBody::addRectCollider(int x, int y, int w, int h) {
+	void PhysicsBody::addRectCollider(float x, float y, float w, float h) {
 		Collider* col = new ColliderRect(coll_handler, &parent->transform_, x, y, w, h);
 		colliders.push_back(col);
 	}
@@ -185,7 +185,7 @@ namespace Shard {
 		colliders.push_back(col);
 	}
 
-	void PhysicsBody::addCircleCollider(int x, int y, int rad) {
+	void PhysicsBody::addCircleCollider(float x, float y, float rad) {
 		Collider* col = new ColliderCircle(coll_handler, &parent->transform_, x, y, rad);
 		colliders.push_back(col);
 	}

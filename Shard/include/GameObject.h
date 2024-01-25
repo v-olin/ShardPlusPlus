@@ -33,11 +33,12 @@ namespace Shard {
         void checkDestroyMe();
 
         // to be inherited by other objects
-        virtual void initialize() = 0;
-        virtual void update() = 0;
-        virtual void physicsUpdate() = 0;
-        virtual void prePhysicsUpdate() = 0;
-        virtual void killMe() = 0; // needs physicsManager
+        virtual void initialize() {}
+        virtual void update() {}
+        virtual void physicsUpdate() {}
+        virtual void prePhysicsUpdate() {}
+        // needs physicsManager
+        virtual void killMe() {}
 
 
 

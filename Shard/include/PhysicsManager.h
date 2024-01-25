@@ -39,16 +39,9 @@ namespace Shard {
 
 	private:
 
-		struct ColObjComparator {
-			bool operator()(CollidingObject& lhs, CollidingObject& rhs) {
-				return 1;
-				//return (lhs.a.equals(rhs.a)) && (lhs.b.equals(rhs.b));
-			}
-		};
+		std::vector<CollidingObject> collisions_to_check_;
+		std::vector<CollidingObject> collidings_;
 
-		std::unordered_set<CollidingObject> collisions_to_check_;
-
-		std::unordered_set<CollidingObject> collidings_;
 		
 		long last_update, last_debug_draw;
 		//SAPEntry sap_x, sap_y;
@@ -65,4 +58,8 @@ namespace Shard {
 		void narrowPass();
 		void checkForCollisions();
 	};
+	
+	//int compareSAP(Shard::SAPEntry& a, Shard::SAPEntry& b) {
+	//	return a.start - b.start;
+	//}
 }

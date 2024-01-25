@@ -19,6 +19,12 @@ namespace Shard {
 			return (start == other.start) && (end == other.end) && (owner == other.owner);
 		}
 
-	private:
+		bool operator < (const SAPEntry& other) {
+			return start < other.start;
+		}
+
+		static int compareSAP(SAPEntry& a, SAPEntry& b) {
+			return a.start - b.start;
+		}
 	};
 }
