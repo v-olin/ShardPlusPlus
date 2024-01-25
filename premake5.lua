@@ -31,18 +31,25 @@ project "Shard"
 	includedirs
 	{
 		"%{prj.name}/vendor/SDL2-2.28.5/include",
+		"%{prj.name}/vendor/SDL2_ttf-2.22.0/include",
+		"%{prj.name}/vendor/SDL2_image-2.8.2/include",
 		"%{prj.name}/vendor/glm",
 		"%{prj.name}/include"
 	}
 	
 	libdirs
 	{
-		"%{prj.name}/vendor/SDL2-2.28.5/lib/x64"
+		"%{prj.name}/vendor/SDL2-2.28.5/lib/x64",
+		"%{prj.name}/vendor/SDL2_ttf-2.22.0/lib/x64",
+		"%{prj.name}/vendor/SDL2_image-2.8.2/lib/x64"
+		
 	}
 
 	links
 	{
-		"SDL2.lib"
+		"SDL2.lib",
+		"SDL2_ttf.lib",
+		"SDL2_image.lib"
 	}
 	
 	filter "system:windows"

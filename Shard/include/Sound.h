@@ -9,8 +9,8 @@
 #include <string>
 
 namespace Shard {
-	class SHARD_API Sound {
+	class Sound {
 	public:
-		void playSound(std::string file_name);
+		SHARD_API void playSound(std::string file_name);
 	};
 }
