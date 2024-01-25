@@ -1082,6 +1082,9 @@
     <ClInclude Include="include\Collider.h" />
     <ClInclude Include="include\ColliderCircle.h" />
     <ClInclude Include="include\ColliderRect.h" />
+    <ClInclude Include="include\InputEvent.h" />
+    <ClInclude Include="include\InputManager.h" />
+    <ClInclude Include="include\Logger.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AssetManager.cpp">
@@ -1105,6 +1108,15 @@
     <ClCompile Include="vendor\glm\detail\glm.cpp">
       <Filter>vendor\glm\detail</Filter>
     </ClCompile>
+    <ClCompile Include="src\Sound.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AssetManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BaseFunctionality.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="src\PhysicsBody.cpp" />
     <ClCompile Include="src\ColliderRect.cpp" />
     <ClCompile Include="src\ColliderCircle.cpp" />
@@ -1113,5 +1125,6 @@
     <ClCompile Include="src\Collider.cpp" />
     <ClCompile Include="src\InputManager.cpp" />
     <ClCompile Include="src\Transform.cpp" />
+    <ClCompile Include="src\Logger.cpp" />
   </ItemGroup>
 </Project>

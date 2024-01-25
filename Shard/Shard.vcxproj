@@ -105,6 +105,7 @@
     <ClInclude Include="include\ColliderCircle.h" />
     <ClInclude Include="include\ColliderRect.h" />
     <ClInclude Include="include\CollisionHandler.h" />
+    <ClInclude Include="include\Logger.h" />
     <ClInclude Include="include\framework.h" />
     <ClInclude Include="include\CollidingObject.h" />
     <ClInclude Include="include\GameObject.h" />
@@ -467,6 +468,7 @@
     <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\PhysicsBody.cpp" />
     <ClCompile Include="src\PhysicsManager.cpp" />
+    <ClCompile Include="src\Logger.cpp" />
     <ClCompile Include="src\Sound.cpp" />
     <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\InputManager.cpp" />
