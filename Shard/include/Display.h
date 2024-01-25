@@ -7,6 +7,8 @@
 #define SHARD_API __declspec(dllimport)
 #endif
 
+#include "Transform.h"
+#include "GameObject.h"
 #include <string>
 
 namespace Shard {
@@ -17,22 +19,9 @@ namespace Shard {
         int B;
         int A;
     } Color;
-    //TODO, begone, will not build but no suprise, this is a crazy hack
-    typedef class Transform {
-    public:
-        std::string spritePath;
-        int ht, wid, scalex, scaley, x, y, rotz;
-        SHARD_API void recalculateCentre();
-    } Transform;
-    
-    
-    typedef struct GameObject {
-        Transform transform;
-    } GameObject;
 	
     class  Display { // this is inherited by DisplaySDL and DisplayText
 	public:
-         //protected int _height, _width;
 
         virtual SHARD_API void drawLine(int x, int y, int x2, int y2, int r, int g, int b, int a);
 

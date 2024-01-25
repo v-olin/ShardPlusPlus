@@ -46,7 +46,6 @@ namespace Shard {
 		std::vector<Transform> _toDraw;
 		std::vector<Line> _linesToDraw;
 		std::vector<Circle> _circlesToDraw;
-		// TODO: replace 'int' with proper type
 		std::unordered_map<std::string, SDL_Texture*> spriteBuffer;
 	};
 

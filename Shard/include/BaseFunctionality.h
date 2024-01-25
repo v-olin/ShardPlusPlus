@@ -11,11 +11,8 @@
 #include <unordered_map>
 
 namespace Shard {
-
 	// Singleton pattern taken from: https://stackoverflow.com/a/1008289
-
 	class BaseFunctionality {
-
 	public:
 		static SHARD_API BaseFunctionality& getInstance()
 		{
