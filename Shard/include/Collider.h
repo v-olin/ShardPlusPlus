@@ -7,7 +7,7 @@
 #endif
 
 #include <string>
-#include <glm.hpp>
+//#include <glm.hpp>
 #include <SDL.h>
 #include <typeinfo>
 #include <optional>

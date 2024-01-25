@@ -1,5 +1,5 @@
-#include "Collider.h"
 #include "Transform.h"
+#include "Collider.h"
 
 namespace Shard {
 	ColliderCircle::ColliderCircle(CollisionHandler* game_obj, Transform* transform)

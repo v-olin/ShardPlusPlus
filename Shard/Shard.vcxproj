@@ -101,10 +101,16 @@
   <ItemGroup>
     <ClInclude Include="include\AssetManager.h" />
     <ClInclude Include="include\BaseFunctionality.h" />
+    <ClInclude Include="include\Collider.h" />
+    <ClInclude Include="include\ColliderCircle.h" />
+    <ClInclude Include="include\ColliderRect.h" />
+    <ClInclude Include="include\CollisionHandler.h" />
     <ClInclude Include="include\framework.h" />
     <ClInclude Include="include\CollidingObject.h" />
+    <ClInclude Include="include\GameObject.h" />
     <ClInclude Include="include\InputEvent.h" />
     <ClInclude Include="include\InputManager.h" />
+    <ClInclude Include="include\PhysicsBody.h" />
     <ClInclude Include="include\PhysicsManager.h" />
     <ClInclude Include="include\SAPEntry.h" />
     <ClInclude Include="include\Sound.h" />
@@ -465,6 +471,7 @@
     <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\InputManager.cpp" />
     <ClCompile Include="src\pch.cpp" />
+    <ClCompile Include="src\Transform.cpp" />
     <ClCompile Include="vendor\glm\detail\dummy.cpp" />
     <ClCompile Include="vendor\glm\detail\glm.cpp" />
   </ItemGroup>
