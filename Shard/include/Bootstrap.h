@@ -48,26 +48,20 @@ namespace Shard {
 
 
 	private:
-		static SHARD_API void setup(std::string config);
-
-		static Game running_game;
-		static Display display_engine;
-		static Sound sound_engine;
-		static InputManager input;
-		static PhysicsManager phys;
-		static AssetManager asset;
-
-		static int target_frame_rate;
-        static int millis_per_frame;
-        static double delta_time;
-        static double time_elapsed;
-        static int frames;
-        static std::vector<long> frame_times;
-        static long start_time;
-        static std::string base_dir;
-		static std::unordered_map<std::string, std::string> en_vars;
-
-
+		inline static Game running_game;
+		inline static Display display_engine;
+		inline static Sound sound_engine;
+		inline static InputManager input;
+		inline static PhysicsManager& phys{ PhysicsManager::getInstance() };
+		inline static AssetManager& asset{ AssetManager::getInstance() };
+		inline static int target_frame_rate;
+        inline static int millis_per_frame;
+        inline static double delta_time;
+        inline static double time_elapsed;
+        inline static int frames;
+        inline static std::vector<long> frame_times;
+        inline static long start_time;
+        inline static std::string base_dir;
+		inline static std::unordered_map<std::string, std::string> en_vars;
 	};
-
 }

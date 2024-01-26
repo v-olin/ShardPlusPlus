@@ -181,7 +181,7 @@ namespace Shard {
 
         phys.gravity_modifier = 0.1f;
 
-        phys_debug = getEnvironmentVariable("phusics_debug") == "1";
+        phys_debug = getEnvironmentVariable("physics_debug") == "1";
 
         while (true) {
             frames += 1;

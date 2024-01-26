@@ -489,9 +489,6 @@
     <ClCompile Include="vendor\glm\detail\dummy.cpp" />
     <ClCompile Include="vendor\glm\detail\glm.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="NewFile.txt" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

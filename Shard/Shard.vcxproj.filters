@@ -1174,7 +1174,4 @@
     <ClCompile Include="src\Bootstrap.cpp" />
     <ClCompile Include="src\GameObjectManager.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="NewFile.txt" />
-  </ItemGroup>
 </Project>

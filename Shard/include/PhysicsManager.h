@@ -20,8 +20,6 @@ namespace Shard {
 		long time_interval;
 		float gravity_modifier;
 
-
-
 		static PhysicsManager& getInstance();
 
 		PhysicsManager(PhysicsManager const&) = delete;
