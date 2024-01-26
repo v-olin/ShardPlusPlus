@@ -10,6 +10,15 @@
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vendor\GLFW">
+      <UniqueIdentifier>{D27667C1-3E2C-E0B6-C720-DA8D33D5D6BA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\GLFW\include">
+      <UniqueIdentifier>{45501F1D-B1B1-FC2A-3A1F-43DDA67F33EA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\GLFW\include\GLFW">
+      <UniqueIdentifier>{A4FE9F69-9023-EFE9-B96E-D479A5F2ED07}</UniqueIdentifier>
+    </Filter>
     <Filter Include="vendor\SDL2-2.28.5">
       <UniqueIdentifier>{F1910D23-DD75-CE78-46D6-C8CB32D9B8FA}</UniqueIdentifier>
     </Filter>
@@ -27,6 +36,15 @@
     </Filter>
     <Filter Include="vendor\SDL2_ttf-2.22.0\include">
       <UniqueIdentifier>{8642E51E-7268-AF85-5BAE-34514773D451}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\glew">
+      <UniqueIdentifier>{318F79C1-9D44-F2B6-2639-EC8D92EDE8BA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\glew\include">
+      <UniqueIdentifier>{A457F7F3-10B9-D401-9926-1BB405870BC1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\glew\include\GL">
+      <UniqueIdentifier>{86B6A6B4-72B0-CF06-5B1D-661747B63573}</UniqueIdentifier>
     </Filter>
     <Filter Include="vendor\glm">
       <UniqueIdentifier>{829FC5A8-6E57-07F6-D75E-E051C335A2E6}</UniqueIdentifier>
@@ -46,12 +64,42 @@
     <Filter Include="vendor\glm\simd">
       <UniqueIdentifier>{1EFDF202-8A88-60C7-9399-E3BBFFA3BCC7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vendor\stb_image">
+      <UniqueIdentifier>{0DA0BA59-F998-D9AB-22CB-BE300E23B9B7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\stb_image\include">
+      <UniqueIdentifier>{8084391F-6CA9-889F-95F4-6D2F817887BD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\tiny_obj">
+      <UniqueIdentifier>{C074E122-2C00-4FE7-3511-D2DBA11BABE7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\tiny_obj\include">
+      <UniqueIdentifier>{335CF72E-9F93-3FC6-A89D-A3E9145466BF}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AssetManager.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\BaseFunctionality.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Bootstrap.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Collider.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ColliderCircle.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ColliderRect.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CollidingObject.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CollisionHandler.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\Display.h">
@@ -63,10 +111,37 @@
     <ClInclude Include="include\DisplayText.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\GLUtility.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameObject.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameObjectManager.h">
+      <Filter>include</Filter>
+    </ClInclude>
     <ClInclude Include="include\InputEvent.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\InputManager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Logger.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Model.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PhysicsBody.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PhysicsManager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SAPEntry.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\Sound.h">
@@ -75,11 +150,23 @@
     <ClInclude Include="include\StringUtility.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\Transform.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Transform3D.h">
+      <Filter>include</Filter>
+    </ClInclude>
     <ClInclude Include="include\framework.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\pch.h">
       <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\GLFW\include\GLFW\glfw3.h">
+      <Filter>vendor\GLFW\include\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\GLFW\include\GLFW\glfw3native.h">
+      <Filter>vendor\GLFW\include\GLFW</Filter>
     </ClInclude>
     <ClInclude Include="vendor\SDL2-2.28.5\include\SDL.h">
       <Filter>vendor\SDL2-2.28.5\include</Filter>
@@ -320,6 +407,18 @@
     </ClInclude>
     <ClInclude Include="vendor\SDL2_ttf-2.22.0\include\SDL_ttf.h">
       <Filter>vendor\SDL2_ttf-2.22.0\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\glew\include\GL\eglew.h">
+      <Filter>vendor\glew\include\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\glew\include\GL\glew.h">
+      <Filter>vendor\glew\include\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\glew\include\GL\glxew.h">
+      <Filter>vendor\glew\include\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\glew\include\GL\wglew.h">
+      <Filter>vendor\glew\include\GL</Filter>
     </ClInclude>
     <ClInclude Include="vendor\glm\common.hpp">
       <Filter>vendor\glm</Filter>
@@ -1101,26 +1200,12 @@
     <ClInclude Include="vendor\glm\vector_relational.hpp">
       <Filter>vendor\glm</Filter>
     </ClInclude>
-    <ClInclude Include="include\Transform.h" />
-    <ClInclude Include="include\Transform3D.h" />
-    <ClInclude Include="include\CollidingObject.h" />
-    <ClInclude Include="include\SAPEntry.h" />
-    <ClInclude Include="include\PhysicsManager.h" />
-    <ClInclude Include="include\InputEvent.h" />
-    <ClInclude Include="include\InputManager.h" />
-    <ClInclude Include="include\VectorUtility.h" />
-    <ClInclude Include="include\PhysicsBody.h" />
-    <ClInclude Include="include\GameObject.h" />
-    <ClInclude Include="include\CollisionHandler.h" />
-    <ClInclude Include="include\Collider.h" />
-    <ClInclude Include="include\ColliderCircle.h" />
-    <ClInclude Include="include\ColliderRect.h" />
-    <ClInclude Include="include\InputEvent.h" />
-    <ClInclude Include="include\InputManager.h" />
-    <ClInclude Include="include\Logger.h" />
-    <ClInclude Include="include\Bootstrap.h" />
-    <ClInclude Include="include\Game.h" />
-    <ClInclude Include="include\GameObjectManager.h" />
+    <ClInclude Include="vendor\stb_image\include\stb_image.h">
+      <Filter>vendor\stb_image\include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\tiny_obj\include\tiny_obj_loader.h">
+      <Filter>vendor\tiny_obj\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AssetManager.cpp">
@@ -1129,16 +1214,49 @@
     <ClCompile Include="src\BaseFunctionality.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Bootstrap.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Collider.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ColliderCircle.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ColliderRect.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="src\DisplaySDL.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\DisplayText.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameObject.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObjectManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="src\InputManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Logger.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Model.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PhysicsBody.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PhysicsManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="src\Sound.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Transform.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\dllmain.cpp">
@@ -1153,25 +1271,5 @@
     <ClCompile Include="vendor\glm\detail\glm.cpp">
       <Filter>vendor\glm\detail</Filter>
     </ClCompile>
-    <ClCompile Include="src\Sound.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AssetManager.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\BaseFunctionality.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PhysicsBody.cpp" />
-    <ClCompile Include="src\ColliderRect.cpp" />
-    <ClCompile Include="src\ColliderCircle.cpp" />
-    <ClCompile Include="src\GameObject.cpp" />
-    <ClCompile Include="src\PhysicsManager.cpp" />
-    <ClCompile Include="src\Collider.cpp" />
-    <ClCompile Include="src\InputManager.cpp" />
-    <ClCompile Include="src\Transform.cpp" />
-    <ClCompile Include="src\Logger.cpp" />
-    <ClCompile Include="src\Bootstrap.cpp" />
-    <ClCompile Include="src\GameObjectManager.cpp" />
   </ItemGroup>
 </Project>
