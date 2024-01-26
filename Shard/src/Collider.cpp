@@ -117,6 +117,10 @@ namespace Shard {
 	}
 
 	std::optional<glm::vec2> ColliderCircle::checkCollision(Collider* other) {
+
+		return other->checkCollision(this);
+
+		/*
 		ColliderCircle circ;
 		ColliderRect rect;
 
@@ -130,6 +134,7 @@ namespace Shard {
 		}
 		else
 			return std::nullopt;
+		*/
 	}
 
 	ColliderRect::ColliderRect() : Collider(nullptr, nullptr) {
@@ -247,6 +252,8 @@ namespace Shard {
 	}
 
 	std::optional<glm::vec2> ColliderRect::checkCollision(Collider* other) {
+		return other->checkCollision(this);
+		/*
 		ColliderCircle circ;
 		ColliderRect rect;
 		if (typeid(circ) == typeid(other)) {
@@ -262,6 +269,7 @@ namespace Shard {
 			//oops, this is not good
 			return std::nullopt;
 		}
+		*/
 	}
 
 	std::optional<glm::vec2> ColliderRect::checkCollision(ColliderRect* other) {

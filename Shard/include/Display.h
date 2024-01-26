@@ -1,6 +1,5 @@
 #pragma once
 
-
 #ifdef _WINDLL
 #define SHARD_API __declspec(dllexport)
 #else
@@ -23,15 +22,12 @@ namespace Shard {
     class  Display { // this is inherited by DisplaySDL and DisplayText
 	public:
 
-        virtual SHARD_API void drawLine(int x, int y, int x2, int y2, int r, int g, int b, int a);
-
+        virtual SHARD_API void drawLine(int x, int y, int x2, int y2, int r, int g, int b, int a) {}
         virtual SHARD_API void drawLine(int x, int y, int x2, int y2, Color col)
         {
             drawLine(x, y, x2, y2, col.R, col.G, col.B, col.A);
         }
-
-
-        virtual SHARD_API void drawCircle(int x, int y, int rad, int r, int g, int b, int a);
+        virtual SHARD_API void drawCircle(int x, int y, int rad, int r, int g, int b, int a) {}
 
         virtual SHARD_API void drawCircle(int x, int y, int rad, Color col)
         {
@@ -57,13 +53,10 @@ namespace Shard {
             showText(text, x, y, size, col.R, col.G, col.B);
         }
 
-
-
-        virtual SHARD_API void setFullscreen();
-
-        virtual SHARD_API void addToDraw(GameObject gob);
-
-        virtual SHARD_API void removeToDraw(GameObject gob);
+        virtual SHARD_API void setFullscreen() {}
+        virtual SHARD_API void addToDraw(GameObject gob) {}
+        virtual SHARD_API void removeToDraw(GameObject gob) {}
+        
         SHARD_API int getHeight()
         {
             return _height;
@@ -80,11 +73,11 @@ namespace Shard {
             _width = w;
         }
 
-        virtual SHARD_API void initialize();
-        virtual SHARD_API void clearDisplay();
-        virtual SHARD_API void display();
+        virtual SHARD_API void initialize() {}
+        virtual SHARD_API void clearDisplay() {}
+        virtual SHARD_API void display() {}
 
-        virtual SHARD_API void showText(std::string text, double x, double y, int size, int r, int g, int b);
+        virtual SHARD_API void showText(std::string text, double x, double y, int size, int r, int g, int b) {}
         //idk whhere char[, ] would be used...
         //virtual void showText(char[, ] text, double x, double y, int size, int r, int g, int b);
     protected:
