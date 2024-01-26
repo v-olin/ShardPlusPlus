@@ -37,6 +37,9 @@ project "Shard"
 		"%{prj.name}/vendor/stb_image/include",
 		"%{prj.name}/vendor/tiny_obj/include",
 		"%{prj.name}/vendor/glew/include",
+		"%{prj.name}/vendor/stb_image/include",
+		"%{prj.name}/vendor/tiny_obj/include",
+		"%{prj.name}/vendor/glew/include",
 		"%{prj.name}/include"
 	}
 	
