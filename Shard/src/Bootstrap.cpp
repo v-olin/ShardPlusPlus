@@ -70,7 +70,7 @@ namespace Shard {
         return frames;
     }
 
-    std::string Bootstrap::getBaseDir() {
+    const std::string Bootstrap::getBaseDir() {
         return base_dir;
     }
 

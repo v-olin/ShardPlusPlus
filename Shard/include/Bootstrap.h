@@ -35,7 +35,7 @@ namespace Shard {
 		static SHARD_API int getCurrentFrame();
 		static SHARD_API void Main(std::string[]);
 
-		static std::string getBaseDir();
+		static const std::string getBaseDir();
 		
 		static SHARD_API Display* getDisplay();
 		static SHARD_API Sound* getSound();
