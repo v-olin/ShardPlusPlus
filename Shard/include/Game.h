@@ -9,12 +9,13 @@
 #include "AssetManager.h"
 
 namespace Shard {
+
 	class Game {
 	public:
 		AssetManager* assets;
 
 		SHARD_API AssetManager* getAssetManager() {
-			assets = &Bootstrap::getAssetManager();
+			assets = &AssetManager::getInstance();
 			return assets;
 		}
 		virtual SHARD_API void initalize() {}

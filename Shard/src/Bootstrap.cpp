@@ -74,24 +74,24 @@ namespace Shard {
         return base_dir;
     }
 
-    const Display& Bootstrap::getDisplay() {
-        return display_engine;
+    Display* Bootstrap::getDisplay() {
+        return &display_engine;
     }
 
-    const Sound& Bootstrap::getSound() {
-        return sound_engine;
+    Sound* Bootstrap::getSound() {
+        return &sound_engine;
     }
 
-    const InputManager& Bootstrap::getInput() {
-        return input;
+    InputManager* Bootstrap::getInput() {
+        return &input;
     }
 
-    const AssetManager& Bootstrap::getAssetManager() {
-        return asset;
+    AssetManager* Bootstrap::getAssetManager() {
+        return &asset;
     }
 
-    const Game& Bootstrap::getRunningGame() {
-        return running_game;
+    Game* Bootstrap::getRunningGame() {
+        return &running_game;
     }
 
     void Bootstrap::setup() {
@@ -104,10 +104,50 @@ namespace Shard {
 
         Logger::log("Current config path: " + config_path);
 
-        BaseFunctionality::getInstance().readConfigFile(config_path);
+        auto config = BaseFunctionality::getInstance().readConfigFile(config_path);
+        bool bailOut = false;
+
+        bool display_engine_initialized = false;
+        bool running_game_initialized = false;
+        bool sound_engine_initialized = false;
 
         // TODO: determine logic and structure of config file
         //       and implement here
+        for (const auto& [class_name, formal_className] : config) {
+            if (class_name.compare("display") == 0){
+                display_engine.initialize();
+                display_engine_initialized = true;
+            }
+            else if (class_name.compare("asset") == 0)
+                asset.registerAssets();
+            else if (class_name.compare("game") == 0){
+                target_frame_rate = running_game.getTargetFrameRate();
+                millis_per_frame = 1000 / target_frame_rate;
+                running_game_initialized = true;
+            }
+            else if (class_name.compare("input") == 0)
+                input.initialize();
+        }
+
+        if (!display_engine_initialized) {
+            Logger::log("display not initialized", LoggerLevel::LOG_LEVEL_ERROR);
+            bailOut = true;
+        }
+
+        if (!running_game_initialized) {
+            Logger::log("runningame not initialized", LoggerLevel::LOG_LEVEL_ERROR);
+            bailOut = true;
+        }
+
+        if (!sound_engine_initialized) {
+            Logger::log("sound not initialized", LoggerLevel::LOG_LEVEL_ERROR);
+            bailOut = true;
+        }
+
+        // Missing key component(s), GET TO THE CHOPPA!!!
+        if (bailOut)
+            std::exit(0);
+
     }
 
     void Bootstrap::setupEnvironmentVariables(std::string path) {
@@ -119,11 +159,6 @@ namespace Shard {
             en_vars[key] = value;
     }
 
-
-
-    int Bootstrap::getCurrentFrame(){
-        return frames;
-    }
 
 
     void Bootstrap::Main(std::string args[]){
@@ -148,10 +183,10 @@ namespace Shard {
 
         phys_debug = getEnvironmentVariable("phusics_debug") == "1";
 
-        while(1){
+        while (true) {
             frames += 1;
             time_in_milliseconds_start = getCurrentMillis();
-            getDisplay().clearDisplay();
+            getDisplay()->clearDisplay();
             running_game.update();
 
             if(running_game.isRunning()){
@@ -189,9 +224,5 @@ namespace Shard {
             }
         }
         
-
-
-
-
     }
 }

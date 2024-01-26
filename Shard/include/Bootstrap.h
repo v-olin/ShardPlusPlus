@@ -8,12 +8,12 @@
 #endif
 
 #include "Game.h"
+#include "AssetManager.h"
 #include "GameObject.h"
 #include "Display.h"
 #include "Sound.h"
 #include "InputManager.h"
 #include "PhysicsManager.h"
-#include "AssetManager.h"
 
 #include <string>
 #include <vector>
@@ -37,11 +37,11 @@ namespace Shard {
 
 		static std::string getBaseDir();
 		
-		static SHARD_API const Display& getDisplay();
-		static SHARD_API const Sound& getSound();
-		static SHARD_API const InputManager& getInput();
-		static SHARD_API const AssetManager& getAssetManager();
-		static SHARD_API const Game& getRunningGame();
+		static SHARD_API Display* getDisplay();
+		static SHARD_API Sound* getSound();
+		static SHARD_API InputManager* getInput();
+		static SHARD_API AssetManager* getAssetManager();
+		static SHARD_API Game* getRunningGame();
 
 		static SHARD_API void setup();
 		static SHARD_API void setupEnvironmentVariables(std::string path);
@@ -50,12 +50,12 @@ namespace Shard {
 	private:
 		static SHARD_API void setup(std::string config);
 
-		static const Game running_game;
-		static const Display display_engine;
-		static const Sound sound_engine;
-		static const InputManager input;
-		static const PhysicsManager phys;
-		static const AssetManager asset;
+		static Game running_game;
+		static Display display_engine;
+		static Sound sound_engine;
+		static InputManager input;
+		static PhysicsManager phys;
+		static AssetManager asset;
 
 		static int target_frame_rate;
         static int millis_per_frame;
