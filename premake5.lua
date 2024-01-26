@@ -37,9 +37,7 @@ project "Shard"
 		"%{prj.name}/vendor/stb_image/include",
 		"%{prj.name}/vendor/tiny_obj/include",
 		"%{prj.name}/vendor/glew/include",
-		"%{prj.name}/vendor/stb_image/include",
-		"%{prj.name}/vendor/tiny_obj/include",
-		"%{prj.name}/vendor/glew/include",
+		-- "%{prj.name}/vendor/GLFW/include/GLFW",
 		"%{prj.name}/include"
 	}
 	
@@ -48,14 +46,19 @@ project "Shard"
 		"%{prj.name}/vendor/SDL2-2.28.5/lib/x64",
 		"%{prj.name}/vendor/SDL2_ttf-2.22.0/lib/x64",
 		"%{prj.name}/vendor/SDL2_image-2.8.2/lib/x64",
+		-- "%{prj.name}/vendor/GLFW/lib-vc2022",
 		"%{prj.name}/vendor/glew/lib"
 	}
-
+	
 	links
 	{
 		"SDL2.lib",
 		"SDL2_ttf.lib",
-		"SDL2_image.lib"
+		"SDL2_image.lib",
+		"opengl32.lib",
+		"glew32.lib",
+		-- "glfw3.lib",
+		"glu32.lib"
 	}
 	
 	filter "system:windows"

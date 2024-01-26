@@ -1,14 +1,22 @@
 #include "Model.h"
 
+#include <GL/glew.h>
+#include <GL/GLU.h>
 #include <fstream>
 #include <algorithm>
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+#include <string>
 
-#include <GL/glew.h>
+// DON'T REMOVE, AND DON'T DEFINE ANYWHERE ELSE!!!!!!!!!!!!!
+#define STB_IMAGE_IMPLEMENTATION
+#define TINYOBJLOADER_IMPLEMENTATION
+
 #include <tiny_obj_loader.h>
 #include <stb_image.h>
+
+#include "GLUtility.h"
 
 namespace Shard {
 
@@ -38,6 +46,7 @@ namespace Shard {
 					nname += c;
 				}
 			}
+
 			return nname;
 		}
 
@@ -615,14 +624,13 @@ namespace Shard {
 				glActiveTexture(GL_TEXTURE0);
 
 				// TODO: copy over all utility functions from labhelper.h
-				setUniformSlow(current_program, "has_color_texture", has_color_texture);
-				setUniformSlow(current_program, "has_emission_texture", has_emission_texture);
-
-				setUniformSlow(current_program, "material_color", material.m_color);
-				setUniformSlow(current_program, "material_metalness", material.m_metalness);
-				setUniformSlow(current_program, "material_fresnel", material.m_fresnel);
-				setUniformSlow(current_program, "material_shininess", material.m_shininess);
-				setUniformSlow(current_program, "material_emission", material.m_emission);
+				GLUtility::setUniformSlow(current_program, "has_color_texture", has_color_texture);
+				GLUtility::setUniformSlow(current_program, "has_emission_texture", has_emission_texture);
+				GLUtility::setUniformSlow(current_program, "material_color", material.m_color);
+				GLUtility::setUniformSlow(current_program, "material_metalness", material.m_metalness);
+				GLUtility::setUniformSlow(current_program, "material_fresnel", material.m_fresnel);
+				GLUtility::setUniformSlow(current_program, "material_shininess", material.m_shininess);
+				GLUtility::setUniformSlow(current_program, "material_emission", material.m_emission);
 
 				// Actually unused in the labs
 				/*

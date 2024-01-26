@@ -10,20 +10,20 @@
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vendor\GLFW">
+      <UniqueIdentifier>{D27667C1-3E2C-E0B6-C720-DA8D33D5D6BA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\GLFW\include">
+      <UniqueIdentifier>{45501F1D-B1B1-FC2A-3A1F-43DDA67F33EA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\GLFW\include\GLFW">
+      <UniqueIdentifier>{A4FE9F69-9023-EFE9-B96E-D479A5F2ED07}</UniqueIdentifier>
+    </Filter>
     <Filter Include="vendor\SDL2-2.28.5">
       <UniqueIdentifier>{F1910D23-DD75-CE78-46D6-C8CB32D9B8FA}</UniqueIdentifier>
     </Filter>
     <Filter Include="vendor\SDL2-2.28.5\include">
       <UniqueIdentifier>{641AC2FF-502A-6ED0-B9E3-D2EEA5125D69}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="vendor\glew">
-      <UniqueIdentifier>{318F79C1-9D44-F2B6-2639-EC8D92EDE8BA}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="vendor\glew\include">
-      <UniqueIdentifier>{A457F7F3-10B9-D401-9926-1BB405870BC1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="vendor\glew\include\GL">
-      <UniqueIdentifier>{86B6A6B4-72B0-CF06-5B1D-661747B63573}</UniqueIdentifier>
     </Filter>
     <Filter Include="vendor\SDL2_image-2.8.2">
       <UniqueIdentifier>{7EE913F4-EA20-5C8B-F32A-C0AE5FE18284}</UniqueIdentifier>
@@ -36,6 +36,15 @@
     </Filter>
     <Filter Include="vendor\SDL2_ttf-2.22.0\include">
       <UniqueIdentifier>{8642E51E-7268-AF85-5BAE-34514773D451}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\glew">
+      <UniqueIdentifier>{318F79C1-9D44-F2B6-2639-EC8D92EDE8BA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\glew\include">
+      <UniqueIdentifier>{A457F7F3-10B9-D401-9926-1BB405870BC1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\glew\include\GL">
+      <UniqueIdentifier>{86B6A6B4-72B0-CF06-5B1D-661747B63573}</UniqueIdentifier>
     </Filter>
     <Filter Include="vendor\glm">
       <UniqueIdentifier>{829FC5A8-6E57-07F6-D75E-E051C335A2E6}</UniqueIdentifier>
@@ -75,6 +84,24 @@
     <ClInclude Include="include\BaseFunctionality.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\Bootstrap.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Collider.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ColliderCircle.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ColliderRect.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CollidingObject.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CollisionHandler.h">
+      <Filter>include</Filter>
+    </ClInclude>
     <ClInclude Include="include\Display.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -84,13 +111,37 @@
     <ClInclude Include="include\DisplayText.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\GLUtility.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameObject.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameObjectManager.h">
+      <Filter>include</Filter>
+    </ClInclude>
     <ClInclude Include="include\InputEvent.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\InputManager.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\Logger.h">
+      <Filter>include</Filter>
+    </ClInclude>
     <ClInclude Include="include\Model.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PhysicsBody.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PhysicsManager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SAPEntry.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\Sound.h">
@@ -99,11 +150,23 @@
     <ClInclude Include="include\StringUtility.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\Transform.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Transform3D.h">
+      <Filter>include</Filter>
+    </ClInclude>
     <ClInclude Include="include\framework.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\pch.h">
       <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\GLFW\include\GLFW\glfw3.h">
+      <Filter>vendor\GLFW\include\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\GLFW\include\GLFW\glfw3native.h">
+      <Filter>vendor\GLFW\include\GLFW</Filter>
     </ClInclude>
     <ClInclude Include="vendor\SDL2-2.28.5\include\SDL.h">
       <Filter>vendor\SDL2-2.28.5\include</Filter>
@@ -1137,26 +1200,6 @@
     <ClInclude Include="vendor\glm\vector_relational.hpp">
       <Filter>vendor\glm</Filter>
     </ClInclude>
-    <ClInclude Include="include\Transform.h" />
-    <ClInclude Include="include\Transform3D.h" />
-    <ClInclude Include="include\CollidingObject.h" />
-    <ClInclude Include="include\SAPEntry.h" />
-    <ClInclude Include="include\PhysicsManager.h" />
-    <ClInclude Include="include\InputEvent.h" />
-    <ClInclude Include="include\InputManager.h" />
-    <ClInclude Include="include\VectorUtility.h" />
-    <ClInclude Include="include\PhysicsBody.h" />
-    <ClInclude Include="include\GameObject.h" />
-    <ClInclude Include="include\CollisionHandler.h" />
-    <ClInclude Include="include\Collider.h" />
-    <ClInclude Include="include\ColliderCircle.h" />
-    <ClInclude Include="include\ColliderRect.h" />
-    <ClInclude Include="include\InputEvent.h" />
-    <ClInclude Include="include\InputManager.h" />
-    <ClInclude Include="include\Logger.h" />
-    <ClInclude Include="include\Bootstrap.h" />
-    <ClInclude Include="include\Game.h" />
-    <ClInclude Include="include\GameObjectManager.h" />
     <ClInclude Include="vendor\stb_image\include\stb_image.h">
       <Filter>vendor\stb_image\include</Filter>
     </ClInclude>
@@ -1171,19 +1214,49 @@
     <ClCompile Include="src\BaseFunctionality.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Bootstrap.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Collider.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ColliderCircle.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ColliderRect.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="src\DisplaySDL.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\DisplayText.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameObject.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObjectManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="src\InputManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Logger.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Model.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\PhysicsBody.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PhysicsManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="src\Sound.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Transform.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\dllmain.cpp">
@@ -1198,25 +1271,5 @@
     <ClCompile Include="vendor\glm\detail\glm.cpp">
       <Filter>vendor\glm\detail</Filter>
     </ClCompile>
-    <ClCompile Include="src\Sound.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AssetManager.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\BaseFunctionality.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PhysicsBody.cpp" />
-    <ClCompile Include="src\ColliderRect.cpp" />
-    <ClCompile Include="src\ColliderCircle.cpp" />
-    <ClCompile Include="src\GameObject.cpp" />
-    <ClCompile Include="src\PhysicsManager.cpp" />
-    <ClCompile Include="src\Collider.cpp" />
-    <ClCompile Include="src\InputManager.cpp" />
-    <ClCompile Include="src\Transform.cpp" />
-    <ClCompile Include="src\Logger.cpp" />
-    <ClCompile Include="src\Bootstrap.cpp" />
-    <ClCompile Include="src\GameObjectManager.cpp" />
   </ItemGroup>
 </Project>

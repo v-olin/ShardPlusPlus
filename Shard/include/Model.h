@@ -14,7 +14,7 @@
 
 namespace Shard {
 
-	struct Texture {
+	struct SHARD_API Texture {
 		bool valid = false;
 		uint32_t gl_id = 0;
 		uint32_t gl_id_internal = 0;
@@ -30,7 +30,7 @@ namespace Shard {
 
 	};
 
-	struct Material
+	struct SHARD_API Material
 	{
 		std::string m_name;
 		glm::vec3 m_color;
@@ -47,7 +47,7 @@ namespace Shard {
 		Texture m_emission_texture;
 	};
 
-	struct Mesh
+	struct SHARD_API Mesh
 	{
 		std::string m_name;
 		uint32_t m_material_idx;
@@ -56,7 +56,7 @@ namespace Shard {
 		uint32_t m_number_of_vertices;
 	};
 
-	class Model
+	class SHARD_API Model
 	{
 	public:
 		~Model();
@@ -80,11 +80,9 @@ namespace Shard {
 		uint32_t m_vaob;
 	};
 
-	Model* loadModelFromOBJ(std::string filename);
-	void saveModelToOBJ(Model* model, std::string filename);
-	void saveModelMaterialsToMTL(Model* model, std::string filename);
-	void freeModel(Model* model);
-	void render(const Model* model, const bool submitMaterials = true);
-}
-
+	SHARD_API Model* loadModelFromOBJ(std::string filename);
+	SHARD_API void saveModelToOBJ(Model* model, std::string filename);
+	SHARD_API void saveModelMaterialsToMTL(Model* model, std::string filename);
+	SHARD_API void freeModel(Model* model);
+	SHARD_API void render(const Model* model, const bool submitMaterials = true);
 }
