@@ -1,5 +1,4 @@
-﻿// DisplaySDL.h - Description
-#pragma once
+﻿#pragma once
 
 #include "DisplayText.h"
 
