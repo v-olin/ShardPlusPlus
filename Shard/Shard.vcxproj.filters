@@ -1206,6 +1206,10 @@
     <ClInclude Include="vendor\tiny_obj\include\tiny_obj_loader.h">
       <Filter>vendor\tiny_obj\include</Filter>
     </ClInclude>
+    <ClInclude Include="include\TextureManager.h" />
+    <ClInclude Include="include\Camera.h" />
+    <ClInclude Include="include\SceneManager.h" />
+    <ClInclude Include="include\ShaderManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AssetManager.cpp">
@@ -1271,5 +1275,8 @@
     <ClCompile Include="vendor\glm\detail\glm.cpp">
       <Filter>vendor\glm\detail</Filter>
     </ClCompile>
+    <ClCompile Include="src\TextureManager.cpp" />
+    <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\ShaderManager.cpp" />
   </ItemGroup>
 </Project>

@@ -1,5 +1,7 @@
 #include "Sound.h"
+
 #include "AssetManager.h"
+#include "Logger.h"
 
 #include <SDL_audio.h>
 
@@ -16,9 +18,12 @@ namespace Shard {
         const char* audio_device = SDL_GetAudioDeviceName(0, 0);
         SDL_AudioDeviceID dev_id = SDL_OpenAudioDevice(audio_device, 0, &have, &want, 0);
 
-        // TODO: log error if success == 0
         int success = SDL_QueueAudio(dev_id, wav_buffer, length);
-
-        SDL_PauseAudioDevice(dev_id, 0);
+        if (success != 0) {
+            std::string msg = "Couldn't queue audio: " + file_name;
+            Logger::log(msg.c_str(), LOG_LEVEL_ERROR);
+        }
+        else
+            SDL_PauseAudioDevice(dev_id, 0);
 	}
 }

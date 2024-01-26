@@ -14,9 +14,10 @@ using std::cout, std::endl;
 namespace Shard {
 	enum SHARD_API LoggerLevel {
 		LOG_LEVEL_NONE = 0,
-		LOG_LEVEL_ERROR = 1,
-		LOG_LEVEL_WARNING = 2,
-		LOG_LEVEL_ALL = 3
+		LOG_LEVEL_FATAL = 1,
+		LOG_LEVEL_ERROR = 2,
+		LOG_LEVEL_WARNING = 3,
+		LOG_LEVEL_ALL = 4
 	};
 
 	class Logger {
