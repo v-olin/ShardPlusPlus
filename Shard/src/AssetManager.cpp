@@ -1,4 +1,5 @@
 #include "AssetManager.h"
+#include "Bootstrap.h"
 
 #include <filesystem>
 
@@ -7,7 +8,12 @@ namespace fs = std::filesystem;
 namespace Shard {
 	AssetManager::AssetManager() {
 		// get from env var
-		asset_path_ = "some/path";
+		//asset_path_ = "some/path";
+		//asset_path_ = Bootstrap::getEnvironmentVariable("assetpath");
+	}
+
+	void AssetManager::loadAssetPath() {
+		asset_path_ = Bootstrap::getEnvironmentVariable("assetpath");
 	}
 
 	void AssetManager::registerAssets() {
@@ -35,12 +41,13 @@ namespace Shard {
 		return path.substr(path.find_last_of("/\\") + 1);
 	}
 
-	std::string AssetManager::getAssetPath(std::string asset) {
+	const char* AssetManager::getAssetPath(const char* asset) {
 		if (assets_.find(asset) == assets_.end())
 			return "";
 
 		// debug log asset not found
+		auto tmp = assets_[asset].c_str();
 
-		return assets_[asset];
+		return tmp;	
 	}
 }

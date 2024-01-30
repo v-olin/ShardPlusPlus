@@ -1,6 +1,9 @@
 #include "DisplayText.h"
 #include "Logger.h"
 
+
+#include <filesystem>
+
 namespace Shard {
 
 	void DisplayText::clearDisplay() {
@@ -10,21 +13,24 @@ namespace Shard {
 		SDL_RenderClear(_rend);
 	}
 
-	TTF_Font* DisplayText::loadFont(std::string path, int size) {
-		std::string key = path + "," + std::to_string(size);
-		if (fontLibrary.find(key) != fontLibrary.end())
-			return fontLibrary.at(key);
-		
-		auto font = TTF_OpenFont(path.data(), size);
+	TTF_Font* DisplayText::loadFont(const std::string& font_name, int size) {
 
+		if (fontLibrary.find(font_name) != fontLibrary.end())
+			return fontLibrary.at(font_name);
+
+		std::filesystem::path path_to_font = std::filesystem::current_path();
+		path_to_font.append("assets");
+		path_to_font.append("fonts");
+		path_to_font.append(font_name);
+
+		auto font = TTF_OpenFont(path_to_font.string().c_str(), size);
 		if (font == NULL) {
-			Logger::log("DisplayText.cpp loadFont: Could not open font " + path, LOG_LEVEL_ALL);
+			Logger::log("DisplayText.cpp loadFont: Could not open font " + font_name, LOG_LEVEL_ALL);
 			return nullptr;
 		}
 
-		fontLibrary.at(key) = font;
-
-		return fontLibrary.at(key);
+		fontLibrary[font_name] = font;
+		return fontLibrary.at(font_name);
 	}
 	
 	void DisplayText::display() {
@@ -36,6 +42,7 @@ namespace Shard {
 		SDL_SetWindowFullscreen(_window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 	}
 	void DisplayText::initialize() {
+		Logger::log("Inintialized Display");
 		setSize(1280, 864);
 		SDL_Init(SDL_INIT_EVERYTHING);
 		TTF_Init();
@@ -48,23 +55,27 @@ namespace Shard {
 		_rend = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED);
 		SDL_SetRenderDrawBlendMode(_rend, SDL_BLENDMODE_BLEND);
 		SDL_SetRenderDrawColor(_rend, 0, 0, 0, 225);
+		Logger::log("Inintialized Display");
 	}
 
-	void DisplayText::showText(std::string text, double x, double y, int size, int r, int g, int b) {
+	void DisplayText::showText(const char* text, double x, double y, int size, int r, int g, int b) {
 		int nx, ny, w = 0, h = 0;
 		SDL_Color col{};
 		col.r = (Uint8)r;
 		col.g = (Uint8)g;
 		col.b = (Uint8)b;
 		col.a = (Uint8)255;
-		TTF_Font* font = loadFont("Fonts/calibri.ttf", size);
+		TTF_Font* font = loadFont("calibri.ttf", size);
 
-		
-		TextDetails td = TextDetails(text, x, y, col, 12);
+		auto td = TextDetails(text, x, y, col, 12);
 		td.font = font;
 
 		SDL_Surface* surf = TTF_RenderText_Blended(td.font, td.text.data(), td.col);
 		SDL_Texture* lblText = SDL_CreateTextureFromSurface(_rend, surf);
+		if (!lblText) {
+			Logger::log("[error in DisplayText::showText] texture fucky wucky");
+			// Handle texture creation error
+		}
 		SDL_FreeSurface(surf);
 
 		SDL_Rect sRect{};
@@ -85,7 +96,7 @@ namespace Shard {
 	}
 
 	void DisplayText::draw() {
-		for (const TextDetails td : myTexts) {
+		for (const TextDetails& td : myTexts) {
 			SDL_Rect sRect{};
 
 			sRect.x = (int)td.x;
@@ -93,7 +104,7 @@ namespace Shard {
 			sRect.w = 0;
 			sRect.h = 0;
 
-			TTF_SizeText(td.font, td.text.data(), &sRect.w, &sRect.h);
+			TTF_SizeText(td.font, td.text.c_str(), &sRect.w, &sRect.h);
 			SDL_RenderCopy(_rend, td.lblText, NULL, &sRect);
 		}
 		SDL_RenderPresent(_rend);

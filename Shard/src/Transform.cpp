@@ -6,6 +6,8 @@
 #define M_PI 3.14159265358979323846264338327950288
 
 namespace Shard {
+		
+
 	Transform::Transform() {
 		scale_x = 1.f;
 		scale_y = 1.f;

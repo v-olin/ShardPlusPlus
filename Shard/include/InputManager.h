@@ -1,12 +1,7 @@
 #pragma once
 
-
-#ifdef _WINDLL
-#define SHARD_API __declspec(dllexport)
-#else
-#define SHARD_API __declspec(dllimport)
-#endif
 #include "InputEvent.h"
+#include "Game.h"
 #include <unordered_set>
 
 namespace Shard {
@@ -18,22 +13,24 @@ namespace Shard {
 			KeyDown = 4,
 			KeyUp = 5
 		};
-	typedef void (*InputHandler)(InputEvent, EventType);
+	//typedef void (*InputHandler)(InputEvent, EventType);
+
+	class InputListener {
+	public:
+		virtual  ~InputListener() {}
+		virtual  void handleEvent(InputEvent ie, EventType et) = 0;
+	};
+
 	class InputManager {
 	public:
-		
-
-
-		SHARD_API void initialize();
-		SHARD_API void addListeners(InputHandler);
-		SHARD_API void removeListeners(InputHandler);
-		SHARD_API void informListeners(InputEvent, EventType);
-		SHARD_API void getInput();
+		 void initialize();
+		 void addListeners(InputListener*);
+		 void removeListeners(InputListener*);
+		 void informListeners(InputEvent, EventType);
+		 void getInput();
 	private:
-		std::unordered_set<InputHandler> myListeners;
+		std::unordered_set<InputListener*> myListeners;
 		double tick;
-
 		double time_interval;
-
 	};
 }

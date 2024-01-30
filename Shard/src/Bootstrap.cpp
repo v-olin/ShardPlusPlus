@@ -2,10 +2,13 @@
 #include "Logger.h"
 #include "BaseFunctionality.h"
 #include "GameObjectManager.h"
+#include "DisplaySDL.h"
+#include "DisplayText.h"
 
 #include <chrono>
 #include <filesystem>
 #include <unordered_map>
+#include <thread>
 
 namespace Shard {
 
@@ -42,7 +45,8 @@ namespace Shard {
     float Bootstrap::getSecondFPS() {
         long now = getCurrentMillis();
 
-        Logger::log("Current frametime: " + frame_times.size(), LOG_LEVEL_ALL);
+        Logger::log(("Current frametime: " + std::to_string(frame_times.size())).c_str());
+
 
         if (frame_times.empty()) {
             return -1;
@@ -51,7 +55,7 @@ namespace Shard {
         auto riter = frame_times.rbegin();
         size_t frame_count = 0;
 
-        while (*(++riter) > (now - 1000) && riter != frame_times.rend()) {
+        while (riter != frame_times.rend() && *(riter++) > (now - 1000) ) {
             frame_count++;
         }
 
@@ -75,7 +79,7 @@ namespace Shard {
     }
 
     Display* Bootstrap::getDisplay() {
-        return &display_engine;
+        return display_engine;
     }
 
     Sound* Bootstrap::getSound() {
@@ -91,7 +95,14 @@ namespace Shard {
     }
 
     Game* Bootstrap::getRunningGame() {
-        return &running_game;
+        return running_game;
+    }
+
+    void Bootstrap::setRunningGame(Game* game) {
+       running_game = game;
+       target_frame_rate = running_game->getTargetFrameRate();
+       millis_per_frame = 1000 / target_frame_rate;
+       running_game_set = true;
     }
 
     void Bootstrap::setup() {
@@ -102,31 +113,39 @@ namespace Shard {
         setupEnvironmentVariables(base_dir + "\\" + "envar.cfg");
         std::string config_path = base_dir + "\\" + DEFAULT_CONFIG;
 
-        Logger::log("Current config path: " + config_path);
+        const char* msg = ("Current config path: " + config_path).c_str();
+        Logger::log(msg);
 
         auto config = BaseFunctionality::getInstance().readConfigFile(config_path);
         bool bailOut = false;
 
+        asset.loadAssetPath();
+        //asset{ AssetManager::getInstance() };
+        //phys{ PhysicsManager::getInstance(); };
+
         bool display_engine_initialized = false;
-        bool running_game_initialized = false;
-        bool sound_engine_initialized = false;
+        //bool running_game_initialized = false;
 
         // TODO: determine logic and structure of config file
         //       and implement here
         for (const auto& [class_name, formal_className] : config) {
-            if (class_name.compare("display") == 0){
-                display_engine.initialize();
+            if (class_name.compare("display") == 0) {
+                if (formal_className.compare("DisplaySDL") == 0) 
+                    display_engine = new DisplaySDL();
+                display_engine->initialize();
                 display_engine_initialized = true;
             }
             else if (class_name.compare("asset") == 0)
                 asset.registerAssets();
-            else if (class_name.compare("game") == 0){
-                target_frame_rate = running_game.getTargetFrameRate();
-                millis_per_frame = 1000 / target_frame_rate;
-                running_game_initialized = true;
-            }
+            /* else if (class_name.compare("game") == 0){
+                 target_frame_rate = running_game.getTargetFrameRate();
+                 millis_per_frame = 1000 / target_frame_rate;
+                 running_game_initialized = true;
+             }*/
             else if (class_name.compare("input") == 0)
                 input.initialize();
+            //else if (class_name.compare("sound") == 0)
+            //    sound_engine = new Sound();
         }
 
         if (!display_engine_initialized) {
@@ -134,13 +153,8 @@ namespace Shard {
             bailOut = true;
         }
 
-        if (!running_game_initialized) {
+        if (!running_game_set) {
             Logger::log("runningame not initialized", LoggerLevel::LOG_LEVEL_ERROR);
-            bailOut = true;
-        }
-
-        if (!sound_engine_initialized) {
-            Logger::log("sound not initialized", LoggerLevel::LOG_LEVEL_ERROR);
             bailOut = true;
         }
 
@@ -151,7 +165,7 @@ namespace Shard {
     }
 
     void Bootstrap::setupEnvironmentVariables(std::string path) {
-        Logger::log("Path is" + path);
+        Logger::log(("Path is" + path).c_str());
 
         std::unordered_map<std::string, std::string> config = BaseFunctionality::getInstance().readConfigFile(path);
 
@@ -174,7 +188,7 @@ namespace Shard {
         start_time = getCurrentMillis();
         frames = 0;
 
-        running_game.initalize();
+        running_game->initalize();
 
         time_in_milliseconds_start = start_time;
         last_tick = start_time;
@@ -187,9 +201,9 @@ namespace Shard {
             frames += 1;
             time_in_milliseconds_start = getCurrentMillis();
             getDisplay()->clearDisplay();
-            running_game.update();
+            running_game->update();
 
-            if(running_game.isRunning()){
+            if(running_game->isRunning()){
 
 
 				// Get input, which works at 50 FPS to make sure it doesn't interfere with the 
@@ -198,13 +212,13 @@ namespace Shard {
 
 				// Update runs as fast as the system lets it.  Any kind of movement or counter 
 				// increment should be based then on the deltaTime variable.
-				GameObjectManager::getInstance().update();
+				GameObjectManager::getInstance()->update();
 
 				// This will update every 20 milliseconds or thereabouts.  Our physics system aims 
 				// at a 50 FPS cycle.
 				if (phys.willTick())
 				{
-					GameObjectManager::getInstance().prePhysicsUpdate();
+					GameObjectManager::getInstance()->prePhysicsUpdate();
 				}
 
 				// Update the physics.  If it's too soon, it'll return false.   Otherwise 
@@ -215,12 +229,37 @@ namespace Shard {
 				{
 					// If it did tick, give every object an update
 					// that is pinned to the timing of the physics system.
-					GameObjectManager::getInstance().physicsUpdate();
+					GameObjectManager::getInstance()->physicsUpdate();
 				}
 
 				if (phys_debug) {
 					phys.drawDebugColliders();
 				}
+
+                getDisplay()->display();
+
+
+                time_in_milliseconds_end = getCurrentMillis();
+
+                frame_times.push_back(time_in_milliseconds_end);
+                interval = time_in_milliseconds_end - time_in_milliseconds_start;
+                time_elapsed += delta_time;
+                sleep = (int)(millis_per_frame - interval);
+
+                if (sleep >= 0) {
+                    // Frame rate regulator.  Bear in mind since this is millisecond precision, and we 
+                  // only get whole numbers from our interval, it will only rarely match a target 
+                  // FPS.  Milliseconds just aren't precise enough.
+                  //
+                  //  (I'm hinting if this bothers you, you might have found an engine modification to make...)
+                    //Thread.Sleep(sleep);
+                    SDL_Delay(sleep); 
+                    //std::this_thread::sleep_for(std::chrono::milliseconds(sleep));
+                }
+                time_in_milliseconds_end = getCurrentMillis();
+                delta_time = (time_in_milliseconds_end - time_in_milliseconds_start) / 1000.0f;
+                last_tick = time_in_milliseconds_start;
+                
             }
         }
         

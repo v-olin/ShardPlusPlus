@@ -1,18 +1,24 @@
 #include "GameObject.h"
 #include "Transform3D.h"
 #include "PhysicsBody.h"
-
+#include "GameObjectManager.h"
+#include "Logger.h"
 #include <algorithm>
 
 namespace Shard {
-	GameObject::GameObject() {
-		visible_ = false;
-
-		to_be_destroyed_ = false;
-		this->initialize();
+	GameObject::GameObject()
+		: tags({})
+		, transient_(false)
+		, to_be_destroyed_(false)
+		, visible_(false)
+		, transform_()
+		, body_(nullptr) {
+		GameObjectManager::getInstance()->addGameObject(this);
+		//this->initialize();
+		auto t = tags.size();
 	}
 
-	void GameObject::addTag(std::string tag) {
+	void GameObject::addTag(const char* tag) {
 		tags.push_back(tag);
 	}
 

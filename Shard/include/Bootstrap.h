@@ -1,12 +1,6 @@
 // Bootstrap.h - Description
 #pragma once
 
-#ifdef _WINDLL
-#define SHARD_API __declspec(dllexport)
-#else
-#define SHARD_API __declspec(dllimport)
-#endif
-
 #include "Game.h"
 #include "AssetManager.h"
 #include "GameObject.h"
@@ -24,32 +18,34 @@ namespace Shard {
 	class Bootstrap {
 
 	public:
-		inline static SHARD_API const std::string DEFAULT_CONFIG = "config.cfg";
-		static SHARD_API bool checkEnvironmentVariable(std::string id);
-		static SHARD_API std::string getEnvironmentVariable(std::string id);
-		static SHARD_API double timeElapsed();
-		static SHARD_API double getDeltaTime();
-		static SHARD_API long getCurrentMillis();
-		static SHARD_API float getFPS();
-		static SHARD_API float getSecondFPS();
-		static SHARD_API int getCurrentFrame();
-		static SHARD_API void Main(std::string[]);
+		inline static  const std::string DEFAULT_CONFIG = "config.cfg";
+		static  bool checkEnvironmentVariable(std::string id);
+		static  std::string getEnvironmentVariable(std::string id);
+		static  double timeElapsed();
+		static  double getDeltaTime();
+		static  long getCurrentMillis();
+		static  float getFPS();
+		static  float getSecondFPS();
+		static  int getCurrentFrame();
+		static  void Main(std::string[]);
 
 		static const std::string getBaseDir();
 		
-		static SHARD_API Display* getDisplay();
-		static SHARD_API Sound* getSound();
-		static SHARD_API InputManager* getInput();
-		static SHARD_API AssetManager* getAssetManager();
-		static SHARD_API Game* getRunningGame();
+		static  Display* getDisplay();
+		static  Sound* getSound();
+		static  InputManager* getInput();
+		static  AssetManager* getAssetManager();
+		static  Game* getRunningGame();
+		static  void setRunningGame(Game* game);
 
-		static SHARD_API void setup();
-		static SHARD_API void setupEnvironmentVariables(std::string path);
+		static  void setup();
+		static  void setupEnvironmentVariables(std::string path);
 
 
 	private:
-		inline static Game running_game;
-		inline static Display display_engine;
+		inline static bool running_game_set;
+		inline static Game* running_game;
+		inline static Display* display_engine;
 		inline static Sound sound_engine;
 		inline static InputManager input;
 		inline static PhysicsManager& phys{ PhysicsManager::getInstance() };

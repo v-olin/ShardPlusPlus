@@ -1,5 +1,5 @@
 #include <SDL_events.h>
-//#include "bootstrap.h"
+#include "Bootstrap.h"
 #include "InputManager.h"
 
 //This replaces all thigs regardnig input in the C# code.
@@ -7,11 +7,11 @@
 
 namespace Shard {
 
-	void InputManager::addListeners(InputHandler callback) {
-		myListeners.insert(callback);
+	void InputManager::addListeners(InputListener* listener) {
+		myListeners.insert(listener);
 	}
-	void InputManager::removeListeners(InputHandler callback) {
-		myListeners.erase(callback);
+	void InputManager::removeListeners(InputListener* listener) {
+		myListeners.erase(listener);
 	}
 
 	void InputManager::getInput() {
@@ -20,7 +20,7 @@ namespace Shard {
 		InputEvent ie;
 
 		//TODO add back when bootstrap is implemented
-		//tick += Bootstrap.getDeltaTime();
+		tick += Bootstrap::getDeltaTime();
 		if (tick < time_interval)
 			return;
 
@@ -32,7 +32,7 @@ namespace Shard {
 				ie.y = mot.y;
 				informListeners(ie, MouseMotion);
 			}
-			if (ev.type == SDL_MOUSEBUTTONDOWN || ev.type == SDL_MOUSEBUTTONDOWN) {
+			if (ev.type == SDL_MOUSEBUTTONUP || ev.type == SDL_MOUSEBUTTONDOWN) {
 				SDL_MouseButtonEvent butt = ev.button;
 				ie.button = (int)butt.button;
 				ie.x = butt.x;
@@ -56,12 +56,15 @@ namespace Shard {
 			tick -= time_interval;
 		}
 	}
+
 	void InputManager::informListeners(InputEvent ie, EventType et) {
-		for (const InputHandler callback : myListeners)
-			callback(ie, et);
+		for (InputListener* listener : myListeners)
+			listener->handleEvent(ie, et);
 	}
+
 	void InputManager::initialize() {
 		tick = 0;
 		time_interval = 1.0 / 60.0;
 	}
+
 }

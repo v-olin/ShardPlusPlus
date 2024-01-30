@@ -3,9 +3,7 @@
 namespace Shard {
 
 	void Logger::setLoggerLevel(LoggerLevel new_level) {
-		Logger& logger = getInstance();
-
-		logger.logg_level = new_level;
+		getInstance().logg_level = new_level;
 	}
 
 	void Logger::log(std::string msg, LoggerLevel level) {
@@ -13,8 +11,7 @@ namespace Shard {
 			std::cout << msg << std::endl;
 		}
 	}
-
-	void Logger::log(std::string msg) {
+	void Logger::log(const char* msg) {
 		log(msg, getInstance().logg_level);
 	}
 }
