@@ -1,30 +1,33 @@
 #pragma once
 
-#ifdef _WINDLL
-#define SHARD_API __declspec(dllexport)
-#else
-#define SHARD_API __declspec(dllimport)
-#endif
-
 #include <string>
 #include <vector>
 
 #include "Transform3D.h"
 
 namespace Shard {
-    class SHARD_API PhysicsBody;
+    class  PhysicsBody;
 
-    class SHARD_API GameObject {
+    class  GameObject {
     public:
         Transform3D transform_;
         bool transient_, to_be_destroyed_, visible_;
         PhysicsBody* body_ = nullptr;
         // change this if erases are frequent
-        std::vector<std::string> tags {};
+        std::vector<const char*> tags {};
 
         GameObject();
+        GameObject(const GameObject* src){
+            transform_ = Transform3D(src->transform_);
+            //body_ = PhysicsBody(src->body_);
+            body_ = src->body_;
+            tags = src->tags;
+        }
 
-        void addTag(std::string tag);
+
+        ~GameObject() {}
+
+        void addTag(const char* tag);
         void removeTag(std::string tag);
         bool hasTag(std::string tag);
         std::string getTags();
@@ -39,8 +42,5 @@ namespace Shard {
         virtual void prePhysicsUpdate() {}
         // needs physicsManager
         virtual void killMe() {}
-
-
-
     };
 }

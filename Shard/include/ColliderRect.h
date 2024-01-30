@@ -2,9 +2,9 @@
 #pragma once
 
 #ifdef _WINDLL
-#define SHARD_API __declspec(dllexport)
+#define  __declspec(dllexport)
 #else
-#define SHARD_API __declspec(dllimport)
+#define  __declspec(dllimport)
 #endif
 
 // #include "Collider.h"
@@ -12,9 +12,9 @@
 #include "CollisionHandler.h"
 
 namespace Shard {
-    class SHARD_API Collider;
+    class  Collider;
 
-    class SHARD_API ColliderRect : public Collider {
+    class  ColliderRect : public Collider {
     public:
         float width, height, base_width, base_height;
         float left, right, top, bottom;

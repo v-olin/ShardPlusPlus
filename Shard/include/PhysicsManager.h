@@ -1,11 +1,5 @@
 #pragma once
 
-#ifdef _WINDLL
-#define SHARD_API __declspec(dllexport)
-#else
-#define SHARD_API __declspec(dllimport)
-#endif
-
 #include "CollidingObject.h"
 #include "SAPEntry.h"
 
@@ -15,7 +9,7 @@
 #include <optional>
 
 namespace Shard {
-	class SHARD_API PhysicsManager {
+	class  PhysicsManager {
 	public:
 		long time_interval;
 		float gravity_modifier;
@@ -25,8 +19,8 @@ namespace Shard {
 		PhysicsManager(PhysicsManager const&) = delete;
 		PhysicsManager& operator=(PhysicsManager const&) = delete;
 
-		void addPhysicsObject(PhysicsBody body);
-		void removePhysicsObject(PhysicsBody body);
+		void addPhysicsObject(PhysicsBody* body);
+		void removePhysicsObject(PhysicsBody* body);
 		void clearList();
 		void addToList(SAPEntry node);
 		// void outputList(SAPEntry node); only for debug, skipping
@@ -49,7 +43,7 @@ namespace Shard {
 		std::list<SAPEntry> sap_x;
 		glm::vec2 gravity_dir;
 
-		std::vector<PhysicsBody> all_physics_objects;
+		std::vector<PhysicsBody*> all_physics_objects;
 
 		PhysicsManager();
 

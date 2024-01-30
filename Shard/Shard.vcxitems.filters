@@ -1,0 +1,1260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{89AF369E-F58E-B539-FEA6-40106A051C9B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor">
+      <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\GLFW">
+      <UniqueIdentifier>{D27667C1-3E2C-E0B6-C720-DA8D33D5D6BA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\GLFW\include">
+      <UniqueIdentifier>{45501F1D-B1B1-FC2A-3A1F-43DDA67F33EA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\GLFW\include\GLFW">
+      <UniqueIdentifier>{A4FE9F69-9023-EFE9-B96E-D479A5F2ED07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\SDL2-2.28.5">
+      <UniqueIdentifier>{F1910D23-DD75-CE78-46D6-C8CB32D9B8FA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\SDL2-2.28.5\include">
+      <UniqueIdentifier>{641AC2FF-502A-6ED0-B9E3-D2EEA5125D69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\SDL2_image-2.8.2">
+      <UniqueIdentifier>{7EE913F4-EA20-5C8B-F32A-C0AE5FE18284}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\SDL2_image-2.8.2\include">
+      <UniqueIdentifier>{F1AEB9E9-5D92-C829-6695-F665D2F78E7A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\SDL2_ttf-2.22.0">
+      <UniqueIdentifier>{13B8E3DA-FFB1-0C2D-E81E-A33DD4B77299}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\SDL2_ttf-2.22.0\include">
+      <UniqueIdentifier>{8642E51E-7268-AF85-5BAE-34514773D451}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\glew">
+      <UniqueIdentifier>{318F79C1-9D44-F2B6-2639-EC8D92EDE8BA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\glew\include">
+      <UniqueIdentifier>{A457F7F3-10B9-D401-9926-1BB405870BC1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\glew\include\GL">
+      <UniqueIdentifier>{86B6A6B4-72B0-CF06-5B1D-661747B63573}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\glm">
+      <UniqueIdentifier>{829FC5A8-6E57-07F6-D75E-E051C335A2E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\glm\detail">
+      <UniqueIdentifier>{04D16468-70E7-62FE-B95E-EE1F25B43386}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\glm\ext">
+      <UniqueIdentifier>{E213C9C9-CEE1-BCCF-B775-2DF6A3E29834}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\glm\gtc">
+      <UniqueIdentifier>{CF1BC9C9-BBE9-BCCF-A47D-2DF690EA9834}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\glm\gtx">
+      <UniqueIdentifier>{E41BC9C9-D0E9-BCCF-B97D-2DF6A5EA9834}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\glm\simd">
+      <UniqueIdentifier>{1EFDF202-8A88-60C7-9399-E3BBFFA3BCC7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\stb_image">
+      <UniqueIdentifier>{0DA0BA59-F998-D9AB-22CB-BE300E23B9B7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\stb_image\include">
+      <UniqueIdentifier>{8084391F-6CA9-889F-95F4-6D2F817887BD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\tiny_obj">
+      <UniqueIdentifier>{C074E122-2C00-4FE7-3511-D2DBA11BABE7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\tiny_obj\include">
+      <UniqueIdentifier>{335CF72E-9F93-3FC6-A89D-A3E9145466BF}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\AssetManager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\BaseFunctionality.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\Bootstrap.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\Collider.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\ColliderCircle.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\ColliderRect.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\CollidingObject.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\CollisionHandler.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\Display.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\DisplaySDL.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\DisplayText.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\GLUtility.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\Game.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\GameObject.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\GameObjectManager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\InputEvent.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\InputManager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\Logger.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\Model.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\PhysicsBody.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\PhysicsManager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\SAPEntry.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\Sound.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\StringUtility.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\Transform.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\Transform3D.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\GLFW\include\GLFW\glfw3.h">
+      <Filter>vendor\GLFW\include\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\GLFW\include\GLFW\glfw3native.h">
+      <Filter>vendor\GLFW\include\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_assert.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_atomic.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_audio.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_bits.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_blendmode.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_clipboard.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_config.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_cpuinfo.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_egl.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_endian.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_error.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_events.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_filesystem.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_gamecontroller.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_gesture.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_guid.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_haptic.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_hidapi.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_hints.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_joystick.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_keyboard.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_keycode.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_loadso.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_locale.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_log.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_main.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_messagebox.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_metal.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_misc.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_mouse.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_mutex.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_name.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_opengl.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_opengl_glext.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_opengles.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_opengles2.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_opengles2_gl2.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_opengles2_gl2ext.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_opengles2_gl2platform.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_opengles2_khrplatform.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_pixels.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_platform.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_power.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_quit.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_rect.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_render.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_revision.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_rwops.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_scancode.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_sensor.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_shape.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_stdinc.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_surface.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_system.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_syswm.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_test.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_test_assert.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_test_common.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_test_compare.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_test_crc32.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_test_font.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_test_fuzzer.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_test_harness.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_test_images.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_test_log.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_test_md5.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_test_memory.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_test_random.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_thread.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_timer.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_touch.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_types.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_version.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_video.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_vulkan.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\begin_code.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\close_code.h">
+      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2_image-2.8.2\include\SDL_image.h">
+      <Filter>vendor\SDL2_image-2.8.2\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2_ttf-2.22.0\include\SDL_ttf.h">
+      <Filter>vendor\SDL2_ttf-2.22.0\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glew\include\GL\eglew.h">
+      <Filter>vendor\glew\include\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glew\include\GL\glew.h">
+      <Filter>vendor\glew\include\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glew\include\GL\glxew.h">
+      <Filter>vendor\glew\include\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glew\include\GL\wglew.h">
+      <Filter>vendor\glew\include\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\common.hpp">
+      <Filter>vendor\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\_features.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\_fixes.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\_noise.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\_swizzle.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\_swizzle_func.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\_vectorize.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\compute_vector_relational.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\func_common.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\func_common_simd.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\func_exponential.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\func_exponential_simd.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\func_geometric.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\func_geometric_simd.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\func_integer.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\func_integer_simd.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\func_matrix.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\func_matrix_simd.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\func_packing.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\func_packing_simd.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\func_trigonometric.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\func_trigonometric_simd.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\func_vector_relational.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\func_vector_relational_simd.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\qualifier.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\setup.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_float.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_gentype.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_gentype.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_half.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_half.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_int.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_mat.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_mat.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_mat2x2.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_mat2x2.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_mat2x3.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_mat2x3.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_mat2x4.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_mat2x4.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_mat3x2.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_mat3x2.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_mat3x3.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_mat3x3.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_mat3x4.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_mat3x4.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_mat4x2.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_mat4x2.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_mat4x3.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_mat4x3.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_mat4x4.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_mat4x4.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_mat4x4_simd.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_vec.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_vec.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_vec1.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_vec1.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_vec2.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_vec2.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_vec3.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_vec3.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_vec4.hpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_vec4.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\detail\type_vec4_simd.inl">
+      <Filter>vendor\glm\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\exponential.hpp">
+      <Filter>vendor\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\ext.hpp">
+      <Filter>vendor\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\ext\vec1.hpp">
+      <Filter>vendor\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\ext\vec1.inl">
+      <Filter>vendor\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\ext\vector_relational.hpp">
+      <Filter>vendor\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\ext\vector_relational.inl">
+      <Filter>vendor\glm\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\fwd.hpp">
+      <Filter>vendor\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\geometric.hpp">
+      <Filter>vendor\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\glm.hpp">
+      <Filter>vendor\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\bitfield.hpp">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\bitfield.inl">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\color_space.hpp">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\color_space.inl">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\constants.hpp">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\constants.inl">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\epsilon.hpp">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\epsilon.inl">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\integer.hpp">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\integer.inl">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\matrix_access.hpp">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\matrix_access.inl">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\matrix_integer.hpp">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\matrix_inverse.hpp">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\matrix_inverse.inl">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\matrix_transform.hpp">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\matrix_transform.inl">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\noise.hpp">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\noise.inl">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\packing.hpp">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\packing.inl">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\quaternion.hpp">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\quaternion.inl">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\quaternion_simd.inl">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\random.hpp">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\random.inl">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\reciprocal.hpp">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\reciprocal.inl">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\round.hpp">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\round.inl">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\type_aligned.hpp">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\type_precision.hpp">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\type_precision.inl">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\type_ptr.hpp">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\type_ptr.inl">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\ulp.hpp">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\ulp.inl">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\vec1.hpp">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtc\vec1.inl">
+      <Filter>vendor\glm\gtc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\associated_min_max.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\associated_min_max.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\bit.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\bit.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\closest_point.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\closest_point.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\color_encoding.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\color_encoding.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\color_space.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\color_space.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\color_space_YCoCg.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\color_space_YCoCg.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\common.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\common.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\compatibility.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\compatibility.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\component_wise.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\component_wise.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\dual_quaternion.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\dual_quaternion.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\euler_angles.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\euler_angles.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\extend.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\extend.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\extended_min_max.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\extended_min_max.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\exterior_product.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\exterior_product.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\fast_exponential.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\fast_exponential.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\fast_square_root.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\fast_square_root.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\fast_trigonometry.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\fast_trigonometry.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\float_notmalize.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\functions.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\functions.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\gradient_paint.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\gradient_paint.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\handed_coordinate_space.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\handed_coordinate_space.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\hash.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\hash.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\integer.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\integer.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\intersect.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\intersect.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\io.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\io.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\log_base.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\log_base.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\matrix_cross_product.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\matrix_cross_product.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\matrix_decompose.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\matrix_decompose.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\matrix_factorisation.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\matrix_factorisation.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\matrix_interpolation.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\matrix_interpolation.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\matrix_major_storage.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\matrix_major_storage.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\matrix_operation.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\matrix_operation.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\matrix_query.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\matrix_query.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\matrix_transform_2d.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\matrix_transform_2d.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\mixed_product.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\mixed_product.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\norm.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\norm.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\normal.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\normal.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\normalize_dot.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\normalize_dot.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\number_precision.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\number_precision.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\optimum_pow.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\optimum_pow.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\orthonormalize.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\orthonormalize.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\perpendicular.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\perpendicular.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\polar_coordinates.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\polar_coordinates.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\projection.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\projection.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\quaternion.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\quaternion.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\range.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\raw_data.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\raw_data.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\rotate_normalized_axis.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\rotate_normalized_axis.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\rotate_vector.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\rotate_vector.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\scalar_multiplication.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\scalar_relational.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\scalar_relational.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\spline.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\spline.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\std_based_type.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\std_based_type.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\string_cast.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\string_cast.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\texture.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\texture.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\transform.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\transform.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\transform2.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\transform2.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\type_aligned.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\type_aligned.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\type_trait.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\type_trait.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\vec_swizzle.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\vector_angle.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\vector_angle.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\vector_query.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\vector_query.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\wrap.hpp">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\gtx\wrap.inl">
+      <Filter>vendor\glm\gtx</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\integer.hpp">
+      <Filter>vendor\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\mat2x2.hpp">
+      <Filter>vendor\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\mat2x3.hpp">
+      <Filter>vendor\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\mat2x4.hpp">
+      <Filter>vendor\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\mat3x2.hpp">
+      <Filter>vendor\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\mat3x3.hpp">
+      <Filter>vendor\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\mat3x4.hpp">
+      <Filter>vendor\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\mat4x2.hpp">
+      <Filter>vendor\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\mat4x3.hpp">
+      <Filter>vendor\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\mat4x4.hpp">
+      <Filter>vendor\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\matrix.hpp">
+      <Filter>vendor\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\packing.hpp">
+      <Filter>vendor\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\simd\common.h">
+      <Filter>vendor\glm\simd</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\simd\exponential.h">
+      <Filter>vendor\glm\simd</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\simd\geometric.h">
+      <Filter>vendor\glm\simd</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\simd\integer.h">
+      <Filter>vendor\glm\simd</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\simd\matrix.h">
+      <Filter>vendor\glm\simd</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\simd\packing.h">
+      <Filter>vendor\glm\simd</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\simd\platform.h">
+      <Filter>vendor\glm\simd</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\simd\trigonometric.h">
+      <Filter>vendor\glm\simd</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\simd\vector_relational.h">
+      <Filter>vendor\glm\simd</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\trigonometric.hpp">
+      <Filter>vendor\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\vec2.hpp">
+      <Filter>vendor\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\vec3.hpp">
+      <Filter>vendor\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\vec4.hpp">
+      <Filter>vendor\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\vector_relational.hpp">
+      <Filter>vendor\glm</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\stb_image\include\stb_image.h">
+      <Filter>vendor\stb_image\include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\tiny_obj\include\tiny_obj_loader.h">
+      <Filter>vendor\tiny_obj\include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\AssetManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\BaseFunctionality.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\Bootstrap.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\Collider.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\ColliderCircle.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\ColliderRect.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\DisplaySDL.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\DisplayText.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\GameObject.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\GameObjectManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\InputManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\Logger.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\Model.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\PhysicsBody.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\PhysicsManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\Sound.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\Transform.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)vendor\glm\detail\glm.cpp">
+      <Filter>vendor\glm\detail</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -32,7 +32,8 @@ namespace Shard {
 
 		parent = game_obj;
 		trans = game_obj->transform_;
-		coll_handler = game_obj->body_->coll_handler;
+		//This requires game_obj to have a physicsBody, but here we are trying to create one??
+		//coll_handler = game_obj->body_->coll_handler;
 
 		angular_drag = 0.01f;
 		drag = 0.01f;
@@ -44,7 +45,7 @@ namespace Shard {
 		reflect_on_collision = false;
 
 		time_interval_ = PhysicsManager::getInstance().time_interval;
-		PhysicsManager::getInstance().addPhysicsObject(*this);
+		PhysicsManager::getInstance().addPhysicsObject(this);
 	}
 
 	void PhysicsBody::applyGravity(glm::vec2 dir, const float multiplier) {

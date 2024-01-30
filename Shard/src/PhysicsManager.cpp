@@ -1,5 +1,6 @@
 #include "PhysicsManager.h"
 #include "CollisionHandler.h"
+#include "Bootstrap.h"
 
 #include <algorithm>
 #include <list>
@@ -14,11 +15,11 @@ namespace Shard {
 		return instance;
 	}
 
-	void PhysicsManager::addPhysicsObject(PhysicsBody body) {
+	void PhysicsManager::addPhysicsObject(PhysicsBody* body) {
 		bool exists = false;
 		for(size_t i = 0; i < all_physics_objects.size(); i++){
 			auto other = all_physics_objects.at(i);
-			if (other.parent == body.parent){
+			if (other->parent == body->parent){
 				exists = true;
 				break;
 			}
@@ -27,10 +28,10 @@ namespace Shard {
 			all_physics_objects.push_back(body);
 	}
 
-	void PhysicsManager::removePhysicsObject(PhysicsBody body) {
+	void PhysicsManager::removePhysicsObject(PhysicsBody* body) {
 		for(size_t i = 0; i < all_physics_objects.size(); i++){
 			auto other = all_physics_objects.at(i);
-			if(other.parent == body.parent){
+			if(other->parent == body->parent){
 				auto iter = all_physics_objects.begin();
 				std::advance(iter, i);
 				all_physics_objects.erase(iter);
@@ -112,8 +113,7 @@ namespace Shard {
 
 	bool PhysicsManager::willTick() {
 		// TODO: requires bootstrap
-
-		return false;
+		return Bootstrap::getCurrentMillis() - last_update > time_interval;
 	}
 
 	bool PhysicsManager::update() {
@@ -125,17 +125,18 @@ namespace Shard {
 		// TODO: bootstrap get current millis;
 		last_update = 0;
 
-		for (PhysicsBody &body : all_physics_objects) {
-			if (body.uses_gravity)
-				body.applyGravity(gravity_dir, gravity_modifier);
+		for (PhysicsBody* body : all_physics_objects) {
+			if (body->uses_gravity)
+				body->applyGravity(gravity_dir, gravity_modifier);
 
-			body.physicsTick();
-			body.recalculateColliders();
+			body->physicsTick();
+			body->recalculateColliders();
 		}
 
-		// for (CollidingObject col : collidings_) {
-		for (size_t i = collidings_.size() - 1; i >= 0; --i) {
-			CollidingObject col = collidings_.at(i);
+		int i = 0;
+		for (CollidingObject col : collidings_) {
+	/*	for (size_t i = collidings_.size() - 1; i >= 0; --i) {
+			CollidingObject col = collidings_.at(i);*/
 
 			auto a_handler = col.a.coll_handler;
 			auto b_handler = col.b.coll_handler;
@@ -161,6 +162,7 @@ namespace Shard {
 				b_handler->onCollisionExit(&col.a);
 				to_remove.push_back(i);
 			}
+			i++;
 		}
 
 		for (size_t idx : to_remove) {
@@ -176,8 +178,8 @@ namespace Shard {
 	}
 
 	void PhysicsManager::drawDebugColliders() {
-		for (PhysicsBody &body : all_physics_objects)
-			body.draw();
+		for (PhysicsBody* body : all_physics_objects)
+			body->draw();
 	}
 
 	bool PhysicsManager::findColliding(PhysicsBody& a, PhysicsBody& b) {
@@ -195,11 +197,11 @@ namespace Shard {
 	void PhysicsManager::broadPassSearchAndSweep() {
 
 		std::list<PhysicsBody> candidates;
-		for (PhysicsBody &body : all_physics_objects) {
+		for (PhysicsBody* body : all_physics_objects) {
 			SAPEntry sx;
-			glm::vec2 tmp = body.min_and_max_x;
+			glm::vec2 tmp = body->min_and_max_x;
 
-			sx.owner = &body;
+			sx.owner = body;
 			sx.start = tmp.x;
 			sx.end = tmp.y;
 

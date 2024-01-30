@@ -1,11 +1,5 @@
 #pragma once
 
-#ifdef _WINDLL
-#define SHARD_API __declspec(dllexport)
-#else
-#define SHARD_API __declspec(dllimport)
-#endif
-
 #include "Display.h"
 
 #include <SDL.h>
@@ -30,21 +24,34 @@ namespace Shard {
 		TTF_Font* font;
 		SDL_Texture* lblText;
 
-		SHARD_API TextDetails(const TextDetails& src){
+		 TextDetails(const TextDetails& src){
 			this->text = src.text;
 			this->x = src.x;
 			this->y = src.y;
 			this->col = src.col;
 			this->size = src.size;
+			this->font = src.font;
+			this->lblText = src.lblText;
 		}
 
-		SHARD_API TextDetails(std::string text, double x, double y, SDL_Color col, int spacing)
+		 TextDetails(std::string text, double x, double y, SDL_Color col, int spacing)
 		{
 			this->text = text;
 			this->x = x;
 			this->y = y;
 			this->col = col;
 			this->size = spacing;
+		}
+
+		 TextDetails(std::string text, double x, double y, SDL_Color col, int spacing, TTF_Font* font, SDL_Texture* lblText)
+		{
+			this->text = text;
+			this->x = x;
+			this->y = y;
+			this->col = col;
+			this->size = spacing;
+			this->font = font;
+			this->lblText = lblText;
 		}
 	};
 
@@ -56,12 +63,12 @@ namespace Shard {
 		Uint32 _format;
 		int _access;
 		
-		SHARD_API void clearDisplay() override;
-		SHARD_API TTF_Font* loadFont(std::string path, int size);
-		SHARD_API void display() override;
-		SHARD_API void setFullscreen() override;
-		SHARD_API void initialize() override;
-		SHARD_API void showText(std::string text, double x, double y, int size, int r, int g, int b) override;
+		 void clearDisplay() override;
+		 TTF_Font* loadFont(const std::string& font_name, int size);
+		 void display() override;
+		 void setFullscreen() override;
+		 void initialize() override;
+		 void showText(const char* text, double x, double y, int size, int r, int g, int b) override;
         //idk where char[, ] would be used...
         //virtual void showText(char[, ] text, double x, double y, int size, int r, int g, int b);
 

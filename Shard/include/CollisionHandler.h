@@ -1,15 +1,9 @@
 #pragma once
 
-#ifdef _WINDLL
-#define SHARD_API __declspec(dllexport)
-#else
-#define SHARD_API __declspec(dllimport)
-#endif
-
 namespace Shard {
-    class SHARD_API PhysicsBody;
+    class  PhysicsBody;
 
-    class SHARD_API CollisionHandler {
+    class  CollisionHandler {
     public:
         virtual void onCollisionEnter(PhysicsBody* body) = 0;
         virtual void onCollisionExit(PhysicsBody* body) = 0;

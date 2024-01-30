@@ -1,11 +1,5 @@
 #pragma once
 
-#ifdef _WINDLL
-#define SHARD_API __declspec(dllexport)
-#else
-#define SHARD_API __declspec(dllimport)
-#endif
-
 #include <string>
 //#include <glm.hpp>
 #include <SDL.h>
@@ -16,10 +10,10 @@
 #include "Transform.h"
 
 namespace Shard {
-    class SHARD_API ColliderCircle;
-    class SHARD_API ColliderRect;
+    class  ColliderCircle;
+    class  ColliderRect;
 
-    class SHARD_API Collider {
+    class  Collider {
     public:
         float x, y;
         glm::vec2 min_and_max_x;
@@ -82,7 +76,7 @@ namespace Shard {
 
     };
 
-    class SHARD_API ColliderCircle : public Collider {
+    class  ColliderCircle : public Collider {
     public:
         float rad;
         float x_off, y_off;
@@ -104,7 +98,7 @@ namespace Shard {
         std::optional<glm::vec2> checkCollision(ColliderCircle* other);
     };
 
-    class SHARD_API ColliderRect : public Collider {
+    class  ColliderRect : public Collider {
     public:
         float width, height, base_width, base_height;
         float left, right, top, bottom;

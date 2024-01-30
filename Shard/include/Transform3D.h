@@ -1,15 +1,9 @@
 #pragma once
 
-#ifdef _WINDLL
-#define SHARD_API __declspec(dllexport)
-#else
-#define SHARD_API __declspec(dllimport)
-#endif
-
 #include "Transform.h"
 
 namespace Shard {
-	class SHARD_API Transform3D : public Transform {
+	class  Transform3D : public Transform {
 	public:
 
 		Transform3D() : Transform() {
@@ -18,6 +12,14 @@ namespace Shard {
 			rotx = 0;
 			roty = 0;
 			scale_z = 1.f;
+		}
+
+		Transform3D(const Transform3D* src) : Transform(src) {
+			this->z = src->z;
+			this->rotx = src->rotx;
+			this->roty = src->roty;
+			this->scale_z = src->scale_z;
+
 		}
 
 	private:

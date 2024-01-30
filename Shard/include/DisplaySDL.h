@@ -1,12 +1,6 @@
 ﻿// DisplaySDL.h - Description
 #pragma once
 
-#ifdef _WINDLL
-#define SHARD_API __declspec(dllexport)
-#else
-#define SHARD_API __declspec(dllimport)
-#endif
-
 #include "DisplayText.h"
 
 #include <vector>
@@ -30,17 +24,17 @@ namespace Shard {
 
 	class DisplaySDL : public DisplayText {
 	public:
-		SHARD_API DisplaySDL();
-		SHARD_API void initialize() override;
-		SHARD_API void addToDraw(GameObject gob) override;
-		SHARD_API void removeToDraw(GameObject gob) override;
-		SHARD_API SDL_Texture* loadTexture(Transform trans);
-		SHARD_API SDL_Texture* loadTexture(std::string path);
-		SHARD_API void renderCircle(int centreX, int centreY, int radius);
-		SHARD_API void drawCircle(int x, int y, int radius, int r, int g, int b, int a) override;
-		SHARD_API void drawLine(int x, int y, int x2, int y2, int r, int g, int b, int a) override;
-		SHARD_API void display() override;
-		SHARD_API void clearDisplay() override;
+		 DisplaySDL() {}
+		 void initialize() override;
+		 void addToDraw(GameObject* gob) override;
+		 void removeToDraw(GameObject* gob) override;
+		 SDL_Texture* loadTexture(Transform* trans);
+		 SDL_Texture* loadTexture(std::string path);
+		 void renderCircle(int centreX, int centreY, int radius);
+		 void drawCircle(int x, int y, int radius, int r, int g, int b, int a) override;
+		 void drawLine(int x, int y, int x2, int y2, int r, int g, int b, int a) override;
+		 void display() override;
+		 void clearDisplay() override;
 
 	private:
 		std::vector<Transform> _toDraw;

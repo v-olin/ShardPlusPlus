@@ -1,11 +1,5 @@
 #pragma once
 
-#ifdef _WINDLL
-#define SHARD_API __declspec(dllexport)
-#else
-#define SHARD_API __declspec(dllimport)
-#endif
-
 #include <vector>
 #include <SDL.h>
 #include <glm.hpp>
@@ -14,9 +8,9 @@
 #include "Collider.h"
 
 namespace Shard {
-	class SHARD_API Transform;
+	class  Transform;
 
-	class SHARD_API PhysicsBody {
+	class  PhysicsBody {
 	public:
 		float angular_drag;
 		float drag;
@@ -36,6 +30,8 @@ namespace Shard {
 		CollisionHandler* coll_handler;
 
 		PhysicsBody();
+
+
 		PhysicsBody(GameObject* game_obj);
 
 		// change to Vec3 for 3d

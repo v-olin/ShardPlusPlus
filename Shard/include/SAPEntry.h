@@ -1,15 +1,9 @@
 #pragma once
 
-#ifdef _WINDLL
-#define SHARD_API __declspec(dllexport)
-#else
-#define SHARD_API __declspec(dllimport)
-#endif
-
 #include "PhysicsBody.h"
 
 namespace Shard {
-	struct SHARD_API SAPEntry {
+	struct  SAPEntry {
 	public:
 		PhysicsBody* owner;
 		float start, end;

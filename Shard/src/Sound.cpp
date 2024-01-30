@@ -10,7 +10,7 @@ namespace Shard {
         unsigned char* wav_buffer;
 
         AssetManager& manager = AssetManager::getInstance();
-        std::string file_path = manager.getAssetPath(file_name);
+        std::string file_path = manager.getAssetPath(file_name.c_str());
 
         SDL_LoadWAV(file_path.c_str(), &have, &wav_buffer, &length);
         const char* audio_device = SDL_GetAudioDeviceName(0, 0);
