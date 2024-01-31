@@ -10,15 +10,6 @@
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
     </Filter>
-    <Filter Include="vendor\GLFW">
-      <UniqueIdentifier>{D27667C1-3E2C-E0B6-C720-DA8D33D5D6BA}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="vendor\GLFW\include">
-      <UniqueIdentifier>{45501F1D-B1B1-FC2A-3A1F-43DDA67F33EA}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="vendor\GLFW\include\GLFW">
-      <UniqueIdentifier>{A4FE9F69-9023-EFE9-B96E-D479A5F2ED07}</UniqueIdentifier>
-    </Filter>
     <Filter Include="vendor\SDL2-2.28.5">
       <UniqueIdentifier>{F1910D23-DD75-CE78-46D6-C8CB32D9B8FA}</UniqueIdentifier>
     </Filter>
@@ -155,12 +146,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Transform3D.h">
       <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\GLFW\include\GLFW\glfw3.h">
-      <Filter>vendor\GLFW\include\GLFW</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\GLFW\include\GLFW\glfw3native.h">
-      <Filter>vendor\GLFW\include\GLFW</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL.h">
       <Filter>vendor\SDL2-2.28.5\include</Filter>

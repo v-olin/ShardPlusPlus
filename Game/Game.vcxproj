@@ -71,10 +71,10 @@
       <AdditionalLibraryDirectories>..\Shard\vendor\SDL2-2.28.5\lib\x64;..\Shard\vendor\SDL2_ttf-2.22.0\lib\x64;..\Shard\vendor\SDL2_image-2.8.2\lib\x64;..\Shard\vendor\glew\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Debug-windows-x86_64\Shard\SDL2.dll\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-x86_64\Shard\SDL2.dll ..\bin\Debug-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-x86_64\Shard\SDL2.dll ..\bin\Debug-windows-x86_64\$(ProjectName) &gt; nul)
-IF EXIST ..\bin\Debug-windows-x86_64\Shard\SDL2_ttf.dll\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-x86_64\Shard\SDL2_ttf.dll ..\bin\Debug-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-x86_64\Shard\SDL2_ttf.dll ..\bin\Debug-windows-x86_64\$(ProjectName) &gt; nul)
-IF EXIST ..\bin\Debug-windows-x86_64\Shard\SDL2_image.dll\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-x86_64\Shard\SDL2_image.dll ..\bin\Debug-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-x86_64\Shard\SDL2_image.dll ..\bin\Debug-windows-x86_64\$(ProjectName) &gt; nul)
-IF EXIST ..\bin\Debug-windows-x86_64\Shard\glew32.dll\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-x86_64\Shard\glew32.dll ..\bin\Debug-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-x86_64\Shard\glew32.dll ..\bin\Debug-windows-x86_64\$(ProjectName) &gt; nul)</Command>
+      <Command>IF EXIST ..\Shard\vendor\SDL2-2.28.5\lib\x64\SDL2.dll\ (xcopy /Q /E /Y /I ..\Shard\vendor\SDL2-2.28.5\lib\x64\SDL2.dll ..\bin\Debug-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\Shard\vendor\SDL2-2.28.5\lib\x64\SDL2.dll ..\bin\Debug-windows-x86_64\$(ProjectName) &gt; nul)
+IF EXIST ..\Shard\vendor\SDL2_ttf-2.22.0\lib\x64\SDL2_ttf.dll\ (xcopy /Q /E /Y /I ..\Shard\vendor\SDL2_ttf-2.22.0\lib\x64\SDL2_ttf.dll ..\bin\Debug-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\Shard\vendor\SDL2_ttf-2.22.0\lib\x64\SDL2_ttf.dll ..\bin\Debug-windows-x86_64\$(ProjectName) &gt; nul)
+IF EXIST ..\Shard\vendor\SDL2_image-2.8.2\lib\x64\SDL2_image.dll\ (xcopy /Q /E /Y /I ..\Shard\vendor\SDL2_image-2.8.2\lib\x64\SDL2_image.dll ..\bin\Debug-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\Shard\vendor\SDL2_image-2.8.2\lib\x64\SDL2_image.dll ..\bin\Debug-windows-x86_64\$(ProjectName) &gt; nul)
+IF EXIST ..\Shard\vendor\glew\lib\glew32.dll\ (xcopy /Q /E /Y /I ..\Shard\vendor\glew\lib\glew32.dll ..\bin\Debug-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\Shard\vendor\glew\lib\glew32.dll ..\bin\Debug-windows-x86_64\$(ProjectName) &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -100,10 +100,10 @@ IF EXIST ..\bin\Debug-windows-x86_64\Shard\glew32.dll\ (xcopy /Q /E /Y /I ..\bin
       <AdditionalLibraryDirectories>..\Shard\vendor\SDL2-2.28.5\lib\x64;..\Shard\vendor\SDL2_ttf-2.22.0\lib\x64;..\Shard\vendor\SDL2_image-2.8.2\lib\x64;..\Shard\vendor\glew\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Release-windows-x86_64\Shard\SDL2.dll\ (xcopy /Q /E /Y /I ..\bin\Release-windows-x86_64\Shard\SDL2.dll ..\bin\Release-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-x86_64\Shard\SDL2.dll ..\bin\Release-windows-x86_64\$(ProjectName) &gt; nul)
-IF EXIST ..\bin\Release-windows-x86_64\Shard\SDL2_ttf.dll\ (xcopy /Q /E /Y /I ..\bin\Release-windows-x86_64\Shard\SDL2_ttf.dll ..\bin\Release-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-x86_64\Shard\SDL2_ttf.dll ..\bin\Release-windows-x86_64\$(ProjectName) &gt; nul)
-IF EXIST ..\bin\Release-windows-x86_64\Shard\SDL2_image.dll\ (xcopy /Q /E /Y /I ..\bin\Release-windows-x86_64\Shard\SDL2_image.dll ..\bin\Release-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-x86_64\Shard\SDL2_image.dll ..\bin\Release-windows-x86_64\$(ProjectName) &gt; nul)
-IF EXIST ..\bin\Release-windows-x86_64\Shard\glew32.dll\ (xcopy /Q /E /Y /I ..\bin\Release-windows-x86_64\Shard\glew32.dll ..\bin\Release-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-x86_64\Shard\glew32.dll ..\bin\Release-windows-x86_64\$(ProjectName) &gt; nul)</Command>
+      <Command>IF EXIST ..\Shard\vendor\SDL2-2.28.5\lib\x64\SDL2.dll\ (xcopy /Q /E /Y /I ..\Shard\vendor\SDL2-2.28.5\lib\x64\SDL2.dll ..\bin\Release-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\Shard\vendor\SDL2-2.28.5\lib\x64\SDL2.dll ..\bin\Release-windows-x86_64\$(ProjectName) &gt; nul)
+IF EXIST ..\Shard\vendor\SDL2_ttf-2.22.0\lib\x64\SDL2_ttf.dll\ (xcopy /Q /E /Y /I ..\Shard\vendor\SDL2_ttf-2.22.0\lib\x64\SDL2_ttf.dll ..\bin\Release-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\Shard\vendor\SDL2_ttf-2.22.0\lib\x64\SDL2_ttf.dll ..\bin\Release-windows-x86_64\$(ProjectName) &gt; nul)
+IF EXIST ..\Shard\vendor\SDL2_image-2.8.2\lib\x64\SDL2_image.dll\ (xcopy /Q /E /Y /I ..\Shard\vendor\SDL2_image-2.8.2\lib\x64\SDL2_image.dll ..\bin\Release-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\Shard\vendor\SDL2_image-2.8.2\lib\x64\SDL2_image.dll ..\bin\Release-windows-x86_64\$(ProjectName) &gt; nul)
+IF EXIST ..\Shard\vendor\glew\lib\glew32.dll\ (xcopy /Q /E /Y /I ..\Shard\vendor\glew\lib\glew32.dll ..\bin\Release-windows-x86_64\$(ProjectName) &gt; nul) ELSE (xcopy /Q /Y /I ..\Shard\vendor\glew\lib\glew32.dll ..\bin\Release-windows-x86_64\$(ProjectName) &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
