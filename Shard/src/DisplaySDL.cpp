@@ -10,7 +10,6 @@ namespace Shard {
 		DisplayText::initialize();
 	}
 
-	// TODO: replace return type 'int' with proper type
 	SDL_Texture* DisplaySDL::loadTexture(Transform* trans) {
 		SDL_Texture* ret;
 		unsigned int format;
@@ -135,6 +134,17 @@ namespace Shard {
 		SDL_Rect sRect;
 		SDL_Rect tRect;
 
+		for (const Circle& c : _circlesToDraw) {
+			SDL_SetRenderDrawColor(_rend, c.r, c.g, c.b, c.a);
+			renderCircle(c.x, c.y, c.radius);
+		}
+
+		for (const Line& l : _linesToDraw) {
+			SDL_SetRenderDrawColor(_rend, (Uint8)l.r, (Uint8)l.g, (Uint8)l.b, (Uint8)l.a);
+			SDL_RenderDrawLine(_rend, l.sx, l.sy, l.ex, l.ey);
+			SDL_SetRenderDrawColor(_rend, 0, 0, 0, 255);
+		}
+
 		for (Transform* trans : _toDraw) {
 			if (((std::string)trans->sprite_path).empty())
 				continue;
@@ -151,19 +161,8 @@ namespace Shard {
 			tRect.h = sRect.h;
 
 			SDL_RenderCopyEx(_rend, sprite, &sRect, &tRect, (int)trans->rotz, NULL, SDL_FLIP_NONE);
-			
 		}
-		
-		for (const Circle& c : _circlesToDraw) {
-			SDL_SetRenderDrawColor(_rend, c.r, c.g, c.b, c.a);
-			renderCircle(c.x, c.y, c.radius);
-		}
-
-		for (const Line& l : _linesToDraw) {
-			SDL_SetRenderDrawColor(_rend, (Uint8)l.r, (Uint8)l.g, (Uint8)l.b, (Uint8)l.a);
-			SDL_RenderDrawLine(_rend, l.sx, l.sy, l.ex, l.ey);
-		}
-
+	
 		DisplayText::display();
 	}
 

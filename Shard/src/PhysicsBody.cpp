@@ -28,13 +28,14 @@ namespace Shard {
 	}
 
 	PhysicsBody::PhysicsBody(GameObject* game_obj) {
-		debug_color_ = SDL_Color{ 0, 255, 0 }; // green
+		debug_color_ = SDL_Color{ 0, 255, 0, 255 }; // green
 
 		parent = game_obj;
 		//trans = game_obj->transform_;
 		//This requires game_obj to have a physicsBody, but here we are trying to create one??
 		//coll_handler = game_obj->body_->coll_handler;
 
+		// TODO: initializer list
 		angular_drag = 0.01f;
 		drag = 0.01f;
 		mass = 1.f;
@@ -63,15 +64,15 @@ namespace Shard {
 	glm::vec2 PhysicsBody::getMinAndMax(const bool x) {
 		float min = std::numeric_limits<float>::max();
 		float max = std::numeric_limits<float>::min();
-		glm::vec2 tmp(min, max);
+		glm::vec2 tmp;
 
 		for (auto &collider : colliders) {
-			tmp = x ? collider->min_and_max_x : collider->min_and_max_y;
-			min = tmp.x < min ? tmp.x : min;
-			max = tmp.y > max ? tmp.y : max;
-			tmp = x ? collider->min_and_max_x : collider->min_and_max_y;
-			min = tmp.x < min ? tmp.x : min;
-			max = tmp.y > max ? tmp.y : max;
+			tmp = x ? collider->min_and_max_x : min_and_max_y;
+
+			if (tmp.x < min)
+				min = tmp.x;
+			if (tmp.y > max)
+				max = tmp.y;
 		}
 
 		return { min, max };

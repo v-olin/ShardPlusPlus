@@ -8,13 +8,11 @@
 namespace Shard {
 		
 
-	Transform::Transform() {
-		scale_x = 1.f;
-		scale_y = 1.f;
-
-		x = 0; y = 0;
-		lx = 0; ly = 0;
-
+	Transform::Transform()
+		: scale_x(1.f), scale_y(1.f)
+		, x(0), y(0), lx(0), ly(0)
+		, w(0), h(0), rotz(0)
+	{
 		rotate(0);
 	}
 

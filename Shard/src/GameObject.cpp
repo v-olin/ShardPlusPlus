@@ -11,7 +11,7 @@ namespace Shard {
 		, transient_(false)
 		, to_be_destroyed_(false)
 		, visible_(false)
-		, transform_()
+		, transform_(nullptr)
 		, body_(nullptr) {
 		GameObjectManager::getInstance()->addGameObject(this);
 		//this->initialize();

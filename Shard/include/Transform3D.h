@@ -3,23 +3,16 @@
 #include "Transform.h"
 
 namespace Shard {
-	class  Transform3D : public Transform {
+	class Transform3D : public Transform {
 	public:
 
-		Transform3D() : Transform() {
-			
-			z = 0;
-			rotx = 0;
-			roty = 0;
-			scale_z = 1.f;
-		}
+		Transform3D() : Transform(), z(0), rotx(0), roty(y), scale_z(1.0f) { }
 
 		Transform3D(const Transform3D* src) : Transform(src) {
 			this->z = src->z;
 			this->rotx = src->rotx;
 			this->roty = src->roty;
 			this->scale_z = src->scale_z;
-
 		}
 
 	private:

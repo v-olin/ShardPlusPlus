@@ -6,7 +6,6 @@
 
 #include <iostream>
 
-
 #undef main
 
 GameTest::GameTest() {}

@@ -18,6 +18,10 @@ namespace Shard {
         float x, y;
         glm::vec2 min_and_max_x;
         glm::vec2 min_and_max_y;
+
+        glm::vec2 top_left;
+        glm::vec2 bottom_right;
+
         bool rotate_at_offset;
         Transform* transform;
         CollisionHandler* game_object;
@@ -29,35 +33,25 @@ namespace Shard {
             rotate_at_offset(0),
             from_trans(false),
             transform(nullptr),
-            game_object(nullptr)
-        {
-        };
+            game_object(nullptr) { }
 
         Collider(CollisionHandler* game_obj, Transform* transform) 
             : x(0), y(0),
             min_and_max_x(0),
             min_and_max_y(0),
             rotate_at_offset(0),
-            from_trans(false)
-        {
-            this->x = 0;
-            this->y = 0;
-            this->game_object = game_obj;
-            this->transform = transform;
-        }
+            from_trans(false),
+            game_object(game_obj),
+            transform(transform) { }
 
         Collider(CollisionHandler* game_obj, Transform* transform, float x, float y)
-            : x(0), y(0),
+            : x(x), y(y),
             min_and_max_x(0),
             min_and_max_y(0),
             rotate_at_offset(0),
-            from_trans(false)
-        {
-            this->x = x;
-            this->y = y;
-            this->game_object = game_obj;
-            this->transform = transform;
-        }
+            from_trans(false),
+            game_object(game_obj),
+            transform(transform) { }
 
         virtual void recalculate() = 0;
         

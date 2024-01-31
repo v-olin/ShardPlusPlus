@@ -151,8 +151,11 @@ namespace Shard {
 
 	ColliderRect::ColliderRect(CollisionHandler* game_obj, Transform* transform, float x, float y, float w, float h)
 		: Collider(game_obj, transform, x, y) {
-		this->width = w;
-		this->height = h;
+		//this->width = w;
+		//this->height = h;
+
+		this->base_width = w;
+		this->base_height = h;
 
 		rotate_at_offset = true;
 		from_trans = false;
@@ -194,16 +197,46 @@ namespace Shard {
 			y0 = y - transform->centre.y;
 
 			x1 = (float)(x0 * cos(angle) - y0 * sin(angle));
-			y1 = (float)(x0 * sin(angle) + y0 * sin(angle));
+			y1 = (float)(x0 * sin(angle) + y0 * cos(angle));
 
 			x = x1 + (float)transform->centre.x;
 			y = y1 + (float)transform->centre.y;
 		}
 
-		left = x - width / 2;
-		right = x + width / 2;
-		top = y - height / 2;
-		bottom = y + height / 2;
+		/*
+					   top
+						|
+						|
+						|
+			left --------------- right
+						|
+						|
+						|
+					 bottom
+
+		*/
+
+		int tx = x - width / 2;
+		int ty = y - height / 2;
+		
+		int bx = x + width / 2;
+		int by = y + height / 2;
+
+		top_left = glm::vec2(tx, ty);
+		bottom_right = glm::vec2(bx, by);
+
+		// (tx, ty), (bx, by)
+
+		/*
+		(tx, ty) ------------
+		   |				|
+		   |				|
+		   |				|
+		   |				|
+		   |				|
+		   ---------------(bx, by)
+		*/
+
 	}
 
 	ColliderRect ColliderRect::calculateMinkowskiDifference(ColliderRect& other) {
@@ -308,15 +341,36 @@ namespace Shard {
 	}
 
 	void ColliderRect::draw(SDL_Color col) {
-		// TODO: cannot do until display is finished
 		Display* d = Bootstrap::getDisplay();
+		recalculate();
 
-		d->drawLine((int)min_and_max_x[0], (int)min_and_max_y[0], (int)min_and_max_x[1], (int)min_and_max_y[0], col);
-		d->drawLine((int)min_and_max_x[0], (int)min_and_max_y[0], (int)min_and_max_x[0], (int)min_and_max_y[1], col);
-		d->drawLine((int)min_and_max_x[1], (int)min_and_max_y[0], (int)min_and_max_x[1], (int)min_and_max_y[1], col);
-		d->drawLine((int)min_and_max_x[0], (int)min_and_max_y[1], (int)min_and_max_x[1], (int)min_and_max_y[1], col);
+		//d->drawLine((int)min_and_max_x[0], (int)min_and_max_y[0], (int)min_and_max_x[1], (int)min_and_max_y[0], col);
+		//d->drawLine((int)min_and_max_x[0], (int)min_and_max_y[0], (int)min_and_max_x[0], (int)min_and_max_y[1], col);
+		//d->drawLine((int)min_and_max_x[1], (int)min_and_max_y[0], (int)min_and_max_x[1], (int)min_and_max_y[1], col);
+		//d->drawLine((int)min_and_max_x[0], (int)min_and_max_y[1], (int)min_and_max_x[1], (int)min_and_max_y[1], col);
+		
+
+
+		// min_x = { left, right }
+		// min_y = { top, bottom }
+
+		// min_and_max_x.x = sx = left;
+		// min_and_max_x.y = ex = right;
+
+		// min_and_max_y.x = sy;
+		// min_and_max_y.y = ey;
+
+		// line defined by two points (x1, y1) (x2, y2)
+		// drawLine(x1, y1, x2, y2);
+		// drawLine(sx, sy, ex, ey);
+
+		//(int x, y, x2, y2)
+		// TODO: rewrite this hot ass garbage
+		d->drawLine((int)min_and_max_x.x, (int)min_and_max_y.x, (int)min_and_max_x.y, (int)min_and_max_y.x, col);
+		d->drawLine((int)min_and_max_x.x, (int)min_and_max_y.x, (int)min_and_max_x.x, (int)min_and_max_y.y, col);
+		d->drawLine((int)min_and_max_x.y, (int)min_and_max_y.x, (int)min_and_max_x.y, (int)min_and_max_y.y, col);
+		d->drawLine((int)min_and_max_x.x, (int)min_and_max_y.y, (int)min_and_max_x.y, (int)min_and_max_y.y, col);
 
 		//d->drawCircle((int)x, (int)y, 2, col);
-
 	}
 }

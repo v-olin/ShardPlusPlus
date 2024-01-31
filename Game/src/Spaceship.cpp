@@ -5,7 +5,6 @@
 #include "Logger.h"
 
 Spaceship::Spaceship() : GameObject() {
-    //GameObject::initialize();
 	initialize();
 }
 
@@ -78,8 +77,6 @@ void Spaceship::initialize() {
 	up = false;
 	down = false;
 
-    //body_ = new Shard::PhysicsBody();
-
 	body_->mass = 1.f;
 	body_->max_force = 10.f;
 	body_->angular_drag = 0.01f;
@@ -91,21 +88,13 @@ void Spaceship::initialize() {
 
     // i just want to drive my fucking spaceship 
     //(commented since it needs pgysics body)
-	body_->addRectCollider();
+	body_->addRectCollider(transform_->x, transform_->y, 40, 40);
 
-    //const char* a = "Spacheship";
-    //GameObject::addTag(a);
-    //tags.push_back("asdkaskd");
-    
-    auto t = tags.size();
     GameObject::addTag("Spaceship");
 }
 
 void Spaceship::update() {
-    //0x00000295ee25f3a0
-    //0x00000295ee25f5e0
     Shard::Bootstrap::getDisplay()->addToDraw(this);
-    
 }
 
 void Spaceship::physicsUpdate() {
