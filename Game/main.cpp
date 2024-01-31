@@ -9,7 +9,9 @@
 
 #undef main
 
-GameTest::GameTest() {}
+GameTest::GameTest() {
+	// Empty constructor.
+}
 
 void GameTest::update() {
 	std::string second_fps = std::to_string(Shard::Bootstrap::getSecondFPS());

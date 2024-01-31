@@ -1,11 +1,4 @@
 /*
-#pragma once
-
-#ifdef _WINDLL
-#define  __declspec(dllexport)
-#else
-#define  __declspec(dllimport)
-#endif
 
 //#include "Collider.h"
 
@@ -33,4 +26,5 @@ namespace Shard {
 		void draw(SDL_Color color) override;
 	};
 }
+
 */

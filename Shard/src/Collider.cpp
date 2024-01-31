@@ -4,6 +4,11 @@
 #include "Display.h"
 
 namespace Shard {
+
+	ColliderCircle::ColliderCircle() :
+		rad(0), x_off(0), y_off(0) {
+	}
+
 	ColliderCircle::ColliderCircle(CollisionHandler* game_obj, Transform* transform)
 		: Collider(game_obj, transform) {
 		from_trans = true;
@@ -22,11 +27,13 @@ namespace Shard {
 	}
 
 	void ColliderCircle::calculateBoundingBox() {
-		float x0, x1, y0, y1, int_width, angle = (float)(M_PI * transform->rotz / 180.f);
+		float x0, x1, y0, y1, int_width;
+		float angle = (float)(M_PI * transform->rotz / 180.f);
 
 		if (from_trans) {
 			int_width = transform->w * (float)transform->scale_x;
 			rad = (float)(int_width / 2);
+			
 			x = (float)transform->x + x_off + rad;
 			y = (float)transform->y + y_off + rad;
 		}
@@ -46,8 +53,12 @@ namespace Shard {
 			y = y1 + (float)transform->centre.y;
 		}
 
-		min_and_max_x = glm::vec2{ x - rad, x + rad };
-		min_and_max_y = glm::vec2{ y - rad, y + rad };
+		box_top_left.x = x - rad;
+		box_top_left.y = y - rad;
+
+		box_bottom_right.x = x + rad;
+		box_bottom_right.y = y + rad;
+
 	}
 
 	void ColliderCircle::recalculate() {
@@ -87,7 +98,8 @@ namespace Shard {
 	}
 
 	void ColliderCircle::draw(SDL_Color color) {
-		// wait for display
+		Display* d = Bootstrap::getDisplay();
+		d->drawCircle((int)x, (int)y, rad, color);
 	}
 
 	std::optional<glm::vec2> ColliderCircle::checkCollision(ColliderCircle* other) {
@@ -109,41 +121,43 @@ namespace Shard {
 	}
 
 	std::optional<glm::vec2> ColliderCircle::checkCollision(glm::vec2 point) {
-		if (point.x >= min_and_max_x.x && // left
-			point.x <= min_and_max_x.y && // right
-			point.y >= min_and_max_y.x && // top
-			point.y <= min_and_max_x.y) // bottom
-			return std::optional<glm::vec2>(glm::vec2{ 0,0 });
+		if (point.x >= box_top_left.x &&
+			point.x <= box_bottom_right.x &&
+			point.y >= box_top_left.y &&
+			point.y <= box_bottom_right.y) {
+			return std::optional<glm::vec2>({0, 0});
+		}
 
 		return std::nullopt;
 	}
 
 	std::optional<glm::vec2> ColliderCircle::checkCollision(Collider* other) {
-
 		return other->checkCollision(this);
-
-		/*
-		ColliderCircle circ;
-		ColliderRect rect;
-
-		if (typeid(circ) == typeid(other)) {
-			ColliderCircle* circ_p = dynamic_cast<ColliderCircle*>(other);
-			return checkCollision(circ_p);
-		}
-		else if (typeid(rect) == typeid(other)) {
-			ColliderRect* rect_p = dynamic_cast<ColliderRect*>(other);
-			return checkCollision(rect_p);
-		}
-		else
-			return std::nullopt;
-		*/
 	}
+
+
+
+
+
+	// Please keep this gap because it's so confusing having ColliderCircle AND ColliderRect right
+	// next to each other
+	// this gap
+	// will make it much clearer
+	// where one ends and the other beings
+	// thanks.
+	// ???
+	// $$$
+	// hotel?
+	// trivago.
+
+
 
 	ColliderRect::ColliderRect() : Collider(nullptr, nullptr) {
 		for_minkowski = true;
 	}
 
-	ColliderRect::ColliderRect(CollisionHandler* game_obj, Transform* transform) : Collider(game_obj, transform) {
+	ColliderRect::ColliderRect(CollisionHandler* game_obj, Transform* transform) 
+		: Collider(game_obj, transform) {
 		from_trans = true;
 		rotate_at_offset = false;
 		calculateBoundingBox();
@@ -200,28 +214,46 @@ namespace Shard {
 			y = y1 + (float)transform->centre.y;
 		}
 
+		int tx = x - width / 2.0f;
+		int ty = y - height / 2.0f;
+
+		int bx = x + width / 2.0f;
+		int by = y + height / 2.0f;
+
+		box_top_left = glm::vec2(tx, ty);
+		box_bottom_right = glm::vec2(bx, by);
+
+		/*
 		left = x - width / 2;
 		right = x + width / 2;
 		top = y - height / 2;
 		bottom = y + height / 2;
+		*/
 	}
 
 	ColliderRect ColliderRect::calculateMinkowskiDifference(ColliderRect& other) {
-		float l, r, t, b, w, h;
+		//float l, r, t, b, w, h;
+		float tx, ty, bx, by, w, h;
 		ColliderRect mink = ColliderRect();
 
-		l = left - other.right;
-		t = other.top - bottom;
-		r = right - other.left;
-		b = other.bottom - top;
+		// previously: l, t, r, b
+		tx = left - other.right;
+		ty = other.top - bottom;
+		bx = right - other.left;
+		by = other.bottom - top;
 
 		w = width + other.width;
 		h = height + other.height;
 		mink.width = w;
 		mink.height = h;
 
+		mink.box_top_left = glm::vec2(tx, ty);
+		mink.box_bottom_right = glm::vec2(bx, by);
+
+		/*
 		mink.min_and_max_x = glm::vec2{ l, r };
 		mink.min_and_max_y = glm::vec2{ t, b };
+		*/
 
 		return mink;
 	}
@@ -307,16 +339,31 @@ namespace Shard {
 		return std::nullopt;
 	}
 
-	void ColliderRect::draw(SDL_Color col) {
+	void ColliderRect::draw(SDL_Color color) {
 		// TODO: cannot do until display is finished
 		Display* d = Bootstrap::getDisplay();
 
-		d->drawLine((int)min_and_max_x[0], (int)min_and_max_y[0], (int)min_and_max_x[1], (int)min_and_max_y[0], col);
-		d->drawLine((int)min_and_max_x[0], (int)min_and_max_y[0], (int)min_and_max_x[0], (int)min_and_max_y[1], col);
-		d->drawLine((int)min_and_max_x[1], (int)min_and_max_y[0], (int)min_and_max_x[1], (int)min_and_max_y[1], col);
-		d->drawLine((int)min_and_max_x[0], (int)min_and_max_y[1], (int)min_and_max_x[1], (int)min_and_max_y[1], col);
+		int tx = box_top_left.x;
+		int ty = box_top_left.y;
 
-		//d->drawCircle((int)x, (int)y, 2, col);
+		int bx = box_bottom_right.x;
+		int by = box_bottom_right.y;
+
+		// Top
+		d->drawLine(tx, ty, bx, ty, color);
+		//d->drawLine((int)min_and_max_x[0], (int)min_and_max_y[0], (int)min_and_max_x[1], (int)min_and_max_y[0], col);
+		
+		// Right
+		d->drawLine(bx, ty, bx, by, color);
+		//d->drawLine((int)min_and_max_x[0], (int)min_and_max_y[0], (int)min_and_max_x[0], (int)min_and_max_y[1], col);
+		
+		// Bottom
+		d->drawLine(tx, by, bx, by, color);
+		//d->drawLine((int)min_and_max_x[1], (int)min_and_max_y[0], (int)min_and_max_x[1], (int)min_and_max_y[1], col);
+		
+		// Left
+		d->drawLine(tx, ty, tx, by, color);
+		//d->drawLine((int)min_and_max_x[0], (int)min_and_max_y[1], (int)min_and_max_x[1], (int)min_and_max_y[1], col);
 
 	}
 }

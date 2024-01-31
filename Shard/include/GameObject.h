@@ -14,17 +14,14 @@ namespace Shard {
         bool transient_, to_be_destroyed_, visible_;
         PhysicsBody* body_ = nullptr;
         // change this if erases are frequent
-        std::vector<const char*> tags {};
+        std::vector<const char*> tags{};
 
         GameObject();
-        GameObject(const GameObject* src){
+        GameObject(const GameObject* src) {
             transform_ = src->transform_;
-            //body_ = PhysicsBody(src->body_);
             body_ = src->body_;
             tags = src->tags;
         }
-
-
         ~GameObject() {}
 
         void addTag(const char* tag);

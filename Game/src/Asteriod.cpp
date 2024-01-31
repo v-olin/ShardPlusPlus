@@ -13,7 +13,7 @@ Asteroid::Asteroid() {
 
 void Asteroid::initialize()
 {
-    transform_->sprite_path = Shard::Bootstrap::getAssetManager()->getAssetPath("asteriod.png");
+    body_->trans.sprite_path = Shard::Bootstrap::getAssetManager()->getAssetPath("asteriod.png");
 
     setPhysicsEnabled();
     body_->max_torque = 100;
@@ -22,12 +22,10 @@ void Asteroid::initialize()
     body_->uses_gravity = true;
     body_->stop_on_collision = false;
     body_->reflect_on_collision = true;
-    //            MyBody.Kinematic = true;
-    body_->addForce(transform_->right, 20.5f);
-
+    //MyBody.Kinematic = true;
+    body_->addForce(body_->trans.right, 20.5f);
 
     body_->addRectCollider();
-
     //Shard::Bootstrap::getInput()->addListeners(&handleAsteroidInput);
 
     addTag("Asteroid");

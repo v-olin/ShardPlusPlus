@@ -11,7 +11,7 @@ namespace Shard {
 		, transient_(false)
 		, to_be_destroyed_(false)
 		, visible_(false)
-		, transform_()
+		, transform_(nullptr)
 		, body_(nullptr) {
 		GameObjectManager::getInstance()->addGameObject(this);
 		//this->initialize();
@@ -58,8 +58,15 @@ namespace Shard {
 		if (!transient_)
 			return;
 
-		if (transform_->x > 0 && transform_->x < 1920 && // get width of display
-			transform_->y > 0 && transform_->y < 1080) { // get height of display 
+		auto& transform = body_->trans;
+
+		SDL_DisplayMode dm;
+		SDL_GetCurrentDisplayMode(0, &dm);
+		auto display_width = dm.w;
+		auto display_height = dm.h;
+
+		if (transform.x > 0 && transform.x < display_width && // get width of display
+			transform.y > 0 && transform.y < display_height) { // get height of display 
 			return;
 		}
 

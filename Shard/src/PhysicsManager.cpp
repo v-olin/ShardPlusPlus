@@ -245,7 +245,7 @@ namespace Shard {
 					mass_b = mass_prop;
 
 					if (!col_obj.b.is_kinematic) {
-						col_obj.b.parent->transform_->translate(-1 * impulse.x * mass_prop, -1 * impulse.y * mass_prop);
+						col_obj.b.parent->body_->trans.translate(-1 * impulse.x * mass_prop, -1 * impulse.y * mass_prop);
 						mass_prop = 1.f - mass_prop;
 					}
 					else {
@@ -255,7 +255,7 @@ namespace Shard {
 					mass_a = mass_prop;
 
 					if (!col_obj.a.is_kinematic)
-						col_obj.a.parent->transform_->translate(impulse.x * mass_prop, impulse.y * mass_prop);
+						col_obj.a.parent->body_->trans.translate(impulse.x * mass_prop, impulse.y * mass_prop);
 					
 					if (col_obj.a.stop_on_collision)
 						col_obj.a.stopForces();
@@ -279,7 +279,6 @@ namespace Shard {
 	void PhysicsManager::checkForCollisions() {
 		broadPass();
 		narrowPass();
-
 		collisions_to_check_.clear();
 	}
 

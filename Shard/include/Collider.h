@@ -16,29 +16,25 @@ namespace Shard {
     class  Collider {
     public:
         float x, y;
-        glm::vec2 min_and_max_x;
-        glm::vec2 min_and_max_y;
+        glm::vec2 box_top_left{};
+        glm::vec2 box_bottom_right{};
         bool rotate_at_offset;
         Transform* transform;
         CollisionHandler* game_object;
 
         Collider()
             : x(0), y(0),
-            min_and_max_x(0),
-            min_and_max_y(0),
-            rotate_at_offset(0),
-            from_trans(false),
+            rotate_at_offset(false),
             transform(nullptr),
             game_object(nullptr)
         {
         };
 
-        Collider(CollisionHandler* game_obj, Transform* transform) 
+        Collider(CollisionHandler* game_obj, Transform* transform)
             : x(0), y(0),
-            min_and_max_x(0),
-            min_and_max_y(0),
-            rotate_at_offset(0),
-            from_trans(false)
+            rotate_at_offset(false),
+            transform(nullptr),
+            game_object(nullptr)
         {
             this->x = 0;
             this->y = 0;
@@ -48,10 +44,9 @@ namespace Shard {
 
         Collider(CollisionHandler* game_obj, Transform* transform, float x, float y)
             : x(0), y(0),
-            min_and_max_x(0),
-            min_and_max_y(0),
-            rotate_at_offset(0),
-            from_trans(false)
+            rotate_at_offset(false),
+            transform(nullptr),
+            game_object(nullptr)
         {
             this->x = x;
             this->y = y;
@@ -60,19 +55,12 @@ namespace Shard {
         }
 
         virtual void recalculate() = 0;
-        
-        /*
-        virtual std::optional<glm::vec2> checkCollision(ColliderRect* other) = 0;
-        virtual std::optional<glm::vec2> checkCollision(ColliderCircle* other) = 0;
-        */
-
         virtual std::optional<glm::vec2> checkCollision(glm::vec2 point) = 0;
         virtual std::optional<glm::vec2> checkCollision(Collider* c) = 0;
-
         virtual void draw(SDL_Color color) = 0;
 
     protected:
-        bool from_trans;
+        bool from_trans{false};
 
     };
 
@@ -81,7 +69,7 @@ namespace Shard {
         float rad;
         float x_off, y_off;
 
-        ColliderCircle() : rad(0), x_off(0), y_off(0) { };
+        ColliderCircle();
         ColliderCircle(CollisionHandler* game_obj, Transform* transform);
         ColliderCircle(CollisionHandler* game_obj, Transform* transform, float x, float y, float rad);
 

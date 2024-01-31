@@ -31,8 +31,6 @@ namespace Shard {
 		Transform3D trans;
 
 		PhysicsBody();
-
-
 		PhysicsBody(GameObject* game_obj);
 
 		// change to Vec3 for 3d
