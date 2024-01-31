@@ -47,16 +47,16 @@ namespace Shard {
 
 	void DisplaySDL::addToDraw(GameObject* gob) {
 		_toDraw.push_back(gob->transform_);
-		if ((gob->transform_.sprite_path != NULL) && (gob->transform_.sprite_path[0] == '\0')) 
+		if ((gob->transform_->sprite_path != NULL) && (gob->transform_->sprite_path[0] == '\0')) 
 			return;
-		loadTexture(gob->transform_.sprite_path);
+		loadTexture(gob->transform_->sprite_path);
 	}
 
 	void DisplaySDL::removeToDraw(GameObject* gob) {
 		auto iter = _toDraw.begin();
 
 		while (++iter != _toDraw.end()) {
-			if (gob->transform_.h == (*iter).h)
+			if (gob->transform_->h == (*iter)->h)
 				_toDraw.erase(iter);
 			return;
 		}
@@ -135,22 +135,22 @@ namespace Shard {
 		SDL_Rect sRect;
 		SDL_Rect tRect;
 
-		for (Transform trans : _toDraw) {
-			if (((std::string)trans.sprite_path).empty())
+		for (Transform* trans : _toDraw) {
+			if (((std::string)trans->sprite_path).empty())
 				continue;
-			SDL_Texture* sprite = loadTexture(&trans);
+			SDL_Texture* sprite = loadTexture(trans);
 
 			sRect.x = 0;
 			sRect.y = 0;
-			sRect.w = (int)(trans.w * trans.scale_x);
-			sRect.h = (int)(trans.h * trans.scale_y);
+			sRect.w = (int)(trans->w * trans->scale_x);
+			sRect.h = (int)(trans->h * trans->scale_y);
 
-			tRect.x = (int)trans.x;
-			tRect.y = (int)trans.y;
+			tRect.x = (int)trans->x;
+			tRect.y = (int)trans->y;
 			tRect.w = sRect.w;
 			tRect.h = sRect.h;
 
-			SDL_RenderCopyEx(_rend, sprite, &sRect, &tRect, (int)trans.rotz, NULL, SDL_FLIP_NONE);
+			SDL_RenderCopyEx(_rend, sprite, &sRect, &tRect, (int)trans->rotz, NULL, SDL_FLIP_NONE);
 			
 		}
 		

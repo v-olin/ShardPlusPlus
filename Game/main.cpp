@@ -16,11 +16,10 @@ void GameTest::update() {
 	std::string fps = std::to_string(Shard::Bootstrap::getFPS());
 	Shard::Display* display = Shard::Bootstrap::getDisplay();
 	display->showText(("FPS: " + second_fps + " / " + fps).c_str(), 10, 10, 12, 255, 255, 255);
-	spaceship->update();
 }
 
 int GameTest::getTargetFrameRate() {
-	return 10;
+	return 50;
 }
 
 void GameTest::createShip() {

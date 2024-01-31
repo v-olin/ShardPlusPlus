@@ -31,7 +31,7 @@ namespace Shard {
 		debug_color_ = SDL_Color{ 0, 255, 0 }; // green
 
 		parent = game_obj;
-		trans = game_obj->transform_;
+		//trans = game_obj->transform_;
 		//This requires game_obj to have a physicsBody, but here we are trying to create one??
 		//coll_handler = game_obj->body_->coll_handler;
 
@@ -172,22 +172,22 @@ namespace Shard {
 	}
 
 	void PhysicsBody::addRectCollider() {
-		Collider* col = new ColliderRect( coll_handler, &parent->transform_);
+		Collider* col = new ColliderRect( coll_handler, parent->transform_);
 		colliders.push_back(col);
 	}
 
 	void PhysicsBody::addRectCollider(float x, float y, float w, float h) {
-		Collider* col = new ColliderRect(coll_handler, &parent->transform_, x, y, w, h);
+		Collider* col = new ColliderRect(coll_handler, parent->transform_, x, y, w, h);
 		colliders.push_back(col);
 	}
 
 	void PhysicsBody::addCircleCollider() {
-		Collider* col = new ColliderCircle(coll_handler, &parent->transform_);
+		Collider* col = new ColliderCircle(coll_handler, parent->transform_);
 		colliders.push_back(col);
 	}
 
 	void PhysicsBody::addCircleCollider(float x, float y, float rad) {
-		Collider* col = new ColliderCircle(coll_handler, &parent->transform_, x, y, rad);
+		Collider* col = new ColliderCircle(coll_handler, parent->transform_, x, y, rad);
 		colliders.push_back(col);
 	}
 

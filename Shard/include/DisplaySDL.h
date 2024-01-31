@@ -37,7 +37,7 @@ namespace Shard {
 		 void clearDisplay() override;
 
 	private:
-		std::vector<Transform> _toDraw;
+		std::vector<Transform*> _toDraw;
 		std::vector<Line> _linesToDraw;
 		std::vector<Circle> _circlesToDraw;
 		std::unordered_map<std::string, SDL_Texture*> spriteBuffer;
