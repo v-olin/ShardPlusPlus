@@ -29,6 +29,7 @@ namespace Shard {
 		debug_color_ = SDL_Color{ 0, 255, 0, 255 }; // green
 		parent = game_obj;
 
+		// TODO: initializer list
 		angular_drag = 0.01f;
 		drag = 0.01f;
 		mass = 1.f;

@@ -165,8 +165,11 @@ namespace Shard {
 
 	ColliderRect::ColliderRect(CollisionHandler* game_obj, Transform* transform, float x, float y, float w, float h)
 		: Collider(game_obj, transform, x, y) {
-		this->width = w;
-		this->height = h;
+		//this->width = w;
+		//this->height = h;
+
+		this->base_width = w;
+		this->base_height = h;
 
 		rotate_at_offset = true;
 		from_trans = false;
@@ -208,7 +211,7 @@ namespace Shard {
 			y0 = y - transform->centre.y;
 
 			x1 = (float)(x0 * cos(angle) - y0 * sin(angle));
-			y1 = (float)(x0 * sin(angle) + y0 * sin(angle));
+			y1 = (float)(x0 * sin(angle) + y0 * cos(angle));
 
 			x = x1 + (float)transform->centre.x;
 			y = y1 + (float)transform->centre.y;
@@ -342,6 +345,7 @@ namespace Shard {
 	void ColliderRect::draw(SDL_Color color) {
 		// TODO: cannot do until display is finished
 		Display* d = Bootstrap::getDisplay();
+		recalculate();
 
 		int tx = box_top_left.x;
 		int ty = box_top_left.y;

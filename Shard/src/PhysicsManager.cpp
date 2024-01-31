@@ -16,6 +16,7 @@ namespace Shard {
 	}
 
 	void PhysicsManager::addPhysicsObject(PhysicsBody* body) {
+		// TODO: std::find?
 		bool exists = false;
 		for(size_t i = 0; i < all_physics_objects.size(); i++){
 			auto other = all_physics_objects.at(i);

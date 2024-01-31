@@ -8,8 +8,6 @@
 #include "Collider.h"
 
 namespace Shard {
-	class  Transform;
-
 	class  PhysicsBody {
 	public:
 		float angular_drag;
@@ -66,7 +64,7 @@ namespace Shard {
 		float torque_;
 		glm::vec2 force_;
 		long time_interval_;
-		SDL_Color debug_color_;
+		SDL_Color debug_color_{0,255,0,255};
 		std::vector<Collider*> collision_candidates;
 	};
 }

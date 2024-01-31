@@ -60,6 +60,9 @@ void Spaceship::initialize() {
 
     // if you move this stuff above transform_ init ^ then colliders will not be drawn
     // why? ... you figure it out!
+	up = false;
+	down = false;
+
 	body_->mass = 1.f;
 	body_->max_force = 10.f;
 	body_->angular_drag = 0.01f;
@@ -76,6 +79,10 @@ void Spaceship::initialize() {
     //body_->addCircleCollider();
     
     auto t = tags.size();
+    // i just want to drive my fucking spaceship 
+    //(commented since it needs pgysics body)
+	body_->addRectCollider(transform_->x, transform_->y, 40, 40);
+
     GameObject::addTag("Spaceship");
 }
 
@@ -84,7 +91,6 @@ void Spaceship::update() {
     //0x00000295ee25f3a0
     //0x00000295ee25f5e0
     Shard::Bootstrap::getDisplay()->addToDraw(this);
-    
 }
 
 void Spaceship::physicsUpdate() {

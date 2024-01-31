@@ -13,13 +13,13 @@ namespace Shard {
 	public:
 		int sx, sy;
 		int ex, ey;
-		int r, g, b, a;
+		int r, g, b, a{255};
 	};
 
 	class Circle {
 	public:
 		int x, y, radius;
-		int r, g, b, a;
+		int r, g, b, a{255};
 	};
 
 	class DisplaySDL : public DisplayText {
