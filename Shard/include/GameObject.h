@@ -10,7 +10,7 @@ namespace Shard {
 
     class  GameObject {
     public:
-        Transform3D transform_;
+        Transform3D* transform_;
         bool transient_, to_be_destroyed_, visible_;
         PhysicsBody* body_ = nullptr;
         // change this if erases are frequent
@@ -18,7 +18,7 @@ namespace Shard {
 
         GameObject();
         GameObject(const GameObject* src){
-            transform_ = Transform3D(src->transform_);
+            transform_ = src->transform_;
             //body_ = PhysicsBody(src->body_);
             body_ = src->body_;
             tags = src->tags;

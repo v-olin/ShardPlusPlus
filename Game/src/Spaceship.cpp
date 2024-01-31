@@ -69,15 +69,15 @@ void Spaceship::handleEvent(Shard::InputEvent ev, Shard::EventType et) {
 }
 
 void Spaceship::initialize() {
-	transform_.x = 500.f;
-	transform_.y = 500.f;
+    setPhysicsEnabled();
+	transform_->x = 500.f;
+	transform_->y = 500.f;
     auto path = Shard::Bootstrap::getAssetManager()->getAssetPath("spaceship.png");
-    transform_.sprite_path = path;
+    transform_->sprite_path = path;
 
 	up = false;
 	down = false;
 
-    setPhysicsEnabled();
     //body_ = new Shard::PhysicsBody();
 
 	body_->mass = 1.f;
@@ -114,9 +114,9 @@ void Spaceship::physicsUpdate() {
     if (turn_right)
         body_->addTorque(0.3f);
     if (up)
-        body_->addForce(transform_.forward, 0.5f);
+        body_->addForce(transform_->forward, 0.5f);
     if (down)
-        body_->addForce(transform_.forward, -0.2);
+        body_->addForce(transform_->forward, -0.2);
 }
 
 void Spaceship::prePhysicsUpdate() {

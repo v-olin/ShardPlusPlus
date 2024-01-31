@@ -47,6 +47,7 @@ namespace Shard {
 
 	void GameObject::setPhysicsEnabled() {
 		body_ = new PhysicsBody(this);
+		transform_ = &(body_->trans);
 	}
 
 	bool GameObject::queryPhysicsEnabled() {
@@ -57,8 +58,8 @@ namespace Shard {
 		if (!transient_)
 			return;
 
-		if (transform_.x > 0 && transform_.x < 1920 && // get width of display
-			transform_.y > 0 && transform_.y < 1080) { // get height of display 
+		if (transform_->x > 0 && transform_->x < 1920 && // get width of display
+			transform_->y > 0 && transform_->y < 1080) { // get height of display 
 			return;
 		}
 

@@ -28,6 +28,7 @@ namespace Shard {
 		GameObject* parent;
 		std::vector<Collider*> colliders;
 		CollisionHandler* coll_handler;
+		Transform3D trans;
 
 		PhysicsBody();
 
@@ -68,7 +69,6 @@ namespace Shard {
 		glm::vec2 force_;
 		long time_interval_;
 		SDL_Color debug_color_;
-		Transform3D trans;
 		std::vector<Collider*> collision_candidates;
 	};
 }
