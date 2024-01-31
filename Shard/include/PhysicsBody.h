@@ -18,7 +18,7 @@ namespace Shard {
 		float max_force;
 		float max_torque;
 		bool is_kinematic;
-		bool allows_pass_through;
+		bool pass_through;
 		bool uses_gravity;
 		bool stop_on_collision;
 		bool reflect_on_collision;

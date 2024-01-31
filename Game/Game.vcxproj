@@ -108,12 +108,14 @@ IF EXIST ..\Shard\vendor\glew\lib\glew32.dll\ (xcopy /Q /E /Y /I ..\Shard\vendor
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Asteriod.h" />
+    <ClInclude Include="include\Bullet.h" />
     <ClInclude Include="include\Spaceship.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\Asteriod.cpp" />
+    <ClCompile Include="src\Bullet.cpp" />
     <ClCompile Include="src\Spaceship.cpp" />
   </ItemGroup>
   <ImportGroup Label="Shared">

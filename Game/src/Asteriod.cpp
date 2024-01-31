@@ -12,7 +12,6 @@ Asteroid::Asteroid() : GameObject() {
 }
 
 void Asteroid::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
-    // this is how shoot hmm??
     if (et == Shard::EventType::MouseDown && ie.button == SDL_BUTTON_MIDDLE) {
         if ((body_->checkCollisions(glm::vec2{ ie.x, ie.y })).has_value()) {
             torque_counter += 10;
@@ -37,7 +36,7 @@ void Asteroid::initialize()
     body_->is_kinematic = false;
     
     // TODO: Add randomness to initial force
-    body_->addForce(transform_->right, 2.0f);
+    //body_->addForce(transform_->right, 2.0f);
 
     body_->addCircleCollider(32, 32, 30);
 
@@ -58,8 +57,9 @@ void Asteroid::physicsUpdate() {
         torque_counter -= 1;
 }
 
-
 void Asteroid::onCollisionEnter(Shard::PhysicsBody body) {
+
+    Shard::Logger::log("INSIDE ONCOLLISIONENTER ASTEROOOOOOOOID@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", Shard::LoggerLevel::LOG_LEVEL_ALL);
 
     if (body.parent->hasTag("Bullet")) {
         to_be_destroyed_ = true;

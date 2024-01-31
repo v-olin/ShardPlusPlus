@@ -1,6 +1,7 @@
 #include "PhysicsManager.h"
 #include "CollisionHandler.h"
 #include "Bootstrap.h"
+#include "Logger.h"
 
 #include <algorithm>
 #include <list>
@@ -50,7 +51,13 @@ namespace Shard {
 		//hopefully the values in the list dont change, if they do, implement bubble sort.
 		SAPEntry lhs = *(sap_x.begin());
 
-		for(size_t i = 0; i < sap_x.size() - 1; ++i){
+		sap_x.sort([](const SAPEntry& lhs, const SAPEntry& rhs) {
+			return lhs.start < rhs.start;
+		});
+
+		/*
+		// bubble sort
+		for(size_t i = 0; i < sap_x.size() - 1; i++){
 			auto iter = sap_x.begin();
 			for (size_t j = 0; j < sap_x.size() - 1 - i; ++j) {
 				auto curr = iter, next = ++iter;
@@ -61,12 +68,12 @@ namespace Shard {
 				}
 			}
 		}
+		*/
 	}
 
 	void PhysicsManager::reportCollisionsInAxis() {
-		std::list<SAPEntry> active_objects;
-		std::list<size_t> to_remove;
-		
+		std::vector<SAPEntry> active_objects;
+		//std::vector<size_t> to_remove;
 
 		auto equal = [](SAPEntry a, SAPEntry b) {
 			return a.start == b.start && a.end == b.end && a.owner == b.owner;
@@ -76,15 +83,26 @@ namespace Shard {
 			active_objects.push_back(start);
 
 			auto iter = active_objects.begin();
-			for (size_t i = 1; i < active_objects.size(); i++) {
-				SAPEntry active = *(++iter);
+			for (size_t i = 0; i < active_objects.size(); i++) {
+				SAPEntry active = active_objects[i];
+				//SAPEntry active = *(++iter);
 				
+				// Ensures an object can't collide with itself
 				if (equal(start, active))
 					continue;
 				
 				if (start.start >= active.end)
-					to_remove.push_back(i);
+					//to_remove.push_back(i);
+					int x = 0; // <-- dummy instruction
 				else {
+					// Collision!!!!
+
+					if (start.owner->parent->hasTag("Bullet")) {
+ 						Logger::log("[IF] ACTIVE: " + active.owner->parent->getTags(), LOG_LEVEL_ALL);
+					} else if (active.owner->parent->hasTag("Bullet")) {
+						Logger::log("[ELSE IF] START: " + start.owner->parent->getTags(), LOG_LEVEL_ALL);
+					}
+
 					CollidingObject col;
 				
 					if (start.owner->mass > active.owner->mass) {
@@ -102,13 +120,15 @@ namespace Shard {
 				}
 			}
 
+			/*
 			for (auto riter = to_remove.rbegin(); riter != to_remove.rend(); ++riter) {
 				auto act_iter = active_objects.begin();
 				std::advance(act_iter, *riter);
 				active_objects.erase(act_iter);
 			}
+			*/
 
-			to_remove.clear();
+			//to_remove.clear();
 		}
 	}
 
@@ -135,9 +155,7 @@ namespace Shard {
 		}
 
 		int i = 0;
-		for (CollidingObject col : collidings_) {
-	/*	for (size_t i = collidings_.size() - 1; i >= 0; --i) {
-			CollidingObject col = collidings_.at(i);*/
+		for (CollidingObject& col : collidings_) {
 
 			auto a_handler = col.a.coll_handler;
 			auto b_handler = col.b.coll_handler;
@@ -187,7 +205,7 @@ namespace Shard {
 		// TODO: Potentially flawed implementation.
 		CollidingObject col { a, b };
 
-		for (auto col_ : collidings_) {
+		for (auto &col_ : collidings_) {
 			if (col == col_)
 				return true;
 		}
@@ -196,8 +214,6 @@ namespace Shard {
 	}
 
 	void PhysicsManager::broadPassSearchAndSweep() {
-
-		std::list<PhysicsBody> candidates;
 		for (PhysicsBody* body : all_physics_objects) {
 			SAPEntry sx;
 			glm::vec2 tmp = body->min_and_max_x;
@@ -206,8 +222,21 @@ namespace Shard {
 			sx.start = tmp.x;
 			sx.end = tmp.y;
 
+			// TODO: also do dis for y-axis
 			addToList(sx);
 		}
+
+		// vvvvvvvvvvvvvvv Michael's comment 8)
+		//            outputList (sapX);
+		// What we have at this point is a sorted linked list of all
+		// our objects in order.  So now we go over them all to see 
+		// what are viable collision candidates.  If they don't overlap 
+		// in the axis, they can't collide so don't bother checking them.
+		// Now we find all the candidates that overlap in 
+		// the Y axis from those that overlap in the X axis.
+		// A two pass sweep and prune.
+
+		// For all collisions in X, we need to now check in Y too see comment above from C# code base^^
 
 		reportCollisionsInAxis();
 		clearList();
@@ -230,7 +259,7 @@ namespace Shard {
 			if (possible_impulse.has_value()) {
 				impulse = possible_impulse.value();
 
-				if (!col_obj.a.allows_pass_through && !col_obj.b.allows_pass_through) {
+				if (!col_obj.a.pass_through && !col_obj.b.pass_through) {
 					mass_total = col_obj.a.mass + col_obj.b.mass;
 
 					if (col_obj.a.is_kinematic)

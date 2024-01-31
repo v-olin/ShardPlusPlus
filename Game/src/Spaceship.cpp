@@ -1,5 +1,6 @@
 #include "Spaceship.h"
 #include "Logger.h"
+#include "Bullet.h"
 #include "Bootstrap.h"
 #include "Logger.h"
 
@@ -9,10 +10,14 @@ Spaceship::Spaceship() : GameObject() {
 	initialize();
 }
 
-void Spaceship::fireBullet() {}
+void Spaceship::fireBullet() {
+    Bullet* b = new Bullet();
+    b->setupBullet(this, transform_->centre.x, transform_->centre.y);
+    b->transform_->rotate(transform_->rotz);
+}
 
 void Spaceship::handleEvent(Shard::InputEvent ev, Shard::EventType et) {
-    Shard::Logger::log("handleEvent in ship");
+    //Shard::Logger::log("handleEvent in ship");
     if (et == Shard::EventType::KeyDown)
     {
         if (ev.key == (int)SDL_SCANCODE_W)

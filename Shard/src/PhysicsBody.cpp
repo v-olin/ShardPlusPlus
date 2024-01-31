@@ -18,7 +18,7 @@ namespace Shard {
 		max_force(50),
 		max_torque(100),
 		is_kinematic(true),
-		allows_pass_through(false),
+		pass_through(false),
 		uses_gravity(true),
 		stop_on_collision(false),
 		reflect_on_collision(true),
@@ -58,9 +58,10 @@ namespace Shard {
 		}
 	}
 
+	// const bool :nerd_face_emoji:
 	glm::vec2 PhysicsBody::getMinAndMax(const bool x) {
-		int min = std::numeric_limits<int>::min();
-		int max = std::numeric_limits<int>::max();
+		int min = std::numeric_limits<int>::max();
+		int max = std::numeric_limits<int>::min();
 
 		for (auto &collider : colliders) {
 			if (x) {
@@ -80,7 +81,34 @@ namespace Shard {
 		}
 
 		return { min, max };
+
+		//int min = std::numeric_limits<int>::min();
+		//int max = std::numeric_limits<int>::max();
+
+		/*
+		    float min = Int32.MaxValue;
+            float max = -1 * min;
+            float[] tmp;
+
+            foreach (Collider col in myColliders)
+            {
+
+                if (x)
+                    tmp = col.MinAndMaxX;
+                else
+                    tmp = col.MinAndMaxY;
+
+                if (tmp[0] < min)
+                    min = tmp[0];
+
+                if (tmp[1] > max)
+                    max = tmp[1];
+            }
+
+		*/
+
 	}
+
 	void PhysicsBody::addTorque(const float dir) {
 		if (is_kinematic)
 			return;

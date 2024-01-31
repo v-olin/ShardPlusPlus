@@ -13,6 +13,7 @@
 class GameTest : public Shard::Game, public Shard::InputListener {
 public:
 	GameTest();
+
 	void initalize();
 	void createShip();
 	void createAsteroid();
@@ -22,6 +23,8 @@ public:
 
 	void handleEvent(Shard::InputEvent ev, Shard::EventType et);
 
+	//std::unique_ptr<Asteroid> asteroid{ nullptr };
+	//std::vector<Asteroid> asteroids{};
 	std::unique_ptr<Asteroid> asteroid{ nullptr };
 	std::unique_ptr<Spaceship> spaceship{ nullptr };
 };

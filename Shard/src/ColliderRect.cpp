@@ -123,7 +123,21 @@ namespace Shard {
 	}
 
 	std::optional<glm::vec2> ColliderRect::checkCollision(Collider* other) {
-		return other->checkCollision(this);
+		//return other->checkCollision(this);
+
+		ColliderCircle circ;
+		ColliderRect rect;
+
+		if (typeid(circ) == typeid(other)) {
+			ColliderCircle* circ_p = dynamic_cast<ColliderCircle*>(other);
+			return checkCollision(circ_p);
+		}
+		else if (typeid(rect) == typeid(other)) {
+			ColliderRect* rect_p = dynamic_cast<ColliderRect*>(other);
+			return checkCollision(rect_p);
+		}
+		else
+			return std::nullopt;
 	}
 
 	std::optional<glm::vec2> ColliderRect::checkCollision(ColliderRect* other) {

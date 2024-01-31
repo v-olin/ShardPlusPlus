@@ -16,6 +16,7 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="main.h" />
+    <ClInclude Include="include\Bullet.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -25,5 +26,6 @@
     <ClCompile Include="src\Spaceship.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Bullet.cpp" />
   </ItemGroup>
 </Project>
