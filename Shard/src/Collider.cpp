@@ -1,5 +1,7 @@
 #include "Transform.h"
 #include "Collider.h"
+#include "Bootstrap.h"
+#include "Display.h"
 
 namespace Shard {
 	ColliderCircle::ColliderCircle(CollisionHandler* game_obj, Transform* transform)
@@ -305,7 +307,16 @@ namespace Shard {
 		return std::nullopt;
 	}
 
-	void ColliderRect::draw(SDL_Color color) {
+	void ColliderRect::draw(SDL_Color col) {
 		// TODO: cannot do until display is finished
+		Display* d = Bootstrap::getDisplay();
+
+		d->drawLine((int)min_and_max_x[0], (int)min_and_max_y[0], (int)min_and_max_x[1], (int)min_and_max_y[0], col);
+		d->drawLine((int)min_and_max_x[0], (int)min_and_max_y[0], (int)min_and_max_x[0], (int)min_and_max_y[1], col);
+		d->drawLine((int)min_and_max_x[1], (int)min_and_max_y[0], (int)min_and_max_x[1], (int)min_and_max_y[1], col);
+		d->drawLine((int)min_and_max_x[0], (int)min_and_max_y[1], (int)min_and_max_x[1], (int)min_and_max_y[1], col);
+
+		//d->drawCircle((int)x, (int)y, 2, col);
+
 	}
 }

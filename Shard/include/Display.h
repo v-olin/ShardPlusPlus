@@ -3,35 +3,30 @@
 #include "Transform.h"
 #include "GameObject.h"
 #include <string>
+#include <SDL.h>
 
 namespace Shard {
 
-    typedef struct Color {
-        int R;
-        int G;
-        int B;
-        int A;
-    } Color;
 	
     class  Display { // this is inherited by DisplaySDL and DisplayText
 	public:
 
         
         virtual  void drawLine(int x, int y, int x2, int y2, int r, int g, int b, int a) {}
-        virtual  void drawLine(int x, int y, int x2, int y2, Color col)
+        virtual  void drawLine(int x, int y, int x2, int y2, SDL_Color col)
         {
-            drawLine(x, y, x2, y2, col.R, col.G, col.B, col.A);
+            drawLine(x, y, x2, y2, col.r, col.g, col.b, col.a);
         }
         virtual  void drawCircle(int x, int y, int rad, int r, int g, int b, int a) {}
 
-        virtual  void drawCircle(int x, int y, int rad, Color col)
+        virtual  void drawCircle(int x, int y, int rad, SDL_Color col)
         {
-            drawCircle(x, y, rad, col.R, col.G, col.B, col.A);
+            drawCircle(x, y, rad, col.r, col.g, col.b, col.a);
         }
 
-        virtual  void drawFilledCircle(int x, int y, int rad, Color col)
+        virtual  void drawFilledCircle(int x, int y, int rad, SDL_Color col)
         {
-            drawFilledCircle(x, y, rad, col.R, col.G, col.B, col.A);
+            drawFilledCircle(x, y, rad, col.r, col.g, col.b, col.a);
         }
 
         virtual  void drawFilledCircle(int x, int y, int rad, int r, int g, int b, int a)
@@ -43,9 +38,9 @@ namespace Shard {
             }
         }
 
-         void showText(const char* text, double x, double y, int size, Color col)
+         void showText(const char* text, double x, double y, int size, SDL_Color col)
         {
-            showText(text, x, y, size, col.R, col.G, col.B);
+            showText(text, x, y, size, col.r, col.g, col.b);
         }
 
         virtual  void setFullscreen() = 0;
