@@ -62,7 +62,6 @@ void Spaceship::initialize() {
     // why? ... you figure it out!
 	up = false;
 	down = false;
-
 	body_->mass = 1.f;
 	body_->max_force = 10.f;
 	body_->angular_drag = 0.01f;
@@ -72,13 +71,9 @@ void Spaceship::initialize() {
 	body_->impart_force = false;
 	body_->is_kinematic = false;
 
-	up = false;
-	down = false;
-
-    //body_->addRectCollider();
-    body_->addCircleCollider();
+    body_->addRectCollider();
+    //body_->addCircleCollider();
     
-    auto t = tags.size();
     GameObject::addTag("Spaceship");
 }
 
@@ -107,6 +102,15 @@ void Spaceship::prePhysicsUpdate() {
 void Spaceship::killMe() {
     // TODO: Clean up!!!
 }
-void Spaceship::onCollisionEnter(Shard::PhysicsBody body) {}
-void Spaceship::onCollisionExit(Shard::PhysicsBody body) {}
-void Spaceship::onCollisionStay(Shard::PhysicsBody body) {}
+
+void Spaceship::onCollisionEnter(Shard::PhysicsBody body) {
+    // TODO: Lower HP?
+}
+
+void Spaceship::onCollisionExit(Shard::PhysicsBody body) {
+    // TODO: Not sure...
+}
+
+void Spaceship::onCollisionStay(Shard::PhysicsBody body) {
+    // TODO: Not sure...
+}

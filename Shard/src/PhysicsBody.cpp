@@ -1,6 +1,9 @@
 #include "PhysicsBody.h"
 #include "PhysicsManager.h"
 
+#include "ColliderCircle.h"
+#include "ColliderRect.h"
+
 #include <limits>
 #include <algorithm>
 
