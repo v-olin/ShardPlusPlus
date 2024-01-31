@@ -16,13 +16,13 @@ namespace Shard {
 	
 	class TextDetails {
 	public:
-		std::string text;
-		double x;
-		double y;
-		SDL_Color col;
-		int size;
-		TTF_Font* font;
-		SDL_Texture* lblText;
+		std::string text{};
+		double x{};
+		double y{};
+		SDL_Color col{};
+		int size{};
+		TTF_Font* font{ nullptr };
+		SDL_Texture* lblText{nullptr};
 
 		 TextDetails(const TextDetails& src){
 			this->text = src.text;
@@ -57,11 +57,11 @@ namespace Shard {
 
 	class DisplayText : public Display {
 	protected:
-		SDL_Window* _window;
-		SDL_Renderer* _rend;
+		SDL_Window* _window{ nullptr };
+		SDL_Renderer* _rend{ nullptr };
 	public:
-		Uint32 _format;
-		int _access;
+		Uint32 _format{};
+		int _access{};
 		
 		 void clearDisplay() override;
 		 TTF_Font* loadFont(const std::string& font_name, int size);

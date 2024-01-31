@@ -154,12 +154,12 @@ namespace Shard {
 			
 		}
 		
-		for (const Circle c : _circlesToDraw) {
+		for (const Circle& c : _circlesToDraw) {
 			SDL_SetRenderDrawColor(_rend, c.r, c.g, c.b, c.a);
 			renderCircle(c.x, c.y, c.radius);
 		}
 
-		for (const Line l : _linesToDraw) {
+		for (const Line& l : _linesToDraw) {
 			SDL_SetRenderDrawColor(_rend, (Uint8)l.r, (Uint8)l.g, (Uint8)l.b, (Uint8)l.a);
 			SDL_RenderDrawLine(_rend, l.sx, l.sy, l.ex, l.ey);
 		}

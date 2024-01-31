@@ -6,24 +6,20 @@
 #include "Spaceship.h"
 
 #include <vector>
+#include <memory>
 
 class GameTest : public Shard::Game {
 
 	//class GameTest {
 public:
-	GameTest() {};
+	GameTest();
+	void initalize();
+	void createShip();
+
 	void update();
 	int getTargetFrameRate();
 
-	void initalize();
-
-	void createShip();
-
 	//void handleInput(Shard::InputEvent ev, Shard::EventType et);
 
-
-	Shard::GameObject* background;
-	//std::vector<Shard::GameObject> asteriods;
-
-
+	std::unique_ptr<Spaceship> spaceship{ nullptr };
 };

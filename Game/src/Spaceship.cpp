@@ -116,7 +116,7 @@ void Spaceship::physicsUpdate() {
     if (up)
         body_->addForce(transform_.forward, 0.5f);
     if (down)
-        body_->addForce(transform_.forward, -0.2);
+        body_->addForce(transform_.forward, -0.2f);
 }
 
 void Spaceship::prePhysicsUpdate() {

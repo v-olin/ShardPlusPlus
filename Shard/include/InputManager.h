@@ -30,7 +30,7 @@ namespace Shard {
 		 void getInput();
 	private:
 		std::unordered_set<InputListener*> myListeners;
-		double tick;
-		double time_interval;
+		double tick{};
+		double time_interval{};
 	};
 }

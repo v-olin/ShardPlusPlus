@@ -6,10 +6,11 @@ namespace Shard {
 
 	class Game {
 	public:
-		AssetManager* assets;
+		AssetManager* assets{ nullptr };
 
 		AssetManager* getAssetManager() {
-			assets = &AssetManager::getInstance();
+			if (!assets)
+				assets = &AssetManager::getInstance();
 			return assets;
 		}
 		virtual void initalize() {}

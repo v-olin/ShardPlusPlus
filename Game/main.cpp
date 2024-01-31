@@ -5,45 +5,27 @@
 #include "Spaceship.h"
 
 #include <iostream>
-#include <memory>
+
 
 #undef main
 
-std::unique_ptr<Spaceship> ship_pointer;
+GameTest::GameTest() {}
 
 void GameTest::update() {
 	std::string second_fps = std::to_string(Shard::Bootstrap::getSecondFPS());
 	std::string fps = std::to_string(Shard::Bootstrap::getFPS());
 	Shard::Display* display = Shard::Bootstrap::getDisplay();
 	display->showText(("FPS: " + second_fps + " / " + fps).c_str(), 10, 10, 12, 255, 255, 255);
-	ship_pointer->update();
+	spaceship->update();
 }
 
 int GameTest::getTargetFrameRate() {
 	return 10;
 }
 
-
-//void handleSpaceShipInput(Shard::InputEvent ev, Shard::EventType et) {
-//    ship_pointer->handleEvent(ev, et);
-//}
-
 void GameTest::createShip() {
-	//THIS CRASHES IT:
-	//ship_pointer = new Spaceship();
-
-	ship_pointer = std::make_unique<Spaceship>();
-	Shard::Bootstrap::getInput()->addListeners(ship_pointer.get());
-	//Random rand = new Random();
-	int offsetx = 0, offsety = 0;
-
-	//Shard::GameObject asteroid;
-
-
-	//background = new Shard::GameObject();
-	//background->transform_.sprite_path = Shard::AssetManager::getInstance().getAssetPath("background2.jpg");
-	//background->transform_.x = 0;
-	//background->transform_.y = 0;
+	spaceship = std::make_unique<Spaceship>();
+	Shard::Bootstrap::getInput()->addListeners(spaceship.get());
 }
 
 void GameTest::initalize() {
@@ -54,12 +36,14 @@ void GameTest::initalize() {
 int main() {
 	Shard::Logger::log("Hello from game?!?!?");
 
-	Shard::Logger::log("Runnning Bootstrap::Main");
+	Shard::Logger::log("Creating 'GameTest' object");
 	GameTest game;
+	
 	Shard::Bootstrap::setRunningGame(&game);
+
+	Shard::Logger::log("Runnning Bootstrap::Main");
 	Shard::Bootstrap::Main({});
 
-	Shard::Logger::log("Done?!?");
-
+	Shard::Logger::log("Exited out of Bootstrap::Main. Exiting program.");
 	return 0;
 }

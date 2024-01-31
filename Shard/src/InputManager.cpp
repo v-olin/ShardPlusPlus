@@ -16,7 +16,6 @@ namespace Shard {
 
 	void InputManager::getInput() {
 		SDL_Event ev;
-		int res;
 		InputEvent ie;
 
 		//TODO add back when bootstrap is implemented
