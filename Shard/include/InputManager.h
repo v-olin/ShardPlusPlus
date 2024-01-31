@@ -18,7 +18,7 @@ namespace Shard {
 	class InputListener {
 	public:
 		virtual  ~InputListener() {}
-		virtual  void handleEvent(InputEvent ie, EventType et) = 0;
+		virtual void handleEvent(InputEvent ie, EventType et) = 0;
 	};
 
 	class InputManager {

@@ -24,13 +24,27 @@ int GameTest::getTargetFrameRate() {
 }
 
 void GameTest::createShip() {
+	Shard::Logger::log("Creating spaceship");
 	spaceship = std::make_unique<Spaceship>();
 	Shard::Bootstrap::getInput()->addListeners(spaceship.get());
 }
 
+void GameTest::createAsteroid() {
+	Shard::Logger::log("Creating asteroid");
+	asteroid = std::make_unique<Asteroid>();
+	Shard::Bootstrap::getInput()->addListeners(asteroid.get());
+}
+
 void GameTest::initalize() {
-	Shard::Logger::log("init game");
+	Shard::Logger::log("Initializing game");
 	createShip();
+	// TODO: Create more than one.
+	createAsteroid();
+}
+
+void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
+	if (et != Shard::EventType::MouseDown)
+		Shard::Logger::log("Pressing button " + ie.button);
 }
 
 int main() {

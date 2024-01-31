@@ -65,7 +65,7 @@ void Spaceship::initialize() {
 	body_->mass = 1.f;
 	body_->max_force = 10.f;
 	body_->angular_drag = 0.01f;
-	body_->drag = 0.f;
+	body_->drag = 0.1f;
 	body_->stop_on_collision = false;
 	body_->reflect_on_collision = false;
 	body_->impart_force = false;
