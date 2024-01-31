@@ -75,14 +75,10 @@ void Spaceship::initialize() {
 	up = false;
 	down = false;
 
-    body_->addRectCollider();
-    //body_->addCircleCollider();
+    //body_->addRectCollider();
+    body_->addCircleCollider();
     
     auto t = tags.size();
-    // i just want to drive my fucking spaceship 
-    //(commented since it needs pgysics body)
-	body_->addRectCollider(transform_->x, transform_->y, 40, 40);
-
     GameObject::addTag("Spaceship");
 }
 
