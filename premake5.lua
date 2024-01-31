@@ -82,6 +82,7 @@ project "Game"
 	location "Game"
 	kind "ConsoleApp"
 	language "C++"
+	links { "Shard" }
 	
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")

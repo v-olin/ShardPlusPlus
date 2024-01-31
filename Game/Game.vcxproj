@@ -33,9 +33,6 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <ImportGroup Label="Shared">
-    <Import Project="..\Shard\Shard.vcxitems" Label="Shared" />
-  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -119,6 +116,9 @@ IF EXIST ..\bin\Release-windows-x86_64\Shard\glew32.dll\ (xcopy /Q /E /Y /I ..\b
     <ClCompile Include="src\Asteriod.cpp" />
     <ClCompile Include="src\Spaceship.cpp" />
   </ItemGroup>
+  <ImportGroup Label="Shared">
+    <Import Project="..\Shard\Shard.vcxitems" Label="Shared" />
+  </ImportGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
