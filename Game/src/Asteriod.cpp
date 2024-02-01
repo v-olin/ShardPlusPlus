@@ -39,6 +39,7 @@ void Asteroid::initialize()
     //body_->addForce(transform_->right, 2.0f);
 
     body_->addCircleCollider(32, 32, 30);
+    //body_->addRectCollider();
 
     Shard::Bootstrap::getInput()->addListeners(this);
 
@@ -57,11 +58,11 @@ void Asteroid::physicsUpdate() {
         torque_counter -= 1;
 }
 
-void Asteroid::onCollisionEnter(Shard::PhysicsBody body) {
+void Asteroid::onCollisionEnter(Shard::PhysicsBody* body) {
 
     Shard::Logger::log("INSIDE ONCOLLISIONENTER ASTEROOOOOOOOID@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", Shard::LoggerLevel::LOG_LEVEL_ALL);
 
-    if (body.parent->hasTag("Bullet")) {
+    if (body->parent->hasTag("Bullet")) {
         to_be_destroyed_ = true;
 		Shard::Logger::log("Boom!");
     }
@@ -69,8 +70,8 @@ void Asteroid::onCollisionEnter(Shard::PhysicsBody body) {
     Shard::Logger::log("Bang!");
 }
 
-void Asteroid::onCollisionExit(Shard::PhysicsBody body) {
+void Asteroid::onCollisionExit(Shard::PhysicsBody* body) {
     Shard::Logger::log("Anti bang!");
 }
 
-void Asteroid::onCollisionStay(Shard::PhysicsBody body) { }
+void Asteroid::onCollisionStay(Shard::PhysicsBody* body) { }

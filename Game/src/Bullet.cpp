@@ -19,7 +19,7 @@ void Bullet::setupBullet(Spaceship* origin_spaceship, float x, float y) {
 
 	body_->mass = 100.0f;
 	body_->max_force = 50.0f;
-	body_->pass_through = false;
+	body_->pass_through = true;
 
 	body_->addRectCollider((int)x, (int)y, 10, 10);
 
@@ -31,7 +31,7 @@ void Bullet::initialize() {
 }
 
 void Bullet::physicsUpdate() {
-	body_->addForce(transform_->forward, 25.0f);
+	body_->addForce(transform_->forward, 100.0f);
 }
 
 void Bullet::update() {
@@ -57,18 +57,18 @@ void Bullet::update() {
 	);
 }
 
-void Bullet::onCollisionEnter(Shard::PhysicsBody body) {
+void Bullet::onCollisionEnter(Shard::PhysicsBody* body) {
 
 	Shard::Logger::log("INSIDE ONCOLLISIONENTER BULLETtt tttttttt@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", Shard::LoggerLevel::LOG_LEVEL_ALL);
 
-	if (body_->parent->hasTag("Spaceship") == false) {
+	if (body->parent->hasTag("Spaceship") == false) {
 		Shard::Logger::log("Boom! (bullet ded)");
 		to_be_destroyed_ = true;
 	}
 }
 
-void Bullet::onCollisionExit(Shard::PhysicsBody body) {
+void Bullet::onCollisionExit(Shard::PhysicsBody* body) {
 }
 
-void Bullet::onCollisionStay(Shard::PhysicsBody body) {
+void Bullet::onCollisionStay(Shard::PhysicsBody* body) {
 }

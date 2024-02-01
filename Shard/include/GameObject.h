@@ -7,6 +7,7 @@
 
 namespace Shard {
     class  PhysicsBody;
+    class  PhysicsManager;
 
     class  GameObject {
     public:
@@ -33,11 +34,12 @@ namespace Shard {
         void checkDestroyMe();
 
         // to be inherited by other objects
-        virtual void initialize() {}
+        virtual void initialize() = 0;
         virtual void update() {}
         virtual void physicsUpdate() {}
         virtual void prePhysicsUpdate() {}
         // needs physicsManager
-        virtual void killMe() {}
+        virtual void killMe() {
+                   }
     };
 }

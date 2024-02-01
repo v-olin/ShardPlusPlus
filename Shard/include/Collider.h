@@ -17,11 +17,11 @@ namespace Shard {
         float x, y;
         glm::vec2 box_top_left{};
         glm::vec2 box_bottom_right{};
-        glm::vec2 min_and_max_x;
-        glm::vec2 min_and_max_y;
+        //glm::vec2 min_and_max_x;
+        //glm::vec2 min_and_max_y;
 
-        glm::vec2 top_left;
-        glm::vec2 bottom_right;
+       /* glm::vec2 top_left;
+        glm::vec2 bottom_right;*/
 
         bool rotate_at_offset;
         Transform* transform;

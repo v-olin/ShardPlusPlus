@@ -1,4 +1,5 @@
 #include "GameObjectManager.h"
+#include "PhysicsManager.h"
 
 namespace Shard{
 
@@ -48,8 +49,13 @@ namespace Shard{
 			if (gob->to_be_destroyed_)
 				to_be_deleted.push_back(gob);
 		}
+		for (auto& gob : to_be_deleted) {
+			PhysicsManager::getInstance().removePhysicsObject(gob->body_);
+			gob->killMe();
+		}
 
-		// erase-remove idiom
+
+		// erase-remove idiom, TODO: we also need to call killMe() on all objects that is goinmg to be deleted
 		this->myObjects.erase(std::remove_if(this->myObjects.begin(), this->myObjects.end(), [&](const Shard::GameObject* obj) {
 			return std::find(to_be_deleted.begin(), to_be_deleted.end(), obj) != to_be_deleted.end();
 			}), this->myObjects.end());

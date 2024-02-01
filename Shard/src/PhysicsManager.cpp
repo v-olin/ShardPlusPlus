@@ -95,13 +95,13 @@ namespace Shard {
 					//to_remove.push_back(i);
 					int x = 0; // <-- dummy instruction
 				else {
-					// Collision!!!!
+					// Collision!!!!, not actually a collision
 
-					if (start.owner->parent->hasTag("Bullet")) {
+				/*	if (start.owner->parent->hasTag("Bullet")) {
  						Logger::log("[IF] ACTIVE: " + active.owner->parent->getTags(), LOG_LEVEL_ALL);
 					} else if (active.owner->parent->hasTag("Bullet")) {
 						Logger::log("[ELSE IF] START: " + start.owner->parent->getTags(), LOG_LEVEL_ALL);
-					}
+					}*/
 
 					CollidingObject col;
 				
@@ -155,19 +155,22 @@ namespace Shard {
 		}
 
 		int i = 0;
+		bool remove = false;
 		for (CollidingObject& col : collidings_) {
 
-			auto a_handler = col.a.coll_handler;
-			auto b_handler = col.b.coll_handler;
+			auto a_handler = dynamic_cast<CollisionHandler*>(col.a.parent);
+			auto b_handler = dynamic_cast<CollisionHandler*>(col.b.parent);
 
 			if (col.a.parent->to_be_destroyed_) {
 				b_handler->onCollisionExit(nullptr);
-				to_remove.push_back(i);
+				remove = true;
+				//to_remove.push_back(i);
 			}
 
 			if (col.b.parent->to_be_destroyed_) {
 				a_handler->onCollisionExit(nullptr);
-				to_remove.push_back(i);
+				remove = true;
+				//to_remove.push_back(i);
 			}
 
 			std::optional<glm::vec2> impulse = checkCollisionsBetweenObjects(col.a, col.b);
@@ -179,15 +182,21 @@ namespace Shard {
 			else {
 				a_handler->onCollisionExit(&col.b);
 				b_handler->onCollisionExit(&col.a);
-				to_remove.push_back(i);
+				remove = true;
+				//to_remove.push_back(i);
 			}
-			i++;
+			if (remove)
+				to_remove.push_back(i++);
+			remove = false;
+
 		}
 
+		int removed = 0;
 		for (size_t idx : to_remove) {
 			auto iter = collidings_.begin();
-			std::advance(iter, idx);
+			std::advance(iter, idx-removed);
 			collidings_.erase(iter);
+			removed++;
 		}
 
 		to_remove.clear();
@@ -293,8 +302,10 @@ namespace Shard {
 						col_obj.b.stopForces();
 				}
 
-				col_obj.a.coll_handler->onCollisionEnter(&col_obj.b);
-				col_obj.b.coll_handler->onCollisionEnter(&col_obj.a);
+				//col_obj.a.parent->onCollisionEnter(&col_obj.b);
+				//col_obj.b.coll_handler->onCollisionEnter(&col_obj.a);
+				(dynamic_cast<CollisionHandler*>(col_obj.a.parent))->onCollisionEnter(&col_obj.b);
+				(dynamic_cast<CollisionHandler*>(col_obj.b.parent))->onCollisionEnter(&col_obj.a);
 
 				collidings_.push_back(col_obj);
 

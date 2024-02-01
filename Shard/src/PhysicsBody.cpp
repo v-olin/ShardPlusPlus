@@ -23,8 +23,7 @@ namespace Shard {
 		stop_on_collision(false),
 		reflect_on_collision(true),
 		impart_force(true),
-		parent(nullptr),
-		coll_handler(nullptr)
+		parent(nullptr)
 	{
 	}
 
@@ -212,22 +211,26 @@ namespace Shard {
 	}
 
 	void PhysicsBody::addRectCollider() {
-		Collider* col = new ColliderRect(coll_handler, &parent->body_->trans);
+		auto handler = dynamic_cast<CollisionHandler*>(parent);
+		Collider* col = new ColliderRect(handler, &parent->body_->trans);
 		colliders.push_back(col);
 	}
 
 	void PhysicsBody::addRectCollider(float x, float y, float w, float h) {
-		Collider* col = new ColliderRect(coll_handler, &parent->body_->trans, x, y, w, h);
+		auto handler = dynamic_cast<CollisionHandler*>(parent);
+		Collider* col = new ColliderRect(handler, &parent->body_->trans, x, y, w, h);
 		colliders.push_back(col);
 	}
 
 	void PhysicsBody::addCircleCollider() {
-		Collider* col = new ColliderCircle(coll_handler, &parent->body_->trans);
+		auto handler = dynamic_cast<CollisionHandler*>(parent);
+		Collider* col = new ColliderCircle(handler, &parent->body_->trans);
 		colliders.push_back(col);
 	}
 
 	void PhysicsBody::addCircleCollider(float x, float y, float rad) {
-		Collider* col = new ColliderCircle(coll_handler, &parent->body_->trans, x, y, rad);
+		auto handler = dynamic_cast<CollisionHandler*>(parent);
+		Collider* col = new ColliderCircle(handler, &parent->body_->trans, x, y, rad);
 		colliders.push_back(col);
 	}
 

@@ -108,14 +108,19 @@ void Spaceship::killMe() {
     // TODO: Clean up!!!
 }
 
-void Spaceship::onCollisionEnter(Shard::PhysicsBody body) {
+void Spaceship::onCollisionEnter(Shard::PhysicsBody* body) {
+    Shard::Logger::log("INDIDE ONCOLLISIONENTER SPACESHIP");
+    if (!body->parent->hasTag("Bullet"))
+        body_->debug_color_ = { 255, 0, 0, 255 };
     // TODO: Lower HP?
 }
 
-void Spaceship::onCollisionExit(Shard::PhysicsBody body) {
+void Spaceship::onCollisionExit(Shard::PhysicsBody* body) {
+    body_->debug_color_ = { 0, 255, 0, 255 };
     // TODO: Not sure...
 }
 
-void Spaceship::onCollisionStay(Shard::PhysicsBody body) {
+void Spaceship::onCollisionStay(Shard::PhysicsBody* body) {
     // TODO: Not sure...
+    body_->debug_color_ = { 0, 0, 255, 255 };
 }

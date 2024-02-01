@@ -25,7 +25,8 @@ namespace Shard {
 		bool impart_force;
 		GameObject* parent;
 		std::vector<Collider*> colliders;
-		CollisionHandler* coll_handler;
+		SDL_Color debug_color_{0,255,0,255};
+		//CollisionHandler* coll_handler;
 		Transform3D trans;
 
 		PhysicsBody();
@@ -64,7 +65,6 @@ namespace Shard {
 		float torque_;
 		glm::vec2 force_;
 		long time_interval_;
-		SDL_Color debug_color_{0,255,0,255};
 		std::vector<Collider*> collision_candidates;
 	};
 }

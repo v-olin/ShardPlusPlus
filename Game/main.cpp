@@ -39,24 +39,26 @@ void GameTest::initalize() {
 	Shard::Logger::log("Initializing game");
 	createShip();
 	createAsteroid();
+	Shard::Bootstrap::getInput()->addListeners(this);
 }
 
+std::vector<Asteroid> asteroids;
 void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 	if (et != Shard::EventType::MouseDown)
 		return;
 
-	/*
-	if (ie.button == SDL_BUTTON_LEFT) {
-		Asteroid asteroid{};
-		asteroid.transform_->x = ie.x;
-		asteroid.transform_->y = ie.y;
-		asteroids.push_back(asteroid);
-	}
-	else if (ie.button == SDL_BUTTON_RIGHT) {
-		for (Asteroid& astr : asteroids)
-			astr.to_be_destroyed_ = true;
-	}
-	*/
+	
+	//if (ie.button == SDL_BUTTON_LEFT) {
+	//	Asteroid asteroid{};
+	//	asteroid.transform_->x = ie.x;
+	//	asteroid.transform_->y = ie.y;
+	//	asteroids.push_back(asteroid);
+	//}
+	//else if (ie.button == SDL_BUTTON_RIGHT) {
+	//	for (Asteroid& astr : asteroids)
+	//		astr.to_be_destroyed_ = true;
+	//}
+	
 }
 
 int main() {

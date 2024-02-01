@@ -79,10 +79,10 @@ namespace Shard {
 		float tx, ty, bx, by, w, h;
 		ColliderRect mink = ColliderRect();
 
-		tx = left - other.right;
-		ty = other.top - bottom;
-		bx = right - other.left;
-		by = other.bottom - top;
+		tx = getLeft() - other.getRight();
+		ty = other.getTop() - getBottom();
+		bx = getRight() - other.getLeft();
+		by = other.getBottom() - getTop();
 
 		w = width + other.width;
 		h = height + other.height;
@@ -96,23 +96,23 @@ namespace Shard {
 	}
 
 	glm::vec2 ColliderRect::calculatePenetration(glm::vec2 point) {
-		float min = abs(right - point.x);
+		float min = abs(getRight() - point.x);
 		float cutoff = 0.2f;
 
-		// left edge
-		if (abs(point.x - left) <= min)
-			return glm::vec2{ abs(point.x - left + cutoff), point.y };
+		// getLeft() edge
+		if (abs(point.x - getLeft()) <= min)
+			return glm::vec2{ abs((point.x - getLeft()) + cutoff), point.y };
 
-		// bottom
-		if (abs(bottom - point.y) <= min)
-			return glm::vec2{ point.x, abs(bottom - point.y + cutoff) };
+		// getBottom()
+		if (abs(getBottom() - point.y) <= min)
+			return glm::vec2{ point.x, abs((getBottom() - point.y) + cutoff) };
 
-		// top
-		if (abs(top - point.y) <= min)
-			return glm::vec2{ point.x, -1 * abs(top - point.y) - cutoff };
+		// getTop()
+		if (abs(getTop() - point.y) <= min)
+			return glm::vec2{ point.x, -1 * abs(getTop() - point.y) - cutoff };
 
-		// right
-		return glm::vec2{ -1 * abs(right - point.x) - cutoff, point.y };
+		// getRight()
+		return glm::vec2{ -1 * abs(getRight() - point.x) - cutoff, point.y };
 	}
 
 	//
@@ -123,16 +123,12 @@ namespace Shard {
 	}
 
 	std::optional<glm::vec2> ColliderRect::checkCollision(Collider* other) {
-		//return other->checkCollision(this);
 
-		ColliderCircle circ;
-		ColliderRect rect;
-
-		if (typeid(circ) == typeid(other)) {
+		if (typeid(ColliderCircle) == typeid(*other)) {
 			ColliderCircle* circ_p = dynamic_cast<ColliderCircle*>(other);
 			return checkCollision(circ_p);
 		}
-		else if (typeid(rect) == typeid(other)) {
+		else if (typeid(ColliderRect) == typeid(*other)) {
 			ColliderRect* rect_p = dynamic_cast<ColliderRect*>(other);
 			return checkCollision(rect_p);
 		}
@@ -143,7 +139,7 @@ namespace Shard {
 	std::optional<glm::vec2> ColliderRect::checkCollision(ColliderRect* other) {
 		ColliderRect cr = calculateMinkowskiDifference(*other);
 
-		if (cr.left <= 0 && cr.right >= 0 && cr.top <= 0 && cr.bottom >= 0) {
+		if (cr.getLeft() <= 0 && cr.getRight() >= 0 && cr.getTop() <= 0 && cr.getBottom() >= 0) {
 			glm::vec2 pen = cr.calculatePenetration(glm::vec2{ 0,0 });
 			return std::make_optional<glm::vec2>(pen);
 		}
@@ -164,10 +160,10 @@ namespace Shard {
 	}
 
 	std::optional<glm::vec2> ColliderRect::checkCollision(glm::vec2 other) {
-		if (other.x >= left &&
-			other.x <= right &&
-			other.y >= top &&
-			other.y <= bottom)
+		if (other.x >= getLeft() &&
+			other.x <= getRight() &&
+			other.y >= getTop() &&
+			other.y <= getBottom())
 			return std::make_optional<glm::vec2>(glm::vec2{ 0,0 });
 
 		return std::nullopt;
@@ -184,16 +180,16 @@ namespace Shard {
 		int bx = box_bottom_right.x;
 		int by = box_bottom_right.y;
 
-		// Top
+		// getTop()
 		d->drawLine(tx, ty, bx, ty, color);
 
-		// Right
+		// getRight()
 		d->drawLine(bx, ty, bx, by, color);
 
-		// Bottom
+		// getBottom()
 		d->drawLine(tx, by, bx, by, color);
 
-		// Left
+		// getLeft()
 		d->drawLine(tx, ty, tx, by, color);
 
 	}

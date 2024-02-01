@@ -57,6 +57,7 @@ namespace Shard {
 	}
 
 	void InputManager::informListeners(InputEvent ie, EventType et) {
+		auto s = myListeners.size();
 		for (InputListener* listener : myListeners)
 			listener->handleEvent(ie, et);
 	}

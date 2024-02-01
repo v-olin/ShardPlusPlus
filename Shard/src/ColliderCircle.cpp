@@ -70,15 +70,15 @@ namespace Shard {
 		double tx = x, ty = y, dx, dy, dist, depth;
 		glm::vec2 dir;
 
-		if (x < other->left)
-			tx = other->left;
-		else if (x > other->right)
-			tx = other->right;
+		if (x < other->getLeft())
+			tx = other->getLeft();
+		else if (x > other->getRight())
+			tx = other->getRight();
 
-		if (y < other->top)
-			ty = other->top;
-		else if (y > other->bottom)
-			ty = other->bottom;
+		if (y < other->getTop())
+			ty = other->getTop();
+		else if (y > other->getBottom())
+			ty = other->getBottom();
 
 		dx = x - tx;
 		dy = y - ty;

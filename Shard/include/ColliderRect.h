@@ -6,7 +6,10 @@ namespace Shard {
     class  ColliderRect : public Collider {
     public:
         float width, height, base_width, base_height;
-        float left, right, top, bottom;
+        float getLeft()    { return box_top_left.x; }
+        float getRight()  { return box_bottom_right.x; }
+        float getTop()    { return box_top_left.y; }
+        float getBottom() { return box_bottom_right.y; }
 
         ColliderRect();
         ColliderRect(CollisionHandler* game_obj, Transform* transform);
