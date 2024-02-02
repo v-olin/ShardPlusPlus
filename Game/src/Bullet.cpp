@@ -66,9 +66,7 @@ void Bullet::onCollisionEnter(Shard::PhysicsBody* body) {
 		to_be_destroyed_ = true;
 	}
 }
-
-void Bullet::onCollisionExit(Shard::PhysicsBody* body) {
-}
-
-void Bullet::onCollisionStay(Shard::PhysicsBody* body) {
-}
+void Bullet::onCollisionExit(Shard::PhysicsBody* body) {}
+void Bullet::onCollisionStay(Shard::PhysicsBody* body) {}
+void Bullet::killMe() {}
+void Bullet::prePhysicsUpdate(){}

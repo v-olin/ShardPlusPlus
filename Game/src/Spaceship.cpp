@@ -12,6 +12,7 @@ Spaceship::Spaceship() : GameObject() {
 
 void Spaceship::fireBullet() {
     Bullet* b = new Bullet();
+    Shard::Logger::log("FIRE");
     b->setupBullet(this, transform_->centre.x, transform_->centre.y);
     b->transform_->rotate(transform_->rotz);
 }
@@ -70,11 +71,12 @@ void Spaceship::initialize() {
 	body_->mass = 1.f;
 	body_->max_force = 10.f;
 	body_->angular_drag = 0.01f;
-	body_->drag = 0.1f;
+	body_->drag = 0.2f;
 	body_->stop_on_collision = false;
 	body_->reflect_on_collision = false;
 	body_->impart_force = false;
 	body_->is_kinematic = false;
+    body_->pass_through = false;
 
     body_->addRectCollider();
     //body_->addCircleCollider();
@@ -90,14 +92,20 @@ void Spaceship::update() {
 }
 
 void Spaceship::physicsUpdate() {
+    //we need to change drag and the force/torque we add depending on the framerate
+    auto frames = Shard::Bootstrap::getFPS();
+    //50 frames: angular_drag = .01, drag = .1, torque = .3, force = .25/-.05
+    /*body_->angular_drag = frames / 3000;
+    body_->drag = frames / 500;*/
+
     if (turn_left)
         body_->addTorque(-0.3f);
     if (turn_right)
         body_->addTorque(0.3f);
     if (up)
-        body_->addForce(body_->trans.forward, 0.25f);
+        body_->addForce(body_->trans.forward, 0.5f);
     if (down)
-        body_->addForce(body_->trans.forward, -0.05f);
+        body_->addForce(body_->trans.forward, -0.2f);
 }
 
 void Spaceship::prePhysicsUpdate() {

@@ -73,6 +73,7 @@ namespace Shard {
 
 	void PhysicsManager::reportCollisionsInAxis() {
 		std::vector<SAPEntry> active_objects;
+
 		//std::vector<size_t> to_remove;
 
 		auto equal = [](SAPEntry a, SAPEntry b) {
@@ -231,21 +232,8 @@ namespace Shard {
 			sx.start = tmp.x;
 			sx.end = tmp.y;
 
-			// TODO: also do dis for y-axis
 			addToList(sx);
 		}
-
-		// vvvvvvvvvvvvvvv Michael's comment 8)
-		//            outputList (sapX);
-		// What we have at this point is a sorted linked list of all
-		// our objects in order.  So now we go over them all to see 
-		// what are viable collision candidates.  If they don't overlap 
-		// in the axis, they can't collide so don't bother checking them.
-		// Now we find all the candidates that overlap in 
-		// the Y axis from those that overlap in the X axis.
-		// A two pass sweep and prune.
-
-		// For all collisions in X, we need to now check in Y too see comment above from C# code base^^
 
 		reportCollisionsInAxis();
 		clearList();

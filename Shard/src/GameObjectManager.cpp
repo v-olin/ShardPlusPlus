@@ -52,6 +52,8 @@ namespace Shard{
 		for (auto& gob : to_be_deleted) {
 			PhysicsManager::getInstance().removePhysicsObject(gob->body_);
 			gob->killMe();
+			gob->body_ = nullptr;
+			gob->transform_ = nullptr;
 		}
 
 

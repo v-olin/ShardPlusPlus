@@ -17,7 +17,9 @@ public:
 	// inherited from GameObject
 	void initialize() override;
 	void physicsUpdate() override;
+    void prePhysicsUpdate() override;
 	void update() override;
+	void killMe() override;
 
 	void onCollisionEnter(Shard::PhysicsBody* body) override;
 	void onCollisionExit(Shard::PhysicsBody* body) override ;

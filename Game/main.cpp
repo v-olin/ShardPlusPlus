@@ -7,7 +7,8 @@
 #include <iostream>
 
 #undef main
-
+#define FAST 100000000000;
+#define SLOW 50;
 GameTest::GameTest() {
 	// Empty constructor.
 }
@@ -20,7 +21,7 @@ void GameTest::update() {
 }
 
 int GameTest::getTargetFrameRate() {
-	return 50;
+	return SLOW;
 }
 
 void GameTest::createShip() {

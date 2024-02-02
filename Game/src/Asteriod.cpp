@@ -38,8 +38,8 @@ void Asteroid::initialize()
     // TODO: Add randomness to initial force
     //body_->addForce(transform_->right, 2.0f);
 
-    body_->addCircleCollider(32, 32, 30);
-    //body_->addRectCollider();
+    //body_->addCircleCollider(32, 32, 30);
+    body_->addRectCollider();
 
     Shard::Bootstrap::getInput()->addListeners(this);
 
@@ -75,3 +75,5 @@ void Asteroid::onCollisionExit(Shard::PhysicsBody* body) {
 }
 
 void Asteroid::onCollisionStay(Shard::PhysicsBody* body) { }
+void Asteroid::killMe(){}
+void Asteroid::prePhysicsUpdate(){}

@@ -7,6 +7,9 @@
 #include <limits>
 #include <algorithm>
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <gtx/norm.hpp>
+
 namespace Shard {
 	PhysicsBody::PhysicsBody()
 		: 
@@ -17,12 +20,12 @@ namespace Shard {
 		min_and_max_y(0, 0),
 		max_force(50),
 		max_torque(100),
-		is_kinematic(true),
+		is_kinematic(false),
 		pass_through(false),
-		uses_gravity(true),
-		stop_on_collision(false),
-		reflect_on_collision(true),
-		impart_force(true),
+		uses_gravity(false),
+		stop_on_collision(true),
+		reflect_on_collision(false),
+		impart_force(false),
 		parent(nullptr)
 	{
 	}
@@ -160,13 +163,16 @@ namespace Shard {
 			return;
 
 		force /= mass;
-		if (force.length() * force.length() < 0.0001)
+		//if (force.length() * force.length() < 0.0001)
+		//if (glm::dot(force, force) < 0.0001)
+		if (glm::length2(force) < 0.0001)
 			return;
 
 		force_ += force;
 
 		// Cap the force
-		if (force_.length() > max_force)
+		//if (force_.length() > max_force)
+		if (glm::length(force_) > max_force)
 			force_ = glm::normalize(force_) * max_force;
 	}
 
@@ -180,7 +186,6 @@ namespace Shard {
 
 	void PhysicsBody::physicsTick() {
 		std::vector<glm::vec2> toRemove;
-		float force_mag = force_.length();
 		float rot = torque_;
 
 		if (abs(torque_) < angular_drag) {
@@ -192,14 +197,15 @@ namespace Shard {
 				sign_bit = 1;
 			else if (torque_ < 0)
 				sign_bit = -1;
-			else {
+			else 
 				sign_bit = 0;
-			}
 			torque_ -= sign_bit * angular_drag;
 
 		}
 
 		trans.rotate(rot);
+
+		float force_mag = glm::length(force_);
 		trans.translate(force_);
 
 		if (force_mag < drag) {
