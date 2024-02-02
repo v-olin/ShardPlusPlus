@@ -10,6 +10,8 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <gtx/norm.hpp>
 
+#include "GameObject.h"
+
 namespace Shard {
 	PhysicsBody::PhysicsBody()
 		: 

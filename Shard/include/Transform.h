@@ -6,8 +6,8 @@
 namespace Shard {
     class  Transform {
     public:
-        float x, y, lx, ly, rotz, scale_x, scale_y;
-        int w, h;
+        float x{}, y{}, lx{}, ly{}, rotz{}, scale_x{}, scale_y{};
+        int w{}, h{};
         const char* sprite_path;
         glm::vec2 forward, right, centre;
 

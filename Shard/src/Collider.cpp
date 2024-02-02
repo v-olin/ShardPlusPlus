@@ -15,25 +15,17 @@ namespace Shard {
     Collider::Collider(CollisionHandler* game_obj, Transform* transform)
         : x(0), y(0),
         rotate_at_offset(false),
-        transform(nullptr),
-        game_object(nullptr)
+        transform(transform),
+        game_object(game_obj)
     {
-        this->x = 0;
-        this->y = 0;
-        this->game_object = game_obj;
-        this->transform = transform;
     }
 
     Collider::Collider(CollisionHandler* game_obj, Transform* transform, float x, float y)
-        : x(0), y(0),
+        : x(x), y(y),
         rotate_at_offset(false),
-        transform(nullptr),
-        game_object(nullptr)
+        transform(transform),
+        game_object(game_obj)
     {
-        this->x = x;
-        this->y = y;
-        this->game_object = game_obj;
-        this->transform = transform;
     }
 
 }

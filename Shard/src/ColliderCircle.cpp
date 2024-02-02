@@ -67,7 +67,9 @@ namespace Shard {
 	}
 
 	std::optional<glm::vec2> ColliderCircle::checkCollision(ColliderRect* other) {
-		double tx = x, ty = y, dx, dy, dist, depth;
+		double tx = x;
+		double ty = y;
+		int dx, dy, dist, depth;
 		glm::vec2 dir;
 
 		if (x < other->getLeft())
@@ -83,14 +85,15 @@ namespace Shard {
 		dx = x - tx;
 		dy = y - ty;
 
-		dist = sqrt(pow(dx, 2) + pow(dy, 2));
+		//dist = sqrt(pow(dx, 2) + pow(dy, 2));
+		dist = glm::length(glm::vec2(dx, dy));
 
 		if (dist < rad) {
 			depth = rad - dist;
 
 			dir = dist == 0
-				? dir = glm::normalize(transform->getLastDirection())
-				: dir = glm::normalize(glm::vec2{ dx, dy }) * (float)depth;
+				? glm::normalize(transform->getLastDirection())
+				: glm::normalize(glm::vec2{ dx, dy }) * (float)depth;
 
 			return std::make_optional<glm::vec2>(dir);
 		}

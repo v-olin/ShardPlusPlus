@@ -22,8 +22,8 @@ void Asteroid::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 void Asteroid::initialize()
 {
     setPhysicsEnabled();
-	transform_->x = 100.0f;
-	transform_->y = 100.0f;
+	transform_->x = 300.0f;
+	transform_->y = 300.0f;
 	auto path = Shard::Bootstrap::getAssetManager()->getAssetPath("asteroid.png");
 	transform_->sprite_path = path;
 
@@ -38,7 +38,6 @@ void Asteroid::initialize()
     // TODO: Add randomness to initial force
     //body_->addForce(transform_->right, 2.0f);
 
-    //body_->addCircleCollider(32, 32, 30);
     body_->addRectCollider();
 
     Shard::Bootstrap::getInput()->addListeners(this);

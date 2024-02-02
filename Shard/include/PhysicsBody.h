@@ -4,10 +4,12 @@
 #include <SDL.h>
 #include <glm.hpp>
 
-#include "GameObject.h"
 #include "Collider.h"
+#include "Transform3D.h"
 
 namespace Shard {
+	class GameObject;
+
 	class  PhysicsBody {
 	public:
 		float angular_drag;

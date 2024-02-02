@@ -60,7 +60,7 @@ void Spaceship::initialize() {
 
     setPhysicsEnabled(); // sets body_ to a new PhysicBody(this ) and populates transform_
     transform_->x = 500.f;
-    transform_->y = 500.f;
+    transform_->y = 300.f;
     auto path = Shard::Bootstrap::getAssetManager()->getAssetPath("spaceship.png");
     transform_->sprite_path = path;
 
@@ -69,11 +69,11 @@ void Spaceship::initialize() {
 	up = false;
 	down = false;
 	body_->mass = 1.f;
-	body_->max_force = 10.f;
+	body_->max_force = 1000.f;
 	body_->angular_drag = 0.01f;
-	body_->drag = 0.2f;
-	body_->stop_on_collision = false;
-	body_->reflect_on_collision = false;
+	body_->drag = 0.1f;
+	body_->stop_on_collision = true;
+	body_->reflect_on_collision = true;
 	body_->impart_force = false;
 	body_->is_kinematic = false;
     body_->pass_through = false;
@@ -95,8 +95,8 @@ void Spaceship::physicsUpdate() {
     //we need to change drag and the force/torque we add depending on the framerate
     auto frames = Shard::Bootstrap::getFPS();
     //50 frames: angular_drag = .01, drag = .1, torque = .3, force = .25/-.05
-    /*body_->angular_drag = frames / 3000;
-    body_->drag = frames / 500;*/
+    body_->angular_drag = frames / 3000;
+    body_->drag = frames / 500;
 
     if (turn_left)
         body_->addTorque(-0.3f);

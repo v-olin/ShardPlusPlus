@@ -159,6 +159,8 @@ namespace Shard {
 		bool remove = false;
 		for (CollidingObject& col : collidings_) {
 
+			// todo: if decide to translate, don't do that for kinematic objects
+
 			auto a_handler = dynamic_cast<CollisionHandler*>(col.a.parent);
 			auto b_handler = dynamic_cast<CollisionHandler*>(col.b.parent);
 
@@ -192,6 +194,8 @@ namespace Shard {
 
 		}
 
+		// TODO: Batch erase instead of single
+		// Use: erase-remove idiom
 		int removed = 0;
 		for (size_t idx : to_remove) {
 			auto iter = collidings_.begin();
@@ -200,7 +204,7 @@ namespace Shard {
 			removed++;
 		}
 
-		to_remove.clear();
+		//to_remove.clear();
 		checkForCollisions();
 
 		return true;
@@ -248,7 +252,7 @@ namespace Shard {
 		glm::vec2 impulse;
 		std::optional<glm::vec2> possible_impulse;
 
-		float mass_total, mass_a, mass_b, mass_prop = 0.f;
+		float mass_total, mass_prop = 0.f;
 
 		for (CollidingObject col_obj : collisions_to_check_) {
 			possible_impulse = checkCollisionsBetweenObjects(col_obj.a, col_obj.b);
@@ -269,8 +273,6 @@ namespace Shard {
 						col_obj.a.reduceForces(1.f - mass_prop);
 					}
 
-					mass_b = mass_prop;
-
 					if (!col_obj.b.is_kinematic) {
 						col_obj.b.parent->body_->trans.translate(-1 * impulse.x * mass_prop, -1 * impulse.y * mass_prop);
 						mass_prop = 1.f - mass_prop;
@@ -279,13 +281,12 @@ namespace Shard {
 						mass_prop = 1.f;
 					}
 
-					mass_a = mass_prop;
-
 					if (!col_obj.a.is_kinematic)
 						col_obj.a.parent->body_->trans.translate(impulse.x * mass_prop, impulse.y * mass_prop);
 					
 					if (col_obj.a.stop_on_collision)
 						col_obj.a.stopForces();
+
 					if (col_obj.b.stop_on_collision)
 						col_obj.b.stopForces();
 				}

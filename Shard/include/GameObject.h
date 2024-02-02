@@ -4,9 +4,10 @@
 #include <vector>
 
 #include "Transform3D.h"
+#include "PhysicsBody.h"
 
 namespace Shard {
-    class  PhysicsBody;
+    //class  PhysicsBody;
 
     class  GameObject {
     public:
