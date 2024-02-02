@@ -9,6 +9,7 @@
 #include <optional>
 
 namespace Shard {
+
 	PhysicsManager::PhysicsManager() {}
 
 	PhysicsManager& PhysicsManager::getInstance() {
@@ -161,21 +162,25 @@ namespace Shard {
 
 			// todo: if decide to translate, don't do that for kinematic objects
 
+			//This is bad since the parents could have been deleted by the GameObjectManager
 			auto a_handler = dynamic_cast<CollisionHandler*>(col.a.parent);
 			auto b_handler = dynamic_cast<CollisionHandler*>(col.b.parent);
 
 			if (col.a.parent->to_be_destroyed_) {
-				b_handler->onCollisionExit(nullptr);
-				remove = true;
-				//to_remove.push_back(i);
+				if (!col.b.parent->to_be_destroyed_)
+					b_handler->onCollisionExit(nullptr);
+				to_remove.push_back(i++);
+				continue;
 			}
 
 			if (col.b.parent->to_be_destroyed_) {
-				a_handler->onCollisionExit(nullptr);
-				remove = true;
-				//to_remove.push_back(i);
+				if (!col.a.parent->to_be_destroyed_)
+					a_handler->onCollisionExit(nullptr);
+				to_remove.push_back(i++);
+				continue;
 			}
 
+			
 			std::optional<glm::vec2> impulse = checkCollisionsBetweenObjects(col.a, col.b);
 
 			if (impulse.has_value()) {
@@ -186,7 +191,6 @@ namespace Shard {
 				a_handler->onCollisionExit(&col.b);
 				b_handler->onCollisionExit(&col.a);
 				remove = true;
-				//to_remove.push_back(i);
 			}
 			if (remove)
 				to_remove.push_back(i++);

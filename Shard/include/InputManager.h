@@ -29,7 +29,7 @@ namespace Shard {
 		 void informListeners(InputEvent, EventType);
 		 void getInput();
 	private:
-		std::unordered_set<InputListener*> myListeners;
+		std::vector<InputListener*> myListeners;
 		double tick{};
 		double time_interval{};
 	};

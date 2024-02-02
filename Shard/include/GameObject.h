@@ -23,7 +23,7 @@ namespace Shard {
             body_ = src->body_;
             tags = src->tags;
         }
-        ~GameObject() {}
+        virtual ~GameObject() {}
 
         void addTag(const char* tag);
         void removeTag(std::string tag);

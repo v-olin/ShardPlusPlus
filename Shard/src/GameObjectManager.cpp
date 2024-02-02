@@ -1,5 +1,6 @@
 #include "GameObjectManager.h"
 #include "PhysicsManager.h"
+#include "Bootstrap.h"
 
 namespace Shard{
 
@@ -51,16 +52,26 @@ namespace Shard{
 		}
 		for (auto& gob : to_be_deleted) {
 			PhysicsManager::getInstance().removePhysicsObject(gob->body_);
+
+			InputListener* t;
+			if (t = dynamic_cast<InputListener*>(gob))
+				Bootstrap::getInput()->removeListeners(t);
 			gob->killMe();
-			gob->body_ = nullptr;
-			gob->transform_ = nullptr;
+			std::erase(myObjects, gob); // inefficient af.
+
+			// we need to make sure that the physicsmanager knows that we have deleted some gameObjects
+			// to do this, start with tracking from creation of game object and list all places where the pointer to that object is stored
+			// we need to remove those pointers ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+			// And this is fine since this function is run first in every frame
+			delete gob;
 		}
 
 
 		// erase-remove idiom, TODO: we also need to call killMe() on all objects that is goinmg to be deleted
-		this->myObjects.erase(std::remove_if(this->myObjects.begin(), this->myObjects.end(), [&](const Shard::GameObject* obj) {
-			return std::find(to_be_deleted.begin(), to_be_deleted.end(), obj) != to_be_deleted.end();
-			}), this->myObjects.end());
+		//TODO, we need to delete the obects, since this might leek memory
+		//this->myObjects.erase(std::remove_if(this->myObjects.begin(), this->myObjects.end(), [&](const Shard::GameObject* obj) {
+		//	return std::find(to_be_deleted.begin(), to_be_deleted.end(), obj) != to_be_deleted.end();
+		//	}), this->myObjects.end());
 
 	}
 

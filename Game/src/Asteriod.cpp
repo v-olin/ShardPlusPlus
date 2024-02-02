@@ -74,5 +74,6 @@ void Asteroid::onCollisionExit(Shard::PhysicsBody* body) {
 }
 
 void Asteroid::onCollisionStay(Shard::PhysicsBody* body) { }
-void Asteroid::killMe(){}
+void Asteroid::killMe(){
+}
 void Asteroid::prePhysicsUpdate(){}

@@ -21,7 +21,7 @@ void GameTest::update() {
 }
 
 int GameTest::getTargetFrameRate() {
-	return 100	;
+	return FAST	;
 }
 
 void GameTest::createShip() {
@@ -30,37 +30,42 @@ void GameTest::createShip() {
 	Shard::Bootstrap::getInput()->addListeners(spaceship.get());
 }
 
-void GameTest::createAsteroid() {
-	Shard::Logger::log("Creating asteroid");
-	asteroid = std::make_unique<Asteroid>();
-	Shard::Bootstrap::getInput()->addListeners(asteroid.get());
+void GameTest::createAsteroid(float x, float y) {
+	Asteroid* asteroid = new Asteroid();
+	asteroid->transform_->x = x;
+	asteroid->transform_->y = y;
+	asteroids.push_back(asteroid);
+
+	//Shard::Logger::log("Creating asteroid");
+	//asteroid = std::make_unique<Asteroid>(x, y);
+	//Shard::Bootstrap::getInput()->addListeners(asteroid.get());
 }
 
 void GameTest::initalize() {
 	Shard::Logger::log("Initializing game");
 	createShip();
-	createAsteroid();
+	//for(int i = 0; i < 100; i++)
+	//	createAsteroid(i%10, i%10);
 	Shard::Bootstrap::getInput()->addListeners(this);
 }
 
-std::vector<Asteroid> asteroids;
 void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 	if (et != Shard::EventType::MouseDown)
 		return;
 
 	
-	//if (ie.button == SDL_BUTTON_LEFT) {
-	//	Asteroid asteroid{};
-	//	asteroid.transform_->x = ie.x;
-	//	asteroid.transform_->y = ie.y;
-	//	asteroids.push_back(asteroid);
-	//}
-	//else if (ie.button == SDL_BUTTON_RIGHT) {
-	//	for (Asteroid& astr : asteroids)
-	//		astr.to_be_destroyed_ = true;
-	//}
-	
+	if (ie.button == SDL_BUTTON_LEFT) {
+		createAsteroid(ie.x, ie.y);
+	}
+	else if (ie.button == SDL_BUTTON_RIGHT) {
+		for (auto astr : asteroids) {
+			astr->to_be_destroyed_ = true;
+		}
+		asteroids.clear();
+	}
+
 }
+
 
 int main() {
 	Shard::Logger::log("Hello from game?!?!?");

@@ -218,6 +218,7 @@ namespace Shard {
 		}
 	}
 
+	// TODO: All of these leak memory :)
 	void PhysicsBody::addRectCollider() {
 		auto handler = dynamic_cast<CollisionHandler*>(parent);
 		Collider* col = new ColliderRect(handler, &parent->body_->trans);
