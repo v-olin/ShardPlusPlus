@@ -1,10 +1,16 @@
 #include "PhysicsBody.h"
-#include "GameObject.h"
-#include "ColliderRect.h"
-#include "ColliderCircle.h"
 #include "PhysicsManager.h"
 
+#include "ColliderCircle.h"
+#include "ColliderRect.h"
+
 #include <limits>
+#include <algorithm>
+
+#define GLM_ENABLE_EXPERIMENTAL
+#include <gtx/norm.hpp>
+
+#include "GameObject.h"
 
 namespace Shard {
 	PhysicsBody::PhysicsBody()
@@ -14,35 +20,37 @@ namespace Shard {
 		mass(1),
 		min_and_max_x(0, 0),
 		min_and_max_y(0, 0),
-		max_force(100),
+		max_force(50),
 		max_torque(100),
-		is_kinematic(true),
-		allows_pass_through(false),
-		uses_gravity(true),
-		stop_on_collision(false),
-		reflect_on_collision(true),
-		impart_force(true),
-		parent(nullptr),
-		coll_handler(nullptr)
+		is_kinematic(false),
+		pass_through(false),
+		uses_gravity(false),
+		stop_on_collision(true),
+		reflect_on_collision(false),
+		impart_force(false),
+		parent(nullptr)
 	{
 	}
 
-	PhysicsBody::PhysicsBody(GameObject* game_obj) {
-		debug_color_ = SDL_Color{ 0, 255, 0 }; // green
-
+	PhysicsBody::PhysicsBody(GameObject* game_obj)
+		:
+		angular_drag(0.01f),
+		drag(0.01f),
+		mass(1),
+		min_and_max_x(0, 0),
+		min_and_max_y(0, 0),
+		max_force(50),
+		max_torque(2.f),
+		is_kinematic(false),
+		pass_through(false),
+		uses_gravity(false),
+		stop_on_collision(true),
+		reflect_on_collision(false),
+		impart_force(false)
+	{
+		debug_color_ = SDL_Color{ 0, 255, 0, 255 }; // green
 		parent = game_obj;
-		trans = game_obj->transform_;
-		//This requires game_obj to have a physicsBody, but here we are trying to create one??
-		//coll_handler = game_obj->body_->coll_handler;
 
-		angular_drag = 0.01f;
-		drag = 0.01f;
-		mass = 1.f;
-		max_force = 10.f;
-		max_torque = 2.f;
-		uses_gravity = false;
-		stop_on_collision = true;
-		reflect_on_collision = false;
 
 		time_interval_ = PhysicsManager::getInstance().time_interval;
 		PhysicsManager::getInstance().addPhysicsObject(this);
@@ -60,22 +68,57 @@ namespace Shard {
 		}
 	}
 
+	// const bool :nerd_face_emoji:
 	glm::vec2 PhysicsBody::getMinAndMax(const bool x) {
-		float min = std::numeric_limits<float>::max();
-		float max = std::numeric_limits<float>::min();
-		glm::vec2 tmp(min, max);
+		int min = std::numeric_limits<int>::max();
+		int max = std::numeric_limits<int>::min();
 
 		for (auto &collider : colliders) {
-			tmp = x ? collider->min_and_max_x : collider->min_and_max_y;
-			min = tmp.x < min ? tmp.x : min;
-			max = tmp.y > max ? tmp.y : max;
-			tmp = x ? collider->min_and_max_x : collider->min_and_max_y;
-			min = tmp.x < min ? tmp.x : min;
-			max = tmp.y > max ? tmp.y : max;
+			if (x) {
+				// gets min and max x-values
+				int tx = collider->box_top_left.x;
+				int ex = collider->box_bottom_right.x;
+				min = std::min(tx, min);
+				max = std::max(ex, max);
+			}
+			else {
+				// gets min and max y-values
+				int ty = collider->box_top_left.y;
+				int ey = collider->box_bottom_right.y;
+				min = std::min(ty, min);
+				max = std::max(ey, max);
+			}
 		}
 
 		return { min, max };
+
+		//int min = std::numeric_limits<int>::min();
+		//int max = std::numeric_limits<int>::max();
+
+		/*
+		    float min = Int32.MaxValue;
+            float max = -1 * min;
+            float[] tmp;
+
+            foreach (Collider col in myColliders)
+            {
+
+                if (x)
+                    tmp = col.MinAndMaxX;
+                else
+                    tmp = col.MinAndMaxY;
+
+                if (tmp[0] < min)
+                    min = tmp[0];
+
+                if (tmp[1] > max)
+                    max = tmp[1];
+            }
+
+		*/
+
 	}
+
 	void PhysicsBody::addTorque(const float dir) {
 		if (is_kinematic)
 			return;
@@ -96,8 +139,8 @@ namespace Shard {
 		force_ *= -prop;
 	}
 
-	void PhysicsBody::impartForces(PhysicsBody other, const float mass_prop) {
-		other.addForce(force_ * mass_prop);
+	void PhysicsBody::impartForces(PhysicsBody* other, const float mass_prop) {
+		other->addForce(force_ * mass_prop);
 
 		recalculateColliders();
 	}
@@ -123,20 +166,22 @@ namespace Shard {
 		addForce(dir * force);
 	}
 
-	void PhysicsBody::addForce(glm::vec2 dir) {
+	void PhysicsBody::addForce(glm::vec2 force) {
 		if (is_kinematic)
 			return;
 
-		dir /= mass;
-
-		if (dir.length() * dir.length() < 0.0001)
+		force /= mass;
+		//if (force.length() * force.length() < 0.0001)
+		//if (glm::dot(force, force) < 0.0001)
+		if (glm::length2(force) < 0.0001)
 			return;
 
-		force_ += dir;
+		force_ += force;
 
-		if (force_.length() > max_force) {
+		// Cap the force
+		//if (force_.length() > max_force)
+		if (glm::length(force_) > max_force)
 			force_ = glm::normalize(force_) * max_force;
-		}
 	}
 
 	void PhysicsBody::recalculateColliders() {
@@ -149,18 +194,26 @@ namespace Shard {
 
 	void PhysicsBody::physicsTick() {
 		std::vector<glm::vec2> toRemove;
-		float force_mag = force_.length();
 		float rot = torque_;
 
 		if (abs(torque_) < angular_drag) {
 			torque_ = 0;
 		}
 		else {
-			int signbit = (torque_ > 0) ? 1 : ((torque_ < 0) ? -1 : 0);
-			torque_ -= signbit * angular_drag;
+			int sign_bit{};
+			if (torque_ > 0)
+				sign_bit = 1;
+			else if (torque_ < 0)
+				sign_bit = -1;
+			else 
+				sign_bit = 0;
+			torque_ -= sign_bit * angular_drag;
+
 		}
 
 		trans.rotate(rot);
+
+		float force_mag = glm::length(force_);
 		trans.translate(force_);
 
 		if (force_mag < drag) {
@@ -171,23 +224,28 @@ namespace Shard {
 		}
 	}
 
+	// TODO: All of these leak memory :)
 	void PhysicsBody::addRectCollider() {
-		Collider* col = new ColliderRect( coll_handler, &parent->transform_);
+		auto handler = dynamic_cast<CollisionHandler*>(parent);
+		Collider* col = new ColliderRect(handler, &parent->body_->trans);
 		colliders.push_back(col);
 	}
 
 	void PhysicsBody::addRectCollider(float x, float y, float w, float h) {
-		Collider* col = new ColliderRect(coll_handler, &parent->transform_, x, y, w, h);
+		auto handler = dynamic_cast<CollisionHandler*>(parent);
+		Collider* col = new ColliderRect(handler, &parent->body_->trans, x, y, w, h);
 		colliders.push_back(col);
 	}
 
 	void PhysicsBody::addCircleCollider() {
-		Collider* col = new ColliderCircle(coll_handler, &parent->transform_);
+		auto handler = dynamic_cast<CollisionHandler*>(parent);
+		Collider* col = new ColliderCircle(handler, &parent->body_->trans);
 		colliders.push_back(col);
 	}
 
 	void PhysicsBody::addCircleCollider(float x, float y, float rad) {
-		Collider* col = new ColliderCircle(coll_handler, &parent->transform_, x, y, rad);
+		auto handler = dynamic_cast<CollisionHandler*>(parent);
+		Collider* col = new ColliderCircle(handler, &parent->body_->trans, x, y, rad);
 		colliders.push_back(col);
 	}
 

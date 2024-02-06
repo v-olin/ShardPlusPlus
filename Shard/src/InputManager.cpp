@@ -8,10 +8,15 @@
 namespace Shard {
 
 	void InputManager::addListeners(InputListener* listener) {
-		myListeners.insert(listener);
+		myListeners.push_back(listener);
 	}
 	void InputManager::removeListeners(InputListener* listener) {
-		myListeners.erase(listener);
+		std::erase(myListeners, listener);
+		/*
+		myListeners.erase(std::remove_if(myListeners.begin(), myListeners.end(), [](InputListener* other) {
+			return other == listener;
+		}, myListeners.end());
+		*/
 	}
 
 	void InputManager::getInput() {
@@ -57,8 +62,21 @@ namespace Shard {
 	}
 
 	void InputManager::informListeners(InputEvent ie, EventType et) {
-		for (InputListener* listener : myListeners)
-			listener->handleEvent(ie, et);
+		int idx = 0;
+		while (idx < myListeners.size()) {
+			/*
+			auto li = myListeners[idx++];
+			if (li == nullptr)
+				continue;
+			*/
+			/*
+			if(dynamic_cast<GameObject>li->body_ == nullptr)
+				continue;
+			*/
+			myListeners[idx++]->handleEvent(ie, et);
+		}
+	/*	for (InputListener* listener : myListeners)
+			listener->handleEvent(ie, et);*/
 	}
 
 	void InputManager::initialize() {

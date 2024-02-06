@@ -1,6 +1,7 @@
 #include "PhysicsManager.h"
 #include "CollisionHandler.h"
 #include "Bootstrap.h"
+#include "Logger.h"
 
 #include <algorithm>
 #include <list>
@@ -8,6 +9,7 @@
 #include <optional>
 
 namespace Shard {
+
 	PhysicsManager::PhysicsManager() {}
 
 	PhysicsManager& PhysicsManager::getInstance() {
@@ -16,6 +18,7 @@ namespace Shard {
 	}
 
 	void PhysicsManager::addPhysicsObject(PhysicsBody* body) {
+		// TODO: std::find?
 		bool exists = false;
 		for(size_t i = 0; i < all_physics_objects.size(); i++){
 			auto other = all_physics_objects.at(i);
@@ -49,7 +52,13 @@ namespace Shard {
 		//hopefully the values in the list dont change, if they do, implement bubble sort.
 		SAPEntry lhs = *(sap_x.begin());
 
-		for(size_t i = 0; i < sap_x.size() - 1; ++i){
+		sap_x.sort([](const SAPEntry& lhs, const SAPEntry& rhs) {
+			return lhs.start < rhs.start;
+		});
+
+		/*
+		// bubble sort
+		for(size_t i = 0; i < sap_x.size() - 1; i++){
 			auto iter = sap_x.begin();
 			for (size_t j = 0; j < sap_x.size() - 1 - i; ++j) {
 				auto curr = iter, next = ++iter;
@@ -60,12 +69,13 @@ namespace Shard {
 				}
 			}
 		}
+		*/
 	}
 
 	void PhysicsManager::reportCollisionsInAxis() {
-		std::list<SAPEntry> active_objects;
-		std::list<size_t> to_remove;
-		
+		std::vector<SAPEntry> active_objects;
+
+		//std::vector<size_t> to_remove;
 
 		auto equal = [](SAPEntry a, SAPEntry b) {
 			return a.start == b.start && a.end == b.end && a.owner == b.owner;
@@ -75,24 +85,35 @@ namespace Shard {
 			active_objects.push_back(start);
 
 			auto iter = active_objects.begin();
-			for (size_t i = 1; i < active_objects.size(); i++) {
-				SAPEntry active = *(++iter);
+			for (size_t i = 0; i < active_objects.size(); i++) {
+				SAPEntry active = active_objects[i];
+				//SAPEntry active = *(++iter);
 				
+				// Ensures an object can't collide with itself
 				if (equal(start, active))
 					continue;
 				
 				if (start.start >= active.end)
-					to_remove.push_back(i);
+					//to_remove.push_back(i);
+					int x = 0; // <-- dummy instruction
 				else {
+					// Collision!!!!, not actually a collision
+
+				/*	if (start.owner->parent->hasTag("Bullet")) {
+ 						Logger::log("[IF] ACTIVE: " + active.owner->parent->getTags(), LOG_LEVEL_ALL);
+					} else if (active.owner->parent->hasTag("Bullet")) {
+						Logger::log("[ELSE IF] START: " + start.owner->parent->getTags(), LOG_LEVEL_ALL);
+					}*/
+
 					CollidingObject col;
 				
 					if (start.owner->mass > active.owner->mass) {
-						col.a = *start.owner;
-						col.b = *active.owner;
+						col.a = start.owner;
+						col.b = active.owner;
 					}
 					else {
-						col.a = *active.owner;
-						col.b = *start.owner;
+						col.a = active.owner;
+						col.b = start.owner;
 					}
 				
 					if (!findColliding(col.a, col.b)) {
@@ -101,13 +122,15 @@ namespace Shard {
 				}
 			}
 
+			/*
 			for (auto riter = to_remove.rbegin(); riter != to_remove.rend(); ++riter) {
 				auto act_iter = active_objects.begin();
 				std::advance(act_iter, *riter);
 				active_objects.erase(act_iter);
 			}
+			*/
 
-			to_remove.clear();
+			//to_remove.clear();
 		}
 	}
 
@@ -123,7 +146,7 @@ namespace Shard {
 			return false;
 
 		// TODO: bootstrap get current millis;
-		last_update = 0;
+		last_update = Bootstrap::getCurrentMillis();
 
 		for (PhysicsBody* body : all_physics_objects) {
 			if (body->uses_gravity)
@@ -134,44 +157,58 @@ namespace Shard {
 		}
 
 		int i = 0;
-		for (CollidingObject col : collidings_) {
-	/*	for (size_t i = collidings_.size() - 1; i >= 0; --i) {
-			CollidingObject col = collidings_.at(i);*/
+		bool remove = false;
+		for (CollidingObject& col : collidings_) {
 
-			auto a_handler = col.a.coll_handler;
-			auto b_handler = col.b.coll_handler;
+			// todo: if decide to translate, don't do that for kinematic objects
 
-			if (col.a.parent->to_be_destroyed_) {
-				b_handler->onCollisionExit(nullptr);
-				to_remove.push_back(i);
+			//This is bad since the parents could have been deleted by the GameObjectManager
+			auto a_handler = dynamic_cast<CollisionHandler*>(col.a->parent);
+			auto b_handler = dynamic_cast<CollisionHandler*>(col.b->parent);
+
+			if (col.a->parent->to_be_destroyed_) {
+				if (!col.b->parent->to_be_destroyed_)
+					b_handler->onCollisionExit(nullptr);
+				to_remove.push_back(i++);
+				continue;
 			}
 
-			if (col.b.parent->to_be_destroyed_) {
-				a_handler->onCollisionExit(nullptr);
-				to_remove.push_back(i);
+			if (col.b->parent->to_be_destroyed_) {
+				if (!col.a->parent->to_be_destroyed_)
+					a_handler->onCollisionExit(nullptr);
+				to_remove.push_back(i++);
+				continue;
 			}
 
+			
 			std::optional<glm::vec2> impulse = checkCollisionsBetweenObjects(col.a, col.b);
 
 			if (impulse.has_value()) {
-				a_handler->onCollisionStay(&col.b);
-				b_handler->onCollisionStay(&col.a);
+				a_handler->onCollisionStay(col.b);
+				b_handler->onCollisionStay(col.a);
 			}
 			else {
-				a_handler->onCollisionExit(&col.b);
-				b_handler->onCollisionExit(&col.a);
-				to_remove.push_back(i);
+				a_handler->onCollisionExit(col.b);
+				b_handler->onCollisionExit(col.a);
+				remove = true;
 			}
-			i++;
+			if (remove)
+				to_remove.push_back(i++);
+			remove = false;
+
 		}
 
+		// TODO: Batch erase instead of single
+		// Use: erase-remove idiom
+		int removed = 0;
 		for (size_t idx : to_remove) {
 			auto iter = collidings_.begin();
-			std::advance(iter, idx);
+			std::advance(iter, idx-removed);
 			collidings_.erase(iter);
+			removed++;
 		}
 
-		to_remove.clear();
+		//to_remove.clear();
 		checkForCollisions();
 
 		return true;
@@ -182,11 +219,11 @@ namespace Shard {
 			body->draw();
 	}
 
-	bool PhysicsManager::findColliding(PhysicsBody& a, PhysicsBody& b) {
+	bool PhysicsManager::findColliding(PhysicsBody* a, PhysicsBody* b) {
 		// TODO: Potentially flawed implementation.
 		CollidingObject col { a, b };
 
-		for (auto col_ : collidings_) {
+		for (auto &col_ : collidings_) {
 			if (col == col_)
 				return true;
 		}
@@ -195,8 +232,6 @@ namespace Shard {
 	}
 
 	void PhysicsManager::broadPassSearchAndSweep() {
-
-		std::list<PhysicsBody> candidates;
 		for (PhysicsBody* body : all_physics_objects) {
 			SAPEntry sx;
 			glm::vec2 tmp = body->min_and_max_x;
@@ -221,7 +256,7 @@ namespace Shard {
 		glm::vec2 impulse;
 		std::optional<glm::vec2> possible_impulse;
 
-		float mass_total, mass_a, mass_b, mass_prop = 0.f;
+		float mass_total, mass_prop = 0.f;
 
 		for (CollidingObject col_obj : collisions_to_check_) {
 			possible_impulse = checkCollisionsBetweenObjects(col_obj.a, col_obj.b);
@@ -229,49 +264,52 @@ namespace Shard {
 			if (possible_impulse.has_value()) {
 				impulse = possible_impulse.value();
 
-				if (!col_obj.a.allows_pass_through && !col_obj.b.allows_pass_through) {
-					mass_total = col_obj.a.mass + col_obj.b.mass;
+				if (!col_obj.a->pass_through && !col_obj.b->pass_through) {
+					mass_total = col_obj.a->mass + col_obj.b->mass;
 
-					if (col_obj.a.is_kinematic)
+					if (col_obj.a->is_kinematic)
 						mass_prop = 1.f;
 					else
-						mass_prop = col_obj.a.mass / mass_total;
+						mass_prop = col_obj.a->mass / mass_total;
 
-					if (col_obj.a.impart_force) {
-						col_obj.a.impartForces(col_obj.b, mass_prop);
-						col_obj.a.reduceForces(1.f - mass_prop);
+					if (col_obj.a->impart_force) {
+						col_obj.a->impartForces(col_obj.b, mass_prop);
+						col_obj.a->reduceForces(1.f - mass_prop);
 					}
 
-					mass_b = mass_prop;
-
-					if (!col_obj.b.is_kinematic) {
-						col_obj.b.parent->transform_.translate(-1 * impulse.x * mass_prop, -1 * impulse.y * mass_prop);
+					if (!col_obj.b->is_kinematic) {
+						col_obj.b->parent->body_->trans.translate(-1 * impulse.x * mass_prop, -1 * impulse.y * mass_prop);
 						mass_prop = 1.f - mass_prop;
 					}
 					else {
 						mass_prop = 1.f;
 					}
 
-					mass_a = mass_prop;
-
-					if (!col_obj.a.is_kinematic)
-						col_obj.a.parent->transform_.translate(impulse.x * mass_prop, impulse.y * mass_prop);
+					if (!col_obj.a->is_kinematic)
+						col_obj.a->parent->body_->trans.translate(impulse.x * mass_prop, impulse.y * mass_prop);
 					
-					if (col_obj.a.stop_on_collision)
-						col_obj.a.stopForces();
-					if (col_obj.b.stop_on_collision)
-						col_obj.b.stopForces();
+					if (col_obj.a->stop_on_collision)
+						col_obj.a->stopForces();
+
+					if (col_obj.b->stop_on_collision)
+						col_obj.b->stopForces();
+
+
+
+					if (col_obj.a->reflect_on_collision)
+						col_obj.a->reflectForces(impulse);
+					if (col_obj.b->reflect_on_collision)
+						col_obj.b->reflectForces(impulse);
+
 				}
 
-				col_obj.a.coll_handler->onCollisionEnter(&col_obj.b);
-				col_obj.b.coll_handler->onCollisionEnter(&col_obj.a);
+				//col_obj.a->parent->onCollisionEnter(&col_obj.b);
+				//col_obj.b->coll_handler->onCollisionEnter(&col_obj.a);
+				(dynamic_cast<CollisionHandler*>(col_obj.a->parent))->onCollisionEnter(col_obj.b);
+				(dynamic_cast<CollisionHandler*>(col_obj.b->parent))->onCollisionEnter(col_obj.a);
 
 				collidings_.push_back(col_obj);
 
-				if (col_obj.a.reflect_on_collision)
-					col_obj.a.reflectForces(impulse);
-				if (col_obj.b.reflect_on_collision)
-					col_obj.b.reflectForces(impulse);
 			}
 		}
 	}
@@ -279,15 +317,16 @@ namespace Shard {
 	void PhysicsManager::checkForCollisions() {
 		broadPass();
 		narrowPass();
-
 		collisions_to_check_.clear();
 	}
 
-	std::optional<glm::vec2> PhysicsManager::checkCollisionsBetweenObjects(PhysicsBody& a, PhysicsBody& b) {
+	std::optional<glm::vec2> PhysicsManager::checkCollisionsBetweenObjects(PhysicsBody* a, PhysicsBody* b) {
+		if (a->parent->to_be_destroyed_ || b->parent->to_be_destroyed_)
+			return std::nullopt;
 
 		std::optional<glm::vec2> impulse;
-		for (auto *c1 : a.colliders) {
-			for (auto *c2 : b.colliders) {
+		for (auto *c1 : a->colliders) {
+			for (auto *c2 : b->colliders) {
 				impulse = c1->checkCollision(c2);
 				if (impulse.has_value())
 					return impulse.value();

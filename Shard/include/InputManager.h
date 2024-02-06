@@ -18,7 +18,7 @@ namespace Shard {
 	class InputListener {
 	public:
 		virtual  ~InputListener() {}
-		virtual  void handleEvent(InputEvent ie, EventType et) = 0;
+		virtual void handleEvent(InputEvent ie, EventType et) = 0;
 	};
 
 	class InputManager {
@@ -29,7 +29,7 @@ namespace Shard {
 		 void informListeners(InputEvent, EventType);
 		 void getInput();
 	private:
-		std::unordered_set<InputListener*> myListeners;
+		std::vector<InputListener*> myListeners;
 		double tick{};
 		double time_interval{};
 	};

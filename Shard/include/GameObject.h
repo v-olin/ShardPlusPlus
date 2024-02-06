@@ -4,28 +4,26 @@
 #include <vector>
 
 #include "Transform3D.h"
+#include "PhysicsBody.h"
 
 namespace Shard {
-    class  PhysicsBody;
+    //class  PhysicsBody;
 
     class  GameObject {
     public:
-        Transform3D transform_;
+        Transform3D* transform_;
         bool transient_, to_be_destroyed_, visible_;
         PhysicsBody* body_ = nullptr;
         // change this if erases are frequent
-        std::vector<const char*> tags {};
+        std::vector<const char*> tags{};
 
         GameObject();
-        GameObject(const GameObject* src){
-            transform_ = Transform3D(src->transform_);
-            //body_ = PhysicsBody(src->body_);
+        GameObject(const GameObject* src) {
+            transform_ = src->transform_;
             body_ = src->body_;
             tags = src->tags;
         }
-
-
-        ~GameObject() {}
+        virtual ~GameObject() {}
 
         void addTag(const char* tag);
         void removeTag(std::string tag);
@@ -36,11 +34,11 @@ namespace Shard {
         void checkDestroyMe();
 
         // to be inherited by other objects
-        virtual void initialize() {}
-        virtual void update() {}
-        virtual void physicsUpdate() {}
-        virtual void prePhysicsUpdate() {}
+        virtual void initialize() = 0;
+        virtual void update() = 0;
+        virtual void physicsUpdate() = 0;
+        virtual void prePhysicsUpdate() = 0;
         // needs physicsManager
-        virtual void killMe() {}
+        virtual void killMe() = 0;
     };
 }

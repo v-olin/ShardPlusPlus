@@ -5,7 +5,7 @@
 #include "InputEvent.h"
 #include "InputManager.h"
 
-class Spaceship : public Shard::InputListener, public Shard::GameObject {
+class Spaceship : public Shard::InputListener, public Shard::GameObject, public Shard::CollisionHandler {
 public:
 	bool up, down, turn_left, turn_right;
 
@@ -31,9 +31,9 @@ public:
 	//}
 
 	void fireBullet();
-	void onCollisionEnter(Shard::PhysicsBody body);
-	void onCollisionExit(Shard::PhysicsBody body);
-	void onCollisionStay(Shard::PhysicsBody body);
+	void onCollisionEnter(Shard::PhysicsBody* body) override;
+	void onCollisionExit(Shard::PhysicsBody* body) override;
+	void onCollisionStay(Shard::PhysicsBody* body) override;
 
 	// inherited from InputListener
 	void handleEvent(Shard::InputEvent ev, Shard::EventType et);

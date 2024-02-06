@@ -45,7 +45,7 @@ namespace Shard {
     float Bootstrap::getSecondFPS() {
         long now = getCurrentMillis();
 
-        Logger::log(("Current frametime: " + std::to_string(frame_times.size())).c_str());
+        //Logger::log(("Current frametime: " + std::to_string(frame_times.size())).c_str());
 
 
         if (frame_times.empty()) {
@@ -238,6 +238,8 @@ namespace Shard {
 
                 getDisplay()->display();
 
+                // Clean up objects that are to be deleted
+                GameObjectManager::getInstance()->cleanup();
 
                 time_in_milliseconds_end = getCurrentMillis();
 
@@ -246,16 +248,10 @@ namespace Shard {
                 time_elapsed += delta_time;
                 sleep = (int)(millis_per_frame - interval);
 
-                if (sleep >= 0) {
-                    // Frame rate regulator.  Bear in mind since this is millisecond precision, and we 
-                  // only get whole numbers from our interval, it will only rarely match a target 
-                  // FPS.  Milliseconds just aren't precise enough.
-                  //
-                  //  (I'm hinting if this bothers you, you might have found an engine modification to make...)
-                    //Thread.Sleep(sleep);
-                    SDL_Delay(sleep); 
-                    //std::this_thread::sleep_for(std::chrono::milliseconds(sleep));
-                }
+                if (sleep >= 0)
+                    std::this_thread::sleep_for(std::chrono::milliseconds(sleep));
+                    //SDL_Delay(sleep); 
+                
                 time_in_milliseconds_end = getCurrentMillis();
                 delta_time = (time_in_milliseconds_end - time_in_milliseconds_start) / 1000.0f;
                 last_tick = time_in_milliseconds_start;

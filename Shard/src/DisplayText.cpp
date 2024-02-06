@@ -1,7 +1,6 @@
 #include "DisplayText.h"
 #include "Logger.h"
 
-
 #include <filesystem>
 
 namespace Shard {
@@ -9,7 +8,10 @@ namespace Shard {
 	void DisplayText::clearDisplay() {
 		for (const TextDetails &td : myTexts)
 			SDL_DestroyTexture(td.lblText);
+
 		myTexts.clear();
+		// Reset clear-color to black
+		SDL_SetRenderDrawColor(_rend, 0, 0, 0, 255);
 		SDL_RenderClear(_rend);
 	}
 

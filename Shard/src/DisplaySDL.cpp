@@ -1,5 +1,6 @@
 #include "DisplaySDL.h"
 #include "Logger.h"
+#include "PhysicsBody.h"
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -10,7 +11,6 @@ namespace Shard {
 		DisplayText::initialize();
 	}
 
-	// TODO: replace return type 'int' with proper type
 	SDL_Texture* DisplaySDL::loadTexture(Transform* trans) {
 		SDL_Texture* ret;
 		unsigned int format;
@@ -46,19 +46,25 @@ namespace Shard {
 	}
 
 	void DisplaySDL::addToDraw(GameObject* gob) {
-		_toDraw.push_back(gob->transform_);
-		if ((gob->transform_.sprite_path != NULL) && (gob->transform_.sprite_path[0] == '\0')) 
+
+		auto* gob_transform = &gob->body_->trans;
+
+		_toDraw.push_back(gob_transform);
+		
+		if ((gob_transform->sprite_path != NULL) && (gob_transform->sprite_path[0] == '\0'))
 			return;
-		loadTexture(gob->transform_.sprite_path);
+
+		loadTexture(gob_transform->sprite_path);
 	}
 
 	void DisplaySDL::removeToDraw(GameObject* gob) {
 		auto iter = _toDraw.begin();
 
 		while (++iter != _toDraw.end()) {
-			if (gob->transform_.h == (*iter).h)
+			if (gob->body_->trans.h == (*iter)->h) {
 				_toDraw.erase(iter);
-			return;
+				return;
+			}
 		}
 	}
 
@@ -135,25 +141,6 @@ namespace Shard {
 		SDL_Rect sRect;
 		SDL_Rect tRect;
 
-		for (Transform trans : _toDraw) {
-			if (((std::string)trans.sprite_path).empty())
-				continue;
-			SDL_Texture* sprite = loadTexture(&trans);
-
-			sRect.x = 0;
-			sRect.y = 0;
-			sRect.w = (int)(trans.w * trans.scale_x);
-			sRect.h = (int)(trans.h * trans.scale_y);
-
-			tRect.x = (int)trans.x;
-			tRect.y = (int)trans.y;
-			tRect.w = sRect.w;
-			tRect.h = sRect.h;
-
-			SDL_RenderCopyEx(_rend, sprite, &sRect, &tRect, (int)trans.rotz, NULL, SDL_FLIP_NONE);
-			
-		}
-		
 		for (const Circle& c : _circlesToDraw) {
 			SDL_SetRenderDrawColor(_rend, c.r, c.g, c.b, c.a);
 			renderCircle(c.x, c.y, c.radius);
@@ -162,8 +149,27 @@ namespace Shard {
 		for (const Line& l : _linesToDraw) {
 			SDL_SetRenderDrawColor(_rend, (Uint8)l.r, (Uint8)l.g, (Uint8)l.b, (Uint8)l.a);
 			SDL_RenderDrawLine(_rend, l.sx, l.sy, l.ex, l.ey);
+			SDL_SetRenderDrawColor(_rend, 0, 0, 0, 255);
 		}
 
+		for (Transform* trans : _toDraw) {
+			if (((std::string)trans->sprite_path).empty())
+				continue;
+			SDL_Texture* sprite = loadTexture(trans);
+
+			sRect.x = 0;
+			sRect.y = 0;
+			sRect.w = (int)(trans->w * trans->scale_x);
+			sRect.h = (int)(trans->h * trans->scale_y);
+
+			tRect.x = (int)trans->x;
+			tRect.y = (int)trans->y;
+			tRect.w = sRect.w;
+			tRect.h = sRect.h;
+
+			SDL_RenderCopyEx(_rend, sprite, &sRect, &tRect, (int)trans->rotz, NULL, SDL_FLIP_NONE);
+		}
+	
 		DisplayText::display();
 	}
 

@@ -1,23 +1,15 @@
-/*
-#pragma once
-
-#ifdef _WINDLL
-#define  __declspec(dllexport)
-#else
-#define  __declspec(dllimport)
-#endif
-
-// #include "Collider.h"
-
-#include "CollisionHandler.h"
+#include "Collider.h"
 
 namespace Shard {
-    class  Collider;
+    class ColliderCircle;
 
     class  ColliderRect : public Collider {
     public:
         float width, height, base_width, base_height;
-        float left, right, top, bottom;
+        float getLeft()    { return box_top_left.x; }
+        float getRight()  { return box_bottom_right.x; }
+        float getTop()    { return box_top_left.y; }
+        float getBottom() { return box_bottom_right.y; }
 
         ColliderRect();
         ColliderRect(CollisionHandler* game_obj, Transform* transform);
@@ -29,14 +21,17 @@ namespace Shard {
 
         // inherited from Collider
         void recalculate() override;
-        std::optional<glm::vec2> checkCollision(ColliderRect& other) override;
-        std::optional<glm::vec2> checkCollision(ColliderCircle& other) override;
         std::optional<glm::vec2> checkCollision(glm::vec2 point) override;
+        std::optional<glm::vec2> checkCollision(Collider* c) override;
         void draw(SDL_Color color) override;
 
+        //internal colliding check
+        std::optional<glm::vec2> checkCollision(ColliderRect* other);
+        std::optional<glm::vec2> checkCollision(ColliderCircle* other);
 
     private:
         bool for_minkowski = false;
+
     };
+
 }
-*/
