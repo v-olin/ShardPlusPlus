@@ -11,6 +11,7 @@ namespace Shard {
 		 void physicsUpdate();
 		 void prePhysicsUpdate();
 		 void update();
+		 void cleanup();
 
 		static GameObjectManager* getInstance(){
 			static GameObjectManager manager;
@@ -20,6 +21,7 @@ namespace Shard {
 
 	private:
 		std::vector<GameObject*> myObjects;
+		std::vector<GameObject*> to_be_deleted;
 	
 	}; 
 }

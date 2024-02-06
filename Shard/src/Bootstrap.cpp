@@ -238,6 +238,8 @@ namespace Shard {
 
                 getDisplay()->display();
 
+                // Clean up objects that are to be deleted
+                GameObjectManager::getInstance()->cleanup();
 
                 time_in_milliseconds_end = getCurrentMillis();
 

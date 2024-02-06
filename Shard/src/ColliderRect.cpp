@@ -98,7 +98,7 @@ namespace Shard {
 	glm::vec2 ColliderRect::calculatePenetration(glm::vec2 point) {
 		float min = abs(getRight() - point.x);
 		//TODO, depends on framerate...
-		float cutoff = 0.2f;
+		float cutoff = 20.0f;
 
 		// getLeft() edge
 		if (abs(point.x - getLeft()) <= min)

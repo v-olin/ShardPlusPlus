@@ -133,8 +133,8 @@ namespace Shard {
 		force_ *= -prop;
 	}
 
-	void PhysicsBody::impartForces(PhysicsBody other, const float mass_prop) {
-		other.addForce(force_ * mass_prop);
+	void PhysicsBody::impartForces(PhysicsBody* other, const float mass_prop) {
+		other->addForce(force_ * mass_prop);
 
 		recalculateColliders();
 	}

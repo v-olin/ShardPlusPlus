@@ -108,12 +108,12 @@ namespace Shard {
 					CollidingObject col;
 				
 					if (start.owner->mass > active.owner->mass) {
-						col.a = *start.owner;
-						col.b = *active.owner;
+						col.a = start.owner;
+						col.b = active.owner;
 					}
 					else {
-						col.a = *active.owner;
-						col.b = *start.owner;
+						col.a = active.owner;
+						col.b = start.owner;
 					}
 				
 					if (!findColliding(col.a, col.b)) {
@@ -146,7 +146,7 @@ namespace Shard {
 			return false;
 
 		// TODO: bootstrap get current millis;
-		last_update = 0;
+		last_update = Bootstrap::getCurrentMillis();
 
 		for (PhysicsBody* body : all_physics_objects) {
 			if (body->uses_gravity)
@@ -163,18 +163,18 @@ namespace Shard {
 			// todo: if decide to translate, don't do that for kinematic objects
 
 			//This is bad since the parents could have been deleted by the GameObjectManager
-			auto a_handler = dynamic_cast<CollisionHandler*>(col.a.parent);
-			auto b_handler = dynamic_cast<CollisionHandler*>(col.b.parent);
+			auto a_handler = dynamic_cast<CollisionHandler*>(col.a->parent);
+			auto b_handler = dynamic_cast<CollisionHandler*>(col.b->parent);
 
-			if (col.a.parent->to_be_destroyed_) {
-				if (!col.b.parent->to_be_destroyed_)
+			if (col.a->parent->to_be_destroyed_) {
+				if (!col.b->parent->to_be_destroyed_)
 					b_handler->onCollisionExit(nullptr);
 				to_remove.push_back(i++);
 				continue;
 			}
 
-			if (col.b.parent->to_be_destroyed_) {
-				if (!col.a.parent->to_be_destroyed_)
+			if (col.b->parent->to_be_destroyed_) {
+				if (!col.a->parent->to_be_destroyed_)
 					a_handler->onCollisionExit(nullptr);
 				to_remove.push_back(i++);
 				continue;
@@ -184,12 +184,12 @@ namespace Shard {
 			std::optional<glm::vec2> impulse = checkCollisionsBetweenObjects(col.a, col.b);
 
 			if (impulse.has_value()) {
-				a_handler->onCollisionStay(&col.b);
-				b_handler->onCollisionStay(&col.a);
+				a_handler->onCollisionStay(col.b);
+				b_handler->onCollisionStay(col.a);
 			}
 			else {
-				a_handler->onCollisionExit(&col.b);
-				b_handler->onCollisionExit(&col.a);
+				a_handler->onCollisionExit(col.b);
+				b_handler->onCollisionExit(col.a);
 				remove = true;
 			}
 			if (remove)
@@ -219,7 +219,7 @@ namespace Shard {
 			body->draw();
 	}
 
-	bool PhysicsManager::findColliding(PhysicsBody& a, PhysicsBody& b) {
+	bool PhysicsManager::findColliding(PhysicsBody* a, PhysicsBody* b) {
 		// TODO: Potentially flawed implementation.
 		CollidingObject col { a, b };
 
@@ -264,48 +264,48 @@ namespace Shard {
 			if (possible_impulse.has_value()) {
 				impulse = possible_impulse.value();
 
-				if (!col_obj.a.pass_through && !col_obj.b.pass_through) {
-					mass_total = col_obj.a.mass + col_obj.b.mass;
+				if (!col_obj.a->pass_through && !col_obj.b->pass_through) {
+					mass_total = col_obj.a->mass + col_obj.b->mass;
 
-					if (col_obj.a.is_kinematic)
+					if (col_obj.a->is_kinematic)
 						mass_prop = 1.f;
 					else
-						mass_prop = col_obj.a.mass / mass_total;
+						mass_prop = col_obj.a->mass / mass_total;
 
-					if (col_obj.a.impart_force) {
-						col_obj.a.impartForces(col_obj.b, mass_prop);
-						col_obj.a.reduceForces(1.f - mass_prop);
+					if (col_obj.a->impart_force) {
+						col_obj.a->impartForces(col_obj.b, mass_prop);
+						col_obj.a->reduceForces(1.f - mass_prop);
 					}
 
-					if (!col_obj.b.is_kinematic) {
-						col_obj.b.parent->body_->trans.translate(-1 * impulse.x * mass_prop, -1 * impulse.y * mass_prop);
+					if (!col_obj.b->is_kinematic) {
+						col_obj.b->parent->body_->trans.translate(-1 * impulse.x * mass_prop, -1 * impulse.y * mass_prop);
 						mass_prop = 1.f - mass_prop;
 					}
 					else {
 						mass_prop = 1.f;
 					}
 
-					if (!col_obj.a.is_kinematic)
-						col_obj.a.parent->body_->trans.translate(impulse.x * mass_prop, impulse.y * mass_prop);
+					if (!col_obj.a->is_kinematic)
+						col_obj.a->parent->body_->trans.translate(impulse.x * mass_prop, impulse.y * mass_prop);
 					
-					if (col_obj.a.stop_on_collision)
-						col_obj.a.stopForces();
+					if (col_obj.a->stop_on_collision)
+						col_obj.a->stopForces();
 
-					if (col_obj.b.stop_on_collision)
-						col_obj.b.stopForces();
+					if (col_obj.b->stop_on_collision)
+						col_obj.b->stopForces();
 				}
 
-				//col_obj.a.parent->onCollisionEnter(&col_obj.b);
-				//col_obj.b.coll_handler->onCollisionEnter(&col_obj.a);
-				(dynamic_cast<CollisionHandler*>(col_obj.a.parent))->onCollisionEnter(&col_obj.b);
-				(dynamic_cast<CollisionHandler*>(col_obj.b.parent))->onCollisionEnter(&col_obj.a);
+				//col_obj.a->parent->onCollisionEnter(&col_obj.b);
+				//col_obj.b->coll_handler->onCollisionEnter(&col_obj.a);
+				(dynamic_cast<CollisionHandler*>(col_obj.a->parent))->onCollisionEnter(col_obj.b);
+				(dynamic_cast<CollisionHandler*>(col_obj.b->parent))->onCollisionEnter(col_obj.a);
 
 				collidings_.push_back(col_obj);
 
-				if (col_obj.a.reflect_on_collision)
-					col_obj.a.reflectForces(impulse);
-				if (col_obj.b.reflect_on_collision)
-					col_obj.b.reflectForces(impulse);
+				if (col_obj.a->reflect_on_collision)
+					col_obj.a->reflectForces(impulse);
+				if (col_obj.b->reflect_on_collision)
+					col_obj.b->reflectForces(impulse);
 			}
 		}
 	}
@@ -316,11 +316,13 @@ namespace Shard {
 		collisions_to_check_.clear();
 	}
 
-	std::optional<glm::vec2> PhysicsManager::checkCollisionsBetweenObjects(PhysicsBody& a, PhysicsBody& b) {
+	std::optional<glm::vec2> PhysicsManager::checkCollisionsBetweenObjects(PhysicsBody* a, PhysicsBody* b) {
+		if (a->parent->to_be_destroyed_ || b->parent->to_be_destroyed_)
+			return std::nullopt;
 
 		std::optional<glm::vec2> impulse;
-		for (auto *c1 : a.colliders) {
-			for (auto *c2 : b.colliders) {
+		for (auto *c1 : a->colliders) {
+			for (auto *c2 : b->colliders) {
 				impulse = c1->checkCollision(c2);
 				if (impulse.has_value())
 					return impulse.value();

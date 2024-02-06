@@ -40,7 +40,7 @@ namespace Shard {
 		glm::vec2 getMinAndMax(const bool x);
 		void addTorque(const float dir);
 		void reverseForces(const float prop);
-		void impartForces(PhysicsBody other, const float massProp);
+		void impartForces(PhysicsBody* other, const float massProp);
 		void stopForces();
 		void reflectForces(glm::vec2 impulse);
 		void reduceForces(const float prop);
@@ -61,6 +61,10 @@ namespace Shard {
 
 		bool equals(PhysicsBody& other){
 			return parent == other.parent;
+		}
+
+		bool equals(PhysicsBody* other) {
+			return parent == other->parent;
 		}
 
 	private:

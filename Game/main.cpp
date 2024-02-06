@@ -21,7 +21,7 @@ void GameTest::update() {
 }
 
 int GameTest::getTargetFrameRate() {
-	return FAST	;
+	return SLOW	;
 }
 
 void GameTest::createShip() {

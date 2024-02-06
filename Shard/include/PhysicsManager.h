@@ -28,7 +28,7 @@ namespace Shard {
 		bool willTick();
 		bool update();
 		void drawDebugColliders();
-		bool findColliding(PhysicsBody& a, PhysicsBody& b);
+		bool findColliding(PhysicsBody* a, PhysicsBody* b);
 		void broadPassSearchAndSweep();
 		void broadPass();
 
@@ -47,7 +47,7 @@ namespace Shard {
 
 		PhysicsManager();
 
-		std::optional<glm::vec2> checkCollisionsBetweenObjects(PhysicsBody& a, PhysicsBody& b);
+		std::optional<glm::vec2> checkCollisionsBetweenObjects(PhysicsBody* a, PhysicsBody* b);
 		//void broadPassBruteForce();
 		void narrowPass();
 		void checkForCollisions();

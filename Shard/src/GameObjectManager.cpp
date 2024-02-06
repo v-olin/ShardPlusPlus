@@ -43,13 +43,23 @@ namespace Shard{
 
 	void GameObjectManager::update() {
 
-		std::vector<Shard::GameObject*> to_be_deleted;
 		for (auto& gob : this->myObjects) {
 			gob->update();
 			gob->checkDestroyMe();
 			if (gob->to_be_destroyed_)
 				to_be_deleted.push_back(gob);
 		}
+
+
+		// erase-remove idiom, TODO: we also need to call killMe() on all objects that is goinmg to be deleted
+		//TODO, we need to delete the obects, since this might leek memory
+		//this->myObjects.erase(std::remove_if(this->myObjects.begin(), this->myObjects.end(), [&](const Shard::GameObject* obj) {
+		//	return std::find(to_be_deleted.begin(), to_be_deleted.end(), obj) != to_be_deleted.end();
+		//	}), this->myObjects.end());
+
+	}
+
+	void GameObjectManager::cleanup() {
 		for (auto& gob : to_be_deleted) {
 			PhysicsManager::getInstance().removePhysicsObject(gob->body_);
 
@@ -65,14 +75,6 @@ namespace Shard{
 			// And this is fine since this function is run first in every frame
 			delete gob;
 		}
-
-
-		// erase-remove idiom, TODO: we also need to call killMe() on all objects that is goinmg to be deleted
-		//TODO, we need to delete the obects, since this might leek memory
-		//this->myObjects.erase(std::remove_if(this->myObjects.begin(), this->myObjects.end(), [&](const Shard::GameObject* obj) {
-		//	return std::find(to_be_deleted.begin(), to_be_deleted.end(), obj) != to_be_deleted.end();
-		//	}), this->myObjects.end());
-
+		to_be_deleted.clear();
 	}
-
 }
