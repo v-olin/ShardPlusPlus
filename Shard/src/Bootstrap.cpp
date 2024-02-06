@@ -249,7 +249,8 @@ namespace Shard {
                 sleep = (int)(millis_per_frame - interval);
 
                 if (sleep >= 0)
-                    SDL_Delay(sleep); 
+                    std::this_thread::sleep_for(std::chrono::milliseconds(sleep));
+                    //SDL_Delay(sleep); 
                 
                 time_in_milliseconds_end = getCurrentMillis();
                 delta_time = (time_in_milliseconds_end - time_in_milliseconds_start) / 1000.0f;
