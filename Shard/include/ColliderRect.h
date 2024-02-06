@@ -12,8 +12,8 @@ namespace Shard {
         float getBottom() { return box_bottom_right.y; }
 
         ColliderRect();
-        ColliderRect(CollisionHandler* game_obj, Transform* transform);
-        ColliderRect(CollisionHandler* game_obj, Transform* transform, float x, float y, float width, float height);
+        ColliderRect(std::shared_ptr<CollisionHandler> game_obj, std::shared_ptr<Transform> transform);
+        ColliderRect(std::shared_ptr<CollisionHandler> game_obj, std::shared_ptr<Transform> transform, float x, float y, float width, float height);
 
         void calculateBoundingBox();
         ColliderRect calculateMinkowskiDifference(ColliderRect& other);
@@ -22,12 +22,12 @@ namespace Shard {
         // inherited from Collider
         void recalculate() override;
         std::optional<glm::vec2> checkCollision(glm::vec2 point) override;
-        std::optional<glm::vec2> checkCollision(Collider* c) override;
+        std::optional<glm::vec2> checkCollision(std::shared_ptr<Collider> c) override;
         void draw(SDL_Color color) override;
 
         //internal colliding check
-        std::optional<glm::vec2> checkCollision(ColliderRect* other);
-        std::optional<glm::vec2> checkCollision(ColliderCircle* other);
+        std::optional<glm::vec2> checkCollision(std::shared_ptr<ColliderRect> other);
+        std::optional<glm::vec2> checkCollision(std::shared_ptr<ColliderCircle> other);
 
     private:
         bool for_minkowski = false;

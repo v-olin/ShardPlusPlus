@@ -17,7 +17,7 @@ namespace Shard {
 		return instance;
 	}
 
-	void PhysicsManager::addPhysicsObject(PhysicsBody* body) {
+	void PhysicsManager::addPhysicsObject(std::shared_ptr<PhysicsBody> body) {
 		// TODO: std::find?
 		bool exists = false;
 		for(size_t i = 0; i < all_physics_objects.size(); i++){
@@ -31,7 +31,7 @@ namespace Shard {
 			all_physics_objects.push_back(body);
 	}
 
-	void PhysicsManager::removePhysicsObject(PhysicsBody* body) {
+	void PhysicsManager::removePhysicsObject(std::shared_ptr<PhysicsBody> body) {
 		for(size_t i = 0; i < all_physics_objects.size(); i++){
 			auto other = all_physics_objects.at(i);
 			if(other->parent == body->parent){
@@ -148,7 +148,7 @@ namespace Shard {
 		// TODO: bootstrap get current millis;
 		last_update = Bootstrap::getCurrentMillis();
 
-		for (PhysicsBody* body : all_physics_objects) {
+		for (auto &body : all_physics_objects) {
 			if (body->uses_gravity)
 				body->applyGravity(gravity_dir, gravity_modifier);
 
@@ -163,8 +163,13 @@ namespace Shard {
 			// todo: if decide to translate, don't do that for kinematic objects
 
 			//This is bad since the parents could have been deleted by the GameObjectManager
-			auto a_handler = dynamic_cast<CollisionHandler*>(col.a->parent);
-			auto b_handler = dynamic_cast<CollisionHandler*>(col.b->parent);
+			// upcast to shared_ptr
+			auto a_handler = std::dynamic_pointer_cast<CollisionHandler>(col.a->parent);
+			auto b_handler = std::dynamic_pointer_cast<CollisionHandler>(col.b->parent);
+
+			if (!a_handler || !b_handler) {
+				Logger::log("failed upcast", LOG_LEVEL_ALL);
+			}
 
 			if (col.a->parent->to_be_destroyed_) {
 				if (!col.b->parent->to_be_destroyed_)
@@ -215,16 +220,16 @@ namespace Shard {
 	}
 
 	void PhysicsManager::drawDebugColliders() {
-		for (PhysicsBody* body : all_physics_objects)
+		for (const std::shared_ptr<PhysicsBody>& body : all_physics_objects)
 			body->draw();
 	}
 
-	bool PhysicsManager::findColliding(PhysicsBody* a, PhysicsBody* b) {
+	bool PhysicsManager::findColliding(std::shared_ptr<PhysicsBody> a, std::shared_ptr<PhysicsBody> b) {
 		// TODO: Potentially flawed implementation.
 		CollidingObject col { a, b };
 
 		for (auto &col_ : collidings_) {
-			if (col == col_)
+			if (col.equals(col_))
 				return true;
 		}
 
@@ -232,7 +237,7 @@ namespace Shard {
 	}
 
 	void PhysicsManager::broadPassSearchAndSweep() {
-		for (PhysicsBody* body : all_physics_objects) {
+		for (auto body : all_physics_objects) {
 			SAPEntry sx;
 			glm::vec2 tmp = body->min_and_max_x;
 
@@ -278,7 +283,7 @@ namespace Shard {
 					}
 
 					if (!col_obj.b->is_kinematic) {
-						col_obj.b->parent->body_->trans.translate(-1 * impulse.x * mass_prop, -1 * impulse.y * mass_prop);
+						col_obj.b->parent->body_->trans->translate(-1 * impulse.x * mass_prop, -1 * impulse.y * mass_prop);
 						mass_prop = 1.f - mass_prop;
 					}
 					else {
@@ -286,7 +291,7 @@ namespace Shard {
 					}
 
 					if (!col_obj.a->is_kinematic)
-						col_obj.a->parent->body_->trans.translate(impulse.x * mass_prop, impulse.y * mass_prop);
+						col_obj.a->parent->body_->trans->translate(impulse.x * mass_prop, impulse.y * mass_prop);
 					
 					if (col_obj.a->stop_on_collision)
 						col_obj.a->stopForces();
@@ -305,8 +310,8 @@ namespace Shard {
 
 				//col_obj.a->parent->onCollisionEnter(&col_obj.b);
 				//col_obj.b->coll_handler->onCollisionEnter(&col_obj.a);
-				(dynamic_cast<CollisionHandler*>(col_obj.a->parent))->onCollisionEnter(col_obj.b);
-				(dynamic_cast<CollisionHandler*>(col_obj.b->parent))->onCollisionEnter(col_obj.a);
+				(std::dynamic_pointer_cast<CollisionHandler>(col_obj.a->parent))->onCollisionEnter(col_obj.b);
+				(std::dynamic_pointer_cast<CollisionHandler>(col_obj.b->parent))->onCollisionEnter(col_obj.a);
 
 				collidings_.push_back(col_obj);
 
@@ -320,13 +325,13 @@ namespace Shard {
 		collisions_to_check_.clear();
 	}
 
-	std::optional<glm::vec2> PhysicsManager::checkCollisionsBetweenObjects(PhysicsBody* a, PhysicsBody* b) {
+	std::optional<glm::vec2> PhysicsManager::checkCollisionsBetweenObjects(std::shared_ptr <PhysicsBody> a, std::shared_ptr<PhysicsBody> b) {
 		if (a->parent->to_be_destroyed_ || b->parent->to_be_destroyed_)
 			return std::nullopt;
 
 		std::optional<glm::vec2> impulse;
-		for (auto *c1 : a->colliders) {
-			for (auto *c2 : b->colliders) {
+		for (auto c1 : a->colliders) {
+			for (auto c2 : b->colliders) {
 				impulse = c1->checkCollision(c2);
 				if (impulse.has_value())
 					return impulse.value();

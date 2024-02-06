@@ -3,19 +3,24 @@
 #include "Bullet.h"
 #include "Bootstrap.h"
 #include "Logger.h"
+#include "GameObjectManager.h"
 
 #include <SDL.h>
 
 Spaceship::Spaceship() : GameObject() {
-	initialize();
+	//initialize();
+	//Shard::GameObjectManager::getInstance().addGameObject(shared_from_this());
 }
 
 void Spaceship::fireBullet() {
     Bullet* b = new Bullet();
     Shard::Logger::log("FIRE");
-    b->setupBullet(this, transform_->centre.x, transform_->centre.y);
-    b->transform_->rotate(transform_->rotz);
-    Shard::Bootstrap::getSound()->playSound("fire.wav");
+
+    // THIS SHOULD NOT BE DONE HERE,
+    // https://tenor.com/view/oh-no-oh-no-anyway-gif-18887547 
+    b->setupBullet(body_->trans->centre.x, body_->trans->centre.y);
+    b->body_->trans->rotate(body_->trans->rotz);
+    Shard::Bootstrap::getSound().playSound("fire.wav");
 }
 
 void Spaceship::handleEvent(Shard::InputEvent ev, Shard::EventType et) {
@@ -60,10 +65,10 @@ void Spaceship::handleEvent(Shard::InputEvent ev, Shard::EventType et) {
 void Spaceship::initialize() {
 
     setPhysicsEnabled(); // sets body_ to a new PhysicBody(this ) and populates transform_
-    transform_->x = 500.f;
-    transform_->y = 300.f;
-    auto path = Shard::Bootstrap::getAssetManager()->getAssetPath("spaceship.png");
-    transform_->sprite_path = path;
+    body_->trans->x = 500.f;
+    body_->trans->y = 300.f;
+    auto path = Shard::Bootstrap::getAssetManager().getAssetPath("spaceship.png");
+    body_->trans->sprite_path = path;
 
     // if you move this stuff above transform_ init ^ then colliders will not be drawn
     // why? ... you figure it out!
@@ -86,10 +91,8 @@ void Spaceship::initialize() {
 }
 
 void Spaceship::update() {
-    // TODO: ???
-    //0x00000295ee25f3a0
-    //0x00000295ee25f5e0
-    Shard::Bootstrap::getDisplay()->addToDraw(this);
+ 
+    Shard::Bootstrap::getDisplay()->addToDraw(shared_from_this());
 }
 
 void Spaceship::physicsUpdate() {
@@ -104,9 +107,9 @@ void Spaceship::physicsUpdate() {
     if (turn_right)
         body_->addTorque(0.3f);
     if (up)
-        body_->addForce(body_->trans.forward, 0.5f);
+        body_->addForce(body_->trans->forward, 0.5f);
     if (down)
-        body_->addForce(body_->trans.forward, -0.2f);
+        body_->addForce(body_->trans->forward, -0.2f);
 }
 
 void Spaceship::prePhysicsUpdate() {
@@ -117,19 +120,18 @@ void Spaceship::killMe() {
     // TODO: Clean up!!!
 }
 
-void Spaceship::onCollisionEnter(Shard::PhysicsBody* body) {
+void Spaceship::onCollisionEnter(std::shared_ptr<Shard::PhysicsBody> body) {
     Shard::Logger::log("INDIDE ONCOLLISIONENTER SPACESHIP");
     if (!body->parent->hasTag("Bullet"))
         body_->debug_color_ = { 255, 0, 0, 255 };
     // TODO: Lower HP?
 }
 
-void Spaceship::onCollisionExit(Shard::PhysicsBody* body) {
-    body_->debug_color_ = { 0, 255, 0, 255 };
+void Spaceship::onCollisionExit(std::shared_ptr<Shard::PhysicsBody> body) {
     // TODO: Not sure...
 }
 
-void Spaceship::onCollisionStay(Shard::PhysicsBody* body) {
+void Spaceship::onCollisionStay(std::shared_ptr<Shard::PhysicsBody> body) {
     // TODO: Not sure...
     if (!body->parent->hasTag("Bullet"))
         body_->debug_color_ = { 0, 0, 255, 255 };

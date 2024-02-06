@@ -5,7 +5,7 @@
 namespace Shard {
 	struct  SAPEntry {
 	public:
-		PhysicsBody* owner;
+		std::shared_ptr<PhysicsBody> owner;
 		float start, end;
 		//SAPEntry &prev, &next; // use std::list idiot
 		

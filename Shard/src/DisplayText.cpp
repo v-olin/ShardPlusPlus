@@ -109,6 +109,7 @@ namespace Shard {
 			TTF_SizeText(td.font, td.text.c_str(), &sRect.w, &sRect.h);
 			SDL_RenderCopy(_rend, td.lblText, NULL, &sRect);
 		}
+		// FUCK SDL!!
 		SDL_RenderPresent(_rend);
 	}
 

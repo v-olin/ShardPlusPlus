@@ -11,7 +11,7 @@ namespace Shard {
 		DisplayText::initialize();
 	}
 
-	SDL_Texture* DisplaySDL::loadTexture(Transform* trans) {
+	SDL_Texture* DisplaySDL::loadTexture(std::shared_ptr<Transform> trans) {
 		SDL_Texture* ret;
 		unsigned int format;
 		int access;
@@ -41,30 +41,30 @@ namespace Shard {
 		spriteBuffer[path] = SDL_CreateTextureFromSurface(_rend, img);
 		SDL_SetTextureBlendMode(spriteBuffer[path], SDL_BLENDMODE_BLEND);
 
-		//TODO, return was img in C#, check if this change works
 		return spriteBuffer[path];
 	}
 
-	void DisplaySDL::addToDraw(GameObject* gob) {
+	void DisplaySDL::addToDraw(std::shared_ptr<GameObject> gob) {
 
-		auto* gob_transform = &gob->body_->trans;
+		auto gob_transform = std::make_shared<Transform3D>(gob->body_->trans);
 
 		_toDraw.push_back(gob_transform);
 		
-		if ((gob_transform->sprite_path != NULL) && (gob_transform->sprite_path[0] == '\0'))
+		if(gob_transform->sprite_path.empty())
 			return;
 
 		loadTexture(gob_transform->sprite_path);
 	}
-
-	void DisplaySDL::removeToDraw(GameObject* gob) {
+	
+	void DisplaySDL::removeToDraw(std::shared_ptr<GameObject> gob) {
 		auto iter = _toDraw.begin();
-
-		while (++iter != _toDraw.end()) {
-			if (gob->body_->trans.h == (*iter)->h) {
+		while (iter != _toDraw.end()) {
+			auto trans = *iter;
+			if (gob->body_->trans->h == trans->h) {
 				_toDraw.erase(iter);
 				return;
 			}
+			iter++;
 		}
 	}
 
@@ -152,9 +152,10 @@ namespace Shard {
 			SDL_SetRenderDrawColor(_rend, 0, 0, 0, 255);
 		}
 
-		for (Transform* trans : _toDraw) {
-			if (((std::string)trans->sprite_path).empty())
+		for (auto trans : _toDraw) {
+			if (trans->sprite_path.empty())
 				continue;
+
 			SDL_Texture* sprite = loadTexture(trans);
 
 			sRect.x = 0;

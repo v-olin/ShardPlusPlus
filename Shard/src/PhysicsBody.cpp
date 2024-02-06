@@ -15,6 +15,9 @@
 namespace Shard {
 	PhysicsBody::PhysicsBody()
 		: 
+		force_(0,0),
+		time_interval_(0),
+		torque_(0),
 		angular_drag(0),
 		drag(0),
 		mass(1),
@@ -30,9 +33,10 @@ namespace Shard {
 		impart_force(false),
 		parent(nullptr)
 	{
+		trans = std::make_shared<Transform3D>();
 	}
 
-	PhysicsBody::PhysicsBody(GameObject* game_obj)
+	PhysicsBody::PhysicsBody(std::shared_ptr<GameObject> game_obj)
 		:
 		angular_drag(0.01f),
 		drag(0.01f),
@@ -51,9 +55,10 @@ namespace Shard {
 		debug_color_ = SDL_Color{ 0, 255, 0, 255 }; // green
 		parent = game_obj;
 
+		trans = std::make_shared<Transform3D>();
 
 		time_interval_ = PhysicsManager::getInstance().time_interval;
-		PhysicsManager::getInstance().addPhysicsObject(this);
+		//PhysicsManager::getInstance().addPhysicsObject(shared_from_this());
 	}
 
 	void PhysicsBody::applyGravity(glm::vec2 dir, const float multiplier) {
@@ -92,31 +97,6 @@ namespace Shard {
 
 		return { min, max };
 
-		//int min = std::numeric_limits<int>::min();
-		//int max = std::numeric_limits<int>::max();
-
-		/*
-		    float min = Int32.MaxValue;
-            float max = -1 * min;
-            float[] tmp;
-
-            foreach (Collider col in myColliders)
-            {
-
-                if (x)
-                    tmp = col.MinAndMaxX;
-                else
-                    tmp = col.MinAndMaxY;
-
-                if (tmp[0] < min)
-                    min = tmp[0];
-
-                if (tmp[1] > max)
-                    max = tmp[1];
-            }
-
-		*/
-
 	}
 
 	void PhysicsBody::addTorque(const float dir) {
@@ -139,7 +119,7 @@ namespace Shard {
 		force_ *= -prop;
 	}
 
-	void PhysicsBody::impartForces(PhysicsBody* other, const float mass_prop) {
+	void PhysicsBody::impartForces(std::shared_ptr<PhysicsBody> other, const float mass_prop) {
 		other->addForce(force_ * mass_prop);
 
 		recalculateColliders();
@@ -211,10 +191,10 @@ namespace Shard {
 
 		}
 
-		trans.rotate(rot);
+		trans->rotate(rot);
 
 		float force_mag = glm::length(force_);
-		trans.translate(force_);
+		trans->translate(force_);
 
 		if (force_mag < drag) {
 			stopForces();
@@ -225,27 +205,28 @@ namespace Shard {
 	}
 
 	// TODO: All of these leak memory :)
+	// not anymore!!! (hopefully)
 	void PhysicsBody::addRectCollider() {
-		auto handler = dynamic_cast<CollisionHandler*>(parent);
-		Collider* col = new ColliderRect(handler, &parent->body_->trans);
+		auto handler = std::dynamic_pointer_cast<CollisionHandler>(parent);
+		auto col = std::make_shared<ColliderRect>(handler, trans->shared_from_this());
 		colliders.push_back(col);
 	}
 
 	void PhysicsBody::addRectCollider(float x, float y, float w, float h) {
-		auto handler = dynamic_cast<CollisionHandler*>(parent);
-		Collider* col = new ColliderRect(handler, &parent->body_->trans, x, y, w, h);
+		auto handler = std::dynamic_pointer_cast<CollisionHandler>(parent);
+		auto col = std::make_shared<ColliderRect>(handler, trans->shared_from_this(), x, y, w, h);
 		colliders.push_back(col);
 	}
 
 	void PhysicsBody::addCircleCollider() {
-		auto handler = dynamic_cast<CollisionHandler*>(parent);
-		Collider* col = new ColliderCircle(handler, &parent->body_->trans);
+		auto handler = std::dynamic_pointer_cast<CollisionHandler>(parent);
+		auto col = std::make_shared<ColliderCircle>(handler, trans->shared_from_this());
 		colliders.push_back(col);
 	}
 
 	void PhysicsBody::addCircleCollider(float x, float y, float rad) {
-		auto handler = dynamic_cast<CollisionHandler*>(parent);
-		Collider* col = new ColliderCircle(handler, &parent->body_->trans, x, y, rad);
+		auto handler = std::dynamic_pointer_cast<CollisionHandler>(parent);
+		auto col = std::make_shared<ColliderCircle>(handler, trans->shared_from_this(), x, y, rad);
 		colliders.push_back(col);
 	}
 

@@ -82,23 +82,23 @@ namespace Shard {
         return display_engine;
     }
 
-    Sound* Bootstrap::getSound() {
-        return &sound_engine;
+    Sound& Bootstrap::getSound() {
+        return sound_engine;
     }
 
-    InputManager* Bootstrap::getInput() {
-        return &input;
+    InputManager& Bootstrap::getInput() {
+        return input;
     }
 
-    AssetManager* Bootstrap::getAssetManager() {
-        return &asset;
+    AssetManager& Bootstrap::getAssetManager() {
+        return asset;
     }
 
-    Game* Bootstrap::getRunningGame() {
+    std::shared_ptr<Game> Bootstrap::getRunningGame() {
         return running_game;
     }
 
-    void Bootstrap::setRunningGame(Game* game) {
+    void Bootstrap::setRunningGame(std::shared_ptr<Game> game) {
        running_game = game;
        target_frame_rate = running_game->getTargetFrameRate();
        millis_per_frame = 1000 / target_frame_rate;
@@ -212,13 +212,13 @@ namespace Shard {
 
 				// Update runs as fast as the system lets it.  Any kind of movement or counter 
 				// increment should be based then on the deltaTime variable.
-				GameObjectManager::getInstance()->update();
+				GameObjectManager::getInstance().update();
 
 				// This will update every 20 milliseconds or thereabouts.  Our physics system aims 
 				// at a 50 FPS cycle.
 				if (phys.willTick())
 				{
-					GameObjectManager::getInstance()->prePhysicsUpdate();
+					GameObjectManager::getInstance().prePhysicsUpdate();
 				}
 
 				// Update the physics.  If it's too soon, it'll return false.   Otherwise 
@@ -229,7 +229,7 @@ namespace Shard {
 				{
 					// If it did tick, give every object an update
 					// that is pinned to the timing of the physics system.
-					GameObjectManager::getInstance()->physicsUpdate();
+					GameObjectManager::getInstance().physicsUpdate();
 				}
 
 				if (phys_debug) {
@@ -239,7 +239,7 @@ namespace Shard {
                 getDisplay()->display();
 
                 // Clean up objects that are to be deleted
-                GameObjectManager::getInstance()->cleanup();
+                GameObjectManager::getInstance().cleanup();
 
                 time_in_milliseconds_end = getCurrentMillis();
 

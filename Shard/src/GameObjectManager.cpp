@@ -4,11 +4,11 @@
 
 namespace Shard{
 
-	void GameObjectManager::addGameObject(GameObject* obj){
+	void GameObjectManager::addGameObject(std::shared_ptr<GameObject> obj){
 		this->myObjects.push_back(obj);
 	}
-
-	void GameObjectManager::removeGameObject(GameObject* obj){
+	
+	void GameObjectManager::removeGameObject(std::shared_ptr<GameObject> obj){
 		auto iter = this->myObjects.begin();
 		while (++iter != this->myObjects.end()) {
 			if (obj->body_ == (*iter)->body_) {
@@ -32,10 +32,10 @@ namespace Shard{
 	}
 
 	void GameObjectManager::prePhysicsUpdate(){
-		if (getInstance()->myObjects.size() == 0)
+		if (getInstance().myObjects.size() == 0)
 			return;
-		auto iter = getInstance()->myObjects.begin();
-		while (iter != getInstance()->myObjects.end()) {
+		auto iter = getInstance().myObjects.begin();
+		while (iter != getInstance().myObjects.end()) {
 			(*iter++)->prePhysicsUpdate();
 		}
 
@@ -63,9 +63,10 @@ namespace Shard{
 		for (auto& gob : to_be_deleted) {
 			PhysicsManager::getInstance().removePhysicsObject(gob->body_);
 
-			InputListener* t;
-			if (t = dynamic_cast<InputListener*>(gob))
-				Bootstrap::getInput()->removeListeners(t);
+			std::shared_ptr<InputListener> listener =
+				std::dynamic_pointer_cast<InputListener>(gob);
+			if (listener) // if successful downcast
+				Bootstrap::getInput().removeListeners(listener);
 			gob->killMe();
 			std::erase(myObjects, gob); // inefficient af.
 
@@ -73,7 +74,10 @@ namespace Shard{
 			// to do this, start with tracking from creation of game object and list all places where the pointer to that object is stored
 			// we need to remove those pointers ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 			// And this is fine since this function is run first in every frame
-			delete gob;
+			
+			// we shouldn't need to delete gob here since it is now a shared_ptr
+			// which should delete itself (if we're lucky)
+			// delete gob; 
 		}
 		to_be_deleted.clear();
 	}

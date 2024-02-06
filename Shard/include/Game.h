@@ -6,15 +6,8 @@ namespace Shard {
 
 	class Game {
 	public:
-		AssetManager* assets{ nullptr };
-
-		AssetManager* getAssetManager() {
-			if (!assets)
-				assets = &AssetManager::getInstance();
-			return assets;
-		}
-		virtual void initalize() {}
-		virtual void update() {}
+		virtual void initalize() = 0;
+		virtual void update() = 0;
 		virtual bool isRunning() {
 			return true;
 		}

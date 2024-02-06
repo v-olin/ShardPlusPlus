@@ -5,8 +5,8 @@ namespace Shard {
 
     class  CollisionHandler {
     public:
-        virtual void onCollisionEnter(PhysicsBody* body) = 0;
-        virtual void onCollisionExit(PhysicsBody* body) = 0;
-        virtual void onCollisionStay(PhysicsBody* body) = 0;
+        virtual void onCollisionEnter(std::shared_ptr<PhysicsBody> body) = 0;
+        virtual void  onCollisionExit(std::shared_ptr<PhysicsBody> body) = 0;
+        virtual void  onCollisionStay(std::shared_ptr<PhysicsBody> body) = 0;
     };
 }

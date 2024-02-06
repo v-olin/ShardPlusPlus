@@ -5,7 +5,14 @@
 #include "InputEvent.h"
 #include "InputManager.h"
 
-class Asteroid : public Shard::GameObject, public Shard::InputListener, public Shard::CollisionHandler {
+#include <memory>
+
+class Asteroid
+	: public Shard::GameObject
+	, public Shard::InputListener
+	, public Shard::CollisionHandler
+	// , public std::enable_shared_from_this<Asteroid> 
+	{
 public:
 	int torque_counter{10};
 
@@ -21,9 +28,9 @@ public:
 	void update() override;
 	void killMe() override;
 
-	void onCollisionEnter(Shard::PhysicsBody* body) override;
-	void onCollisionExit(Shard::PhysicsBody* body) override ;
-	void onCollisionStay(Shard::PhysicsBody* body) override;
+	void onCollisionEnter(std::shared_ptr<Shard::PhysicsBody> body) override;
+	void onCollisionExit(std::shared_ptr<Shard::PhysicsBody> body) override ;
+	void onCollisionStay(std::shared_ptr<Shard::PhysicsBody> body) override;
 
 
 };

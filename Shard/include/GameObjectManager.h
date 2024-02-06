@@ -1,27 +1,27 @@
 #pragma once
 
 #include "GameObject.h"
-
 #include <vector>
+
 namespace Shard {
 	class  GameObjectManager {
 	public:
-		 void addGameObject(GameObject* obj);
-		 void removeGameObject(GameObject* obj);
+		 void addGameObject(std::shared_ptr<GameObject> obj);
+		 void removeGameObject(std::shared_ptr<GameObject> obj);
 		 void physicsUpdate();
 		 void prePhysicsUpdate();
 		 void update();
 		 void cleanup();
 
-		static GameObjectManager* getInstance(){
+		static GameObjectManager& getInstance(){
 			static GameObjectManager manager;
-			return &manager;
+			return manager;
 		}
 
 
 	private:
-		std::vector<GameObject*> myObjects;
-		std::vector<GameObject*> to_be_deleted;
+		std::vector<std::shared_ptr<GameObject>> myObjects;
+		std::vector<std::shared_ptr<GameObject>> to_be_deleted;
 	
 	}; 
 }

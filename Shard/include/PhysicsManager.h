@@ -19,8 +19,8 @@ namespace Shard {
 		PhysicsManager(PhysicsManager const&) = delete;
 		PhysicsManager& operator=(PhysicsManager const&) = delete;
 
-		void addPhysicsObject(PhysicsBody* body);
-		void removePhysicsObject(PhysicsBody* body);
+		void addPhysicsObject(std::shared_ptr<PhysicsBody> body);
+		void removePhysicsObject(std::shared_ptr<PhysicsBody> body);
 		void clearList();
 		void addToList(SAPEntry node);
 		// void outputList(SAPEntry node); only for debug, skipping
@@ -28,7 +28,7 @@ namespace Shard {
 		bool willTick();
 		bool update();
 		void drawDebugColliders();
-		bool findColliding(PhysicsBody* a, PhysicsBody* b);
+		bool findColliding(std::shared_ptr<PhysicsBody> a, std::shared_ptr<PhysicsBody> b);
 		void broadPassSearchAndSweep();
 		void broadPass();
 
@@ -43,11 +43,11 @@ namespace Shard {
 		std::list<SAPEntry> sap_x;
 		glm::vec2 gravity_dir;
 
-		std::vector<PhysicsBody*> all_physics_objects;
+		std::vector<std::shared_ptr<PhysicsBody>> all_physics_objects;
 
 		PhysicsManager();
 
-		std::optional<glm::vec2> checkCollisionsBetweenObjects(PhysicsBody* a, PhysicsBody* b);
+		std::optional<glm::vec2> checkCollisionsBetweenObjects(std::shared_ptr<PhysicsBody> a, std::shared_ptr<PhysicsBody> b);
 		//void broadPassBruteForce();
 		void narrowPass();
 		void checkForCollisions();

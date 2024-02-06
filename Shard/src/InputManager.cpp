@@ -1,29 +1,22 @@
 #include <SDL_events.h>
 #include "Bootstrap.h"
 #include "InputManager.h"
-
-//This replaces all thigs regardnig input in the C# code.
-//Except the InputBasic class, sice that class is never used in the original code...
+#include "Logger.h"
 
 namespace Shard {
 
-	void InputManager::addListeners(InputListener* listener) {
+	void InputManager::addListeners(std::shared_ptr<InputListener> listener) {
 		myListeners.push_back(listener);
 	}
-	void InputManager::removeListeners(InputListener* listener) {
+	
+	void InputManager::removeListeners(std::shared_ptr<InputListener> listener) {
 		std::erase(myListeners, listener);
-		/*
-		myListeners.erase(std::remove_if(myListeners.begin(), myListeners.end(), [](InputListener* other) {
-			return other == listener;
-		}, myListeners.end());
-		*/
 	}
 
 	void InputManager::getInput() {
 		SDL_Event ev;
 		InputEvent ie;
 
-		//TODO add back when bootstrap is implemented
 		tick += Bootstrap::getDeltaTime();
 		if (tick < time_interval)
 			return;
@@ -52,8 +45,7 @@ namespace Shard {
 			}
 			if (ev.type == SDL_KEYDOWN || ev.type == SDL_KEYUP) {
 				ie.key = (int)ev.key.keysym.scancode;
-				//TODO fix when debug is implemented
-				//Debug.getInstance().log("Keydown: " + ie.Key);
+				Logger::log("Keydown: " + ie.key, LOG_LEVEL_ALL);
 				EventType type = ev.type == SDL_KEYDOWN ? KeyDown : KeyUp;
 				informListeners(ie, type);
 			}
@@ -64,19 +56,8 @@ namespace Shard {
 	void InputManager::informListeners(InputEvent ie, EventType et) {
 		int idx = 0;
 		while (idx < myListeners.size()) {
-			/*
-			auto li = myListeners[idx++];
-			if (li == nullptr)
-				continue;
-			*/
-			/*
-			if(dynamic_cast<GameObject>li->body_ == nullptr)
-				continue;
-			*/
 			myListeners[idx++]->handleEvent(ie, et);
 		}
-	/*	for (InputListener* listener : myListeners)
-			listener->handleEvent(ie, et);*/
 	}
 
 	void InputManager::initialize() {
