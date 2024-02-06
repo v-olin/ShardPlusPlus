@@ -293,6 +293,14 @@ namespace Shard {
 
 					if (col_obj.b->stop_on_collision)
 						col_obj.b->stopForces();
+
+
+
+					if (col_obj.a->reflect_on_collision)
+						col_obj.a->reflectForces(impulse);
+					if (col_obj.b->reflect_on_collision)
+						col_obj.b->reflectForces(impulse);
+
 				}
 
 				//col_obj.a->parent->onCollisionEnter(&col_obj.b);
@@ -302,10 +310,6 @@ namespace Shard {
 
 				collidings_.push_back(col_obj);
 
-				if (col_obj.a->reflect_on_collision)
-					col_obj.a->reflectForces(impulse);
-				if (col_obj.b->reflect_on_collision)
-					col_obj.b->reflectForces(impulse);
 			}
 		}
 	}

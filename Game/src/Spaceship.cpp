@@ -130,5 +130,6 @@ void Spaceship::onCollisionExit(Shard::PhysicsBody* body) {
 
 void Spaceship::onCollisionStay(Shard::PhysicsBody* body) {
     // TODO: Not sure...
-    body_->debug_color_ = { 0, 0, 255, 255 };
+    if (!body->parent->hasTag("Bullet"))
+        body_->debug_color_ = { 0, 0, 255, 255 };
 }

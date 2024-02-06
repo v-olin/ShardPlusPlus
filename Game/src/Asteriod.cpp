@@ -34,6 +34,7 @@ void Asteroid::initialize()
     body_->stop_on_collision = false;
     body_->reflect_on_collision = true;
     body_->is_kinematic = false;
+    //body_->pass_through = false;
     
     // TODO: Add randomness to initial force
     //body_->addForce(transform_->right, 2.0f);

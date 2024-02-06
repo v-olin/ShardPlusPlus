@@ -32,19 +32,25 @@ namespace Shard {
 	{
 	}
 
-	PhysicsBody::PhysicsBody(GameObject* game_obj) {
+	PhysicsBody::PhysicsBody(GameObject* game_obj)
+		:
+		angular_drag(0.01f),
+		drag(0.01f),
+		mass(1),
+		min_and_max_x(0, 0),
+		min_and_max_y(0, 0),
+		max_force(50),
+		max_torque(2.f),
+		is_kinematic(false),
+		pass_through(false),
+		uses_gravity(false),
+		stop_on_collision(true),
+		reflect_on_collision(false),
+		impart_force(false)
+	{
 		debug_color_ = SDL_Color{ 0, 255, 0, 255 }; // green
 		parent = game_obj;
 
-		// TODO: initializer list
-		angular_drag = 0.01f;
-		drag = 0.01f;
-		mass = 1.f;
-		max_force = 10.f;
-		max_torque = 2.f;
-		uses_gravity = false;
-		stop_on_collision = true;
-		reflect_on_collision = false;
 
 		time_interval_ = PhysicsManager::getInstance().time_interval;
 		PhysicsManager::getInstance().addPhysicsObject(this);
