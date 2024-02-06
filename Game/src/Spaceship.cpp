@@ -15,6 +15,7 @@ void Spaceship::fireBullet() {
     Shard::Logger::log("FIRE");
     b->setupBullet(this, transform_->centre.x, transform_->centre.y);
     b->transform_->rotate(transform_->rotz);
+    Shard::Bootstrap::getSound()->playSound("fire.wav");
 }
 
 void Spaceship::handleEvent(Shard::InputEvent ev, Shard::EventType et) {
