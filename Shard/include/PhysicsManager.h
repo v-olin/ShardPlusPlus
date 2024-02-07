@@ -38,7 +38,7 @@ namespace Shard {
 		std::vector<CollidingObject> collidings_;
 
 		
-		long last_update, last_debug_draw;
+		long long last_update, last_debug_draw;
 		//SAPEntry sap_x, sap_y;
 		std::list<SAPEntry> sap_x;
 		glm::vec2 gravity_dir;

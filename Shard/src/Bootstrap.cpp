@@ -31,7 +31,7 @@ namespace Shard {
         return delta_time;
     }
 
-    long Bootstrap::getCurrentMillis() {
+    long long Bootstrap::getCurrentMillis() {
         return std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::system_clock::now().time_since_epoch()
         ).count();
@@ -43,7 +43,7 @@ namespace Shard {
     }
 
     float Bootstrap::getSecondFPS() {
-        long now = getCurrentMillis();
+        long long now = getCurrentMillis();
 
         //Logger::log(("Current frametime: " + std::to_string(frame_times.size())).c_str());
 
@@ -176,7 +176,7 @@ namespace Shard {
 
 
     void Bootstrap::Main(std::string args[]){
-		long time_in_milliseconds_start, last_tick, time_in_milliseconds_end;
+		long long time_in_milliseconds_start, last_tick, time_in_milliseconds_end;
 		long interval;
 		int sleep;
 		int tfro = 1;
