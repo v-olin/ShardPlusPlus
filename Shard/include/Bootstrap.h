@@ -23,7 +23,7 @@ namespace Shard {
 		static  std::string getEnvironmentVariable(std::string id);
 		static  double timeElapsed();
 		static  double getDeltaTime();
-		static  long getCurrentMillis();
+		static  long long getCurrentMillis();
 		static  float getFPS();
 		static  float getSecondFPS();
 		static  int getCurrentFrame();
@@ -55,8 +55,8 @@ namespace Shard {
         inline static double delta_time;
         inline static double time_elapsed;
         inline static int frames;
-        inline static std::vector<long> frame_times;
-        inline static long start_time;
+        inline static std::vector<long long> frame_times;
+        inline static long long start_time;
         inline static std::string base_dir;
 		inline static std::unordered_map<std::string, std::string> en_vars;
 	};
