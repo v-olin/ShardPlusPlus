@@ -30,6 +30,7 @@ namespace Shard {
 		static int getCurrentFrame();
 		static void Main(std::string[]);
 
+
 		static const std::string getBaseDir();
 		
 		static std::shared_ptr<Game> getRunningGame();
