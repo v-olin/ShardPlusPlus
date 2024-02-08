@@ -3,6 +3,7 @@
 #include <vector>
 #include <SDL.h>
 #include <glm.hpp>
+#include <memory>
 
 #include "Collider.h"
 #include "Transform3D.h"
@@ -10,7 +11,7 @@
 namespace Shard {
 	class GameObject;
 
-	class  PhysicsBody {
+	class PhysicsBody : public std::enable_shared_from_this<PhysicsBody> {
 	public:
 		float angular_drag;
 		float drag;
@@ -25,14 +26,15 @@ namespace Shard {
 		bool stop_on_collision;
 		bool reflect_on_collision;
 		bool impart_force;
-		GameObject* parent;
-		std::vector<Collider*> colliders;
+		std::shared_ptr<GameObject> parent;
+		//std::vector<Collider*> colliders;
+		std::vector<std::shared_ptr<Collider>> colliders;
 		SDL_Color debug_color_{0,255,0,255};
 		//CollisionHandler* coll_handler;
-		Transform3D trans;
+		std::shared_ptr<Transform3D> trans;
 
 		PhysicsBody();
-		PhysicsBody(GameObject* game_obj);
+		PhysicsBody(std::shared_ptr<GameObject> game_obj);
 
 		// change to Vec3 for 3d
 		void applyGravity(glm::vec2 dir, const float multiplier);
@@ -40,7 +42,7 @@ namespace Shard {
 		glm::vec2 getMinAndMax(const bool x);
 		void addTorque(const float dir);
 		void reverseForces(const float prop);
-		void impartForces(PhysicsBody* other, const float massProp);
+		void impartForces(std::shared_ptr<PhysicsBody> other, const float massProp);
 		void stopForces();
 		void reflectForces(glm::vec2 impulse);
 		void reduceForces(const float prop);
@@ -52,7 +54,7 @@ namespace Shard {
 		void addRectCollider(float x, float y, float w, float h);
 		void addCircleCollider();
 		void addCircleCollider(float x, float y, float rad);
-		//void addCollider(Collider coll);F
+		//void addCollider(Collider coll);
 		std::optional<glm::vec2> checkCollisions(glm::vec2 other);
 
 		bool operator==(PhysicsBody& other){
@@ -63,7 +65,7 @@ namespace Shard {
 			return parent == other.parent;
 		}
 
-		bool equals(PhysicsBody* other) {
+		bool equals(std::shared_ptr<PhysicsBody> other) {
 			return parent == other->parent;
 		}
 

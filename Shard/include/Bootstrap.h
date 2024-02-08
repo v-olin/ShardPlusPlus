@@ -9,6 +9,7 @@
 #include "InputManager.h"
 #include "PhysicsManager.h"
 
+#include <memory>
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -19,32 +20,33 @@ namespace Shard {
 
 	public:
 		inline static  const std::string DEFAULT_CONFIG = "config.cfg";
-		static  bool checkEnvironmentVariable(std::string id);
-		static  std::string getEnvironmentVariable(std::string id);
-		static  double timeElapsed();
-		static  double getDeltaTime();
-		static  long long getCurrentMillis();
-		static  float getFPS();
-		static  float getSecondFPS();
-		static  int getCurrentFrame();
-		static  void Main(std::string[]);
+		static bool checkEnvironmentVariable(std::string id);
+		static std::string getEnvironmentVariable(std::string id);
+		static double timeElapsed();
+		static double getDeltaTime();
+		static long long getCurrentMillis();
+		static float getFPS();
+		static float getSecondFPS();
+		static int getCurrentFrame();
+		static void Main(std::string[]);
+
 
 		static const std::string getBaseDir();
 		
-		static  Display* getDisplay();
-		static  Sound* getSound();
-		static  InputManager* getInput();
-		static  AssetManager* getAssetManager();
-		static  Game* getRunningGame();
-		static  void setRunningGame(Game* game);
+		static std::shared_ptr<Game> getRunningGame();
+		static Display* getDisplay();
+		static Sound& getSound();
+		static InputManager& getInput();
+		static AssetManager& getAssetManager();
+		static void setRunningGame(std::shared_ptr<Game> game);
 
-		static  void setup();
-		static  void setupEnvironmentVariables(std::string path);
+		static void setup();
+		static void setupEnvironmentVariables(std::string path);
 
 
 	private:
 		inline static bool running_game_set;
-		inline static Game* running_game;
+		inline static std::shared_ptr<Game> running_game;
 		inline static Display* display_engine;
 		inline static Sound sound_engine;
 		inline static InputManager input;

@@ -12,8 +12,6 @@
 
 namespace Shard {
 
-	typedef unsigned int uint;
-	
 	class TextDetails {
 	public:
 		std::string text{};
@@ -24,7 +22,7 @@ namespace Shard {
 		TTF_Font* font{ nullptr };
 		SDL_Texture* lblText{nullptr};
 
-		 TextDetails(const TextDetails& src){
+		TextDetails(const TextDetails& src){
 			this->text = src.text;
 			this->x = src.x;
 			this->y = src.y;
@@ -34,7 +32,7 @@ namespace Shard {
 			this->lblText = src.lblText;
 		}
 
-		 TextDetails(std::string text, double x, double y, SDL_Color col, int spacing)
+		TextDetails(std::string text, double x, double y, SDL_Color col, int spacing)
 		{
 			this->text = text;
 			this->x = x;
@@ -43,7 +41,7 @@ namespace Shard {
 			this->size = spacing;
 		}
 
-		 TextDetails(std::string text, double x, double y, SDL_Color col, int spacing, TTF_Font* font, SDL_Texture* lblText)
+		TextDetails(std::string text, double x, double y, SDL_Color col, int spacing, TTF_Font* font, SDL_Texture* lblText)
 		{
 			this->text = text;
 			this->x = x;
@@ -69,8 +67,6 @@ namespace Shard {
 		 void setFullscreen() override;
 		 void initialize() override;
 		 void showText(const char* text, double x, double y, int size, int r, int g, int b) override;
-        //idk where char[, ] would be used...
-        //virtual void showText(char[, ] text, double x, double y, int size, int r, int g, int b);
 
 	private:
 		std::vector<TextDetails> myTexts{};

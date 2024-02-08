@@ -10,7 +10,7 @@
 #include <vector>
 #include <memory>
 
-class GameTest : public Shard::Game, public Shard::InputListener {
+class GameTest : public Shard::Game, public Shard::InputListener, public std::enable_shared_from_this<GameTest> {
 public:
 	GameTest();
 
@@ -23,8 +23,6 @@ public:
 
 	void handleEvent(Shard::InputEvent ev, Shard::EventType et);
 
-	std::vector<Asteroid*> asteroids{};
-	//std::vedctor<Asteroid*> asteroids{ nullptr };
-	//std::unique_ptr<Asteroid> asteroid{ nullptr };
-	std::unique_ptr<Spaceship> spaceship{ nullptr };
+	std::vector<std::shared_ptr<Asteroid>> asteroids{};
+	std::shared_ptr<Spaceship> spaceship;
 };

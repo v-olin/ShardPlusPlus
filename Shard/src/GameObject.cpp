@@ -2,6 +2,7 @@
 #include "Transform3D.h"
 #include "PhysicsBody.h"
 #include "GameObjectManager.h"
+#include "PhysicsManager.h"
 #include "Logger.h"
 #include <algorithm>
 
@@ -11,11 +12,8 @@ namespace Shard {
 		, transient_(false)
 		, to_be_destroyed_(false)
 		, visible_(false)
-		, transform_(nullptr)
-		, body_(nullptr) {
-		GameObjectManager::getInstance()->addGameObject(this);
-		//this->initialize();
-		auto t = tags.size();
+		, body_(nullptr) 
+	{
 	}
 
 	void GameObject::addTag(const char* tag) {
@@ -46,8 +44,8 @@ namespace Shard {
 	}
 
 	void GameObject::setPhysicsEnabled() {
-		body_ = new PhysicsBody(this);
-		transform_ = &(body_->trans);
+		body_ = std::make_shared<PhysicsBody>(shared_from_this());
+		PhysicsManager::getInstance().addPhysicsObject(body_->shared_from_this());
 	}
 
 	bool GameObject::queryPhysicsEnabled() {
@@ -65,8 +63,8 @@ namespace Shard {
 		auto display_width = dm.w;
 		auto display_height = dm.h;
 
-		if (transform.x > 0 && transform.x < display_width && // get width of display
-			transform.y > 0 && transform.y < display_height) { // get height of display 
+		if (transform->x > 0 && transform->x < display_width && // get width of display
+			transform->y > 0 && transform->y < display_height) { // get height of display 
 			return;
 		}
 

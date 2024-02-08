@@ -3,6 +3,7 @@
 
 #include "DisplayText.h"
 
+#include <memory>
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
@@ -26,9 +27,9 @@ namespace Shard {
 	public:
 		 DisplaySDL() {}
 		 void initialize() override;
-		 void addToDraw(GameObject* gob) override;
-		 void removeToDraw(GameObject* gob) override;
-		 SDL_Texture* loadTexture(Transform* trans);
+		 void addToDraw(std::shared_ptr<GameObject> gob) override;
+		 void removeToDraw(std::shared_ptr<GameObject> gob) override;
+		 SDL_Texture* loadTexture(std::shared_ptr<Transform> trans);
 		 SDL_Texture* loadTexture(std::string path);
 		 void renderCircle(int centreX, int centreY, int radius);
 		 void drawCircle(int x, int y, int radius, int r, int g, int b, int a) override;
@@ -37,7 +38,7 @@ namespace Shard {
 		 void clearDisplay() override;
 
 	private:
-		std::vector<Transform*> _toDraw;
+		std::vector<std::shared_ptr<Transform>> _toDraw;
 		std::vector<Line> _linesToDraw;
 		std::vector<Circle> _circlesToDraw;
 		std::unordered_map<std::string, SDL_Texture*> spriteBuffer;

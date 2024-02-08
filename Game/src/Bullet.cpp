@@ -4,18 +4,16 @@
 
 #include <cstdlib>
 
-Bullet::Bullet() : GameObject(), origin(nullptr) {
+Bullet::Bullet() : GameObject() {
 	initialize();
 }
 
-void Bullet::setupBullet(Spaceship* origin_spaceship, float x, float y) {
+void Bullet::setupBullet(float x, float y) {
 	setPhysicsEnabled();
-	transform_->x = x;
-	transform_->y = y;
-	transform_->w = 10;
-	transform_->h = 10;
-
-	this->origin = origin_spaceship;
+	body_->trans->x = x;
+	body_->trans->y = y;
+	body_->trans->w = 10;
+	body_->trans->h = 10;
 
 	body_->mass = 100.0f;
 	body_->max_force = 50.0f;
@@ -31,7 +29,7 @@ void Bullet::initialize() {
 }
 
 void Bullet::physicsUpdate() {
-	body_->addForce(transform_->forward, 100.0f);
+	body_->addForce(body_->trans->forward, 100.0f);
 }
 
 void Bullet::update() {
@@ -41,23 +39,23 @@ void Bullet::update() {
 	Shard::Display* disp = Shard::Bootstrap::getDisplay();
 
 	disp->drawLine(
-		transform_->x,
-		transform_->y,
-		transform_->x + 10,
-		transform_->y + 10,
+		body_->trans->x,
+		body_->trans->y,
+		body_->trans->x + 10,
+		body_->trans->y + 10,
 		color
 	);
 
 	disp->drawLine(
-		transform_->x + 10,
-		transform_->y,
-		transform_->x,
-		transform_->y + 10,
+		body_->trans->x + 10,
+		body_->trans->y,
+		body_->trans->x,
+		body_->trans->y + 10,
 		color
 	);
 }
 
-void Bullet::onCollisionEnter(Shard::PhysicsBody* body) {
+void Bullet::onCollisionEnter(std::shared_ptr<Shard::PhysicsBody> body) {
 
 	Shard::Logger::log("INSIDE ONCOLLISIONENTER BULLETtt tttttttt@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", Shard::LoggerLevel::LOG_LEVEL_ALL);
 
@@ -66,7 +64,7 @@ void Bullet::onCollisionEnter(Shard::PhysicsBody* body) {
 		to_be_destroyed_ = true;
 	}
 }
-void Bullet::onCollisionExit(Shard::PhysicsBody* body) {}
-void Bullet::onCollisionStay(Shard::PhysicsBody* body) {}
+void Bullet::onCollisionExit(std::shared_ptr<Shard::PhysicsBody> body) {}
+void Bullet::onCollisionStay(std::shared_ptr<Shard::PhysicsBody> body) {}
 void Bullet::killMe() {}
 void Bullet::prePhysicsUpdate(){}

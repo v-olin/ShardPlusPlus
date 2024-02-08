@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -7,22 +8,19 @@
 #include "PhysicsBody.h"
 
 namespace Shard {
-    //class  PhysicsBody;
-
-    class  GameObject {
+    class GameObject : public std::enable_shared_from_this<GameObject> {
     public:
-        Transform3D* transform_;
+        // std::shared_ptr<Transform3D> transform_;
         bool transient_, to_be_destroyed_, visible_;
-        PhysicsBody* body_ = nullptr;
-        // change this if erases are frequent
+        std::shared_ptr<PhysicsBody> body_ = nullptr;
         std::vector<const char*> tags{};
 
         GameObject();
-        GameObject(const GameObject* src) {
-            transform_ = src->transform_;
+        GameObject(const std::shared_ptr<GameObject> src) {
             body_ = src->body_;
             tags = src->tags;
         }
+
         virtual ~GameObject() {}
 
         void addTag(const char* tag);

@@ -12,20 +12,24 @@
     <ClInclude Include="include\Asteriod.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\Bullet.h">
+      <Filter>include</Filter>
+    </ClInclude>
     <ClInclude Include="include\Spaceship.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="main.h" />
-    <ClInclude Include="include\Bullet.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\Asteriod.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Bullet.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="src\Spaceship.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Bullet.cpp" />
   </ItemGroup>
 </Project>

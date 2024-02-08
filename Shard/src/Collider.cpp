@@ -12,7 +12,7 @@ namespace Shard {
         game_object(nullptr) {
     }
 
-    Collider::Collider(CollisionHandler* game_obj, Transform* transform)
+    Collider::Collider(std::shared_ptr<CollisionHandler> game_obj, std::shared_ptr<Transform> transform)
         : x(0), y(0),
         rotate_at_offset(false),
         transform(transform),
@@ -20,7 +20,7 @@ namespace Shard {
     {
     }
 
-    Collider::Collider(CollisionHandler* game_obj, Transform* transform, float x, float y)
+    Collider::Collider(std::shared_ptr<CollisionHandler> game_obj, std::shared_ptr<Transform> transform, float x, float y)
         : x(x), y(y),
         rotate_at_offset(false),
         transform(transform),

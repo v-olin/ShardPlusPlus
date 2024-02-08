@@ -10,14 +10,14 @@ namespace Shard {
 		for_minkowski = true;
 	}
 
-	ColliderRect::ColliderRect(CollisionHandler* game_obj, Transform* transform)
+	ColliderRect::ColliderRect(std::shared_ptr<CollisionHandler> game_obj, std::shared_ptr<Transform> transform)
 		: Collider(game_obj, transform) {
 		from_trans = true;
 		rotate_at_offset = false;
 		calculateBoundingBox();
 	}
 
-	ColliderRect::ColliderRect(CollisionHandler* game_obj, Transform* transform, float x, float y, float w, float h)
+	ColliderRect::ColliderRect(std::shared_ptr<CollisionHandler> game_obj, std::shared_ptr<Transform> transform, float x, float y, float w, float h)
 		: Collider(game_obj, transform, x, y) {
 		this->base_width = w;
 		this->base_height = h;
@@ -123,21 +123,22 @@ namespace Shard {
 		calculateBoundingBox();
 	}
 
-	std::optional<glm::vec2> ColliderRect::checkCollision(Collider* other) {
+	std::optional<glm::vec2> ColliderRect::checkCollision(std::shared_ptr<Collider> other) {
+		auto circ_p = std::dynamic_pointer_cast<ColliderCircle>(other);
+		auto rect_p = std::dynamic_pointer_cast<ColliderRect>(other);
 
-		if (typeid(ColliderCircle) == typeid(*other)) {
-			ColliderCircle* circ_p = dynamic_cast<ColliderCircle*>(other);
+		if (circ_p) {
 			return checkCollision(circ_p);
 		}
-		else if (typeid(ColliderRect) == typeid(*other)) {
-			ColliderRect* rect_p = dynamic_cast<ColliderRect*>(other);
+		else if (rect_p) {
 			return checkCollision(rect_p);
 		}
-		else
+		else {
 			return std::nullopt;
+		}
 	}
 
-	std::optional<glm::vec2> ColliderRect::checkCollision(ColliderRect* other) {
+	std::optional<glm::vec2> ColliderRect::checkCollision(std::shared_ptr<ColliderRect> other) {
 		ColliderRect cr = calculateMinkowskiDifference(*other);
 
 		if (cr.getLeft() <= 0 && cr.getRight() >= 0 && cr.getTop() <= 0 && cr.getBottom() >= 0) {
@@ -148,9 +149,10 @@ namespace Shard {
 		return std::nullopt;
 	}
 
-	std::optional<glm::vec2> ColliderRect::checkCollision(ColliderCircle* circ) {
-		std::optional<glm::vec2> possible_v = circ->checkCollision(this);
-
+	std::optional<glm::vec2> ColliderRect::checkCollision(std::shared_ptr<ColliderCircle> circ) {
+		////////////////////////////////////////auto this_ = std::make_shared<ColliderRect>(this);
+		std::optional<glm::vec2> possible_v = circ->checkCollision(shared_from_this());
+		
 		if (possible_v.has_value()) {
 			possible_v.value().x *= -1;
 			possible_v.value().y *= -1;

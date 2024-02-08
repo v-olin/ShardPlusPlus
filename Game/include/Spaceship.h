@@ -10,12 +10,13 @@ public:
 	bool up, down, turn_left, turn_right;
 
 	Spaceship();
-	Spaceship(const Spaceship* src) : Shard::GameObject(this) {
-		this->up = src->up;
-		this->down = src->down;
-		this->turn_left = src->turn_left;
-		this->turn_right = src->turn_right;
-	}
+
+	//Spaceship(std::shared_ptr<Spaceship> src) : Shard::GameObject(shared_from_this()) {
+	//	this->up = src->up;
+	//	this->down = src->down;
+	//	this->turn_left = src->turn_left;
+	//	this->turn_right = src->turn_right;
+	//}
 
 	//Spaceship(const Spaceship* src) {
 	//	this->body_ = src->body_;
@@ -31,9 +32,9 @@ public:
 	//}
 
 	void fireBullet();
-	void onCollisionEnter(Shard::PhysicsBody* body) override;
-	void onCollisionExit(Shard::PhysicsBody* body) override;
-	void onCollisionStay(Shard::PhysicsBody* body) override;
+	void onCollisionEnter(std::shared_ptr<Shard::PhysicsBody> body) override;
+	void onCollisionExit(std::shared_ptr<Shard::PhysicsBody> body) override;
+	void onCollisionStay(std::shared_ptr<Shard::PhysicsBody> body) override;
 
 	// inherited from InputListener
 	void handleEvent(Shard::InputEvent ev, Shard::EventType et);

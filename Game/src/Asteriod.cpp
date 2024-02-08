@@ -1,15 +1,17 @@
 #include "Asteriod.h"
-
+#include "GameObjectManager.h"
 #include "Bootstrap.h"
 #include "Logger.h"
+#include <memory>
 
 void handleAsteroidInput(Shard::InputEvent ev, Shard::EventType et) {
 
 }
 
 Asteroid::Asteroid() : GameObject() {
-	initialize();
+	
 }
+
 
 void Asteroid::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
     if (et == Shard::EventType::MouseDown && ie.button == SDL_BUTTON_MIDDLE) {
@@ -22,10 +24,10 @@ void Asteroid::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 void Asteroid::initialize()
 {
     setPhysicsEnabled();
-	transform_->x = 300.0f;
-	transform_->y = 300.0f;
-	auto path = Shard::Bootstrap::getAssetManager()->getAssetPath("asteroid.png");
-	transform_->sprite_path = path;
+    body_->trans->x = 300.0f;
+	body_->trans->y = 300.0f;
+	auto path = Shard::Bootstrap::getAssetManager().getAssetPath("asteroid.png");
+	body_->trans->sprite_path = path;
 
     body_->max_torque = 50;
     body_->max_force = 100;
@@ -37,17 +39,29 @@ void Asteroid::initialize()
     //body_->pass_through = false;
     
     // TODO: Add randomness to initial force
-    //body_->addForce(transform_->right, 2.0f);
+    //body_->addForce(body_->trans.right, 2.0f);
 
     body_->addRectCollider();
 
-    Shard::Bootstrap::getInput()->addListeners(this);
+    /*
+    
+    getSharedPtr() -> std::shared_ptr<GameBoject>
+    asteroid->getSharedPtr();
+    std::shared_ptr<GameObject>
+
+    */
+
+    Shard::Bootstrap::getInput().addListeners(
+        // shared_ptr<GOBJ> (ptr -> asteroid (which is listener))
+        //shared_from_this()
+        std::dynamic_pointer_cast<Shard::InputListener>(shared_from_this())
+    );
 
     GameObject::addTag("Asteroid");
 
 }
 void Asteroid::update(){
-    Shard::Bootstrap::getDisplay()->addToDraw(this);
+    Shard::Bootstrap::getDisplay()->addToDraw(shared_from_this());
 }
 
 void Asteroid::physicsUpdate() {
@@ -58,7 +72,7 @@ void Asteroid::physicsUpdate() {
         torque_counter -= 1;
 }
 
-void Asteroid::onCollisionEnter(Shard::PhysicsBody* body) {
+void Asteroid::onCollisionEnter(std::shared_ptr<Shard::PhysicsBody> body) {
 
     Shard::Logger::log("INSIDE ONCOLLISIONENTER ASTEROOOOOOOOID@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", Shard::LoggerLevel::LOG_LEVEL_ALL);
 
@@ -70,11 +84,11 @@ void Asteroid::onCollisionEnter(Shard::PhysicsBody* body) {
     Shard::Logger::log("Bang!");
 }
 
-void Asteroid::onCollisionExit(Shard::PhysicsBody* body) {
+void Asteroid::onCollisionExit(std::shared_ptr<Shard::PhysicsBody> body) {
     Shard::Logger::log("Anti bang!");
 }
 
-void Asteroid::onCollisionStay(Shard::PhysicsBody* body) { }
+void Asteroid::onCollisionStay(std::shared_ptr<Shard::PhysicsBody> body) { }
 void Asteroid::killMe(){
 }
 void Asteroid::prePhysicsUpdate(){}

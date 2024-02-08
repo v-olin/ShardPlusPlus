@@ -10,14 +10,14 @@ namespace Shard {
 		rad(0), x_off(0), y_off(0) {
 	}
 
-	ColliderCircle::ColliderCircle(CollisionHandler* game_obj, Transform* transform)
+	ColliderCircle::ColliderCircle(std::shared_ptr<CollisionHandler> game_obj, std::shared_ptr<Transform> transform)
 		: Collider(game_obj, transform) {
 		from_trans = true;
 		rotate_at_offset = false;
 		calculateBoundingBox();
 	}
 
-	ColliderCircle::ColliderCircle(CollisionHandler* game_obj, Transform* transform, float x, float y, float rad)
+	ColliderCircle::ColliderCircle(std::shared_ptr<CollisionHandler> game_obj, std::shared_ptr<Transform> transform, float x, float y, float rad)
 		: Collider(game_obj, transform, x, y) {
 		x_off = x;
 		y_off = y;
@@ -66,7 +66,7 @@ namespace Shard {
 		calculateBoundingBox();
 	}
 
-	std::optional<glm::vec2> ColliderCircle::checkCollision(ColliderRect* other) {
+	std::optional<glm::vec2> ColliderCircle::checkCollision(std::shared_ptr<ColliderRect> other) {
 		double tx = x;
 		double ty = y;
 		int dx, dy, dist, depth;
@@ -106,7 +106,7 @@ namespace Shard {
 		d->drawCircle((int)x, (int)y, rad, color);
 	}
 
-	std::optional<glm::vec2> ColliderCircle::checkCollision(ColliderCircle* other) {
+	std::optional<glm::vec2> ColliderCircle::checkCollision(std::shared_ptr<ColliderCircle> other) {
 		double dist, depth, radsq, xpen, ypen;
 
 		xpen = pow(other->x - x, 2);
@@ -135,8 +135,9 @@ namespace Shard {
 		return std::nullopt;
 	}
 
-	std::optional<glm::vec2> ColliderCircle::checkCollision(Collider* other) {
-		return other->checkCollision(this);
+	std::optional<glm::vec2> ColliderCircle::checkCollision(std::shared_ptr<Collider> other) {
+		//auto this_ = std::make_shared<ColliderCircle>(this);
+		return other->checkCollision(shared_from_this());
 	}
 
 }
