@@ -4,6 +4,7 @@
 #include "PhysicsBody.h"
 #include "InputEvent.h"
 #include "InputManager.h"
+#include "Logger.h"
 
 #include <memory>
 

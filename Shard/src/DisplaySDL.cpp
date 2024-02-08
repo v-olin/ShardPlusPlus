@@ -46,7 +46,7 @@ namespace Shard {
 
 	void DisplaySDL::addToDraw(std::shared_ptr<GameObject> gob) {
 
-		auto gob_transform = std::make_shared<Transform3D>(gob->body_->trans);
+		auto gob_transform = gob->body_->trans->shared_from_this();
 
 		_toDraw.push_back(gob_transform);
 		

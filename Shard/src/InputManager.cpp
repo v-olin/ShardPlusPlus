@@ -45,7 +45,6 @@ namespace Shard {
 			}
 			if (ev.type == SDL_KEYDOWN || ev.type == SDL_KEYUP) {
 				ie.key = (int)ev.key.keysym.scancode;
-				Logger::log("Keydown: " + ie.key, LOG_LEVEL_ALL);
 				EventType type = ev.type == SDL_KEYDOWN ? KeyDown : KeyUp;
 				informListeners(ie, type);
 			}

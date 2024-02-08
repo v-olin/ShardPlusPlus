@@ -67,8 +67,10 @@ namespace Shard{
 				std::dynamic_pointer_cast<InputListener>(gob);
 			if (listener) // if successful downcast
 				Bootstrap::getInput().removeListeners(listener);
+			listener = nullptr;
 			gob->killMe();
 			std::erase(myObjects, gob); // inefficient af.
+			gob->body_ = nullptr;
 
 			// we need to make sure that the physicsmanager knows that we have deleted some gameObjects
 			// to do this, start with tracking from creation of game object and list all places where the pointer to that object is stored

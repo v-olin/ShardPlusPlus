@@ -57,7 +57,8 @@ void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 
 	
 	if (ie.button == SDL_BUTTON_LEFT) {
-		createAsteroid(ie.x, ie.y);
+		for(int i = 0; i < 1; i++)
+			createAsteroid(ie.x, ie.y);
 	}
 	else if (ie.button == SDL_BUTTON_RIGHT) {
 		for (auto astr : asteroids) {

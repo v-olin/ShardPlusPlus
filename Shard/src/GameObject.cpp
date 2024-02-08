@@ -44,7 +44,7 @@ namespace Shard {
 	}
 
 	void GameObject::setPhysicsEnabled() {
-		body_ = std::make_shared<PhysicsBody>();
+		body_ = std::make_shared<PhysicsBody>(shared_from_this());
 		PhysicsManager::getInstance().addPhysicsObject(body_->shared_from_this());
 	}
 

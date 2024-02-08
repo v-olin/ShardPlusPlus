@@ -13,14 +13,16 @@ Spaceship::Spaceship() : GameObject() {
 }
 
 void Spaceship::fireBullet() {
-    Bullet* b = new Bullet();
+    //Bullet* b = new Bullet()
+    std::shared_ptr<Bullet> b(new Bullet);
+    Shard::GameObjectManager::getInstance().addGameObject(b->shared_from_this());
     Shard::Logger::log("FIRE");
 
     // THIS SHOULD NOT BE DONE HERE,
     // https://tenor.com/view/oh-no-oh-no-anyway-gif-18887547 
     b->setupBullet(body_->trans->centre.x, body_->trans->centre.y);
     b->body_->trans->rotate(body_->trans->rotz);
-    Shard::Bootstrap::getSound().playSound("fire.wav");
+    //Shard::Bootstrap::getSound().playSound("fire.wav");
 }
 
 void Spaceship::handleEvent(Shard::InputEvent ev, Shard::EventType et) {
@@ -128,6 +130,7 @@ void Spaceship::onCollisionEnter(std::shared_ptr<Shard::PhysicsBody> body) {
 }
 
 void Spaceship::onCollisionExit(std::shared_ptr<Shard::PhysicsBody> body) {
+    body_->debug_color_ = { 0, 255, 0, 255 };
     // TODO: Not sure...
 }
 

@@ -12,6 +12,7 @@ Asteroid::Asteroid() : GameObject() {
 	
 }
 
+
 void Asteroid::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
     if (et == Shard::EventType::MouseDown && ie.button == SDL_BUTTON_MIDDLE) {
         if ((body_->checkCollisions(glm::vec2{ ie.x, ie.y })).has_value()) {
