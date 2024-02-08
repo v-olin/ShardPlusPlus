@@ -1185,6 +1185,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\tiny_obj\include\tiny_obj_loader.h">
       <Filter>vendor\tiny_obj\include</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\Camera.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\SceneManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\ShaderManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)src\AssetManager.cpp">
@@ -1241,5 +1245,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\glm\detail\glm.cpp">
       <Filter>vendor\glm\detail</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\Camera.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\ShaderManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\TextureManager.cpp" />
   </ItemGroup>
 </Project>

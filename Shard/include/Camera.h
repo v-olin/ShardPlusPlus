@@ -1,11 +1,5 @@
 #pragma once
 
-#ifdef _WINDLL
-#define SHARD_API __declspec(dllexport)
-#else
-#define SHARD_API __declspec(dllimport)
-#endif
-
 #include <glm.hpp>
 #include <gtx/transform.hpp>
 #include <gtc/matrix_transform.hpp>
@@ -36,11 +30,11 @@ namespace Shard {
 		// Camera options
 		float movementSpeed;
 		
-		SHARD_API Camera();
+		Camera();
 		
-		SHARD_API glm::mat4 viewMatrix();
-		SHARD_API void move(Movement direction, float deltaTime);
-		SHARD_API void rotate(float delta_x, float delta_y);
+		glm::mat4 viewMatrix();
+		void move(Movement direction, float deltaTime);
+		void rotate(float delta_x, float delta_y);
 
 	private:
 		// Default camera values

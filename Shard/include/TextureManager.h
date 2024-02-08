@@ -1,11 +1,5 @@
 #pragma once
 
-#ifdef _WINDLL
-#define SHARD_API __declspec(dllexport)
-#else
-#define SHARD_API __declspec(dllimport)
-#endif
-
 #include <string>
 #include <vector>
 #include <unordered_set>
@@ -19,12 +13,12 @@ namespace Shard {
 	public:
 		TextureManager& getInstance();
 
-		SHARD_API TextureManager(TextureManager const&) = delete;
-		SHARD_API TextureManager& operator=(TextureManager const&) = delete;
+		TextureManager(TextureManager const&) = delete;
+		TextureManager& operator=(TextureManager const&) = delete;
 
-		SHARD_API void loadTexture(GLuint* target, const std::string& path);
-		SHARD_API GLuint loadTexture(const std::string& path);
-		SHARD_API GLuint getTexture(const std::string& path);
+		void loadTexture(GLuint* target, const std::string& path);
+		GLuint loadTexture(const std::string& path);
+		GLuint getTexture(const std::string& path);
 
 	private:
 		TextureManager();
