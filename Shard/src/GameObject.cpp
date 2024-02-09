@@ -1,5 +1,4 @@
 #include "GameObject.h"
-#include "Transform3D.h"
 #include "PhysicsBody.h"
 #include "GameObjectManager.h"
 #include "PhysicsManager.h"
@@ -45,6 +44,7 @@ namespace Shard {
 
 	void GameObject::setPhysicsEnabled() {
 		body_ = std::make_shared<PhysicsBody>(shared_from_this());
+		body_->setBoxCollider();
 		PhysicsManager::getInstance().addPhysicsObject(body_->shared_from_this());
 	}
 
@@ -52,22 +52,4 @@ namespace Shard {
 		return body_ != nullptr;
 	}
 
-	void GameObject::checkDestroyMe() {
-		if (!transient_)
-			return;
-
-		auto& transform = body_->trans;
-
-		SDL_DisplayMode dm;
-		SDL_GetCurrentDisplayMode(0, &dm);
-		auto display_width = dm.w;
-		auto display_height = dm.h;
-
-		if (transform->x > 0 && transform->x < display_width && // get width of display
-			transform->y > 0 && transform->y < display_height) { // get height of display 
-			return;
-		}
-
-		to_be_destroyed_ = true;
-	}
 }
