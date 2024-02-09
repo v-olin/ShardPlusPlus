@@ -2,7 +2,6 @@
 #include "Logger.h"
 #include "BaseFunctionality.h"
 #include "GameObjectManager.h"
-#include "DisplaySDL.h"
 #include "DisplayText.h"
 
 #include <chrono>
@@ -130,8 +129,8 @@ namespace Shard {
         //       and implement here
         for (const auto& [class_name, formal_className] : config) {
             if (class_name.compare("display") == 0) {
-                if (formal_className.compare("DisplaySDL") == 0) 
-                    display_engine = new DisplaySDL();
+                // TODO: fooking use OpenGL m8
+
                 display_engine->initialize();
                 display_engine_initialized = true;
             }

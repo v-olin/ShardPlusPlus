@@ -1,4 +1,4 @@
-#include "PhysicsManager.h"
+﻿#include "PhysicsManager.h"
 #include "CollisionHandler.h"
 #include "Bootstrap.h"
 #include "Logger.h"
@@ -10,7 +10,9 @@
 
 namespace Shard {
 
-	PhysicsManager::PhysicsManager() {}
+	PhysicsManager::PhysicsManager() {
+
+	}
 
 	PhysicsManager& PhysicsManager::getInstance() {
 		static PhysicsManager instance;
@@ -18,7 +20,7 @@ namespace Shard {
 	}
 
 	void PhysicsManager::addPhysicsObject(std::shared_ptr<PhysicsBody> body) {
-		// TODO: std::find?
+		// TODO: std::find? yea.
 		bool exists = false;
 		for(size_t i = 0; i < all_physics_objects.size(); i++){
 			auto other = all_physics_objects.at(i);
@@ -27,8 +29,28 @@ namespace Shard {
 				break;
 			}
 		}
-		if (!exists)
+		if (!exists) {
 			all_physics_objects.push_back(body);
+
+			auto [min_max_x, min_max_y, min_max_z] = body->collider->getMinMaxDims();
+
+			auto interval_x = std::make_shared<Interval>(false, body);
+			all_x_intervals.push_back(interval_x);
+			IntervalEdge b_x{ min_max_x[0], true, interval_x };
+			IntervalEdge e_x{ min_max_x[1], false, interval_x };
+			
+			//TODD maybe insertion sort, or maybe bubble sort + insertion sort, and set flag to tell SAP to traverse list
+			//: Potentially: https://stackoverflow.com/a/25524075/23276969
+			edge_list_x.push_back(b_x);
+			edge_list_x.push_back(e_x);
+			traverse_edge_list_x = true;
+	
+			int n = overlap_mat_x.size();
+			std::vector<bool> new_row(n + 1, false);
+			overlap_mat_x.push_back(new_row);
+			for (size_t i = 0; i < n; i++)
+				overlap_mat_x[i].push_back(false);
+		}
 	}
 
 	void PhysicsManager::removePhysicsObject(std::shared_ptr<PhysicsBody> body) {
@@ -42,100 +64,9 @@ namespace Shard {
 		}
 	}
 
-	void PhysicsManager::clearList() {
-		sap_x.clear();
-	}
-
-	void PhysicsManager::addToList(SAPEntry node) {
-		sap_x.push_back(node);
-
-		//hopefully the values in the list dont change, if they do, implement bubble sort.
-		SAPEntry lhs = *(sap_x.begin());
-
-		sap_x.sort([](const SAPEntry& lhs, const SAPEntry& rhs) {
-			return lhs.start < rhs.start;
-		});
-
-		/*
-		// bubble sort
-		for(size_t i = 0; i < sap_x.size() - 1; i++){
-			auto iter = sap_x.begin();
-			for (size_t j = 0; j < sap_x.size() - 1 - i; ++j) {
-				auto curr = iter, next = ++iter;
-				if ((*curr).start > (*next).start) {
-					auto tmp = curr;
-					curr = next;
-					next = tmp;
-				}
-			}
-		}
-		*/
-	}
-
-	void PhysicsManager::reportCollisionsInAxis() {
-		std::vector<SAPEntry> active_objects;
-
-		//std::vector<size_t> to_remove;
-
-		auto equal = [](SAPEntry a, SAPEntry b) {
-			return a.start == b.start && a.end == b.end && a.owner == b.owner;
-		};
-
-		for (const SAPEntry start : sap_x) {
-			active_objects.push_back(start);
-
-			auto iter = active_objects.begin();
-			for (size_t i = 0; i < active_objects.size(); i++) {
-				SAPEntry active = active_objects[i];
-				//SAPEntry active = *(++iter);
-				
-				// Ensures an object can't collide with itself
-				if (equal(start, active))
-					continue;
-				
-				if (start.start >= active.end)
-					//to_remove.push_back(i);
-					int x = 0; // <-- dummy instruction
-				else {
-					// Collision!!!!, not actually a collision
-
-				/*	if (start.owner->parent->hasTag("Bullet")) {
- 						Logger::log("[IF] ACTIVE: " + active.owner->parent->getTags(), LOG_LEVEL_ALL);
-					} else if (active.owner->parent->hasTag("Bullet")) {
-						Logger::log("[ELSE IF] START: " + start.owner->parent->getTags(), LOG_LEVEL_ALL);
-					}*/
-
-					CollidingObject col;
-				
-					if (start.owner->mass > active.owner->mass) {
-						col.a = start.owner;
-						col.b = active.owner;
-					}
-					else {
-						col.a = active.owner;
-						col.b = start.owner;
-					}
-				
-					if (!findColliding(col.a, col.b)) {
-						collisions_to_check_.push_back(col);
-					}
-				}
-			}
-
-			/*
-			for (auto riter = to_remove.rbegin(); riter != to_remove.rend(); ++riter) {
-				auto act_iter = active_objects.begin();
-				std::advance(act_iter, *riter);
-				active_objects.erase(act_iter);
-			}
-			*/
-
-			//to_remove.clear();
-		}
-	}
-
 	bool PhysicsManager::willTick() {
 		// TODO: requires bootstrap
+		return true;
 		return Bootstrap::getCurrentMillis() - last_update > time_interval;
 	}
 
@@ -145,7 +76,6 @@ namespace Shard {
 		if (!willTick())
 			return false;
 
-		// TODO: bootstrap get current millis;
 		last_update = Bootstrap::getCurrentMillis();
 
 		for (auto &body : all_physics_objects) {
@@ -158,7 +88,7 @@ namespace Shard {
 
 		int i = 0;
 		bool remove = false;
-		for (CollidingObject& col : collidings_) {
+		for (CollidingObject& col : collisions) {
 
 			// todo: if decide to translate, don't do that for kinematic objects
 
@@ -186,7 +116,7 @@ namespace Shard {
 			}
 
 			
-			std::optional<glm::vec2> impulse = checkCollisionsBetweenObjects(col.a, col.b);
+			std::optional<glm::vec2> impulse = getImpulseFromCollision(col.a, col.b);
 
 			if (impulse.has_value()) {
 				a_handler->onCollisionStay(col.b);
@@ -207,15 +137,13 @@ namespace Shard {
 		// Use: erase-remove idiom
 		int removed = 0;
 		for (size_t idx : to_remove) {
-			auto iter = collidings_.begin();
+			auto iter = collisions.begin();
 			std::advance(iter, idx-removed);
-			collidings_.erase(iter);
+			collisions.erase(iter);
 			removed++;
 		}
 
-		//to_remove.clear();
 		checkForCollisions();
-
 		return true;
 	}
 
@@ -225,10 +153,9 @@ namespace Shard {
 	}
 
 	bool PhysicsManager::findColliding(std::shared_ptr<PhysicsBody> a, std::shared_ptr<PhysicsBody> b) {
-		// TODO: Potentially flawed implementation.
 		CollidingObject col { a, b };
 
-		for (auto &col_ : collidings_) {
+		for (auto &col_ : collisions) {
 			if (col.equals(col_))
 				return true;
 		}
@@ -236,35 +163,159 @@ namespace Shard {
 		return false;
 	}
 
-	void PhysicsManager::broadPassSearchAndSweep() {
-		for (auto body : all_physics_objects) {
-			SAPEntry sx;
-			glm::vec2 tmp = body->min_and_max_x;
+	std::vector<CollidingObject> PhysicsManager::sweepAndMotherfuckingPrune() {
 
-			sx.owner = body;
-			sx.start = tmp.x;
-			sx.end = tmp.y;
 
-			addToList(sx);
+
+		for(size_t i = 0; i < edge_list_x.size(); i++){
+			auto interval = edge_list_x[i].interval;
+			auto [min_max_x, min_max_y, min_max_z] = interval->gob_body->collider->getMinMaxDims();
+			auto val = edge_list_x[i].is_b ? min_max_x[0] : min_max_x[1];
+			edge_list_x[i].val = val;
 		}
 
-		reportCollisionsInAxis();
-		clearList();
+		//auto [min_max_x, min_max_y, min_max_z] = body->collider->getMinMaxDims();
+
+		std::vector<CollidingObject> collisions;
+
+		static auto findIntervalNum = [&](Interval& interval) {
+			for (size_t i = 0; i < all_x_intervals.size(); i++)
+				if (all_x_intervals[i]->gob_body == interval.gob_body)
+					return (int)i;
+			return -1;
+			};
+
+		//simple/nice case
+		if (!traverse_edge_list_x) {
+
+			//list is not sorted, interval values are updated
+			size_t n = edge_list_x.size();
+			for (size_t i = 0; i < n - 1; i++) {
+				for (size_t j = 0; j < n - 1 - i; j++) {
+					if (edge_list_x[j + 1].val < edge_list_x[j].val) {
+						int interval_a = findIntervalNum(*edge_list_x[j].interval);
+						int interval_b = findIntervalNum(*edge_list_x[j + 1].interval);
+
+						if (interval_a == -1 || interval_b == -1) {
+							Logger::log("oh fuck...(inside sweepAndMotherFuckingPrune\n");
+							std::exit(1);
+						}
+						auto a = std::min(interval_a, interval_b);
+						auto b = std::max(interval_a, interval_b);
+						overlap_mat_x[a][b] = overlap_mat_x[a][b] ^ true;
+
+
+						auto tmp = edge_list_x[j];
+						edge_list_x[j] = edge_list_x[j + 1];
+						edge_list_x[j + 1] = tmp;
+					}
+				}
+			}
+
+		}
+		else {
+			//sort list of edges, bubble
+			size_t n = edge_list_x.size();
+			for (size_t i = 0; i < n - 1; i++) {
+				for (size_t j = 0; j < n - 1 - i; j++) {
+					if (edge_list_x[j + 1].val < edge_list_x[j].val) {
+						auto tmp = edge_list_x[j];
+						edge_list_x[j] = edge_list_x[j + 1];
+						edge_list_x[j + 1] = tmp;
+					}
+				}
+			}
+
+			//Traverse edge_list_x from start to end
+			for (size_t i = 0; i < edge_list_x.size(); i++) {
+				auto interval_edge = edge_list_x[i];
+				if (interval_edge.is_b) {
+					//When a b is encounted, mark corresponding object interval as active in an active_interval_list
+					interval_edge.interval->active = true;
+					active_interval_list.push_back(interval_edge.interval);
+					if (active_interval_list.size() > 1) {
+						// If more than one interval in active_interval_list, then update the overlap_mat_x in right position
+						for (size_t j = 0; j < active_interval_list.size(); j++) {
+							auto fst = active_interval_list[j];
+							for (size_t k = j; k < active_interval_list.size(); k++) {
+								auto snd = active_interval_list[k];
+								auto interval_a = findIntervalNum(*fst);
+								auto interval_b = findIntervalNum(*snd);
+								auto a = std::min(interval_a, interval_b);
+								auto b = std::max(interval_a, interval_b);
+								overlap_mat_x[a][b] = true;
+							}
+						}
+
+					}
+				} else {
+
+					//When an e is encountered, delete the interval in active_interval_list
+					active_interval_list.erase(
+						std::remove_if(
+							active_interval_list.begin(), 
+							active_interval_list.end(), 
+							[&](std::shared_ptr<Interval> interval) {
+								return interval->gob_body == interval_edge.interval->gob_body;
+							}
+						), active_interval_list.end()
+					);
+
+				}
+			}
+		}
+
+		size_t rows = overlap_mat_x.size();
+		size_t cols = overlap_mat_x[0].size();
+		for (size_t i = 0 ; i < rows; i++) {
+			for (size_t j = i + 1; j < cols; j++) {
+				bool overlap_x = overlap_mat_x[i][j];
+				//bool overlap_y = overlap_mat_y[i][j];
+				bool overlap_y = true;
+				//bool overlap_z = overlap_mat_y[i][j];
+				bool overlap_z = true;
+					
+				if (overlap_x && overlap_y && overlap_z) {
+					CollidingObject col;
+					auto gob_body_a = all_x_intervals[i]->gob_body;
+					auto gob_body_b = all_x_intervals[j]->gob_body;
+
+					if (gob_body_a->mass > gob_body_b->mass) {
+						col.a = gob_body_a;
+						col.b = gob_body_b;
+					}
+					else {
+						col.a = gob_body_b;
+						col.b = gob_body_a;
+					}
+					if (!findColliding(col.a, col.b)) 
+						collisions.push_back(col);
+
+				}
+			}
+		}
+		
+		return collisions;
+
 	}
 
-	void PhysicsManager::broadPass() {
-		broadPassSearchAndSweep();
-		// broadPassBruteForce()
-	}
+	void PhysicsManager::runCollisionCheck() {
 
-	void PhysicsManager::narrowPass() {
-		glm::vec2 impulse;
-		std::optional<glm::vec2> possible_impulse;
+		/*
+		1. call sweep and prune, pupulate collisions to check with ACTUALL coillisions
 
+		2. then what?	
+			Loop over collisions, calculate the impulse between them, and use same "physics" that is already implemented in the loop
+		*/
+
+		glm::vec3 impulse;
+		std::optional<glm::vec3> possible_impulse;
 		float mass_total, mass_prop = 0.f;
 
-		for (CollidingObject col_obj : collisions_to_check_) {
-			possible_impulse = checkCollisionsBetweenObjects(col_obj.a, col_obj.b);
+
+		collisions = sweepAndMotherfuckingPrune();
+		for (CollidingObject &col_obj : collisions) {
+			possible_impulse = getImpulseFromCollision(col_obj.a, col_obj.b);
 
 			if (possible_impulse.has_value()) {
 				impulse = possible_impulse.value();
@@ -283,15 +334,18 @@ namespace Shard {
 					}
 
 					if (!col_obj.b->is_kinematic) {
-						col_obj.b->parent->body_->trans->translate(-1 * impulse.x * mass_prop, -1 * impulse.y * mass_prop);
+						glm::vec3 force{ -impulse.x, -impulse.y, -impulse.z};
+						col_obj.b->parent->body_->trans->translate(force * mass_prop);
 						mass_prop = 1.f - mass_prop;
 					}
 					else {
 						mass_prop = 1.f;
 					}
 
-					if (!col_obj.a->is_kinematic)
-						col_obj.a->parent->body_->trans->translate(impulse.x * mass_prop, impulse.y * mass_prop);
+					if (!col_obj.a->is_kinematic) {
+						glm::vec3 force{ impulse.x, impulse.y, impulse.z};
+						col_obj.a->parent->body_->trans->translate(force * mass_prop);
+					}
 					
 					if (col_obj.a->stop_on_collision)
 						col_obj.a->stopForces();
@@ -313,31 +367,89 @@ namespace Shard {
 				(std::dynamic_pointer_cast<CollisionHandler>(col_obj.a->parent))->onCollisionEnter(col_obj.b);
 				(std::dynamic_pointer_cast<CollisionHandler>(col_obj.b->parent))->onCollisionEnter(col_obj.a);
 
-				collidings_.push_back(col_obj);
 
 			}
 		}
 	}
 
 	void PhysicsManager::checkForCollisions() {
-		broadPass();
-		narrowPass();
-		collisions_to_check_.clear();
+		runCollisionCheck();
+		collisions.clear();
 	}
 
-	std::optional<glm::vec2> PhysicsManager::checkCollisionsBetweenObjects(std::shared_ptr <PhysicsBody> a, std::shared_ptr<PhysicsBody> b) {
+	std::optional<glm::vec3> PhysicsManager::getImpulseFromCollision(std::shared_ptr <PhysicsBody> a, std::shared_ptr<PhysicsBody> b) {
+		
 		if (a->parent->to_be_destroyed_ || b->parent->to_be_destroyed_)
 			return std::nullopt;
 
-		std::optional<glm::vec2> impulse;
-		for (auto c1 : a->colliders) {
-			for (auto c2 : b->colliders) {
-				impulse = c1->checkCollision(c2);
-				if (impulse.has_value())
-					return impulse.value();
-			}
-		}
+		// Check penetration level (sus)
+		auto [min_max_x_a, min_max_y_a, min_max_z_a] = a->collider->getMinMaxDims();
+		auto [min_max_x_b, min_max_y_b, min_max_z_b] = b->collider->getMinMaxDims();
+		
+		// todo: pray that one object is never contained in the other
+		// otherwise we're PROBABLY completely fucked
+		/*
+			⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣤⣄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+			⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+			⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀
+			⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀
+			⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⡿⠿⣿⣿⣿⣿⡿⠿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀
+			⠀⠀⠀⠀⠀⠀⠀⢀⣴⣦⡈⠻⣦⣤⣿⣿⣧⣤⣶⠏⢀⣦⣄⠀⠀⠀⠀⠀⠀⠀
+			⠀⠀⠀⠀⠀⢀⣴⣿⣿⣿⣷⣤⣈⠙⠛⠛⠛⢉⣠⣴⣿⣿⣿⣷⣄⠀⠀⠀⠀⠀
+			⠀⠀⠀⠀⢠⣿⣿⣿⣿⠟⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⢻⣿⣿⣿⣆⠀⠀⠀⠀
+			⠀⠀⠀⢀⣿⣿⣿⣿⠃⣰⣿⣿⡿⠛⠋⠉⠛⠻⣿⣿⣷⡀⠹⣿⣿⣿⡆⠀⠀⠀
+			⠀⠀⠀⣸⣿⣿⣿⠃⣰⣿⣿⠋⣠⣾⡇⢸⣷⣦⠈⣿⣿⣿⡄⢹⣿⣿⣿⠀⠀⠀
+			⠀⠀⠀⣿⣿⣿⠋⠀⠉⠉⠉⠀⣿⣿⡇⢸⣿⣿⡇⠉⠉⠉⠁⠀⢻⣿⣿⡆⠀⠀
+			⠀⠀⢰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀
+			⠀⠀⠀⠙⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠃⠘⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠁⠀⠀
+			⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀
+			⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠃⠀⠀⠀⠀⠀⠀⠀⠀
+		*/
 
+		float overlap_x{ 0 };
+		if (min_max_x_a[0] < min_max_x_b[0])
+			overlap_x = min_max_x_a[1] - min_max_x_b[0];
+		else
+			overlap_x = min_max_x_b[1] - min_max_x_a[0];
+
+		float overlap_y{ 0 };
+		if (min_max_y_a[0] < min_max_y_b[0])
+			overlap_y = min_max_y_a[1] - min_max_y_b[0];
+		else
+			overlap_y = min_max_y_b[1] - min_max_y_a[0];
+
+		float overlap_z{ 0 };
+		if (min_max_z_a[0] < min_max_z_b[0])
+			overlap_z = min_max_z_a[1] - min_max_z_b[0];
+		else
+			overlap_z = min_max_z_b[1] - min_max_z_a[0];
+
+		//auto min_overlap = std::min(overlap_x, std::min(overlap_y, overlap_z));
+		auto min_overlap = std::min({ overlap_x, overlap_y, overlap_z });
+
+		if (overlap_x == min_overlap)
+			return std::optional<glm::vec3>({ overlap_x, 0.0f, 0.0f });
+		else if (overlap_y == min_overlap)
+			return std::optional<glm::vec3>({ 0.0f, overlap_y, 0.0f });
+		else if (overlap_z == min_overlap)
+			return std::optional<glm::vec3>({ 0.0f, 0.0f, overlap_z });
+		
+		// uuuuuuuuuuuuuuhhhh.............. no penetration... but collided?
+		// 100 megawhat?
 		return std::nullopt;
+		
+		
+		
+		
+		
+		
+		/*
+		If above code is not sufficient, maybe implement this?
+		if x == max(x, y, z)
+			compare x coords between a and b to figure out what dir to push them
+			ie if a.x < b.x push a in -x dir and b in +x dir
+		*/
+
 	}
+
 }

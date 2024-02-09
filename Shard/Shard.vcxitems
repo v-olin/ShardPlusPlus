@@ -19,12 +19,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Bootstrap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Camera.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Collider.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)include\ColliderCircle.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)include\ColliderRect.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\ColliderBox.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\CollidingObject.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\CollisionHandler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Display.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)include\DisplaySDL.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\DisplayText.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\GLUtility.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Game.h" />
@@ -43,7 +41,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)include\StringUtility.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\TextureManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Transform.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)include\Transform3D.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_assert.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_atomic.h" />
@@ -397,9 +394,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Bootstrap.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Camera.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Collider.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)src\ColliderCircle.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)src\ColliderRect.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)src\DisplaySDL.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\ColliderBox.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\DisplayText.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\GameObject.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\GameObjectManager.cpp" />

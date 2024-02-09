@@ -4,13 +4,11 @@
 #include <string>
 #include <vector>
 
-#include "Transform3D.h"
 #include "PhysicsBody.h"
 
 namespace Shard {
     class GameObject : public std::enable_shared_from_this<GameObject> {
     public:
-        // std::shared_ptr<Transform3D> transform_;
         bool transient_, to_be_destroyed_, visible_;
         std::shared_ptr<PhysicsBody> body_ = nullptr;
         std::vector<const char*> tags{};
@@ -29,9 +27,9 @@ namespace Shard {
         std::string getTags();
         void setPhysicsEnabled();
         bool queryPhysicsEnabled();
-        void checkDestroyMe();
 
         // to be inherited by other objects
+        virtual void checkDestroyMe() = 0;
         virtual void initialize() = 0;
         virtual void update() = 0;
         virtual void physicsUpdate() = 0;
