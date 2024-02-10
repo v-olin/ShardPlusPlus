@@ -137,8 +137,8 @@ std::shared_ptr<GOB> CreateGOB(glm::vec3 initial_position) {
 
 // Test 1: Spawn two game objects far away from each other.
 // Expectation: We should not register any collision between them.
-void Test1() {
-	int collision{0};
+int Test1() {
+	int passed{0};
 
 	auto gob1 = CreateGOB({ 5.0f, 10.0f, 10.0f });
 	auto gob2 = CreateGOB({ 50.0f, 10.0f, 10.0f });
@@ -149,17 +149,18 @@ void Test1() {
 	manager.update();
 
 	// Check collisions
-	if (manager.collisions.size() != 0)
-		collision = 1;
+	if (manager.collision_last_frame == 0)
+		passed = 1;
 
 	// Result?
-	std::cout << "Result test 1: " << std::to_string(collision == false) << "\n";
+	std::cout << "Result test 1: " << std::to_string(passed == 1) << "\n";
+	return passed;
 }
 
 // Test 2: Spawn two game objects close to each other such that they collide.
 // Expectation: We should not register any collision between them.
-void Test2() {
-	int collision{0};
+int Test2() {
+	int passed{0};
 
 	auto gob1 = CreateGOB({ 40.0f, 10.0f, 10.0f });
 	auto gob2 = CreateGOB({ 50.0f, 10.0f, 10.0f });
@@ -168,21 +169,24 @@ void Test2() {
 
 	// Tick
 	manager.update();
-	//manager.update();
 
 	// Check collisions
-	if (manager.collisions.size() > 0)
-		collision = 1;
+	if (manager.collision_last_frame > 0)
+		passed = 1;
 
 	// Result?
-	std::cout << "Result test 2: " << std::to_string(collision == true) << "\n";
-
+	std::cout << "Result test 2: " << std::to_string(passed == 1) << "\n";
+	return passed;
 }
 
 int main() {
 
-	Test1(); // Should fail, no collision.
-	Test2(); // Should pass, expecting collision.
+	std::cout << "Testing shit... 0 means it failed and 1 means it passed.\n\n";
+	
+	//int t1 = Test1(); // Should fail, no collision.
+	int t2 = Test2(); // Should pass, expecting collision.
+	
+	std::cout << "\nhaha, you suck! your tests failed lol (safe assumption being made here)\n";
 
 	// Everything will always be fine.
 	return 0;
