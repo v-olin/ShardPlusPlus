@@ -83,7 +83,7 @@ namespace Shard {
 		return std::nullopt;
 	}
 
-	std::tuple<glm::vec2, glm::vec2, glm::vec2> ColliderBox::getMinMaxDims() {
+	std::vector<glm::vec2> ColliderBox::getMinMaxDims() {
 		// TODO: If we notice weird box sizes when e.g. rotating around origin
 		// check this stuff because box_bottom_left becomes box_bottom_right
 		// and vice versa. U got this, right?

@@ -5,7 +5,7 @@
 #include <typeinfo>
 #include <optional>
 #include <memory>
-#include <tuple>
+#include <vector>
 
 #include "CollisionHandler.h"
 #include "Transform.h"
@@ -28,7 +28,7 @@ namespace Shard {
         virtual void recalculateBoundingBox() = 0;
 
         virtual std::optional<glm::vec3> checkCollision(Ray& ray) = 0;
-        virtual std::tuple<glm::vec2, glm::vec2, glm::vec2> getMinMaxDims() = 0;
+        virtual std::vector<glm::vec2> getMinMaxDims() = 0;
 
         virtual void draw(SDL_Color color) = 0;
         
