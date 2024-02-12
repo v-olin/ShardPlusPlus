@@ -22,7 +22,7 @@ namespace Shard {
 		glm::vec3 position();
 		glm::vec3 rotation();
 		glm::vec3 size();
-		glm::vec3 scale();
+		//glm::vec3 scale();
 		void translate(const glm::vec3& force);
 		void rotate(const float angle_deg, const glm::vec3& axis);
 		void scale(const glm::vec3& scale);

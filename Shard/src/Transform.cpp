@@ -49,13 +49,14 @@ namespace Shard {
         };
     }
 
-
+    /*
     glm::vec3 Transform::scale() {
         glm::vec3 col1{ transformMatrix[0][0], transformMatrix[0][1], transformMatrix[0][2] };
         glm::vec3 col2{ transformMatrix[1][0], transformMatrix[1][1], transformMatrix[1][2] };
         glm::vec3 col3{ transformMatrix[2][0], transformMatrix[2][1], transformMatrix[2][2] };
         return { glm::length(col1), glm::length(col2), glm::length(col3) };
     }
+    */
 
     glm::vec3 Transform::rotation() {
         // get rotation matrix from model matrix:
@@ -94,11 +95,11 @@ namespace Shard {
 	// get top left 3x3 matix and scale it with the basis vectors
 	// such that all values are [-1, 1] (in trig form)
     glm::mat3 Transform::getRotationMatrix() {
-        auto scale = this->scale();
+        auto size = this->size();
         return glm::mat3(
-            glm::vec3(transformMatrix[0] / scale.x),
-            glm::vec3(transformMatrix[1] / scale.y),
-            glm::vec3(transformMatrix[2] / scale.z)
+            glm::vec3(transformMatrix[0] / size.x),
+            glm::vec3(transformMatrix[1] / size.y),
+            glm::vec3(transformMatrix[2] / size.z)
         );
     }
 
@@ -119,6 +120,10 @@ namespace Shard {
     }
 
     void Transform::scale(const glm::vec3& scale) {
+    /*    auto scale_ = scale;
+        scale_.x = sqrt(scale.x);
+        scale_.y = sqrt(scale.y);
+        scale_.z = sqrt(scale.z);*/
         transformMatrix = glm::scale(transformMatrix, scale);
     }
 

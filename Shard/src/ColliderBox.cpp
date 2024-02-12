@@ -17,7 +17,7 @@ namespace Shard {
 	{
 
 		//maybe?
-		auto size_ =transform->size();
+		auto size_ = transform->size();
 		float size_x = size_.x;
 		float size_y = size_.y;
 		float size_z = size_.z;
@@ -47,18 +47,17 @@ namespace Shard {
 		    *---------------------*						|/
 		    v0				      v3					*---------> x
 		    
-		    
 		*/
 
 		std::vector<glm::vec3> vertices{
-			{0.0,	 0.0,	 0.0},			// v0
-			{0.0,	 0.0,	 -size_z},		// v1
-			{size_x, 0.0,	 -size_z},		// v2
-			{size_x, 0.0,	 0.0},			// v3
-			{0.0,	 size_y, 0.0},			// v4
-			{0.0,	 size_y, -size_z},		// v5
-			{size_x, size_y, -size_z},		// v6
-			{size_x, size_y, 0.0}			// v7
+			{0.0,	0.0,	 0.0},		// v0
+			{0.0,	0.0,	 -1},		// v1
+			{1,		0.0,	 -1},		// v2
+			{1,	    0.0,	 0.0},		// v3
+			{0.0,	1,		 0.0},		// v4
+			{0.0,	1,		-1},		// v5
+			{1,		1,		-1},		// v6
+			{1,		1,		0.0}		// v7
 		};
 
 		for (auto &vertex : vertices)
