@@ -73,8 +73,8 @@ namespace Shard {
 		const static int AXIS_Y{ 1 };
 		const static int AXIS_Z{ 2 };
 
-		void doThatThing(int axis);
-		void doThatOtherThing(int axis);
+		void updateEdgeList(int axis);
+		void findOverlaps(int axis);
 		void makeInterval(int axis, std::shared_ptr<PhysicsBody> gob_body);
 		std::vector<std::shared_ptr<Interval>>& getInterval(int axis);
 		std::vector<IntervalEdge>& getEdgeList(int axis);
