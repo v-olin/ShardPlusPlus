@@ -92,6 +92,53 @@ namespace Shard {
 	void PhysicsManager::removePhysicsObject(std::shared_ptr<PhysicsBody> body) {
 		// TODO: remove body from all intervals, make sure to remove all edges from all edge_lists also
 		//and set traverse_edge_list = true for all axies
+		//find edges
+
+		auto delete_from_edge_list = [this, body](int axis) {
+			auto &edge_list = this->getEdgeList(axis);
+			edge_list.erase(std::remove_if(edge_list.begin(), edge_list.end(), [&](const IntervalEdge ie) -> bool {
+				return ie.interval->gob_body == body;
+			}), edge_list.end());
+		};
+
+		delete_from_edge_list(AXIS_X);
+		delete_from_edge_list(AXIS_Y);
+		delete_from_edge_list(AXIS_Z);
+
+		auto delete_from_interval_list = [this, body](int axis) {
+			auto &interval_list = getInterval(axis);
+			interval_list.erase(std::remove_if(interval_list.begin(), interval_list.end(), [&](const std::shared_ptr<Interval>& i) -> bool {
+				return i->gob_body == body;
+				}), interval_list.end());
+			};
+
+		delete_from_interval_list(AXIS_X);
+		delete_from_interval_list(AXIS_Y);
+		delete_from_interval_list(AXIS_Z);
+
+		auto shrink_overlap_mat = [this, body](int axis) {
+			auto& mat = getOverlapMatrix(axis);
+			auto len = mat.size();
+			for (size_t i = 0; i < mat.size(); i++) {
+				mat[i].erase(std::next(mat[i].begin(), len - 1));
+			}
+			mat.erase(std::next(mat.begin(), len - 1));
+			};
+		
+		shrink_overlap_mat(AXIS_X);
+		shrink_overlap_mat(AXIS_Y);
+		shrink_overlap_mat(AXIS_Z);
+
+		//remove from activeintervalks list
+		active_interval_list.erase(std::remove_if(active_interval_list.begin(), active_interval_list.end(), [&](const std::shared_ptr<Interval>& i) -> bool {
+			return i->gob_body == body;
+			}), active_interval_list.end());
+
+
+
+
+
+
 		for(size_t i = 0; i < all_physics_objects.size(); i++){
 			auto other = all_physics_objects.at(i);
 			if(other->parent == body->parent){
@@ -100,6 +147,11 @@ namespace Shard {
 				all_physics_objects.erase(iter);
 			}
 		}
+
+		traverse_edge_list_x = true;
+		traverse_edge_list_y = true;
+		traverse_edge_list_z = true;
+
 	}
 
 	bool PhysicsManager::willTick() {
@@ -258,6 +310,7 @@ namespace Shard {
 		auto& edge_list = getEdgeList(axis);
 		auto& overlap_matrix = getOverlapMatrix(axis);
 		//TODO, reset overlapMatrix to 0
+
 		for (size_t i = 0; i < overlap_matrix.size(); i++) {
 			for (size_t j = 0; j < overlap_matrix.size(); j++) {
 				overlap_matrix[i][j] = 0;
@@ -399,8 +452,7 @@ namespace Shard {
 						col.b = gob_body_a;
 					}
 					if (!findColliding(col.a, col.b)) 
-						collisions.push_back(col); // this shopuld not happen, lets keep in just in case :)
-
+						collisions.push_back(col); 
 				}
 			}
 		}
@@ -423,8 +475,9 @@ namespace Shard {
 		float mass_total, mass_prop = 0.f;
 
 
-		collisions = sweepAndMotherfuckingPrune();
-		for (CollidingObject &col_obj : collisions) {
+		//collisions = sweepAndMotherfuckingPrune();
+		auto cols_to_check = sweepAndMotherfuckingPrune();
+		for (CollidingObject &col_obj : cols_to_check) {
 			possible_impulse = getImpulseFromCollision(col_obj.a, col_obj.b);
 
 			if (possible_impulse.has_value()) {
@@ -475,15 +528,17 @@ namespace Shard {
 				(std::dynamic_pointer_cast<CollisionHandler>(col_obj.a->parent))->onCollisionEnter(col_obj.b);
 				(std::dynamic_pointer_cast<CollisionHandler>(col_obj.b->parent))->onCollisionEnter(col_obj.a);
 
+				collisions.push_back(col_obj);
+
 
 			}
 		}
 	}
 
 	void PhysicsManager::checkForCollisions() {
+		//collisions.clear();
 		runCollisionCheck();
 		collision_last_frame = collisions.size();
-		collisions.clear();
 	}
 
 	std::optional<glm::vec3> PhysicsManager::getImpulseFromCollision(std::shared_ptr <PhysicsBody> a, std::shared_ptr<PhysicsBody> b) {
@@ -523,14 +578,14 @@ namespace Shard {
 		*/
 
 		static auto calculateOverlapDistance = [](const glm::vec2& a, const glm::vec2& b) {
-			float x1 = a[0], x2 = a[1];
-			float y1 = b[0], y2 = b[1];
+			float a_start = a[0], a_end = a[1];
+			float b_start = b[0], b_end = b[1];
 
-			if (x2 < y1 || y2 < x1)
+			if (a_end < b_start || b_end < a_start)
 				return 0.0f;
 
-			float overlap_start = std::max(x1, y1);
-			float overlap_end = std::min(x2, y2);
+			float overlap_start = std::max(a_start, b_start);
+			float overlap_end = std::min(a_end, b_end);
 			float overlap_distance = overlap_end - overlap_start;
 			return overlap_distance;
 		};
@@ -542,6 +597,18 @@ namespace Shard {
 		// Only interested in axis with shortest overlap
 		auto min_overlap = std::min({ overlap_x, overlap_y, overlap_z });
 
+		//branchless programming <3
+		auto x = overlap_x == min_overlap ? overlap_x : 0;
+		auto y = overlap_y == min_overlap ? overlap_y : 0;
+		auto z = overlap_z == min_overlap ? overlap_z : 0;
+	
+
+		if (x == 0 && y == 0 && z == 0)
+			return std::nullopt;
+
+		return std::optional<glm::vec3>({x, y, z});
+
+		/*
 		if (overlap_x == min_overlap)
 			return std::optional<glm::vec3>({ overlap_x, 0.0f, 0.0f });
 
@@ -550,10 +617,10 @@ namespace Shard {
 
 		else if (overlap_z == min_overlap)
 			return std::optional<glm::vec3>({ 0.0f, 0.0f, overlap_z });
+		*/
 		
 		// uuuuuuuuuuuuuuhhhh.............. no penetration... but collided?
 		// 100 megawhat?
-		return std::nullopt;
 
 	}
 
