@@ -7,6 +7,8 @@
 #include <list>
 #include <queue>
 #include <optional>
+#include <unordered_map>
+#include <functional>
 
 namespace Shard {
 
@@ -209,7 +211,6 @@ namespace Shard {
 	}
 
 	std::vector<IntervalEdge>& PhysicsManager::getEdgeList(int axis) {
-		std::vector<IntervalEdge> edge_list;
 		if (axis == AXIS_X)
 			return edge_list_x;
 		else if (axis == AXIS_Y)
@@ -220,9 +221,9 @@ namespace Shard {
 
 	std::vector<std::vector<int>>& PhysicsManager::getOverlapMatrix(int axis)
 	{
-		if (axis == 0)
+		if (axis == AXIS_X)
 			return overlap_mat_x;
-		else if (axis == 1)
+		else if (axis == AXIS_Y)
 			return overlap_mat_y;
 		else // assuming z (not safe lol)
 			return overlap_mat_z;
@@ -239,9 +240,7 @@ namespace Shard {
 	}
 
 	void PhysicsManager::BubbleSort(int axis) {
-
 		auto& edge_list = getEdgeList(axis);
-
 		size_t n = edge_list.size();
 		for (size_t i = 0; i < n - 1; i++) {
 			for (size_t j = 0; j < n - 1 - i; j++) {
@@ -400,7 +399,7 @@ namespace Shard {
 						col.b = gob_body_a;
 					}
 					if (!findColliding(col.a, col.b)) 
-						collisions.push_back(col); //this shopuld not happen, lets keep in just in case :)
+						collisions.push_back(col); // this shopuld not happen, lets keep in just in case :)
 
 				}
 			}
@@ -473,8 +472,6 @@ namespace Shard {
 
 				}
 
-				//col_obj.a->parent->onCollisionEnter(&col_obj.b);
-				//col_obj.b->coll_handler->onCollisionEnter(&col_obj.a);
 				(std::dynamic_pointer_cast<CollisionHandler>(col_obj.a->parent))->onCollisionEnter(col_obj.b);
 				(std::dynamic_pointer_cast<CollisionHandler>(col_obj.b->parent))->onCollisionEnter(col_obj.a);
 
@@ -495,15 +492,15 @@ namespace Shard {
 			return std::nullopt;
 
 		// Check penetration level (sus)
-		auto min_max_a = a->collider->getMinMaxDims();
-		auto &min_max_x_a = min_max_a[0];
-		auto &min_max_y_a = min_max_a[1];
-		auto &min_max_z_a = min_max_a[2];
-
-		auto min_max_b = b->collider->getMinMaxDims();
-		auto &min_max_x_b = min_max_b[0];
-		auto &min_max_y_b = min_max_b[1];
-		auto &min_max_z_b = min_max_b[2];
+		const auto min_max_a = a->collider->getMinMaxDims();
+		const auto &min_max_x_a = min_max_a[0];
+		const auto &min_max_y_a = min_max_a[1];
+		const auto &min_max_z_a = min_max_a[2];
+		
+		const auto min_max_b = b->collider->getMinMaxDims();
+		const auto &min_max_x_b = min_max_b[0];
+		const auto &min_max_y_b = min_max_b[1];
+		const auto &min_max_z_b = min_max_b[2];
 		
 		// todo: pray that one object is never contained in the other
 		// otherwise we're PROBABLY completely fucked
@@ -525,49 +522,38 @@ namespace Shard {
 			⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠃⠀⠀⠀⠀⠀⠀⠀⠀
 		*/
 
-		float overlap_x{ 0 };
-		if (min_max_x_a[0] < min_max_x_b[0])
-			overlap_x = min_max_x_a[1] - min_max_x_b[0];
-		else
-			overlap_x = min_max_x_b[1] - min_max_x_a[0];
+		static auto calculateOverlapDistance = [](const glm::vec2& a, const glm::vec2& b) {
+			float x1 = a[0], x2 = a[1];
+			float y1 = b[0], y2 = b[1];
 
-		float overlap_y{ 0 };
-		if (min_max_y_a[0] < min_max_y_b[0])
-			overlap_y = min_max_y_a[1] - min_max_y_b[0];
-		else
-			overlap_y = min_max_y_b[1] - min_max_y_a[0];
+			if (x2 < y1 || y2 < x1)
+				return 0.0f;
 
-		float overlap_z{ 0 };
-		if (min_max_z_a[0] < min_max_z_b[0])
-			overlap_z = min_max_z_a[1] - min_max_z_b[0];
-		else
-			overlap_z = min_max_z_b[1] - min_max_z_a[0];
+			float overlap_start = std::max(x1, y1);
+			float overlap_end = std::min(x2, y2);
+			float overlap_distance = overlap_end - overlap_start;
+			return overlap_distance;
+		};
 
-		//auto min_overlap = std::min(overlap_x, std::min(overlap_y, overlap_z));
+		const float overlap_x = calculateOverlapDistance(min_max_x_a, min_max_x_b);
+		const float overlap_y = calculateOverlapDistance(min_max_y_a, min_max_y_b);
+		const float overlap_z = calculateOverlapDistance(min_max_z_a, min_max_z_b);
+
+		// Only interested in axis with shortest overlap
 		auto min_overlap = std::min({ overlap_x, overlap_y, overlap_z });
 
 		if (overlap_x == min_overlap)
 			return std::optional<glm::vec3>({ overlap_x, 0.0f, 0.0f });
+
 		else if (overlap_y == min_overlap)
 			return std::optional<glm::vec3>({ 0.0f, overlap_y, 0.0f });
+
 		else if (overlap_z == min_overlap)
 			return std::optional<glm::vec3>({ 0.0f, 0.0f, overlap_z });
 		
 		// uuuuuuuuuuuuuuhhhh.............. no penetration... but collided?
 		// 100 megawhat?
 		return std::nullopt;
-		
-		
-		
-		
-		
-		
-		/*
-		If above code is not sufficient, maybe implement this?
-		if x == max(x, y, z)
-			compare x coords between a and b to figure out what dir to push them
-			ie if a.x < b.x push a in -x dir and b in +x dir
-		*/
 
 	}
 
