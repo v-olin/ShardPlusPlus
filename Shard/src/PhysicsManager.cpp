@@ -10,9 +10,7 @@
 
 namespace Shard {
 
-	PhysicsManager::PhysicsManager() {
-
-	}
+	PhysicsManager::PhysicsManager() { }
 
 	PhysicsManager& PhysicsManager::getInstance() {
 		static PhysicsManager instance;
@@ -91,7 +89,6 @@ namespace Shard {
 
 	void PhysicsManager::removePhysicsObject(std::shared_ptr<PhysicsBody> body) {
 		// TODO: remove body from all intervals, make sure to remove all edges from all edge_lists also
-
 		//and set traverse_edge_list = true for all axies
 		for(size_t i = 0; i < all_physics_objects.size(); i++){
 			auto other = all_physics_objects.at(i);
@@ -104,7 +101,7 @@ namespace Shard {
 	}
 
 	bool PhysicsManager::willTick() {
-		// TODO: requires bootstrap
+		// TODO: remove when not testing
 		return true;
 		return Bootstrap::getCurrentMillis() - last_update > time_interval;
 	}
@@ -311,7 +308,7 @@ namespace Shard {
 
 	}
 
-	//update edge list for given axis
+	//update edge list for given axi
 	void PhysicsManager::updateEdgeList(int axis) {
 		auto &edge_list = getEdgeList(axis);
 		for (size_t i = 0; i < edge_list.size(); i++) {

@@ -109,8 +109,8 @@ public:
 	}
 	void initialize(glm::vec3 initial_position) {
 		setPhysicsEnabled();
-		body_->trans->scale({6.0f, 1.0f, 1.0f});
 		body_->trans->translate(initial_position);
+		body_->trans->scale({10.0f, 10.0f, 10.0f});
 	}
 
 	void onCollisionEnter(std::shared_ptr<Shard::PhysicsBody> body) override {
@@ -162,7 +162,7 @@ int Test1() {
 int Test2() {
 	int passed{0};
 
-	auto gob1 = CreateGOB({ 40.0f, 10.0f, 10.0f });
+	auto gob1 = CreateGOB({ 45.0f, 5.0f, 5.0f });
 	auto gob2 = CreateGOB({ 50.0f, 10.0f, 10.0f });
 	//manager.addPhysicsObject(gob1->body_->shared_from_this());
 	//manager.addPhysicsObject(gob2->body_->shared_from_this());
