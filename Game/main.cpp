@@ -183,7 +183,7 @@ int main() {
 
 	std::cout << "Testing shit... 0 means it failed and 1 means it passed.\n\n";
 	
-	//int t1 = Test1(); // Should fail, no collision.
+	int t1 = Test1(); // Should fail, no collision.
 	int t2 = Test2(); // Should pass, expecting collision.
 	
 	std::cout << "\nhaha, you suck! your tests failed lol (safe assumption being made here)\n";

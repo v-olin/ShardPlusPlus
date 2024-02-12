@@ -90,6 +90,9 @@ namespace Shard {
 	}
 
 	void PhysicsManager::removePhysicsObject(std::shared_ptr<PhysicsBody> body) {
+		// TODO: remove body from all intervals, make sure to remove all edges from all edge_lists also
+
+		//and set traverse_edge_list = true for all axies
 		for(size_t i = 0; i < all_physics_objects.size(); i++){
 			auto other = all_physics_objects.at(i);
 			if(other->parent == body->parent){
@@ -258,6 +261,12 @@ namespace Shard {
 
 		auto& edge_list = getEdgeList(axis);
 		auto& overlap_matrix = getOverlapMatrix(axis);
+		//TODO, reset overlapMatrix to 0
+		for (size_t i = 0; i < overlap_matrix.size(); i++) {
+			for (size_t j = 0; j < overlap_matrix.size(); j++) {
+				overlap_matrix[i][j] = 0;
+			}
+		}
 
 		//T raverse edge_list from start to end
 		for (size_t i = 0; i < edge_list.size(); i++) {
@@ -276,7 +285,7 @@ namespace Shard {
 							auto interval_b = findIntervalIdx(axis, active_interval_list[k]);
 							auto a = std::min(interval_a, interval_b);
 							auto b = std::max(interval_a, interval_b);
-							overlap_matrix[a][b] = 0;
+							overlap_matrix[a][b] = 1; // TODO: should dis be 1??
 						}
 					}
 
@@ -302,7 +311,8 @@ namespace Shard {
 
 	}
 
-	void PhysicsManager::doThatThing(int axis) {
+	//update edge list for given axis
+	void PhysicsManager::updateEdgeList(int axis) {
 		auto &edge_list = getEdgeList(axis);
 		for (size_t i = 0; i < edge_list.size(); i++) {
 			auto& interval = edge_list[i].interval;
@@ -313,7 +323,7 @@ namespace Shard {
 		}
 	}
 
-	void PhysicsManager::doThatOtherThing(int axis) {
+	void PhysicsManager::findOverlaps(int axis) {
 
 		bool& traverse_edge_list = getTraverseEdgeListBool(axis);
 
@@ -357,15 +367,16 @@ namespace Shard {
 		}
 	}
 
+	// TODO: return reference
 	std::vector<CollidingObject> PhysicsManager::sweepAndMotherfuckingPrune() {
 
-		doThatThing(AXIS_X);
-		doThatThing(AXIS_Y);
-		doThatThing(AXIS_Z);
+		updateEdgeList(AXIS_X);
+		updateEdgeList(AXIS_Y);
+		updateEdgeList(AXIS_Z);
 
-		doThatOtherThing(AXIS_X);
-		doThatOtherThing(AXIS_Y);
-		doThatOtherThing(AXIS_Z);
+		findOverlaps(AXIS_X);
+		findOverlaps(AXIS_Y);
+		findOverlaps(AXIS_Z);
 
 		std::vector<CollidingObject> collisions;
 
@@ -392,7 +403,7 @@ namespace Shard {
 						col.b = gob_body_a;
 					}
 					if (!findColliding(col.a, col.b)) 
-						collisions.push_back(col);
+						collisions.push_back(col); //this shopuld not happen, lets keep in just in case :)
 
 				}
 			}
