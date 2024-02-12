@@ -15,13 +15,6 @@ namespace Shard {
 
 	void ColliderBox::recalculateBoundingBox()
 	{
-
-		//maybe?
-		auto size_ = transform->size();
-		float size_x = size_.x;
-		float size_y = size_.y;
-		float size_z = size_.z;
-
 		/*
 		    	   v5                    v6
 		           *---------------------*
