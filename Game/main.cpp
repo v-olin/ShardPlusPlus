@@ -2,7 +2,7 @@
 
 #include "Logger.h"
 #include "Bootstrap.h"
-#include "Spaceship.h"
+#include "Car.h"
 #include "GameObjectManager.h"
 #include <iostream>
 
@@ -62,9 +62,14 @@ void GameTest::update() {
 	// display->showText(("FPS: " + second_fps + " / " + fps).c_str(), 10, 10, 12, 255, 255, 255);
 }
 
+void GameTest::createCar() {
+	car = std::make_shared<Car>();
+	car->initialize();
+}
+
 void GameTest::initalize() {
 	Shard::Logger::log("Initializing game");
-	// createShip();
+	createCar();
 	//for(int i = 0; i < 100; i++)
 	//	createAsteroid(i%10, i%10);
 	Shard::Bootstrap::getInput().addListeners(shared_from_this());

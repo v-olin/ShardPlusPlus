@@ -5,7 +5,7 @@
 #include "GameObject.h"
 
 #include "Asteriod.h"
-#include "Spaceship.h"
+#include "Car.h"
 
 #include <vector>
 #include <memory>
@@ -16,6 +16,7 @@ public:
 
 	void initalize();
 	// void createShip();
+	void createCar();
 	// void createAsteroid(float x, float y);
 
 	void update();
@@ -25,4 +26,6 @@ public:
 
 	// std::vector<std::shared_ptr<Asteroid>> asteroids{};
 	// std::shared_ptr<Spaceship> spaceship;
+	std::shared_ptr<Car> car{ nullptr };
+
 };

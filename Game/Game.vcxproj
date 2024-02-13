@@ -97,14 +97,14 @@
   <ItemGroup>
     <ClInclude Include="include\Asteriod.h" />
     <ClInclude Include="include\Bullet.h" />
-    <ClInclude Include="include\Spaceship.h" />
+    <ClInclude Include="include\Car.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\Asteriod.cpp" />
     <ClCompile Include="src\Bullet.cpp" />
-    <ClCompile Include="src\Spaceship.cpp" />
+    <ClCompile Include="src\Car.cpp" />
   </ItemGroup>
   <ImportGroup Label="Shared">
     <Import Project="..\Shard\Shard.vcxitems" Label="Shared" />
@@ -112,4 +112,10 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ItemGroup>
+    <None Update="C:\Chalmers\MPALG1\LP3\Spelmotor\ShardPlusPlus\Shard\res\shaders\default.vert">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="models\unit_cube.obj" />
+  </ItemGroup>
 </Project>

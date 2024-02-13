@@ -13,13 +13,17 @@ namespace Shard {
 		 void update();
 		 void cleanup();
 
+		 std::vector<std::shared_ptr<GameObject>>& getObjects();
 		static GameObjectManager& getInstance(){
 			static GameObjectManager manager;
 			return manager;
 		}
 
+		GameObjectManager(GameObjectManager const&) = delete;
+		void operator=(GameObjectManager const&) = delete;
 
 	private:
+		GameObjectManager() = default;
 		std::vector<std::shared_ptr<GameObject>> myObjects;
 		std::vector<std::shared_ptr<GameObject>> to_be_deleted;
 	

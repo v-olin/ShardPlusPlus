@@ -319,10 +319,15 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Model.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\PhysicsBody.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\PhysicsManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\SceneManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\ShaderManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\TextureManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Transform.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\glad\glad.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\glm\detail\glm.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)res\shaders\default.frag" />
+    <None Include="$(MSBuildThisFileDirectory)res\shaders\default.vert" />
   </ItemGroup>
 </Project>

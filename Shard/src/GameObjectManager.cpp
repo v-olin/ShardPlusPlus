@@ -41,6 +41,10 @@ namespace Shard{
 
 	}
 
+	
+	std::vector<std::shared_ptr<GameObject>>& GameObjectManager::getObjects() {
+		return myObjects;
+	}
 	void GameObjectManager::update() {
 
 		for (auto& gob : this->myObjects) {

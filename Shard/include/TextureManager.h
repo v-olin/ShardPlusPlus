@@ -23,10 +23,8 @@ namespace Shard {
 	private:
 		TextureManager() = default;
 
-		/*
 		std::unordered_set<GLuint> _textures;
-		std::unordered_map<const std::string&, GLuint> _texture_paths;
-		*/
+		std::unordered_map<std::string, GLuint> _texture_paths;
 
 	};
 

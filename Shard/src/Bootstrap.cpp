@@ -1,5 +1,7 @@
 #include "common.h"
 
+#include "SceneManager.h"
+
 #include "Bootstrap.h"
 #include "Logger.h"
 #include "BaseFunctionality.h"
@@ -223,6 +225,8 @@ namespace Shard {
 
         phys_debug = getEnvironmentVariable("physics_debug") == "1";
 
+        SceneManager sm{};
+
         while (!glfwWindowShouldClose(m_Window)) {
             frames += 1;
             time_in_milliseconds_start = getCurrentMillis();
@@ -268,7 +272,8 @@ namespace Shard {
                 glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-                // Render code here
+                // Render code goes here
+                sm.Draw();
 
                 glfwSwapBuffers(m_Window);
                 glfwPollEvents();

@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "PhysicsBody.h"
+#include "Model.h"
 
 namespace Shard {
     class GameObject : public std::enable_shared_from_this<GameObject> {
@@ -12,6 +13,7 @@ namespace Shard {
         bool transient_, to_be_destroyed_, visible_;
         std::shared_ptr<PhysicsBody> body_ = nullptr;
         std::vector<const char*> tags{};
+        std::shared_ptr<Model> model{ nullptr };
 
         GameObject();
         GameObject(const std::shared_ptr<GameObject> src) {

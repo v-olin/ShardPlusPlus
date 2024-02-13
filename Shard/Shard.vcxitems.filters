@@ -63,6 +63,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)common.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\AssetManager.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -117,7 +118,16 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)include\SAPEntry.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\SceneManager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\ShaderManager.h">
+      <Filter>include</Filter>
+    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)include\StringUtility.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\TextureManager.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Transform.h">
@@ -921,10 +931,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\tiny_obj\include\tiny_obj_loader.h">
       <Filter>vendor\tiny_obj\include</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)include\TextureManager.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)common.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)include\SceneManager.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)include\ShaderManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)src\AssetManager.cpp">
@@ -966,6 +972,12 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)src\PhysicsManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\ShaderManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\TextureManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Transform.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -975,7 +987,10 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\glm\detail\glm.cpp">
       <Filter>vendor\glm\detail</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)src\ShaderManager.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)src\TextureManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\SceneManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)res\shaders\default.vert" />
+    <None Include="$(MSBuildThisFileDirectory)res\shaders\default.frag" />
   </ItemGroup>
 </Project>

@@ -64,20 +64,16 @@ namespace Shard {
 
 		stbi_image_free(data);
 
-		// TODO: 
-		//_texture_paths[path] = textureID;
+		_texture_paths[path] = textureID;
 
 		return textureID;
 	}
 
 	GLuint TextureManager::getTexture(const std::string& path) {
-		// TODO:
-		/*
-		if (_texture_paths.find(path) != _texture_paths.end()) {
+		if (_texture_paths.find(path) != _texture_paths.end())
 			return _texture_paths[path];
-		}
-		*/
-		assert(false);
-		return UINT32_MAX;
+
+		return loadTexture(path);
 	}
+
 }

@@ -53,7 +53,11 @@ namespace Shard {
 	class  Model
 	{
 	public:
+		Model(std::string path);
 		~Model();
+
+		void Draw();
+
 		// The name of the whole model
 		std::string m_name;
 		// The filename of this model
@@ -74,9 +78,9 @@ namespace Shard {
 		uint32_t m_vaob;
 	};
 
-	 Model* loadModelFromOBJ(std::string filename);
-	 void saveModelToOBJ(Model* model, std::string filename);
-	 void saveModelMaterialsToMTL(Model* model, std::string filename);
-	 void freeModel(Model* model);
-	 void render(const Model* model, const bool submitMaterials = true);
+	void saveModelToOBJ(Model* model, std::string filename);
+	void saveModelMaterialsToMTL(Model* model, std::string filename);
+	void freeModel(Model* model);
+	void render(const Model* model, const bool submitMaterials = true);
+
 }
