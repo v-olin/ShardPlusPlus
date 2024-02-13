@@ -3,6 +3,7 @@
 //#include <math.h>
 #include <cmath>
 
+#define GLM_ENABLE_EXPERIMENTAL
 #include "gtc/matrix_transform.hpp"
 
 // this should be included from math.h but isnt for some reason

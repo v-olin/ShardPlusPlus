@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+
 #include <glm.hpp>
 
 namespace Shard {

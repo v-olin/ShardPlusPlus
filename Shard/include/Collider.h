@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <SDL.h>
 #include <typeinfo>
 #include <optional>
 #include <memory>
@@ -30,7 +29,7 @@ namespace Shard {
         virtual std::optional<glm::vec3> checkCollision(Ray& ray) = 0;
         virtual std::vector<glm::vec2> getMinMaxDims() = 0;
 
-        virtual void draw(SDL_Color color) = 0;
+        virtual void draw(glm::vec3 color) = 0;
         
     protected:
         bool from_trans{false};

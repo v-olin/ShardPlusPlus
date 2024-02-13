@@ -10,32 +10,26 @@
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
     </Filter>
-    <Filter Include="vendor\SDL2-2.28.5">
-      <UniqueIdentifier>{F1910D23-DD75-CE78-46D6-C8CB32D9B8FA}</UniqueIdentifier>
+    <Filter Include="vendor\glad">
+      <UniqueIdentifier>{9A8E79C1-0644-F2B6-8F38-EC8DFBECE8BA}</UniqueIdentifier>
     </Filter>
-    <Filter Include="vendor\SDL2-2.28.5\include">
-      <UniqueIdentifier>{641AC2FF-502A-6ED0-B9E3-D2EEA5125D69}</UniqueIdentifier>
+    <Filter Include="vendor\glad\include">
+      <UniqueIdentifier>{0DB0903E-7911-6E4C-027F-B4FE6EDFA40B}</UniqueIdentifier>
     </Filter>
-    <Filter Include="vendor\SDL2_image-2.8.2">
-      <UniqueIdentifier>{7EE913F4-EA20-5C8B-F32A-C0AE5FE18284}</UniqueIdentifier>
+    <Filter Include="vendor\glad\include\KHR">
+      <UniqueIdentifier>{01FD6E78-6D34-B70F-763E-1B33E2F4DD08}</UniqueIdentifier>
     </Filter>
-    <Filter Include="vendor\SDL2_image-2.8.2\include">
-      <UniqueIdentifier>{F1AEB9E9-5D92-C829-6695-F665D2F78E7A}</UniqueIdentifier>
+    <Filter Include="vendor\glad\include\glad">
+      <UniqueIdentifier>{34935E86-20B8-AD06-4903-93963587AC24}</UniqueIdentifier>
     </Filter>
-    <Filter Include="vendor\SDL2_ttf-2.22.0">
-      <UniqueIdentifier>{13B8E3DA-FFB1-0C2D-E81E-A33DD4B77299}</UniqueIdentifier>
+    <Filter Include="vendor\glfw">
+      <UniqueIdentifier>{528F79C1-BE44-F2B6-4739-EC8DB3EDE8BA}</UniqueIdentifier>
     </Filter>
-    <Filter Include="vendor\SDL2_ttf-2.22.0\include">
-      <UniqueIdentifier>{8642E51E-7268-AF85-5BAE-34514773D451}</UniqueIdentifier>
+    <Filter Include="vendor\glfw\include">
+      <UniqueIdentifier>{C5E801F8-314A-DF05-BAB7-25B8261816C5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="vendor\glew">
-      <UniqueIdentifier>{318F79C1-9D44-F2B6-2639-EC8D92EDE8BA}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="vendor\glew\include">
-      <UniqueIdentifier>{A457F7F3-10B9-D401-9926-1BB405870BC1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="vendor\glew\include\GL">
-      <UniqueIdentifier>{86B6A6B4-72B0-CF06-5B1D-661747B63573}</UniqueIdentifier>
+    <Filter Include="vendor\glfw\include\GLFW">
+      <UniqueIdentifier>{24E7751C-100C-C59C-3957-AA2C25DBC3BA}</UniqueIdentifier>
     </Filter>
     <Filter Include="vendor\glm">
       <UniqueIdentifier>{829FC5A8-6E57-07F6-D75E-E051C335A2E6}</UniqueIdentifier>
@@ -78,6 +72,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Bootstrap.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\Camera.h">
+      <Filter>include</Filter>
+    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Collider.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -88,15 +85,6 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)include\CollisionHandler.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)include\Display.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)include\DisplayText.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)include\GLUtility.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Game.h">
@@ -129,266 +117,23 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)include\SAPEntry.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)include\Sound.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)include\StringUtility.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Transform.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glad\include\KHR\khrplatform.h">
+      <Filter>vendor\glad\include\KHR</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_assert.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glad\include\glad\glad.h">
+      <Filter>vendor\glad\include\glad</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_atomic.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glfw\include\GLFW\glfw3.h">
+      <Filter>vendor\glfw\include\GLFW</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_audio.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_bits.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_blendmode.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_clipboard.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_config.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_cpuinfo.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_egl.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_endian.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_error.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_events.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_filesystem.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_gamecontroller.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_gesture.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_guid.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_haptic.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_hidapi.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_hints.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_joystick.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_keyboard.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_keycode.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_loadso.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_locale.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_log.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_main.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_messagebox.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_metal.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_misc.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_mouse.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_mutex.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_name.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_opengl.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_opengl_glext.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_opengles.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_opengles2.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_opengles2_gl2.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_opengles2_gl2ext.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_opengles2_gl2platform.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_opengles2_khrplatform.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_pixels.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_platform.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_power.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_quit.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_rect.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_render.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_revision.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_rwops.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_scancode.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_sensor.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_shape.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_stdinc.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_surface.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_system.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_syswm.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_test.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_test_assert.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_test_common.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_test_compare.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_test_crc32.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_test_font.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_test_fuzzer.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_test_harness.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_test_images.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_test_log.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_test_md5.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_test_memory.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_test_random.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_thread.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_timer.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_touch.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_types.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_version.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_video.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\SDL_vulkan.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\begin_code.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2-2.28.5\include\close_code.h">
-      <Filter>vendor\SDL2-2.28.5\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2_image-2.8.2\include\SDL_image.h">
-      <Filter>vendor\SDL2_image-2.8.2\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\SDL2_ttf-2.22.0\include\SDL_ttf.h">
-      <Filter>vendor\SDL2_ttf-2.22.0\include</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glew\include\GL\eglew.h">
-      <Filter>vendor\glew\include\GL</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glew\include\GL\glew.h">
-      <Filter>vendor\glew\include\GL</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glew\include\GL\glxew.h">
-      <Filter>vendor\glew\include\GL</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glew\include\GL\wglew.h">
-      <Filter>vendor\glew\include\GL</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glfw\include\GLFW\glfw3native.h">
+      <Filter>vendor\glfw\include\GLFW</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\common.hpp">
       <Filter>vendor\glm</Filter>
@@ -1176,10 +921,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\tiny_obj\include\tiny_obj_loader.h">
       <Filter>vendor\tiny_obj\include</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)include\Camera.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\TextureManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)common.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\SceneManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\ShaderManager.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)include\TextureManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)src\AssetManager.cpp">
@@ -1191,13 +936,13 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Bootstrap.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\Camera.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Collider.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)src\ColliderBox.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)src\DisplayText.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)src\GameObject.cpp">
@@ -1221,16 +966,15 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)src\PhysicsManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)src\Sound.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Transform.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)vendor\glad\glad.c">
+      <Filter>vendor\glad</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\glm\detail\glm.cpp">
       <Filter>vendor\glm\detail</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)src\Camera.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\ShaderManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\TextureManager.cpp" />
   </ItemGroup>

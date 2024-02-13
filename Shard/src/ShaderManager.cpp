@@ -1,9 +1,10 @@
 #include "ShaderManager.h"
 #include "Logger.h"
 
+#include "gtc/type_ptr.hpp"
+
 #include <fstream>
 #include <sstream>
-#include <debugapi.h>
 
 namespace Shard {
 
@@ -51,40 +52,15 @@ namespace Shard {
 		glAttachShader(shader_program, f_shader);
 		glDeleteShader(f_shader);
 
+		/*
 		if (!allow_errors)
 			checkGLError(__FILE__, __LINE__) && (__debugbreak(), 1);
+		*/
 
 		if (!linkShaderProgram(shader_program, allow_errors))
 			return 0;
 
 		return shader_program;
-	}
-
-	bool ShaderManager::checkGLError(const char* file, int line) {
-		bool wasError = false;
-
-		for (GLenum glErr = glGetError(); glErr != GL_NO_ERROR; glErr = glGetError())
-		{
-			wasError = true;
-			const GLubyte* sError = gluErrorString(glErr);
-
-			if (!sError)
-			{
-				sError = reinterpret_cast<const GLubyte*>(" (no message available)");
-			}
-
-			std::cerr << "GL Error #" << glErr << "(" << sError << ") "
-				<< " in File " << file << " at line: " << line << std::endl;
-
-#if defined(_WIN32)
-			std::stringstream ss;
-			ss << file << "(" << line << "): GL Error #" << glErr << "(" << sError << ") " << std::endl;
-
-			// outputs error message to debug console, if a debugger is attached.
-			OutputDebugStringA(ss.str().c_str());
-#endif
-		}
-		return wasError;
 	}
 
 	bool ShaderManager::linkShaderProgram(GLuint shader_program, bool allow_errors) {
@@ -137,4 +113,52 @@ namespace Shard {
 
 		return log;
 	}
+
+	void ShaderManager::SetMat4x4(const glm::mat4x4& mat, const std::string& uniform_name) {
+		auto uniform_location = GetUniformLoc(uniform_name);
+		glUniformMatrix4fv(uniform_location, 1, GL_FALSE, glm::value_ptr(mat));
+	}
+
+	void ShaderManager::SetVec4(const glm::vec4& vec, const std::string& uniform_name) {
+		auto uniform_location = GetUniformLoc(uniform_name);
+		glUniform4fv(uniform_location, 1, glm::value_ptr(vec));
+	}
+
+	void ShaderManager::SetVec3(const glm::vec3& vec, const std::string& uniform_name)
+	{
+		auto uniform_location = GetUniformLoc(uniform_name);
+		glUniform3fv(uniform_location, 1, glm::value_ptr(vec));
+	}
+
+	void ShaderManager::SetInteger1(const int& integer, const std::string& uniform_name)
+	{
+		auto uniform_location = GetUniformLoc(uniform_name);
+		glUniform1i(uniform_location, integer);
+	}
+
+	void ShaderManager::SetFloat1(const float& float_, const std::string& uniform_name)
+	{
+		auto uniform_location = GetUniformLoc(uniform_name);
+		glUniform1f(uniform_location, float_);
+	}
+
+	GLint ShaderManager::GetUniformLoc(const std::string& uniform_name)
+	{
+		// TODO: send in shader_id too otherwise can't use
+		/*
+		auto it = m_UniformCache.find(uniform_name);
+		if (it == m_UniformCache.end()) {
+			GLint loc = glGetUniformLocation(m_shader_program, uniform_name.c_str());
+			m_UniformCache[uniform_name] = loc;
+			assert(loc != -1); // uniform not found
+			return loc;
+		}
+
+		return it->second;
+		*/
+		assert(1 == 5);
+		return -1;
+	}
+
 }
+

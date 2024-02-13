@@ -1,6 +1,5 @@
 #pragma once
 
-#include "TextureManager.h"
 #include "Camera.h"
 
 namespace Shard {
@@ -10,7 +9,5 @@ namespace Shard {
 
 	private:
 		Camera camera;
-		TextureManager& textureManager;
-
 	};
 }

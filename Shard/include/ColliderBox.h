@@ -14,7 +14,7 @@ namespace Shard {
 		void recalculateBoundingBox() override;
 		std::optional<glm::vec3> checkCollision(Ray& ray) override;
 		std::vector<glm::vec2> getMinMaxDims() override;
-		void draw(SDL_Color color) override;
+		void draw(glm::vec3 color) override;
 
 	private:
 	};

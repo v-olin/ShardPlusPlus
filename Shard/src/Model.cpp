@@ -1,7 +1,7 @@
 #include "Model.h"
 
-#include <GL/glew.h>
-#include <GL/GLU.h>
+#include "common.h"
+
 #include <fstream>
 #include <algorithm>
 #include <iostream>
@@ -9,14 +9,11 @@
 #include <iomanip>
 #include <string>
 
-// DON'T REMOVE, AND DON'T DEFINE ANYWHERE ELSE!!!!!!!!!!!!!
-#define STB_IMAGE_IMPLEMENTATION
+// DON'T REMOVE DEFINES, AND DON'T DEFINE ANYWHERE ELSE!!!!!!!!!!!!!
 #define TINYOBJLOADER_IMPLEMENTATION
-
 #include <tiny_obj_loader.h>
+#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
-
-#include "GLUtility.h"
 
 namespace Shard {
 
@@ -163,7 +160,7 @@ namespace Shard {
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 16);
+		//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 16);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 		return true;
@@ -623,7 +620,8 @@ namespace Shard {
 				}
 				glActiveTexture(GL_TEXTURE0);
 
-				// TODO: copy over all utility functions from labhelper.h
+				// TODO: Set using shader::SetUniform*
+				/*
 				GLUtility::setUniformSlow(current_program, "has_color_texture", has_color_texture);
 				GLUtility::setUniformSlow(current_program, "has_emission_texture", has_emission_texture);
 				GLUtility::setUniformSlow(current_program, "material_color", material.m_color);
@@ -631,6 +629,7 @@ namespace Shard {
 				GLUtility::setUniformSlow(current_program, "material_fresnel", material.m_fresnel);
 				GLUtility::setUniformSlow(current_program, "material_shininess", material.m_shininess);
 				GLUtility::setUniformSlow(current_program, "material_emission", material.m_emission);
+				*/
 
 				// Actually unused in the labs
 				/*

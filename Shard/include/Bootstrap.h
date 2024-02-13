@@ -4,8 +4,6 @@
 #include "Game.h"
 #include "AssetManager.h"
 #include "GameObject.h"
-#include "Display.h"
-#include "Sound.h"
 #include "InputManager.h"
 #include "PhysicsManager.h"
 
@@ -14,7 +12,10 @@
 #include <vector>
 #include <unordered_map>
 
+class GLFWwindow;
+
 namespace Shard {
+
 
 	class Bootstrap {
 
@@ -34,8 +35,6 @@ namespace Shard {
 		static const std::string getBaseDir();
 		
 		static std::shared_ptr<Game> getRunningGame();
-		static Display* getDisplay();
-		static Sound& getSound();
 		static InputManager& getInput();
 		static AssetManager& getAssetManager();
 		static void setRunningGame(std::shared_ptr<Game> game);
@@ -43,12 +42,10 @@ namespace Shard {
 		static void setup();
 		static void setupEnvironmentVariables(std::string path);
 
-
+		inline static ::GLFWwindow* m_Window;
 	private:
 		inline static bool running_game_set;
 		inline static std::shared_ptr<Game> running_game;
-		inline static Display* display_engine;
-		inline static Sound sound_engine;
 		inline static InputManager input;
 		inline static PhysicsManager& phys{ PhysicsManager::getInstance() };
 		inline static AssetManager& asset{ AssetManager::getInstance() };

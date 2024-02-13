@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <SDL.h>
 #include <glm.hpp>
 #include <memory>
 
@@ -30,7 +29,7 @@ namespace Shard {
 		std::shared_ptr<GameObject> parent{ nullptr };
 		//std::vector<Collider*> colliders;
 		std::shared_ptr<Collider> collider{nullptr};
-		SDL_Color debug_color{0,255,0,255};
+		glm::vec3 debug_color{ 1.0f, 1.0f, 1.0f };
 		//CollisionHandler* coll_handler;
 		std::shared_ptr<Transform> trans;
 

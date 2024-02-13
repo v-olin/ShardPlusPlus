@@ -20,7 +20,7 @@ namespace Shard {
 	PhysicsBody::PhysicsBody(std::shared_ptr<GameObject> game_obj)
 		: parent(game_obj)
 		, trans(std::make_shared<Transform>())
-		, debug_color({ 0, 255, 0, 255 })
+		, debug_color({ 0.0f, 1.0f, 0.0f })
 	{
 		time_interval_ = PhysicsManager::getInstance().time_interval;
 	}

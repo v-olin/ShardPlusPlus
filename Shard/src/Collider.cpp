@@ -1,7 +1,6 @@
 #include "Transform.h"
 #include "Collider.h"
 #include "Bootstrap.h"
-#include "Display.h"
 
 namespace Shard {
 

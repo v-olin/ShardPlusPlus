@@ -4,6 +4,9 @@
 #include "Game.h"
 #include <unordered_set>
 #include <memory>
+#include <queue>
+
+#include "common.h"
 
 namespace Shard {
 	enum EventType {
@@ -28,9 +31,17 @@ namespace Shard {
 		 void removeListeners(std::shared_ptr<InputListener> listener);
 		 void informListeners(InputEvent ie, EventType et);
 		 void getInput();
+
+		 static void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
+		 static void MouseCallback(GLFWwindow* window, double xpos, double ypos);
+		 static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
+		 static void ScrollCallback(GLFWwindow* window, double x_offset, double y_offset);
+		 static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
+		std::queue<std::pair<InputEvent, EventType>> event_queue;
 	private:
 		std::vector<std::shared_ptr<InputListener>> myListeners;
-		double tick{};
-		double time_interval{};
+		double tick{0.0};
+		double time_interval{1.0/60.0};
 	};
 }

@@ -5,7 +5,7 @@
 #include <unordered_set>
 #include <unordered_map>
 
-#include <GL/glew.h>
+#include "common.h"
 
 namespace Shard {
 
@@ -21,10 +21,12 @@ namespace Shard {
 		GLuint getTexture(const std::string& path);
 
 	private:
-		TextureManager();
+		TextureManager() = default;
 
+		/*
 		std::unordered_set<GLuint> _textures;
 		std::unordered_map<const std::string&, GLuint> _texture_paths;
+		*/
 
 	};
 

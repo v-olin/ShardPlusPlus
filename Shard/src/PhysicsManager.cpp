@@ -233,7 +233,10 @@ namespace Shard {
 			removed++;
 		}
 
-		checkForCollisions();
+		// TODO: don't run if no game objects?
+		if (all_physics_objects.size() > 1)
+			checkForCollisions();
+
 		return true;
 	}
 

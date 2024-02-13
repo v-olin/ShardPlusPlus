@@ -1,7 +1,7 @@
 #include "ColliderBox.h"
 
-#include <glm.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
+#include <glm.hpp>
 #include "gtx/component_wise.hpp"
 
 #include <vector>
@@ -86,7 +86,7 @@ namespace Shard {
 		};
 	}
 
-	void ColliderBox::draw(SDL_Color color) {
+	void ColliderBox::draw(glm::vec3 color) {
 
 	}
 
