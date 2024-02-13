@@ -44,12 +44,10 @@ namespace Shard {
     in vec3 normal_;
     in vec2 texCoord_;
 
-    uniform vec3 u_ObjectColor;
-
     out vec4 FragColor;
 
     void main() {
-        FragColor = vec4(u_ObjectColor, 1.0);
+        FragColor = vec4(1.0);
     }
 )";
 		glShaderSource(v_shader, 1, &vs, nullptr);

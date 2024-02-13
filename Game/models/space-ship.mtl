@@ -1,0 +1,217 @@
+# Exported by Chalmers Graphics Group
+newmtl belly-hull
+Kd 0.167891 0.110727 0.352941
+Ks 0.1 0.1 0.1
+Pm 0.3
+Pr 10
+Ke 0 0 0
+Tf 0 0 0
+Ni 1.45
+
+newmtl bottom-fin
+Kd 0.760053 0.764706 0.67474
+Ks 1 1 1
+Pm 1
+Pr 1000
+Ke 0 0 0
+Tf 0 0 0
+Ni 1.45
+
+newmtl bottom-fin-connection
+Kd 0.8 0.585367 0.403749
+Ks 1 1 1
+Pm 1
+Pr 10
+Ke 0 0 0
+Tf 0 0 0
+Ni 1.45
+
+newmtl chasis
+Kd 0.076555 0.076555 0.076555
+Ks 0.3 0.3 0.3
+Pm 0.4
+Pr 50
+Ke 0 0 0
+Tf 0 0 0
+Ni 1.45
+
+newmtl engine
+Kd 0.215686 0.215684 0.215684
+Ks 0.1 0.1 0.1
+Pm 0
+Pr 50
+Ke 0 0 0
+Tf 0 0 0
+Ni 1.45
+
+newmtl engine-connector
+Kd 0.0457108 0.0470588 0.0470588
+Ks 0.04 0.04 0.04
+Pm 0
+Pr 0
+Ke 0 0 0
+Tf 0 0 0
+Ni 1.45
+
+newmtl engine-holder
+Kd 0.8 0.8 0.8
+Ks 1 1 1
+Pm 1
+Pr 20
+Ke 0 0 0
+Tf 0 0 0
+Ni 1.45
+
+newmtl exhaust
+Kd 0 0 0
+Ks 0.2 0.2 0.2
+Pm 0.5
+Pr 100
+Ke 0 0 0
+Tf 0 0 0
+Ni 1.45
+
+newmtl front-bumper
+Kd 0.8 0.8 0.8
+Ks 1 1 1
+Pm 1
+Pr 20
+Ke 0 0 0
+Tf 0 0 0
+Ni 1.45
+
+newmtl front-bumper-attachment
+Kd 0.023617 0.023617 0.023617
+Ks 0.04 0.04 0.04
+Pm 0
+Pr 2
+Ke 0 0 0
+Tf 0 0 0
+Ni 1.45
+
+newmtl front-exhaust
+Kd 0.8 0.8 0.8
+Ks 1 1 1
+Pm 1
+Pr 500
+Ke 0 0 0
+Tf 0 0 0
+Ni 1.45
+
+newmtl hull
+Kd 0.8 0.006273 0.006273
+Ks 0.9 0.9 0.9
+Pm 0.9
+Pr 50
+Ke 0 0 0
+Tf 0 0 0
+Ni 1.45
+
+newmtl ion-engine
+Kd 0.828431 0.828423 0.828423
+Ks 1 1 1
+Pm 1
+Pr 500
+Ke 0 0 0
+Tf 0 0 0
+Ni 1.45
+
+newmtl main-exhaust-gas
+Kd 0 0 0
+Ks 0 0 0
+Pm 0
+Pr 0
+Ke 19.6078 13.7255 8.62745
+Tf 0 0 0
+Ni 1.45
+
+newmtl side-belly-hull
+Kd 0.877451 0.417724 0.197857
+Ks 1 1 1
+Pm 1
+Pr 40
+Ke 0 0 0
+Tf 0 0 0
+Ni 1.45
+
+newmtl side-engine
+Kd 0.789216 0.789208 0.789208
+Ks 1 1 1
+Pm 1
+Pr 500
+Ke 0 0 0
+Tf 0 0 0
+Ni 1.45
+
+newmtl secondary-engine-exhaust
+Kd 0 0 0
+Ks 0.5 0.5 0.5
+Pm 0
+Pr 0
+Ke 0.298039 15.6863 19.6078
+Tf 0 0 0
+Ni 1.45
+
+newmtl secondary-engine-exhaust-fwd
+Kd 0 0 0
+Ks 0.5 0.5 0.5
+Pm 0
+Pr 0
+Ke 0.784314 2.35294 3.13725
+Tf 0 0 0
+Ni 1.45
+
+newmtl side-engine-exhaust
+Kd 0 0 0
+Ks 0 0 0
+Pm 0
+Pr 0
+Ke 0.107843 0.868801 1
+Tf 0 0 0
+Ni 1.45
+
+newmtl struts
+Kd 1 0.808245 0.348039
+Ks 1 1 1
+Pm 1
+Pr 500
+Ke 0 0 0
+Tf 0 0 0
+Ni 1.45
+
+newmtl tail-flap
+Kd 0.112745 0.112744 0.112745
+Ks 0.9 0.9 0.9
+Pm 0.9
+Pr 20
+Ke 0 0 0
+Tf 0 0 0
+Ni 1.45
+
+newmtl tubes
+Kd 0.053347 0.046695 0.08001
+Ks 0.08 0.08 0.08
+Pm 0
+Pr 20
+Ke 0 0 0
+Tf 0 0 0
+Ni 1.45
+
+newmtl windshield
+Kd 0.434866 0.580523 0.748165
+Ks 0.85 0.85 0.85
+Pm 0.4
+Pr 2000
+Ke 0 0 0
+Tf 0 0 0
+Ni 1.45
+
+newmtl windshield-clamp
+Kd 0.01341 0.01341 0.01341
+Ks 0.08 0.08 0.08
+Pm 0
+Pr 2
+Ke 0 0 0
+Tf 0 0 0
+Ni 1.45
+

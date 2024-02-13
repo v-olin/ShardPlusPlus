@@ -112,10 +112,4 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-  <ItemGroup>
-    <None Update="C:\Chalmers\MPALG1\LP3\Spelmotor\ShardPlusPlus\Shard\res\shaders\default.vert">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="models\unit_cube.obj" />
-  </ItemGroup>
 </Project>

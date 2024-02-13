@@ -227,6 +227,9 @@ namespace Shard {
 
         SceneManager sm{};
 
+        glEnable(GL_DEPTH_TEST);
+        glDisable(GL_CULL_FACE);
+
         while (!glfwWindowShouldClose(m_Window)) {
             frames += 1;
             time_in_milliseconds_start = getCurrentMillis();

@@ -32,10 +32,4 @@
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="models\unit_cube.obj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="models\car.obj" />
-  </ItemGroup>
 </Project>

@@ -53,7 +53,8 @@ void Car::initialize() {
     body_->setBoxCollider();
     //body_->addCircleCollider();
 
-	model = std::make_shared<Shard::Model>("models/car.obj");
+	//model = std::make_shared<Shard::Model>("models/car.obj");
+    model = std::make_shared<Shard::Model>("models/space-ship.obj");
     
     GameObject::addTag("Car");
     Shard::GameObjectManager::getInstance().addGameObject(shared_from_this());

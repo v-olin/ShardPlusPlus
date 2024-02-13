@@ -972,6 +972,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)src\PhysicsManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\SceneManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)src\ShaderManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -987,10 +990,5 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\glm\detail\glm.cpp">
       <Filter>vendor\glm\detail</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)src\SceneManager.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)res\shaders\default.vert" />
-    <None Include="$(MSBuildThisFileDirectory)res\shaders\default.frag" />
   </ItemGroup>
 </Project>
