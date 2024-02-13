@@ -5,7 +5,6 @@
 #include <memory>
 
 #include "Collider.h"
-#include "Transform.h"
 
 namespace Shard {
 	class GameObject;
