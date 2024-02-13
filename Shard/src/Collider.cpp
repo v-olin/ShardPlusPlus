@@ -5,27 +5,14 @@
 
 namespace Shard {
 
-    Collider::Collider()
-        : x(0), y(0),
-        rotate_at_offset(false),
-        transform(nullptr),
-        game_object(nullptr) {
-    }
+	typedef struct Ray {
+		glm::vec3 origin;
+		glm::vec3 dir;
+	} Ray;
 
     Collider::Collider(std::shared_ptr<CollisionHandler> game_obj, std::shared_ptr<Transform> transform)
-        : x(0), y(0),
-        rotate_at_offset(false),
-        transform(transform),
-        game_object(game_obj)
-    {
-    }
-
-    Collider::Collider(std::shared_ptr<CollisionHandler> game_obj, std::shared_ptr<Transform> transform, float x, float y)
-        : x(x), y(y),
-        rotate_at_offset(false),
-        transform(transform),
-        game_object(game_obj)
-    {
-    }
+        : transform(transform)
+        , game_object(game_obj)
+    {}
 
 }

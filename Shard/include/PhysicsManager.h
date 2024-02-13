@@ -9,6 +9,27 @@
 #include <optional>
 
 namespace Shard {
+
+	typedef struct Interval {
+		Interval() = default;
+		Interval(bool active, std::shared_ptr<PhysicsBody> body)
+			: active(active)
+			, gob_body(body) {}
+		bool active{ false };
+		std::shared_ptr<PhysicsBody> gob_body{ nullptr };
+	} Interval;
+
+	typedef struct IntervalEdge {
+		IntervalEdge() = default;
+		IntervalEdge(float val, bool is_b, std::shared_ptr<Interval> interval)
+			: val(val)
+			, is_b(is_b)
+			, interval(interval) {}
+		float val{ 0.0f };
+		bool is_b{ true };
+		std::shared_ptr<Interval> interval{ nullptr };
+	} IntervalEdge;
+
 	class  PhysicsManager {
 	public:
 		long time_interval;
@@ -21,39 +42,63 @@ namespace Shard {
 
 		void addPhysicsObject(std::shared_ptr<PhysicsBody> body);
 		void removePhysicsObject(std::shared_ptr<PhysicsBody> body);
-		void clearList();
-		void addToList(SAPEntry node);
-		// void outputList(SAPEntry node); only for debug, skipping
-		void reportCollisionsInAxis();
 		bool willTick();
 		bool update();
 		void drawDebugColliders();
 		bool findColliding(std::shared_ptr<PhysicsBody> a, std::shared_ptr<PhysicsBody> b);
-		void broadPassSearchAndSweep();
-		void broadPass();
 
-	private:
+		std::vector<CollidingObject> sweepAndMotherfuckingPrune();
 
-		std::vector<CollidingObject> collisions_to_check_;
-		std::vector<CollidingObject> collidings_;
+		std::vector<std::shared_ptr<Interval>> all_x_intervals{};
+		std::vector<std::shared_ptr<Interval>> all_y_intervals{};
+		std::vector<std::shared_ptr<Interval>> all_z_intervals{};
+		std::vector<std::shared_ptr<Interval>> active_interval_list{};
 
-		
-		long long last_update, last_debug_draw;
-		//SAPEntry sap_x, sap_y;
+		std::vector<IntervalEdge> edge_list_x{};
+		std::vector<IntervalEdge> edge_list_y{};
+		std::vector<IntervalEdge> edge_list_z{};
+
+		bool traverse_edge_list_x{ true };
+		bool traverse_edge_list_y{ true };
+		bool traverse_edge_list_z{ true };
+
+		std::vector<std::vector<int>> overlap_mat_x{ 0 };
+		std::vector<std::vector<int>> overlap_mat_y{ 0 };
+		std::vector<std::vector<int>> overlap_mat_z{ 0 };
+
+		std::vector<CollidingObject> collisions{};
+		int collision_last_frame{ 0 };
+
+		const static int AXIS_X{ 0 };
+		const static int AXIS_Y{ 1 };
+		const static int AXIS_Z{ 2 };
+
+		void updateEdgeList(int axis);
+		void findOverlaps(int axis);
+		void makeInterval(int axis, std::shared_ptr<PhysicsBody> gob_body);
+		std::vector<std::shared_ptr<Interval>>& getInterval(int axis);
+		std::vector<IntervalEdge>& getEdgeList(int axis);
+		std::vector<std::vector<int>>& getOverlapMatrix(int axis);
+		bool& getTraverseEdgeListBool(int axis);
+		int findIntervalIdx(int axis, std::shared_ptr<Interval> interval);
+		void BubbleSort(int axis);
+		void TraverseEdgeList(int axis);
+
+		////////////////////////////////////////
+
+		long long last_update{ 0 }, last_debug_draw{ 0 };
 		std::list<SAPEntry> sap_x;
-		glm::vec2 gravity_dir;
+		glm::vec3 gravity_dir{ 0.0f, -1.0f, 0.0f };
 
 		std::vector<std::shared_ptr<PhysicsBody>> all_physics_objects;
 
 		PhysicsManager();
 
-		std::optional<glm::vec2> checkCollisionsBetweenObjects(std::shared_ptr<PhysicsBody> a, std::shared_ptr<PhysicsBody> b);
-		//void broadPassBruteForce();
-		void narrowPass();
+		std::optional<glm::vec3> getImpulseFromCollision(std::shared_ptr<PhysicsBody> a, std::shared_ptr<PhysicsBody> b);
+
+		void runCollisionCheck();
 		void checkForCollisions();
-	};
+	private:
+	}; // end class
 	
-	//int compareSAP(Shard::SAPEntry& a, Shard::SAPEntry& b) {
-	//	return a.start - b.start;
-	//}
-}
+} // end namespace shard
