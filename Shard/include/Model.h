@@ -53,7 +53,16 @@ namespace Shard {
 		Model(std::string path);
 		~Model();
 
+		glm::vec3 position();
+		glm::vec3 rotation();
+		glm::vec3 size();
+		glm::vec3 getLastDirection();
+		glm::mat3 getRotationMatrix();
+
 		void Draw();
+		void translate(const glm::vec3& force);
+		void rotate(const float angle_deg, const glm::vec3& axis);
+		void scale(const glm::vec3& scale);
 
 		// The name of the whole model
 		std::string m_name;
@@ -74,6 +83,13 @@ namespace Shard {
 		// Vertex Array Object
 		uint32_t m_vaob;
 		bool m_hasDedicatedShader;
+
+		// merged from transform
+		glm::mat4 m_transformMatrix;
+		glm::mat4 m_lastTransformMatrix;
+		glm::vec3 m_forward;
+		glm::vec3 m_up;
+		glm::vec3 m_right;
 	};
 
 	void saveModelToOBJ(Model* model, std::string filename);

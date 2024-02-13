@@ -1,6 +1,7 @@
 #include "Model.h"
 
 #include "common.h"
+#include "Logger.h"
 
 #include <fstream>
 #include <algorithm>
@@ -8,6 +9,9 @@
 #include <sstream>
 #include <iomanip>
 #include <string>
+
+#define GLM_ENABLE_EXPERIMENTAL
+#include "gtc/matrix_transform.hpp"
 
 // DON'T REMOVE DEFINES, AND DON'T DEFINE ANYWHERE ELSE!!!!!!!!!!!!!
 #define TINYOBJLOADER_IMPLEMENTATION
@@ -127,9 +131,10 @@ namespace Shard {
 		data = stbi_load((directory + filename).c_str(), &width, &height, &components, _components);
 		if (data == nullptr)
 		{
-			std::cout << "ERROR: loadModelFromOBJ(): Failed to load texture: " << filename << " in " << directory
-				<< "\n";
-			exit(1);
+			Logger::log("ERROR: loadModelFromOBJ(): Failed to load texture: " + filename + " in " + directory, LOG_LEVEL_FATAL);
+			//std::cout << "ERROR: loadModelFromOBJ(): Failed to load texture: " << filename << " in " << directory
+			//	<< "\n";
+			//exit(1);
 		}
 		glGenTextures(1, &gl_id_internal);
 		gl_id = gl_id_internal;
@@ -153,8 +158,9 @@ namespace Shard {
 		}
 		else
 		{
-			std::cout << "Texture loading not implemented for this number of compenents.\n";
-			exit(1);
+			Logger::log("Texture loading not implemented for this number of compenents.\n", LOG_LEVEL_FATAL);
+			//std::cout << "Texture loading not implemented for this number of compenents.\n";
+			//exit(1);
 		}
 		glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
@@ -213,6 +219,11 @@ namespace Shard {
 
 	Model::Model(std::string path)
 		: m_hasDedicatedShader(false)
+		, m_transformMatrix({ 1.f })
+		, m_lastTransformMatrix({ 1.f })
+		, m_forward({ 1.f, 0, 0 })
+		, m_up({ 0, 1.f, 0})
+		, m_right({ 0, 0, 1.f})
 	{
 		std::string filename, extension, directory;
 
@@ -313,14 +324,14 @@ namespace Shard {
 			for (int face = 0; face < int(shape.mesh.indices.size()) / 3; face++)
 			{
 				glm::vec3 v0 = glm::vec3(attrib.vertices[shape.mesh.indices[face * 3 + 0].vertex_index * 3 + 0],
-					attrib.vertices[shape.mesh.indices[face * 3 + 0].vertex_index * 3 + 1],
-					attrib.vertices[shape.mesh.indices[face * 3 + 0].vertex_index * 3 + 2]);
+										 attrib.vertices[shape.mesh.indices[face * 3 + 0].vertex_index * 3 + 1],
+										 attrib.vertices[shape.mesh.indices[face * 3 + 0].vertex_index * 3 + 2]);
 				glm::vec3 v1 = glm::vec3(attrib.vertices[shape.mesh.indices[face * 3 + 1].vertex_index * 3 + 0],
-					attrib.vertices[shape.mesh.indices[face * 3 + 1].vertex_index * 3 + 1],
-					attrib.vertices[shape.mesh.indices[face * 3 + 1].vertex_index * 3 + 2]);
+										 attrib.vertices[shape.mesh.indices[face * 3 + 1].vertex_index * 3 + 1],
+										 attrib.vertices[shape.mesh.indices[face * 3 + 1].vertex_index * 3 + 2]);
 				glm::vec3 v2 = glm::vec3(attrib.vertices[shape.mesh.indices[face * 3 + 2].vertex_index * 3 + 0],
-					attrib.vertices[shape.mesh.indices[face * 3 + 2].vertex_index * 3 + 1],
-					attrib.vertices[shape.mesh.indices[face * 3 + 2].vertex_index * 3 + 2]);
+										 attrib.vertices[shape.mesh.indices[face * 3 + 2].vertex_index * 3 + 1],
+										 attrib.vertices[shape.mesh.indices[face * 3 + 2].vertex_index * 3 + 2]);
 
 				glm::vec3 e0 = glm::normalize(v1 - v0);
 				glm::vec3 e1 = glm::normalize(v2 - v0);
@@ -467,6 +478,90 @@ namespace Shard {
 		std::cout << "done.\n";
 	}
 
+	glm::vec3 Model::position() {
+		return glm::vec3(m_transformMatrix[3]);
+	}
+
+	glm::vec3 Model::rotation() {
+		// get rotation matrix from model matrix:
+		// https://math.stackexchange.com/questions/237369/given-this-transformation-matrix-how-do-i-decompose-it-into-translation-rotati
+
+		// this should cut off 4th column and 4th row
+		glm::mat3 rotMatrix = glm::mat3(getRotationMatrix());
+
+		/*
+		get euler angles from rotation matrix
+		https://stackoverflow.com/questions/1996957/conversion-euler-to-matrix-and-matrix-to-euler
+
+		rotMatrix = Ry(H)*Rx(P)*Rz(B)
+			= | cos H*cos B+sin H*sin P*sin B  cos B*sin H*sin P-sin B*cos H  cos P*sin H |
+			  |                   cos P*sin B                    cos B*cos P       -sin P |
+			  | sin B*cos H*sin P-sin H*cos B  sin H*sin B+cos B*cos H*sin P  cos P*cos H |
+
+		*/
+
+		// x = [1], y = [2], z = [3]
+		// x = P = arcsin(-rot[3][2])
+		float x = asin(-rotMatrix[2].y);
+		// y = H = arctan(rot[3][1]/rot[3][3])
+		float y = atan2(rotMatrix[2].x, rotMatrix[2].z);
+		// z = B = arctan(rot[1][2]/rot[2][2])
+		float z = atan2(rotMatrix[0].y, rotMatrix[1].y);
+
+		return { x, y, z };
+	}
+
+	glm::vec3 Model::size() {
+		return glm::vec3{
+			glm::length(glm::vec3(m_transformMatrix[0])),
+			glm::length(glm::vec3(m_transformMatrix[1])),
+			glm::length(glm::vec3(m_transformMatrix[2]))
+		};
+	}
+
+	glm::vec3 Model::getLastDirection() {
+		glm::vec3 pos = glm::vec3(m_transformMatrix[3]);
+		glm::vec3 lastPos = glm::vec3(m_lastTransformMatrix[3]);
+		return lastPos - pos;
+	}
+
+	glm::mat3 Model::getRotationMatrix() {
+		auto size = this->size();
+		return glm::mat3(
+			glm::vec3(m_transformMatrix[0] / size.x),
+			glm::vec3(m_transformMatrix[1] / size.y),
+			glm::vec3(m_transformMatrix[2] / size.z)
+		);
+	}
+
+	void Model::Draw() {
+		glBindVertexArray(m_vaob);
+		for (auto& mesh : m_meshes)
+			glDrawArrays(GL_TRIANGLES, mesh.m_start_index, (GLsizei)mesh.m_number_of_vertices);
+		glBindVertexArray(0);
+	}
+
+	void Model::translate(const glm::vec3& force) {
+		m_lastTransformMatrix = m_transformMatrix;
+		m_transformMatrix = glm::translate(m_transformMatrix, force);
+	}
+
+	// why is the angle in degrees and not radians? very bad!!
+	void Model::rotate(const float angle_deg, const glm::vec3& axis) {
+		m_transformMatrix = glm::rotate(m_transformMatrix, angle_deg, axis);
+		glm::mat3 rot = getRotationMatrix();
+
+		// we also need to rotate the axis vectors of the transform
+		// TDIL this is fucked, unlucky
+		m_forward = glm::normalize(rot * glm::vec3{ 1.f, 0, 0 });
+		m_up = glm::normalize(rot * glm::vec3{ 0, 1.f, 0 });
+		m_right = glm::normalize(rot * glm::vec3{ 0, 0, 1.f });
+	}
+
+	void Model::scale(const glm::vec3& scale) {
+		m_transformMatrix = glm::scale(m_transformMatrix, scale);
+	}
+
 	void saveModelMaterialsToMTL(Model* model, std::string filename)
 	{
 		///////////////////////////////////////////////////////////////////////
@@ -561,13 +656,6 @@ namespace Shard {
 				vertex_counter += 3;
 			}
 		}
-	}
-
-	void Model::Draw() {
-		glBindVertexArray(m_vaob);
-		for (auto& mesh : m_meshes)
-			glDrawArrays(GL_TRIANGLES, mesh.m_start_index, (GLsizei)mesh.m_number_of_vertices);
-		glBindVertexArray(0);
 	}
 
 	///////////////////////////////////////////////////////////////////////

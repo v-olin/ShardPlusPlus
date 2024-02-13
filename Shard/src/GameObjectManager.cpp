@@ -11,7 +11,7 @@ namespace Shard{
 	void GameObjectManager::removeGameObject(std::shared_ptr<GameObject> obj){
 		auto iter = this->myObjects.begin();
 		while (++iter != this->myObjects.end()) {
-			if (obj->body_ == (*iter)->body_) {
+			if (obj->m_body == (*iter)->m_body) {
 				this->myObjects.erase(iter);
 				return;
 			}
@@ -50,7 +50,7 @@ namespace Shard{
 		for (auto& gob : this->myObjects) {
 			gob->update();
 			gob->checkDestroyMe();
-			if (gob->to_be_destroyed_)
+			if (gob->m_toBeDestroyed)
 				to_be_deleted.push_back(gob);
 		}
 
@@ -65,7 +65,7 @@ namespace Shard{
 
 	void GameObjectManager::cleanup() {
 		for (auto& gob : to_be_deleted) {
-			PhysicsManager::getInstance().removePhysicsObject(gob->body_);
+			PhysicsManager::getInstance().removePhysicsObject(gob->m_body);
 
 			std::shared_ptr<InputListener> listener =
 				std::dynamic_pointer_cast<InputListener>(gob);
@@ -74,7 +74,7 @@ namespace Shard{
 			listener = nullptr;
 			gob->killMe();
 			std::erase(myObjects, gob); // inefficient af.
-			gob->body_ = nullptr;
+			gob->m_body = nullptr;
 
 			// we need to make sure that the physicsmanager knows that we have deleted some gameObjects
 			// to do this, start with tracking from creation of game object and list all places where the pointer to that object is stored

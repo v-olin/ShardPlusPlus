@@ -59,18 +59,20 @@ namespace Shard {
 		auto& gobs = GameObjectManager::getInstance().getObjects();
 
 		for (std::shared_ptr<GameObject> gob : gobs) {
-			if (!gob->model->m_hasDedicatedShader) [[likely]] {
+			if (!gob->m_model->m_hasDedicatedShader) [[likely]] {
 				configureDefaultShader();
 			}
 
 			// this is fucked up
-			glm::mat4 modelMatrix = gob->body_->trans->transformMatrix;
+			// glm::mat4 modelMatrix = gob->body_->trans->transformMatrix;
+			// much better :^)
+			glm::mat4 modelMatrix = gob->m_model->m_transformMatrix;
 			glm::mat4 viewMatrix = m_sceneManager.getCameraViewMatrix();
 			glm::mat4 mvpMatrix = m_projectionMatrix * viewMatrix * modelMatrix;
 
 			const GLuint defShader = m_shaderManager.getDefaultShader();
 			m_shaderManager.SetMat4x4(defShader, mvpMatrix, "u_MVP");
-			gob->model->Draw();
+			gob->m_model->Draw();
 
 			if (m_drawColliders) {
 				drawCollider(gob);
@@ -80,11 +82,10 @@ namespace Shard {
 
 	void Renderer::drawCollider(std::shared_ptr<GameObject> toDraw) {
 		return;
-		// this is a problem for another day
-		// very bad!!
-		auto transform = toDraw->body_->trans;
-		glm::vec3 position = transform->position();
-		glm::vec3 size = transform->size();
+		// this is a problem for another day, very bad!!
+		// auto transform = toDraw->body_->trans;
+		// glm::vec3 position = transform->position();
+		// glm::vec3 size = transform->size();
 	}
 
 	void Renderer::configureDefaultShader() {

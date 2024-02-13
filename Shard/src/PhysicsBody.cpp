@@ -11,64 +11,96 @@
 
 #include "GameObject.h"
 
+#define FLOAT_MAX std::numeric_limits<float>::max()
+#define FLOAT_MIN std::numeric_limits<float>::min()
+
 namespace Shard {
 	PhysicsBody::PhysicsBody()
-		: trans(std::make_shared<Transform>())
-	{
-	}
+		: m_drag(0.f)
+		, m_mass(0.f)
+		, m_angularDrag(0.f)
+		, m_maxForce({ FLOAT_MAX, FLOAT_MAX, FLOAT_MAX })
+		, m_maxTorque({ FLOAT_MIN, FLOAT_MIN, FLOAT_MIN }) // why isn't this max? very bad!!
+		, m_isKinematic(false)
+		, m_passThrough(false)
+		, m_usesGravity(false)
+		, m_stopOnCollision(true)
+		, m_reflectOnCollision(false)
+		, m_impartForce(false)
+		, m_parent(nullptr)
+		, m_collider(nullptr)
+		, m_bodyModel(nullptr)
+		, m_debugColor(1.f)
+		, m_force(0.f)
+		, m_torque(0.f)
+		, m_timeInterval(0)
+	{ }
 
-	PhysicsBody::PhysicsBody(std::shared_ptr<GameObject> game_obj)
-		: parent(game_obj)
-		, trans(std::make_shared<Transform>())
-		, debug_color({ 0.0f, 1.0f, 0.0f })
-	{
-		time_interval_ = PhysicsManager::getInstance().time_interval;
-	}
+	PhysicsBody::PhysicsBody(std::shared_ptr<GameObject> gameObj)
+		: m_drag(0.f)
+		, m_mass(0.f)
+		, m_angularDrag(0.f)
+		, m_maxForce({ FLOAT_MAX, FLOAT_MAX, FLOAT_MAX })
+		, m_maxTorque({ FLOAT_MIN, FLOAT_MIN, FLOAT_MIN }) // why isn't this max? very bad!!
+		, m_isKinematic(false)
+		, m_passThrough(false)
+		, m_usesGravity(false)
+		, m_stopOnCollision(true)
+		, m_reflectOnCollision(false)
+		, m_impartForce(false)
+		, m_parent(gameObj)
+		, m_collider(nullptr)
+		, m_bodyModel(gameObj->m_model)
+		, m_debugColor({ 0.0f, 1.0f, 0.0f })
+		, m_force(0.f)
+		, m_torque(0.f)
+		, m_timeInterval(PhysicsManager::getInstance().time_interval)
+	{ }
 
 	void PhysicsBody::applyGravity(glm::vec3 dir, const float multiplier) {
 		addForce(dir * multiplier);
 	}
 
 	void PhysicsBody::draw() {
-		collider->draw(debug_color);
+		//m_collider->draw(m_debugColor);
 	}
 
-	void PhysicsBody::addTorque(glm::vec3 how_much) {
-		if (is_kinematic)
+	void PhysicsBody::addTorque(glm::vec3 howMuch) {
+		if (m_isKinematic)
 			return;
 
-		torque += how_much;
+		m_torque += howMuch;
 
 		// Cap to maximum torque if needed
 		//torque = std::min(torque, max_torque);
 		//torque = std::max(torque, -max_torque);
-		
-		torque.x = std::min(torque.x, max_torque.x);
-		torque.x = std::min(torque.y, max_torque.y);
-		torque.z = std::min(torque.z, max_torque.z);
+
+		m_torque.x = std::min(m_torque.x, m_maxTorque.x);
+		m_torque.x = std::min(m_torque.y, m_maxTorque.y);
+		m_torque.z = std::min(m_torque.z, m_maxTorque.z);
 
 		// Cap to minimum torque if needed
-		torque.x = std::max(-max_torque.x, torque.x);
-		torque.y = std::max(-max_torque.y, torque.y);
-		torque.z = std::max(-max_torque.z, torque.z);
+		m_torque.x = std::max(-m_maxTorque.x, m_torque.x);
+		m_torque.y = std::max(-m_maxTorque.y, m_torque.y);
+		m_torque.z = std::max(-m_maxTorque.z, m_torque.z);
 
 	}
 
 	void PhysicsBody::reverseForces(const float prop) {
-		if (is_kinematic)
+		if (m_isKinematic)
 			return;
 
-		force *= -prop;
+		m_force *= -prop;
 	}
 
-	void PhysicsBody::impartForces(std::shared_ptr<PhysicsBody> other, const float mass_prop) {
-		other->addForce(this->force * mass_prop);
+	void PhysicsBody::impartForces(std::shared_ptr<PhysicsBody> other, const float massProp) {
+		other->addForce(this->m_force * massProp);
 
 		recalculateColliders();
 	}
 
 	void PhysicsBody::stopForces() {
-		force = glm::vec3(0, 0, 0);
+		m_force = glm::vec3(0, 0, 0);
 	}
 
 	void PhysicsBody::reflectForces(glm::vec3 impulse) {
@@ -78,11 +110,11 @@ namespace Shard {
 		reflect.y = impulse.y > 0 ? 1.f : -1.f;
 		reflect.z = impulse.z > 0 ? 1.f : -1.f;
 
-		force *= reflect;
+		m_force *= reflect;
 	}
 
 	void PhysicsBody::reduceForces(const float prop) {
-		force *= prop;
+		m_force *= prop;
 	}
 
 	void PhysicsBody::addForce(glm::vec3 dir, const float force) {
@@ -90,65 +122,66 @@ namespace Shard {
 	}
 
 	void PhysicsBody::addForce(glm::vec3 incoming_force) {
-		if (is_kinematic)
+		if (m_isKinematic)
 			return;
 
 		// TODO: double check if correct?
-		incoming_force /= mass;
+		incoming_force /= m_mass;
 		if (glm::length2(incoming_force) < 0.0001)
 			return;
 
-		force += incoming_force;
+		m_force += incoming_force;
 
 		// Cap the force
-		force.x = std::min(force.x, max_force.x);
-		force.y = std::min(force.y, max_force.y);
-		force.z = std::min(force.z, max_force.z);
-
+		m_force.x = std::min(m_force.x, m_maxForce.x);
+		m_force.y = std::min(m_force.y, m_maxForce.y);
+		m_force.z = std::min(m_force.z, m_maxForce.z);
 	}
 
 	void PhysicsBody::recalculateColliders() {
-		collider->recalculateBoundingBox();
+		m_collider->recalculateBoundingBox();
 	}
 
 	void PhysicsBody::physicsTick() {
 		std::vector<glm::vec2> toRemove;
-		float rotx = torque.x;
-		float roty = torque.y;
-		float rotz = torque.z;
+		float rotx = m_torque.x;
+		float roty = m_torque.y;
+		float rotz = m_torque.z;
 
 		static auto get_sign_bit = [](float n) {
 			return n == 0 ? 0 : (n > 0 ? 1 : -1);
 		};
 
 		static auto apply_drag = [&](float drag, int idx) {
-			float val = torque[idx];
-			torque[idx] -= get_sign_bit(val) * drag;
+			float val = m_torque[idx];
+			m_torque[idx] -= get_sign_bit(val) * drag;
 		};
 
-		apply_drag(angular_drag.x, 0);
-		apply_drag(angular_drag.y, 1);
-		apply_drag(angular_drag.z, 2);
+		apply_drag(m_angularDrag.x, 0);
+		apply_drag(m_angularDrag.y, 1);
+		apply_drag(m_angularDrag.z, 2);
 
-		trans->rotate(torque.x, glm::vec3{1.0, 0.0, 0.0});
-		trans->rotate(torque.y, glm::vec3{0.0, 1.0, 0.0});
-		trans->rotate(torque.z, glm::vec3{0.0, 0.0, 1.0});
+		m_bodyModel->rotate(m_torque.x, glm::vec3{1.0, 0.0, 0.0});
+		m_bodyModel->rotate(m_torque.y, glm::vec3{0.0, 1.0, 0.0});
+		m_bodyModel->rotate(m_torque.z, glm::vec3{0.0, 0.0, 1.0});
 
-		float force_mag = glm::length(force);
-		trans->translate(force);
+		float force_mag = glm::length(m_force);
 
-		if (force_mag < drag) {
+		// TODO: shouldn't this be done after line 177? very bad!!
+		m_bodyModel->translate(m_force);
+
+		if (force_mag < m_drag) {
 			stopForces();
 		}
 		else if (force_mag > 0) {
 			// TODO: Make sure below is correct from force = (force / force_mag) * (force_mag - drag); to vvvvvvvv
-			force = glm::normalize(force) * (force_mag - drag);
+			m_force = glm::normalize(m_force) * (force_mag - m_drag);
 		}
 	}
 
 	void PhysicsBody::setBoxCollider() {
-		auto handler = std::dynamic_pointer_cast<CollisionHandler>(parent);
-		collider = std::make_shared<ColliderBox>(handler, trans->shared_from_this());
+		auto handler = std::dynamic_pointer_cast<CollisionHandler>(m_parent);
+		m_collider = std::make_shared<ColliderBox>(handler, m_bodyModel);
 	}
 
 	//void PhysicsBody::setBoxCollider(float x, float y, float z, float w, float h, float d) {
@@ -157,7 +190,11 @@ namespace Shard {
 	//}
 
 	std::optional<glm::vec2> PhysicsBody::checkCollision(Ray& ray) {
-		std::optional<glm::vec2> dir{ collider->checkCollision(ray) };
+		// if fix :^)
+		return m_collider->checkCollision(ray);
+
+		// TODO: why can't we just return dir? it is also optional. very bad!!
+		std::optional<glm::vec2> dir{ m_collider->checkCollision(ray) };
 		if (dir.has_value())
 			return dir.value();
 

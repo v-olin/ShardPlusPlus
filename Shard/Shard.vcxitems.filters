@@ -130,9 +130,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)include\TextureManager.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)include\Transform.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glad\include\KHR\khrplatform.h">
       <Filter>vendor\glad\include\KHR</Filter>
     </ClInclude>
@@ -980,9 +977,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)src\TextureManager.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)src\Transform.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\glad\glad.c">
