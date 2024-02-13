@@ -26,7 +26,7 @@ namespace Shard {
 		bool m_impartForce;
 
 		std::shared_ptr<GameObject> m_parent;
-		std::shared_ptr<ColliderBox> m_collider;
+		std::shared_ptr<Collider> m_collider;
 		std::shared_ptr<Model> m_bodyModel;
 		glm::vec3 m_debugColor;
 
