@@ -931,6 +931,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\tiny_obj\include\tiny_obj_loader.h">
       <Filter>vendor\tiny_obj\include</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\Renderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)src\AssetManager.cpp">
@@ -990,5 +991,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\glm\detail\glm.cpp">
       <Filter>vendor\glm\detail</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\Renderer.cpp" />
   </ItemGroup>
 </Project>

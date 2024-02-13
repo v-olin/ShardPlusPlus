@@ -5,16 +5,24 @@
 #include <memory>
 #include <vector>
 
-class Camera;
-class Model;
+//class Camera;
+//class Model;
 
 namespace Shard {
 
 	class SceneManager {
 	public:
-		void Draw();
+		static SceneManager& getInstance();
+
+		SceneManager(SceneManager const&) = delete;
+		SceneManager& operator=(SceneManager const&) = delete;
+
+		//void Draw();
+		glm::mat4 getCameraViewMatrix();
+
 	private:
-		Camera camera{};
+		SceneManager() = default;
+		Camera camera;
 	};
 
 }

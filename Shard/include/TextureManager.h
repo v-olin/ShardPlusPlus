@@ -11,7 +11,7 @@ namespace Shard {
 
 	class TextureManager {
 	public:
-		TextureManager& getInstance();
+		static TextureManager& getInstance();
 
 		TextureManager(TextureManager const&) = delete;
 		TextureManager& operator=(TextureManager const&) = delete;

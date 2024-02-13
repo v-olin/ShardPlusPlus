@@ -6,6 +6,9 @@
 #include "Logger.h"
 #include "BaseFunctionality.h"
 #include "GameObjectManager.h"
+#include "TextureManager.h"
+#include "ShaderManager.h"
+#include "Renderer.h"
 
 #include <chrono>
 #include <filesystem>
@@ -225,7 +228,11 @@ namespace Shard {
 
         phys_debug = getEnvironmentVariable("physics_debug") == "1";
 
-        SceneManager sm{};
+        //SceneManager sm{};
+        SceneManager& sm = SceneManager::getInstance();
+        TextureManager& tm = TextureManager::getInstance();
+        ShaderManager& shm = ShaderManager::getInstance();
+        Renderer renderer{ sm, tm, shm, m_Window };
 
         glEnable(GL_DEPTH_TEST);
         glDisable(GL_CULL_FACE);
@@ -264,21 +271,24 @@ namespace Shard {
 					GameObjectManager::getInstance().physicsUpdate();
 				}
 
-				if (phys_debug) {
-					phys.drawDebugColliders();
-				}
+                // physicsmanager should not do this, very bad!!
+				//if (phys_debug) {
+				//	// phys.drawDebugColliders();
+				//}
 
                 /////////////////
                 // Render shit //
                 /////////////////
 
-                glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                // this is now part of render()
+                // glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+                // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
                 // Render code goes here
-                sm.Draw();
+                renderer.render();
+                // this is now part of render()
+                //glfwSwapBuffers(m_Window); 
 
-                glfwSwapBuffers(m_Window);
                 glfwPollEvents();
 
                 //////////////////////////////////////

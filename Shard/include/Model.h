@@ -8,7 +8,7 @@
 
 namespace Shard {
 
-	struct  Texture {
+	struct Texture {
 		bool valid = false;
 		uint32_t gl_id = 0;
 		uint32_t gl_id_internal = 0;
@@ -24,8 +24,7 @@ namespace Shard {
 
 	};
 
-	struct  Material
-	{
+	struct Material	{
 		std::string m_name;
 		glm::vec3 m_color;
 		float m_shininess;
@@ -41,8 +40,7 @@ namespace Shard {
 		Texture m_emission_texture;
 	};
 
-	struct  Mesh
-	{
+	struct Mesh	{
 		std::string m_name;
 		uint32_t m_material_idx;
 		// Where this Mesh's vertices start
@@ -50,8 +48,7 @@ namespace Shard {
 		uint32_t m_number_of_vertices;
 	};
 
-	class  Model
-	{
+	class Model	{
 	public:
 		Model(std::string path);
 		~Model();
@@ -76,10 +73,13 @@ namespace Shard {
 		uint32_t m_texture_coordinates_bo;
 		// Vertex Array Object
 		uint32_t m_vaob;
+		bool m_hasDedicatedShader;
 	};
 
 	void saveModelToOBJ(Model* model, std::string filename);
 	void saveModelMaterialsToMTL(Model* model, std::string filename);
+
+	// no implementation, very bad!!
 	void freeModel(Model* model);
 	void render(const Model* model, const bool submitMaterials = true);
 

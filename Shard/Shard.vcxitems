@@ -32,6 +32,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Model.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\PhysicsBody.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\PhysicsManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\Renderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\SAPEntry.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\SceneManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\ShaderManager.h" />
@@ -319,6 +320,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Model.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\PhysicsBody.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\PhysicsManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\Renderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\SceneManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\ShaderManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\TextureManager.cpp" />

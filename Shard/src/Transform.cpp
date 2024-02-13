@@ -50,15 +50,6 @@ namespace Shard {
         };
     }
 
-    /*
-    glm::vec3 Transform::scale() {
-        glm::vec3 col1{ transformMatrix[0][0], transformMatrix[0][1], transformMatrix[0][2] };
-        glm::vec3 col2{ transformMatrix[1][0], transformMatrix[1][1], transformMatrix[1][2] };
-        glm::vec3 col3{ transformMatrix[2][0], transformMatrix[2][1], transformMatrix[2][2] };
-        return { glm::length(col1), glm::length(col2), glm::length(col3) };
-    }
-    */
-
     glm::vec3 Transform::rotation() {
         // get rotation matrix from model matrix:
         // https://math.stackexchange.com/questions/237369/given-this-transformation-matrix-how-do-i-decompose-it-into-translation-rotati

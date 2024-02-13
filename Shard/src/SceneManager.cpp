@@ -10,6 +10,12 @@ namespace fs = std::filesystem;
 
 namespace Shard {
 
+	SceneManager& SceneManager::getInstance() {
+		static SceneManager instance;
+		return instance;
+	}
+
+	/*
 	void SceneManager::Draw() {
 		auto P = glm::perspective(20.0f, (float)1280/(float)760, 1.0f, 100.0f);
 		auto V = camera.viewMatrix();
@@ -30,7 +36,7 @@ namespace Shard {
 			// :)
 			camera.pos = gob->body_->trans->position() + glm::vec3{ 0.0f, 20.0f, 0.0f } + gob->body_->trans->forward * 20.0f;
 			camera.front = -gob->body_->trans->forward;
-			auto mat = glm::rotate(glm::radians(20.0f), glm::vec3{0.0f, 0.0f, 1.0f});
+			glm::mat4 mat = glm::rotate(glm::radians(20.0f), glm::vec3{0.0f, 0.0f, 1.0f});
 			auto mat2 = mat * glm::vec4(camera.front, 1.0f);
 			camera.front = glm::vec3(mat2);
 			camera.up = glm::vec3(mat * glm::vec4{ 0.0f, 1.0f, 0.0f, 0.0f });
@@ -44,7 +50,11 @@ namespace Shard {
 		}
 		
 		glUseProgram(0);
+	}
+	*/
 
+	glm::mat4 SceneManager::getCameraViewMatrix() {
+		return camera.viewMatrix();
 	}
 
 

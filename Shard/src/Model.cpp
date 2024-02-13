@@ -212,6 +212,7 @@ namespace Shard {
 
 
 	Model::Model(std::string path)
+		: m_hasDedicatedShader(false)
 	{
 		std::string filename, extension, directory;
 
