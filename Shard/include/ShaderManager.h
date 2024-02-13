@@ -13,7 +13,7 @@ namespace Shard {
 	class ShaderManager {
 	public:
 
-		GLuint loadShader(std::string vert_path, std::string frag_path, bool allow_errors);
+		GLuint loadShader(std::string shader_name, bool allow_errors);
 
 		GLuint getShader(std::string shader_name) { 
 			return m_Shaders[shader_name];  

@@ -13,26 +13,11 @@ namespace Shard {
 		auto PV = P * V;
 		auto PVM = PV;
 		
-		auto base_dir = fs::current_path();
-		base_dir = base_dir.parent_path().append("Shard");
-		base_dir = 	base_dir.append("res");
-		base_dir = base_dir.append("shaders");
-		auto copy = base_dir.string();
-
-		copy += "//default.frag";
-		base_dir = base_dir.append("default.vert");
-
-
-
-
 		ShaderManager sm{};
-		//GLuint shader_id = sm.loadShader(base_dir.string(), copy, false);
-	
-		GLuint shader_id = sm.loadShader("C:/Chalmers/MPALG1/LP3/Spelmotor/ShardPlusPlus/Shard/res/shaders/default.vert", "C:/Chalmers/MPALG1/LP3/Spelmotor/ShardPlusPlus/Shard/res/shaders/default.frag", false);
+		GLuint shader_id = sm.loadShader("default", false);
 		sm.current_shader_id = shader_id;
 
 		glUseProgram(shader_id);
-
 
 		auto& gobs = GameObjectManager::getInstance().getObjects();
 		for (auto &gob : gobs) {

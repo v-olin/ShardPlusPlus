@@ -4,52 +4,26 @@
 #include "gtc/type_ptr.hpp"
 
 #include <fstream>
-#include <sstream>
 
 namespace Shard {
 
-	GLuint ShaderManager::loadShader(std::string vert_path, std::string frag_path, bool allow_errors) {
+	GLuint ShaderManager::loadShader(std::string shader_name, bool allow_errors) {
+
+		std::string path_vertex_shader = "../Shard/res/shaders/" + shader_name + ".vert";
+		std::string path_fragment_shader = "../Shard/res/shaders/" + shader_name + ".frag";
+
+		std::ifstream vs_file(path_vertex_shader);
+		std::string vs_src((std::istreambuf_iterator<char>(vs_file)), std::istreambuf_iterator<char>());
+
+		std::ifstream fs_file(path_fragment_shader);
+		std::string fs_src((std::istreambuf_iterator<char>(fs_file)), std::istreambuf_iterator<char>());
+
+		const char* vs = vs_src.c_str();
+		const char* fs = fs_src.c_str();
+
 		GLuint v_shader = glCreateShader(GL_VERTEX_SHADER);
 		GLuint f_shader = glCreateShader(GL_FRAGMENT_SHADER);
 
-		std::ifstream vs_file(vert_path);
-		std::string vs_src((std::istreambuf_iterator<char>(vs_file)), std::istreambuf_iterator<char>());
-
-		std::ifstream fs_file(vert_path);
-		std::string fs_src((std::istreambuf_iterator<char>(fs_file)), std::istreambuf_iterator<char>());
-
-		//const char* vs = vs_src.c_str();
-		//const char* fs = fs_src.c_str();
-		const char* vs = R"(
-    #version 420
-
-    layout (location = 0) in vec3 position;
-    layout (location = 1) in vec3 normal;
-    layout (location = 2) in vec2 texCoord;
-
-    uniform mat4 u_MVP;
-
-    out vec3 normal_;
-    out vec2 texCoord_;
-
-    void main() {
-        gl_Position = u_MVP * vec4(position, 1.0);
-        normal_ = normal;
-        texCoord_ = texCoord;
-    }
-)";
-		const char*  fs = R"(
-    #version 420
-
-    in vec3 normal_;
-    in vec2 texCoord_;
-
-    out vec4 FragColor;
-
-    void main() {
-        FragColor = vec4(1.0);
-    }
-)";
 		glShaderSource(v_shader, 1, &vs, nullptr);
 		glShaderSource(f_shader, 1, &fs, nullptr);
 
