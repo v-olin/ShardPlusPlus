@@ -156,7 +156,7 @@ namespace Shard {
 
 	bool PhysicsManager::willTick() {
 		// TODO: remove when not testing
-		return true;
+		//return true;
 		return Bootstrap::getCurrentMillis() - last_update > time_interval;
 	}
 

@@ -25,8 +25,38 @@ void Car::fireBullet() {
 }
 
 void Car::handleEvent(Shard::InputEvent ev, Shard::EventType et) {
-    //Shard::Logger::log("handleEvent in ship");
-   }
+
+    if (et == Shard::EventType::KeyDown)
+    {
+        if (ev.key == GLFW_KEY_W)
+            up = true;
+
+        if (ev.key == GLFW_KEY_S)
+            down = true;
+
+        if (ev.key == GLFW_KEY_A)
+            turn_left = true;
+
+        if (ev.key == GLFW_KEY_D)
+            turn_right = true;
+
+    }
+    else if (et == Shard::EventType::KeyUp)
+    {
+        if (ev.key == GLFW_KEY_W)
+            up = false;
+
+        if (ev.key == GLFW_KEY_S)
+            down = false;
+
+        if (ev.key == GLFW_KEY_A)
+            turn_left = false;
+
+        if (ev.key == GLFW_KEY_D)
+            turn_right = false;
+    }
+
+}
 
 void Car::initialize() {
 
@@ -41,8 +71,8 @@ void Car::initialize() {
 	up = false;
 	down = false;
 	body_->mass = 1.f;
-	//body_->max_force = 1000.f;
-	//body_->angular_drag = 0.01f;
+    body_->max_force = glm::vec3{ 0.2f };
+    body_->angular_drag = glm::vec3{ 0.01f };
 	body_->drag = 0.1f;
 	body_->stop_on_collision = true;
 	body_->reflect_on_collision = true;
@@ -58,6 +88,7 @@ void Car::initialize() {
     
     GameObject::addTag("Car");
     Shard::GameObjectManager::getInstance().addGameObject(shared_from_this());
+    //Shard::Bootstrap::getInput().addListeners(shared_from_this());
 }
 
 void Car::update() {
@@ -66,20 +97,15 @@ void Car::update() {
 }
 
 void Car::physicsUpdate() {
-    //we need to change drag and the force/torque we add depending on the framerate
-    auto frames = Shard::Bootstrap::getFPS();
-    //50 frames: angular_drag = .01, drag = .1, torque = .3, force = .25/-.05
-    //body_->angular_drag = frames / 3000;
-    //body_->drag = frames / 500;
+    if (turn_left)
+        body_->addTorque({ 0.0f, 0.1f, 0.0f });
+    if (turn_right)
+        body_->addTorque({ 0.0f, -0.1f, 0.0f });
+    if (up)
+        body_->addForce(body_->trans->forward, 0.1f);
 
-    //if (turn_left)
-    //    body_->addTorque(-0.3f);
-    //if (turn_right)
-    //    body_->addTorque(0.3f);
-    //if (up)
-    //    body_->addForce(body_->trans->forward, 0.5f);
-    //if (down)
-    //    body_->addForce(body_->trans->forward, -0.2f);
+    if (down)
+        body_->addForce(body_->trans->forward, -0.1f);
 }
 
 void Car::prePhysicsUpdate() {

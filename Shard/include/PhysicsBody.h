@@ -40,7 +40,7 @@ namespace Shard {
 		void applyGravity(glm::vec3 dir, const float multiplier);
 		void draw();
 		glm::vec2 getMinAndMax(const bool x);
-		void addTorque(const float dir);
+		void addTorque(glm::vec3 torque);
 		void reverseForces(const float prop);
 		void impartForces(std::shared_ptr<PhysicsBody> other, const float massProp);
 		void stopForces();

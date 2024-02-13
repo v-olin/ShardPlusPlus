@@ -65,6 +65,7 @@ void GameTest::update() {
 void GameTest::createCar() {
 	car = std::make_shared<Car>();
 	car->initialize();
+	Shard::Bootstrap::getInput().addListeners(car);
 }
 
 void GameTest::initalize() {

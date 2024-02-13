@@ -33,21 +33,24 @@ namespace Shard {
 		collider->draw(debug_color);
 	}
 
-	void PhysicsBody::addTorque(const float dir) {
+	void PhysicsBody::addTorque(glm::vec3 how_much) {
 		if (is_kinematic)
 			return;
 
-		torque += dir / mass;
+		torque += how_much;
 
 		// Cap to maximum torque if needed
+		//torque = std::min(torque, max_torque);
+		//torque = std::max(torque, -max_torque);
+		
 		torque.x = std::min(torque.x, max_torque.x);
 		torque.x = std::min(torque.y, max_torque.y);
-		torque.x = std::min(torque.z, max_torque.z);
+		torque.z = std::min(torque.z, max_torque.z);
 
 		// Cap to minimum torque if needed
 		torque.x = std::max(-max_torque.x, torque.x);
 		torque.y = std::max(-max_torque.y, torque.y);
-		torque.y = std::max(-max_torque.z, torque.z);
+		torque.z = std::max(-max_torque.z, torque.z);
 
 	}
 
@@ -91,8 +94,8 @@ namespace Shard {
 			return;
 
 		// TODO: double check if correct?
-		force /= mass;
-		if (glm::length2(force) < 0.0001)
+		incoming_force /= mass;
+		if (glm::length2(incoming_force) < 0.0001)
 			return;
 
 		force += incoming_force;

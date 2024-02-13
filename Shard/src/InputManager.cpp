@@ -53,7 +53,7 @@ namespace Shard {
 	void InputManager::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
 		InputManager* input_manager = reinterpret_cast<InputManager*>(glfwGetWindowUserPointer(window));
-
+		
 		InputEvent ie;
 		ie.key = key;
 		EventType type = action == GLFW_PRESS ? KeyDown : KeyUp;
