@@ -27,7 +27,7 @@ namespace Shard {
 
 		std::shared_ptr<GameObject> m_parent;
 		std::shared_ptr<Collider> m_collider;
-		std::shared_ptr<Model> m_bodyModel;
+		std::shared_ptr<Model> m_bodyModel; // this is double pointy, very bad!!
 		glm::vec3 m_debugColor;
 
 		PhysicsBody();
@@ -54,7 +54,7 @@ namespace Shard {
 		void physicsTick();
 		void setBoxCollider();
 		// TODO: this should be const reference!!
-		std::optional<glm::vec2> checkCollision(Ray& ray);
+		std::optional<glm::vec3> checkCollision(Ray& ray);
 
 		bool operator==(PhysicsBody& other){
 			return m_parent == other.m_parent;

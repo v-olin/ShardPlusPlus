@@ -280,15 +280,10 @@ namespace Shard {
                 // Render shit //
                 /////////////////
 
-                // this is now part of render()
-                // glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-                // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
                 // Render code goes here
                 renderer.render();
-                // this is now part of render()
-                //glfwSwapBuffers(m_Window); 
 
+                // this should be done in InputManager, very bad!!
                 glfwPollEvents();
 
                 //////////////////////////////////////

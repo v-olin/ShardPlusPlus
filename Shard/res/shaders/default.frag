@@ -2,9 +2,10 @@
 
 in vec3 normal_;
 in vec2 texCoord_;
+uniform vec3 colorIn;
 
 out vec4 FragColor;
 
 void main() {
-	FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+	FragColor.rgb = colorIn;
 }

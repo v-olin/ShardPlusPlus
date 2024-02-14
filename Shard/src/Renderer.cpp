@@ -28,7 +28,7 @@ namespace Shard {
 
 		// i have no fucking idea what this does (???)
 		// stolen from old codebase
-		glClearColor(0.2f, 0.2f, 0.8f, 1.0f);
+		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		drawScene();
@@ -66,15 +66,19 @@ namespace Shard {
 			// this is fucked up
 			// glm::mat4 modelMatrix = gob->body_->trans->transformMatrix;
 			// much better :^)
-			glm::mat4 modelMatrix = gob->m_model->m_transformMatrix;
+			glm::mat4 modelMatrix = gob->m_model->getModelMatrix();
 			glm::mat4 viewMatrix = m_sceneManager.getCameraViewMatrix();
 			glm::mat4 mvpMatrix = m_projectionMatrix * viewMatrix * modelMatrix;
 
 			const GLuint defShader = m_shaderManager.getDefaultShader();
-			m_shaderManager.SetMat4x4(defShader, mvpMatrix, "u_MVP");
+			if (!gob->m_model->m_hasDedicatedShader) [[likely]] {
+				m_shaderManager.SetMat4x4(defShader, mvpMatrix, "u_MVP");
+			}
+
+
 			gob->m_model->Draw();
 
-			if (m_drawColliders) {
+			if (m_drawColliders) { // if debug
 				drawCollider(gob);
 			}
 		}

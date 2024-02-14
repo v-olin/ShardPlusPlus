@@ -29,10 +29,10 @@ void Car::handleEvent(Shard::InputEvent ev, Shard::EventType et) {
     if (et == Shard::EventType::KeyDown)
     {
         if (ev.key == GLFW_KEY_W)
-            up = true;
+            forward = true;
 
         if (ev.key == GLFW_KEY_S)
-            down = true;
+            backward = true;
 
         if (ev.key == GLFW_KEY_A)
             turn_left = true;
@@ -40,20 +40,31 @@ void Car::handleEvent(Shard::InputEvent ev, Shard::EventType et) {
         if (ev.key == GLFW_KEY_D)
             turn_right = true;
 
+        if (ev.key == GLFW_KEY_LEFT_CONTROL)
+            pitch_up = true;
+
+        if (ev.key == GLFW_KEY_LEFT_SHIFT)
+            pitch_down = true;
     }
     else if (et == Shard::EventType::KeyUp)
     {
         if (ev.key == GLFW_KEY_W)
-            up = false;
+            forward = false;
 
         if (ev.key == GLFW_KEY_S)
-            down = false;
+            backward = false;
 
         if (ev.key == GLFW_KEY_A)
             turn_left = false;
 
         if (ev.key == GLFW_KEY_D)
             turn_right = false;
+
+        if (ev.key == GLFW_KEY_LEFT_CONTROL)
+            pitch_up = false;
+
+        if (ev.key == GLFW_KEY_LEFT_SHIFT)
+            pitch_down = false;
     }
 
 }
@@ -68,11 +79,16 @@ void Car::initialize() {
 
     // if you move this stuff above transform_ init ^ then colliders will not be drawn
     // why? ... you figure it out!
-	up = false;
-	down = false;
+	forward = false;
+	backward = false;
+    turn_left = false;
+    turn_right = false;
+    pitch_down = false;
+    pitch_up = false;
 	m_body->m_mass = 1.f;
     m_body->m_maxForce = glm::vec3{ 0.2f };
     m_body->m_angularDrag = glm::vec3{ 0.01f };
+    m_body->m_maxTorque = glm::vec3{ 10.0f, 10.0f, 10.0f };
 	m_body->m_drag = 0.1f;
 	m_body->m_stopOnCollision = true;
 	m_body->m_reflectOnCollision = true;
@@ -107,14 +123,17 @@ void Car::update() {
 
 void Car::physicsUpdate() {
     if (turn_left)
-        m_body->addTorque({ 0.0f, 0.1f, 0.0f });
+        m_body->addTorque({ 0, 0.1f, 0 });
     if (turn_right)
-        m_body->addTorque({ 0.0f, -0.1f, 0.0f });
-    if (up)
+        m_body->addTorque({ 0, -0.1f, 0 });
+    if (backward)
         m_body->addForce(m_model->m_forward, 0.1f);
-
-    if (down)
+    if (forward)
         m_body->addForce(m_model->m_forward, -0.1f);
+    if (pitch_up)
+        m_body->addTorque({ 0, 0, 0.1f });
+    if (pitch_down)
+        m_body->addTorque({ 0, 0, -0.1f });
 }
 
 void Car::prePhysicsUpdate() {

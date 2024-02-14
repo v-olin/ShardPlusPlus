@@ -56,10 +56,11 @@ namespace Shard {
 		
 		InputEvent ie;
 		ie.key = key;
-		EventType type = action == GLFW_PRESS ? KeyDown : KeyUp;
-		input_manager->event_queue.push({ ie, type });
-		//input_manager->informListeners(ie, type);
-
+		// if GLFW_REPEAT, do nothing
+		if(action == GLFW_PRESS || action == GLFW_RELEASE){
+			EventType type = action == GLFW_PRESS  ? KeyDown : KeyUp;
+			input_manager->event_queue.push({ ie, type });
+		}
 	}
 
 	void InputManager::ScrollCallback(GLFWwindow* window, double x_offset, double y_offset)

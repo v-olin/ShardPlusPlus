@@ -20,7 +20,7 @@ namespace Shard {
 		, m_mass(0.f)
 		, m_angularDrag(0.f)
 		, m_maxForce({ FLOAT_MAX, FLOAT_MAX, FLOAT_MAX })
-		, m_maxTorque({ FLOAT_MIN, FLOAT_MIN, FLOAT_MIN }) // why isn't this max? very bad!!
+		, m_maxTorque({ FLOAT_MIN, FLOAT_MIN, FLOAT_MIN })
 		, m_isKinematic(false)
 		, m_passThrough(false)
 		, m_usesGravity(false)
@@ -41,7 +41,7 @@ namespace Shard {
 		, m_mass(0.f)
 		, m_angularDrag(0.f)
 		, m_maxForce({ FLOAT_MAX, FLOAT_MAX, FLOAT_MAX })
-		, m_maxTorque({ FLOAT_MIN, FLOAT_MIN, FLOAT_MIN }) // why isn't this max? very bad!!
+		, m_maxTorque({ FLOAT_MIN, FLOAT_MIN, FLOAT_MIN })
 		, m_isKinematic(false)
 		, m_passThrough(false)
 		, m_usesGravity(false)
@@ -65,18 +65,19 @@ namespace Shard {
 		//m_collider->draw(m_debugColor);
 	}
 
-	void PhysicsBody::addTorque(glm::vec3 howMuch) {
+
+	void PhysicsBody::addTorque(glm::vec3 torque) {
 		if (m_isKinematic)
 			return;
 
-		m_torque += howMuch;
+		m_torque += torque;
 
 		// Cap to maximum torque if needed
 		//torque = std::min(torque, max_torque);
 		//torque = std::max(torque, -max_torque);
 
 		m_torque.x = std::min(m_torque.x, m_maxTorque.x);
-		m_torque.x = std::min(m_torque.y, m_maxTorque.y);
+		m_torque.y = std::min(m_torque.y, m_maxTorque.y);
 		m_torque.z = std::min(m_torque.z, m_maxTorque.z);
 
 		// Cap to minimum torque if needed
@@ -157,18 +158,30 @@ namespace Shard {
 			m_torque[idx] -= get_sign_bit(val) * drag;
 		};
 
-		apply_drag(m_angularDrag.x, 0);
-		apply_drag(m_angularDrag.y, 1);
-		apply_drag(m_angularDrag.z, 2);
+		if (abs(m_torque.x) < m_angularDrag.x)
+			m_torque.x = 0;
+		else
+			apply_drag(m_angularDrag.x, 0);
+		if (abs(m_torque.y) < m_angularDrag.y)
+			m_torque.y = 0;
+		else
+			apply_drag(m_angularDrag.y, 1);
+		if (abs(m_torque.z) < m_angularDrag.z)
+			m_torque.z = 0;
+		else
+			apply_drag(m_angularDrag.z, 2);
 
-		m_bodyModel->rotate(m_torque.x, glm::vec3{1.0, 0.0, 0.0});
-		m_bodyModel->rotate(m_torque.y, glm::vec3{0.0, 1.0, 0.0});
-		m_bodyModel->rotate(m_torque.z, glm::vec3{0.0, 0.0, 1.0});
-
+		// parent->model->rotate
+		//m_bodyModel->rotate(m_torque.x, glm::vec3{1.0, 0.0, 0.0});
+		//m_bodyModel->rotate(m_torque.y, glm::vec3{0.0, 1.0, 0.0});
+		//m_bodyModel->rotate(m_torque.z, glm::vec3{0.0, 0.0, 1.0});
 		float force_mag = glm::length(m_force);
-
-		// TODO: shouldn't this be done after line 177? very bad!!
 		m_bodyModel->translate(m_force);
+		
+		m_bodyModel->rotate(rotx, m_bodyModel->m_forward);
+		m_bodyModel->rotate(roty, m_bodyModel->m_up);
+		m_bodyModel->rotate(rotz, m_bodyModel->m_right);
+
 
 		if (force_mag < m_drag) {
 			stopForces();
@@ -184,20 +197,7 @@ namespace Shard {
 		m_collider = std::make_shared<ColliderBox>(handler, m_bodyModel);
 	}
 
-	//void PhysicsBody::setBoxCollider(float x, float y, float z, float w, float h, float d) {
-	//	auto handler = std::dynamic_pointer_cast<CollisionHandler>(parent);
-	//	collider = std::make_shared<ColliderBox>(handler, trans->shared_from_this(), x, y, z, w, h, d);
-	//}
-
-	std::optional<glm::vec2> PhysicsBody::checkCollision(Ray& ray) {
-		// if fix :^)
+	std::optional<glm::vec3> PhysicsBody::checkCollision(Ray& ray) {
 		return m_collider->checkCollision(ray);
-
-		// TODO: why can't we just return dir? it is also optional. very bad!!
-		std::optional<glm::vec2> dir{ m_collider->checkCollision(ray) };
-		if (dir.has_value())
-			return dir.value();
-
-		return std::nullopt;
 	}
 }

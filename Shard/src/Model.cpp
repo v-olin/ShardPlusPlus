@@ -10,6 +10,10 @@
 #include <iomanip>
 #include <string>
 
+#include "ShaderManager.h"
+
+#include <gtx/transform.hpp>
+
 #define GLM_ENABLE_EXPERIMENTAL
 #include "gtc/matrix_transform.hpp"
 
@@ -219,8 +223,11 @@ namespace Shard {
 
 	Model::Model(std::string path)
 		: m_hasDedicatedShader(false)
-		, m_transformMatrix({ 1.f })
-		, m_lastTransformMatrix({ 1.f })
+		//, m_transformMatrix(glm::mat4(1.f))
+		//, m_lastTransformMatrix(glm::mat4(1.f))
+		, m_transMatrix(glm::mat4(1.f))
+		, m_rotMatrix(glm::mat4(1.f))
+		, m_lastTransMatrix(glm::mat4(1.f))
 		, m_forward({ 1.f, 0, 0 })
 		, m_up({ 0, 1.f, 0})
 		, m_right({ 0, 0, 1.f})
@@ -479,7 +486,7 @@ namespace Shard {
 	}
 
 	glm::vec3 Model::position() {
-		return glm::vec3(m_transformMatrix[3]);
+		return glm::vec3(m_transMatrix[3]);
 	}
 
 	glm::vec3 Model::rotation() {
@@ -513,42 +520,47 @@ namespace Shard {
 
 	glm::vec3 Model::size() {
 		return glm::vec3{
-			glm::length(glm::vec3(m_transformMatrix[0])),
-			glm::length(glm::vec3(m_transformMatrix[1])),
-			glm::length(glm::vec3(m_transformMatrix[2]))
+			glm::length(glm::vec3(m_transMatrix[0])),
+			glm::length(glm::vec3(m_transMatrix[1])),
+			glm::length(glm::vec3(m_transMatrix[2]))
 		};
 	}
 
 	glm::vec3 Model::getLastDirection() {
-		glm::vec3 pos = glm::vec3(m_transformMatrix[3]);
-		glm::vec3 lastPos = glm::vec3(m_lastTransformMatrix[3]);
+		glm::vec3 pos = glm::vec3(m_transMatrix[3]);
+		glm::vec3 lastPos = glm::vec3(m_lastTransMatrix[3]);
 		return lastPos - pos;
 	}
 
 	glm::mat3 Model::getRotationMatrix() {
 		auto size = this->size();
-		return glm::mat3(
-			glm::vec3(m_transformMatrix[0] / size.x),
-			glm::vec3(m_transformMatrix[1] / size.y),
-			glm::vec3(m_transformMatrix[2] / size.z)
-		);
+		return glm::mat3(m_rotMatrix);
 	}
 
 	void Model::Draw() {
 		glBindVertexArray(m_vaob);
-		for (auto& mesh : m_meshes)
+		static ShaderManager& sm = ShaderManager::getInstance();
+		for (auto& mesh : m_meshes) {
+			const Material& mat = m_materials[mesh.m_material_idx];
+			//glActiveTexture(GL_TEXTURE0);
+			//glBindTexture(GL_TEXTURE_2D, mat.m_color_texture.gl_id);
+			//sm.SetInteger1(sm.getDefaultShader(), mat.m_color_texture.valid ? 1 : 0, "has_color_texture");
+			sm.SetVec3(sm.getDefaultShader(), mat.m_color, "colorIn");
 			glDrawArrays(GL_TRIANGLES, mesh.m_start_index, (GLsizei)mesh.m_number_of_vertices);
+		}
 		glBindVertexArray(0);
 	}
 
 	void Model::translate(const glm::vec3& force) {
-		m_lastTransformMatrix = m_transformMatrix;
-		m_transformMatrix = glm::translate(m_transformMatrix, force);
+		m_lastTransMatrix = m_transMatrix;
+		m_transMatrix = glm::translate(force) * m_transMatrix;
+		//m_transMatrix = glm::translate(m_transMatrix, force);
 	}
 
 	// why is the angle in degrees and not radians? very bad!!
 	void Model::rotate(const float angle_deg, const glm::vec3& axis) {
-		m_transformMatrix = glm::rotate(m_transformMatrix, angle_deg, axis);
+		m_rotMatrix = glm::rotate(glm::radians(angle_deg), axis) * m_rotMatrix;
+		// m_transformMatrix = glm::rotate(m_transformMatrix, glm::radians(angle_deg), axis);
 		glm::mat3 rot = getRotationMatrix();
 
 		// we also need to rotate the axis vectors of the transform
@@ -559,7 +571,11 @@ namespace Shard {
 	}
 
 	void Model::scale(const glm::vec3& scale) {
-		m_transformMatrix = glm::scale(m_transformMatrix, scale);
+		m_transMatrix = glm::scale(m_transMatrix, scale);
+	}
+
+	glm::mat4 Model::getModelMatrix() {
+		return m_transMatrix * m_rotMatrix;
 	}
 
 	void saveModelMaterialsToMTL(Model* model, std::string filename)

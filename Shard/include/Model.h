@@ -63,6 +63,7 @@ namespace Shard {
 		void translate(const glm::vec3& force);
 		void rotate(const float angle_deg, const glm::vec3& axis);
 		void scale(const glm::vec3& scale);
+		glm::mat4 getModelMatrix();
 
 		// The name of the whole model
 		std::string m_name;
@@ -85,8 +86,13 @@ namespace Shard {
 		bool m_hasDedicatedShader;
 
 		// merged from transform
-		glm::mat4 m_transformMatrix;
-		glm::mat4 m_lastTransformMatrix;
+		//glm::mat4 m_transformMatrix;
+		//glm::mat4 m_lastTransformMatrix;
+
+		glm::mat4 m_transMatrix;
+		glm::mat4 m_rotMatrix;
+		glm::mat4 m_lastTransMatrix;
+
 		glm::vec3 m_forward;
 		glm::vec3 m_up;
 		glm::vec3 m_right;

@@ -59,7 +59,7 @@ namespace Shard {
 
 		for (auto &vertex : vertices)
 			//cant remember if it should be one or zero        here v   , so this might fuck shit up
-			vertex = glm::vec3(m_model->m_transformMatrix * glm::vec4(vertex, 1.0));
+			vertex = glm::vec3(m_model->getModelMatrix() * glm::vec4(vertex, 1.0));
 
 		auto min = glm::vec3{ FLOAT_MAX };
 		auto max = glm::vec3{ FLOAT_MIN };
