@@ -75,21 +75,64 @@ namespace Shard {
 				m_shaderManager.SetMat4x4(defShader, mvpMatrix, "u_MVP");
 			}
 
-
 			gob->m_model->Draw();
 
-			if (m_drawColliders) { // if debug
+			if (true) { // if debug
 				drawCollider(gob);
 			}
 		}
+
+		glUseProgram(0);
 	}
 
 	void Renderer::drawCollider(std::shared_ptr<GameObject> toDraw) {
-		return;
-		// this is a problem for another day, very bad!!
-		// auto transform = toDraw->body_->trans;
-		// glm::vec3 position = transform->position();
-		// glm::vec3 size = transform->size();
+
+		std::vector<glm::vec2> minMax = toDraw->m_body->m_collider->getMinMaxDims();
+
+		glm::vec3 max = glm::vec3{
+			minMax[0].y,
+			minMax[1].y,
+			minMax[2].y
+		};
+
+		glm::vec3 min = glm::vec3{
+			minMax[0].x,
+			minMax[1].x,
+			minMax[2].x
+		};
+
+		GLuint vaob;
+		GLuint bfo;
+
+		float vertices[] = {
+			min.x,	min.y,	 min.z,		// v0
+			min.x,	min.y,	 -max.z,	// v1
+			max.x,	min.y,	 -max.z,	// v2
+			max.x,	min.y,	 min.z,		// v3
+			min.x,	max.y,	 min.z,		// v4
+			min.x,	max.y,	 -max.z,	// v5
+			max.x,	max.y,	 -max.z,	// v6
+			max.x,	max.y,	 min.z		// v7
+		};
+
+		glUseProgram(m_shaderManager.getShader("collider"));
+
+		m_shaderManager.SetVec3(m_shaderManager.getShader("collider"), toDraw->m_body->m_debugColor, "colorIn");
+
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+		glGenVertexArrays(1, &vaob);
+		glBindVertexArray(vaob);
+		glGenBuffers(1, &bfo);
+		glBindBuffer(GL_ARRAY_BUFFER, bfo);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * sizeof(float), 0);
+		glEnableVertexAttribArray(0);
+		glDrawArrays(GL_TRIANGLES, 0, 8 * 3);
+
+		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
 	void Renderer::configureDefaultShader() {

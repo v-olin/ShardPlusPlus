@@ -179,6 +179,9 @@ namespace Shard {
 
         }
 
+        ShaderManager& sm = ShaderManager::getInstance();
+        sm.loadShader("collider", false);
+
         return;
 
         if (!display_engine_initialized) {
@@ -309,5 +312,6 @@ namespace Shard {
             }
         }
         
+        Logger::log("Bing!", LOG_LEVEL_FATAL);
     }
 }

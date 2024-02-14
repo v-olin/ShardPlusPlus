@@ -46,23 +46,26 @@ namespace Shard {
 		    
 		*/
 
+		glm::vec3 max = m_model->max;
+		glm::vec3 min = m_model->min;
+
 		std::vector<glm::vec3> vertices{
-			{0.0,	0.0,	 0.0},		// v0
-			{0.0,	0.0,	 -1},		// v1
-			{1,		0.0,	 -1},		// v2
-			{1,	    0.0,	 0.0},		// v3
-			{0.0,	1,		 0.0},		// v4
-			{0.0,	1,		-1},		// v5
-			{1,		1,		-1},		// v6
-			{1,		1,		0.0}		// v7
+			{min.x,	min.y,	 min.z},	// v0
+			{min.x,	min.y,	 -max.z},	// v1
+			{max.x,	min.y,	 -max.z},	// v2
+			{max.x,	min.y,	 min.z},	// v3
+			{min.x,	max.y,	 min.z},	// v4
+			{min.x,	max.y,	 -max.z},	// v5
+			{max.x,	max.y,	 -max.z},	// v6
+			{max.x,	max.y,	 min.z}		// v7
 		};
 
 		for (auto &vertex : vertices)
-			//cant remember if it should be one or zero        here v   , so this might fuck shit up
+			//cant remember if it should be one or zero here v, so this might fuck shit up
 			vertex = glm::vec3(m_model->getModelMatrix() * glm::vec4(vertex, 1.0));
 
-		auto min = glm::vec3{ FLOAT_MAX };
-		auto max = glm::vec3{ FLOAT_MIN };
+		min = glm::vec3{ FLOAT_MAX };
+		max = glm::vec3{ FLOAT_MIN };
 
 		for (int i = 0; i < 8;  i++) {
 			min = glm::min(min, vertices[i]);
