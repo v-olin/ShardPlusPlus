@@ -5,18 +5,21 @@
 #include <vector>
 
 #include "PhysicsBody.h"
+#include "Model.h"
 
 namespace Shard {
     class GameObject : public std::enable_shared_from_this<GameObject> {
     public:
-        bool transient_, to_be_destroyed_, visible_;
-        std::shared_ptr<PhysicsBody> body_ = nullptr;
-        std::vector<const char*> tags{};
+        bool m_transient, m_toBeDestroyed, m_visible;
+        std::shared_ptr<PhysicsBody> m_body;
+        std::shared_ptr<Model> m_model;
+        std::vector<const char*> m_tags;
 
         GameObject();
+
         GameObject(const std::shared_ptr<GameObject> src) {
-            body_ = src->body_;
-            tags = src->tags;
+            m_body = src->m_body;
+            m_tags = src->m_tags;
         }
 
         virtual ~GameObject() {}

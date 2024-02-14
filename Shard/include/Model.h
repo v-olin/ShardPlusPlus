@@ -8,7 +8,7 @@
 
 namespace Shard {
 
-	struct  Texture {
+	struct Texture {
 		bool valid = false;
 		uint32_t gl_id = 0;
 		uint32_t gl_id_internal = 0;
@@ -24,8 +24,7 @@ namespace Shard {
 
 	};
 
-	struct  Material
-	{
+	struct Material	{
 		std::string m_name;
 		glm::vec3 m_color;
 		float m_shininess;
@@ -41,8 +40,7 @@ namespace Shard {
 		Texture m_emission_texture;
 	};
 
-	struct  Mesh
-	{
+	struct Mesh	{
 		std::string m_name;
 		uint32_t m_material_idx;
 		// Where this Mesh's vertices start
@@ -50,10 +48,23 @@ namespace Shard {
 		uint32_t m_number_of_vertices;
 	};
 
-	class  Model
-	{
+	class Model	{
 	public:
+		Model(std::string path);
 		~Model();
+
+		glm::vec3 position();
+		glm::vec3 rotation();
+		glm::vec3 size();
+		glm::vec3 getLastDirection();
+		glm::mat3 getRotationMatrix();
+
+		void Draw();
+		void translate(const glm::vec3& force);
+		void rotate(const float angle_deg, const glm::vec3& axis);
+		void scale(const glm::vec3& scale);
+		glm::mat4 getModelMatrix();
+
 		// The name of the whole model
 		std::string m_name;
 		// The filename of this model
@@ -72,11 +83,26 @@ namespace Shard {
 		uint32_t m_texture_coordinates_bo;
 		// Vertex Array Object
 		uint32_t m_vaob;
+		bool m_hasDedicatedShader;
+
+		// merged from transform
+		//glm::mat4 m_transformMatrix;
+		//glm::mat4 m_lastTransformMatrix;
+
+		glm::mat4 m_transMatrix;
+		glm::mat4 m_rotMatrix;
+		glm::mat4 m_lastTransMatrix;
+
+		glm::vec3 m_forward;
+		glm::vec3 m_up;
+		glm::vec3 m_right;
 	};
 
-	 Model* loadModelFromOBJ(std::string filename);
-	 void saveModelToOBJ(Model* model, std::string filename);
-	 void saveModelMaterialsToMTL(Model* model, std::string filename);
-	 void freeModel(Model* model);
-	 void render(const Model* model, const bool submitMaterials = true);
+	void saveModelToOBJ(Model* model, std::string filename);
+	void saveModelMaterialsToMTL(Model* model, std::string filename);
+
+	// no implementation, very bad!!
+	void freeModel(Model* model);
+	void render(const Model* model, const bool submitMaterials = true);
+
 }

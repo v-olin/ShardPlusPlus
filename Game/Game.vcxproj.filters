@@ -15,7 +15,7 @@
     <ClInclude Include="include\Bullet.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\Spaceship.h">
+    <ClInclude Include="include\Car.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="main.h" />
@@ -28,7 +28,7 @@
     <ClCompile Include="src\Bullet.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Spaceship.cpp">
+    <ClCompile Include="src\Car.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

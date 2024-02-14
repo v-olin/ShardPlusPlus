@@ -2,6 +2,7 @@
 #include "CollisionHandler.h"
 #include "Bootstrap.h"
 #include "Logger.h"
+#include "ColliderBox.h"
 
 #include <algorithm>
 #include <list>
@@ -9,9 +10,12 @@
 #include <optional>
 #include <unordered_map>
 #include <functional>
+#include <unordered_map>
+#include <functional>
 
 namespace Shard {
 
+	PhysicsManager::PhysicsManager() { }
 	PhysicsManager::PhysicsManager() { }
 
 	PhysicsManager& PhysicsManager::getInstance() {
@@ -22,7 +26,7 @@ namespace Shard {
 	void PhysicsManager::makeInterval(int axis, std::shared_ptr<PhysicsBody> gob_body) {
 
 		// Check penetration level (sus)
-		auto min_max = gob_body->collider->getMinMaxDims();
+		auto min_max = gob_body->m_collider->getMinMaxDims();
 		auto& min_max_x = min_max[0];
 		auto& min_max_y = min_max[1];
 		auto& min_max_z = min_max[2];
@@ -73,16 +77,22 @@ namespace Shard {
 
 	void PhysicsManager::addPhysicsObject(std::shared_ptr<PhysicsBody> body) {
 		// TODO: std::find? yea.
+		// TODO: std::find? yea.
 		bool exists = false;
 		for(size_t i = 0; i < all_physics_objects.size(); i++){
 			auto &other = all_physics_objects.at(i);
-			if (other->parent == body->parent){
+			if (other->m_parent == body->m_parent){
 				exists = true;
 				break;
 			}
 		}
 		if (!exists) {
+		if (!exists) {
 			all_physics_objects.push_back(body);
+			makeInterval(AXIS_X, body);
+			makeInterval(AXIS_Y, body);
+			makeInterval(AXIS_Z, body);
+		}
 			makeInterval(AXIS_X, body);
 			makeInterval(AXIS_Y, body);
 			makeInterval(AXIS_Z, body);
@@ -139,9 +149,58 @@ namespace Shard {
 
 
 
+		// TODO: remove body from all intervals, make sure to remove all edges from all edge_lists also
+		//and set traverse_edge_list = true for all axies
+		//find edges
+
+		auto delete_from_edge_list = [this, body](int axis) {
+			auto &edge_list = this->getEdgeList(axis);
+			edge_list.erase(std::remove_if(edge_list.begin(), edge_list.end(), [&](const IntervalEdge ie) -> bool {
+				return ie.interval->gob_body == body;
+			}), edge_list.end());
+		};
+
+		delete_from_edge_list(AXIS_X);
+		delete_from_edge_list(AXIS_Y);
+		delete_from_edge_list(AXIS_Z);
+
+		auto delete_from_interval_list = [this, body](int axis) {
+			auto &interval_list = getInterval(axis);
+			interval_list.erase(std::remove_if(interval_list.begin(), interval_list.end(), [&](const std::shared_ptr<Interval>& i) -> bool {
+				return i->gob_body == body;
+				}), interval_list.end());
+			};
+
+		delete_from_interval_list(AXIS_X);
+		delete_from_interval_list(AXIS_Y);
+		delete_from_interval_list(AXIS_Z);
+
+		auto shrink_overlap_mat = [this, body](int axis) {
+			auto& mat = getOverlapMatrix(axis);
+			auto len = mat.size();
+			for (size_t i = 0; i < mat.size(); i++) {
+				mat[i].erase(std::next(mat[i].begin(), len - 1));
+			}
+			mat.erase(std::next(mat.begin(), len - 1));
+			};
+		
+		shrink_overlap_mat(AXIS_X);
+		shrink_overlap_mat(AXIS_Y);
+		shrink_overlap_mat(AXIS_Z);
+
+		//remove from activeintervalks list
+		active_interval_list.erase(std::remove_if(active_interval_list.begin(), active_interval_list.end(), [&](const std::shared_ptr<Interval>& i) -> bool {
+			return i->gob_body == body;
+			}), active_interval_list.end());
+
+
+
+
+
+
 		for(size_t i = 0; i < all_physics_objects.size(); i++){
 			auto other = all_physics_objects.at(i);
-			if(other->parent == body->parent){
+			if(other->m_parent == body->m_parent){
 				auto iter = all_physics_objects.begin();
 				std::advance(iter, i);
 				all_physics_objects.erase(iter);
@@ -152,11 +211,16 @@ namespace Shard {
 		traverse_edge_list_y = true;
 		traverse_edge_list_z = true;
 
+
+		traverse_edge_list_x = true;
+		traverse_edge_list_y = true;
+		traverse_edge_list_z = true;
+
 	}
 
 	bool PhysicsManager::willTick() {
 		// TODO: remove when not testing
-		return true;
+		//return true;
 		return Bootstrap::getCurrentMillis() - last_update > time_interval;
 	}
 
@@ -169,7 +233,7 @@ namespace Shard {
 		last_update = Bootstrap::getCurrentMillis();
 
 		for (auto &body : all_physics_objects) {
-			if (body->uses_gravity)
+			if (body->m_usesGravity)
 				body->applyGravity(gravity_dir, gravity_modifier);
 
 			body->physicsTick();
@@ -179,33 +243,35 @@ namespace Shard {
 		int i = 0;
 		bool remove = false;
 		for (CollidingObject& col : collisions) {
+		for (CollidingObject& col : collisions) {
 
 			// todo: if decide to translate, don't do that for kinematic objects
 
 			//This is bad since the parents could have been deleted by the GameObjectManager
 			// upcast to shared_ptr
-			auto a_handler = std::dynamic_pointer_cast<CollisionHandler>(col.a->parent);
-			auto b_handler = std::dynamic_pointer_cast<CollisionHandler>(col.b->parent);
+			auto a_handler = std::dynamic_pointer_cast<CollisionHandler>(col.a->m_parent);
+			auto b_handler = std::dynamic_pointer_cast<CollisionHandler>(col.b->m_parent);
 
 			if (!a_handler || !b_handler) {
 				Logger::log("failed upcast", LOG_LEVEL_ALL);
 			}
 
-			if (col.a->parent->to_be_destroyed_) {
-				if (!col.b->parent->to_be_destroyed_)
+			if (col.a->m_parent->m_toBeDestroyed) {
+				if (!col.b->m_parent->m_toBeDestroyed)
 					b_handler->onCollisionExit(nullptr);
 				to_remove.push_back(i++);
 				continue;
 			}
 
-			if (col.b->parent->to_be_destroyed_) {
-				if (!col.a->parent->to_be_destroyed_)
+			if (col.b->m_parent->m_toBeDestroyed) {
+				if (!col.a->m_parent->m_toBeDestroyed)
 					a_handler->onCollisionExit(nullptr);
 				to_remove.push_back(i++);
 				continue;
 			}
 
 			
+			std::optional<glm::vec2> impulse = getImpulseFromCollision(col.a, col.b);
 			std::optional<glm::vec2> impulse = getImpulseFromCollision(col.a, col.b);
 
 			if (impulse.has_value()) {
@@ -228,12 +294,17 @@ namespace Shard {
 		int removed = 0;
 		for (size_t idx : to_remove) {
 			auto iter = collisions.begin();
+			auto iter = collisions.begin();
 			std::advance(iter, idx-removed);
+			collisions.erase(iter);
 			collisions.erase(iter);
 			removed++;
 		}
 
-		checkForCollisions();
+		// TODO: don't run if no game objects?
+		if (all_physics_objects.size() > 1)
+			checkForCollisions();
+
 		return true;
 	}
 
@@ -245,6 +316,7 @@ namespace Shard {
 	bool PhysicsManager::findColliding(std::shared_ptr<PhysicsBody> a, std::shared_ptr<PhysicsBody> b) {
 		CollidingObject col { a, b };
 
+		for (auto &col_ : collisions) {
 		for (auto &col_ : collisions) {
 			if (col.equals(col_))
 				return true;
@@ -365,7 +437,7 @@ namespace Shard {
 		auto &edge_list = getEdgeList(axis);
 		for (size_t i = 0; i < edge_list.size(); i++) {
 			auto& interval = edge_list[i].interval;
-			auto min_maxes = interval->gob_body->collider->getMinMaxDims();
+			auto min_maxes = interval->gob_body->m_collider->getMinMaxDims();
 			auto &min_max = min_maxes[axis];
 			auto val = edge_list[i].is_b ? min_max[0] : min_max[1];
 			edge_list[i].val = val;
@@ -443,7 +515,7 @@ namespace Shard {
 					auto &gob_body_a = all_x_intervals[i]->gob_body;
 					auto &gob_body_b = all_x_intervals[j]->gob_body;
 
-					if (gob_body_a->mass > gob_body_b->mass) {
+					if (gob_body_a->m_mass > gob_body_b->m_mass) {
 						col.a = gob_body_a;
 						col.b = gob_body_b;
 					}
@@ -480,53 +552,60 @@ namespace Shard {
 		for (CollidingObject &col_obj : cols_to_check) {
 			possible_impulse = getImpulseFromCollision(col_obj.a, col_obj.b);
 
+		//collisions = sweepAndMotherfuckingPrune();
+		auto cols_to_check = sweepAndMotherfuckingPrune();
+		for (CollidingObject &col_obj : cols_to_check) {
+			possible_impulse = getImpulseFromCollision(col_obj.a, col_obj.b);
+
 			if (possible_impulse.has_value()) {
 				impulse = possible_impulse.value();
 
-				if (!col_obj.a->pass_through && !col_obj.b->pass_through) {
-					mass_total = col_obj.a->mass + col_obj.b->mass;
+				if (!col_obj.a->m_passThrough && !col_obj.b->m_passThrough) {
+					mass_total = col_obj.a->m_mass + col_obj.b->m_mass;
 
-					if (col_obj.a->is_kinematic)
+					if (col_obj.a->m_isKinematic)
 						mass_prop = 1.f;
 					else
-						mass_prop = col_obj.a->mass / mass_total;
+						mass_prop = col_obj.a->m_mass / mass_total;
 
-					if (col_obj.a->impart_force) {
+					if (col_obj.a->m_impartForce) {
 						col_obj.a->impartForces(col_obj.b, mass_prop);
 						col_obj.a->reduceForces(1.f - mass_prop);
 					}
 
-					if (!col_obj.b->is_kinematic) {
+					if (!col_obj.b->m_isKinematic) {
 						glm::vec3 force{ -impulse.x, -impulse.y, -impulse.z};
-						col_obj.b->parent->body_->trans->translate(force * mass_prop);
+						col_obj.b->m_parent->m_model->translate(force * mass_prop);
 						mass_prop = 1.f - mass_prop;
 					}
 					else {
 						mass_prop = 1.f;
 					}
 
-					if (!col_obj.a->is_kinematic) {
+					if (!col_obj.a->m_isKinematic) {
 						glm::vec3 force{ impulse.x, impulse.y, impulse.z};
-						col_obj.a->parent->body_->trans->translate(force * mass_prop);
+						col_obj.a->m_parent->m_model->translate(force * mass_prop);
 					}
 					
-					if (col_obj.a->stop_on_collision)
+					if (col_obj.a->m_stopOnCollision)
 						col_obj.a->stopForces();
 
-					if (col_obj.b->stop_on_collision)
+					if (col_obj.b->m_stopOnCollision)
 						col_obj.b->stopForces();
 
 
 
-					if (col_obj.a->reflect_on_collision)
+					if (col_obj.a->m_reflectOnCollision)
 						col_obj.a->reflectForces(impulse);
-					if (col_obj.b->reflect_on_collision)
+					if (col_obj.b->m_reflectOnCollision)
 						col_obj.b->reflectForces(impulse);
 
 				}
 
-				(std::dynamic_pointer_cast<CollisionHandler>(col_obj.a->parent))->onCollisionEnter(col_obj.b);
-				(std::dynamic_pointer_cast<CollisionHandler>(col_obj.b->parent))->onCollisionEnter(col_obj.a);
+				(std::dynamic_pointer_cast<CollisionHandler>(col_obj.a->m_parent))->onCollisionEnter(col_obj.b);
+				(std::dynamic_pointer_cast<CollisionHandler>(col_obj.b->m_parent))->onCollisionEnter(col_obj.a);
+
+				collisions.push_back(col_obj);
 
 				collisions.push_back(col_obj);
 
@@ -539,20 +618,23 @@ namespace Shard {
 		//collisions.clear();
 		runCollisionCheck();
 		collision_last_frame = collisions.size();
+		//collisions.clear();
+		runCollisionCheck();
+		collision_last_frame = collisions.size();
 	}
 
 	std::optional<glm::vec3> PhysicsManager::getImpulseFromCollision(std::shared_ptr <PhysicsBody> a, std::shared_ptr<PhysicsBody> b) {
 		
-		if (a->parent->to_be_destroyed_ || b->parent->to_be_destroyed_)
+		if (a->m_parent->m_toBeDestroyed || b->m_parent->m_toBeDestroyed)
 			return std::nullopt;
 
 		// Check penetration level (sus)
-		const auto min_max_a = a->collider->getMinMaxDims();
+		const auto min_max_a = a->m_collider->getMinMaxDims();
 		const auto &min_max_x_a = min_max_a[0];
 		const auto &min_max_y_a = min_max_a[1];
 		const auto &min_max_z_a = min_max_a[2];
 		
-		const auto min_max_b = b->collider->getMinMaxDims();
+		const auto min_max_b = b->m_collider->getMinMaxDims();
 		const auto &min_max_x_b = min_max_b[0];
 		const auto &min_max_y_b = min_max_b[1];
 		const auto &min_max_z_b = min_max_b[2];

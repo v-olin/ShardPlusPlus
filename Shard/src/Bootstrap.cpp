@@ -1,8 +1,14 @@
+#include "common.h"
+
+#include "SceneManager.h"
+
 #include "Bootstrap.h"
 #include "Logger.h"
 #include "BaseFunctionality.h"
 #include "GameObjectManager.h"
-#include "DisplayText.h"
+#include "TextureManager.h"
+#include "ShaderManager.h"
+#include "Renderer.h"
 
 #include <chrono>
 #include <filesystem>
@@ -77,14 +83,6 @@ namespace Shard {
         return base_dir;
     }
 
-    Display* Bootstrap::getDisplay() {
-        return display_engine;
-    }
-
-    Sound& Bootstrap::getSound() {
-        return sound_engine;
-    }
-
     InputManager& Bootstrap::getInput() {
         return input;
     }
@@ -105,6 +103,48 @@ namespace Shard {
     }
 
     void Bootstrap::setup() {
+
+        /////////////////////
+        // Initialize GLFW //
+        /////////////////////
+        if (!glfwInit()) {
+            std::cout << "[LOG][GLFW_INIT] error calling 'glfwInit()'.\n";
+            std::exit(1);
+        }
+
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+
+        // TODO: don't hardcode size
+        m_Window = glfwCreateWindow(1280, 760, "ENGINE START... NO PROBLEM... 5 MINUTW... TIDIN TIDIN TIDIN... ENGINE KAPUTT!!!! (<game_name_here>)", 0, 0);
+
+        if (m_Window == nullptr) {
+            glfwTerminate();
+            std::cout << "[LOG][GLFW_INIT] Failed to create window with OpenGL context (glfwCreateWindow).\n";
+            std::exit(1);
+        }
+
+        glfwMakeContextCurrent(m_Window);
+        glfwSetFramebufferSizeCallback(m_Window, InputManager::FramebufferSizeCallback);
+        glfwSetCursorPosCallback(m_Window, InputManager::MouseCallback);
+        glfwSetMouseButtonCallback(m_Window, InputManager::MouseButtonCallback);
+        glfwSetScrollCallback(m_Window, InputManager::ScrollCallback);
+        glfwSetKeyCallback(m_Window, InputManager::KeyCallback);
+
+        glfwSetWindowUserPointer(m_Window, reinterpret_cast<void*>(&input));
+
+        /////////////////////
+        // Initialize GLAD //
+        /////////////////////
+        int version = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+        if (version == 0) {
+            std::cout << "[LOG][GLAD_INIT] Failed to initialize OpenGL context (gladLoadGL).\n";
+            std::exit(1);
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////
+
         std::string work_dir = std::filesystem::current_path().string();
         // GAME EXE SHOULD BE IN TOPMOST FOLDER!!!!!
         base_dir = work_dir;
@@ -119,8 +159,6 @@ namespace Shard {
         bool bailOut = false;
 
         asset.loadAssetPath();
-        //asset{ AssetManager::getInstance() };
-        //phys{ PhysicsManager::getInstance(); };
 
         bool display_engine_initialized = false;
         //bool running_game_initialized = false;
@@ -128,24 +166,20 @@ namespace Shard {
         // TODO: determine logic and structure of config file
         //       and implement here
         for (const auto& [class_name, formal_className] : config) {
-            if (class_name.compare("display") == 0) {
-                // TODO: fooking use OpenGL m8
 
-                display_engine->initialize();
-                display_engine_initialized = true;
+            if (class_name.compare("display") == 0) {
+                // TODO: do something
             }
+
             else if (class_name.compare("asset") == 0)
                 asset.registerAssets();
-            /* else if (class_name.compare("game") == 0){
-                 target_frame_rate = running_game.getTargetFrameRate();
-                 millis_per_frame = 1000 / target_frame_rate;
-                 running_game_initialized = true;
-             }*/
+
             else if (class_name.compare("input") == 0)
                 input.initialize();
-            //else if (class_name.compare("sound") == 0)
-            //    sound_engine = new Sound();
+
         }
+
+        return;
 
         if (!display_engine_initialized) {
             Logger::log("display not initialized", LoggerLevel::LOG_LEVEL_ERROR);
@@ -172,9 +206,7 @@ namespace Shard {
             en_vars[key] = value;
     }
 
-
-
-    void Bootstrap::Main(std::string args[]){
+    void Bootstrap::Main(std::string args[]) {
 		long long time_in_milliseconds_start, last_tick, time_in_milliseconds_end;
 		long interval;
 		int sleep;
@@ -196,14 +228,22 @@ namespace Shard {
 
         phys_debug = getEnvironmentVariable("physics_debug") == "1";
 
-        while (true) {
+        //SceneManager sm{};
+        SceneManager& sm = SceneManager::getInstance();
+        TextureManager& tm = TextureManager::getInstance();
+        ShaderManager& shm = ShaderManager::getInstance();
+        Renderer renderer{ sm, tm, shm, m_Window };
+
+        glEnable(GL_DEPTH_TEST);
+        glDisable(GL_CULL_FACE);
+
+        while (!glfwWindowShouldClose(m_Window)) {
             frames += 1;
             time_in_milliseconds_start = getCurrentMillis();
-            getDisplay()->clearDisplay();
+
             running_game->update();
 
             if(running_game->isRunning()){
-
 
 				// Get input, which works at 50 FPS to make sure it doesn't interfere with the 
 				// variable frame rates.
@@ -231,11 +271,22 @@ namespace Shard {
 					GameObjectManager::getInstance().physicsUpdate();
 				}
 
-				if (phys_debug) {
-					phys.drawDebugColliders();
-				}
+                // physicsmanager should not do this, very bad!!
+				//if (phys_debug) {
+				//	// phys.drawDebugColliders();
+				//}
 
-                getDisplay()->display();
+                /////////////////
+                // Render shit //
+                /////////////////
+
+                // Render code goes here
+                renderer.render();
+
+                // this should be done in InputManager, very bad!!
+                glfwPollEvents();
+
+                //////////////////////////////////////
 
                 // Clean up objects that are to be deleted
                 GameObjectManager::getInstance().cleanup();

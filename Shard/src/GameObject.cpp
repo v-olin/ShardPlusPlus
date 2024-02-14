@@ -7,35 +7,36 @@
 
 namespace Shard {
 	GameObject::GameObject()
-		: tags({})
-		, transient_(false)
-		, to_be_destroyed_(false)
-		, visible_(false)
-		, body_(nullptr) 
+		: m_tags({})
+		, m_transient(false)
+		, m_toBeDestroyed(false)
+		, m_visible(false)
+		, m_body(nullptr)
+		, m_model(nullptr)
 	{
 	}
 
 	void GameObject::addTag(const char* tag) {
-		tags.push_back(tag);
+		m_tags.push_back(tag);
 	}
 
 	void GameObject::removeTag(std::string tag) {
-		auto iter = std::find(tags.begin(), tags.end(), tag);
+		auto iter = std::find(m_tags.begin(), m_tags.end(), tag);
 
-		if (iter != tags.end())
-			tags.erase(iter);
+		if (iter != m_tags.end())
+			m_tags.erase(iter);
 	}
 
 	bool GameObject::hasTag(std::string tag) {
-		auto iter = std::find(tags.begin(), tags.end(), tag);
+		auto iter = std::find(m_tags.begin(), m_tags.end(), tag);
 
-		return iter != tags.end();
+		return iter != m_tags.end();
 	}
 
 	std::string GameObject::getTags() {
 		std::string concat = "";
 
-		for (std::string s : tags) {
+		for (std::string s : m_tags) {
 			concat += s + ";";
 		}
 
@@ -43,13 +44,13 @@ namespace Shard {
 	}
 
 	void GameObject::setPhysicsEnabled() {
-		body_ = std::make_shared<PhysicsBody>(shared_from_this());
-		body_->setBoxCollider();
-		PhysicsManager::getInstance().addPhysicsObject(body_->shared_from_this());
+		m_body = std::make_shared<PhysicsBody>(shared_from_this());
+		m_body->setBoxCollider();
+		PhysicsManager::getInstance().addPhysicsObject(m_body->shared_from_this());
 	}
 
 	bool GameObject::queryPhysicsEnabled() {
-		return body_ != nullptr;
+		return m_body != nullptr;
 	}
 
 }

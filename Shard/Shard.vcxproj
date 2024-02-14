@@ -102,6 +102,7 @@
     <ClInclude Include="include\AssetManager.h" />
     <ClInclude Include="include\BaseFunctionality.h" />
     <ClInclude Include="include\Bootstrap.h" />
+    <ClInclude Include="include\Camera.h" />
     <ClInclude Include="include\Collider.h" />
     <ClInclude Include="include\ColliderCircle.h" />
     <ClInclude Include="include\ColliderRect.h" />
@@ -121,8 +122,11 @@
     <ClInclude Include="include\PhysicsBody.h" />
     <ClInclude Include="include\PhysicsManager.h" />
     <ClInclude Include="include\SAPEntry.h" />
+    <ClInclude Include="include\SceneManager.h" />
+    <ClInclude Include="include\ShaderManager.h" />
     <ClInclude Include="include\Sound.h" />
     <ClInclude Include="include\StringUtility.h" />
+    <ClInclude Include="include\TextureManager.h" />
     <ClInclude Include="include\Transform.h" />
     <ClInclude Include="include\Transform3D.h" />
     <ClInclude Include="include\framework.h" />
@@ -477,6 +481,7 @@
     <ClInclude Include="vendor\tiny_obj\include\tiny_obj_loader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\BaseFunctionality.cpp" />
     <ClCompile Include="src\Bootstrap.cpp" />
@@ -492,7 +497,9 @@
     <ClCompile Include="src\Model.cpp" />
     <ClCompile Include="src\PhysicsBody.cpp" />
     <ClCompile Include="src\PhysicsManager.cpp" />
+    <ClCompile Include="src\ShaderManager.cpp" />
     <ClCompile Include="src\Sound.cpp" />
+    <ClCompile Include="src\TextureManager.cpp" />
     <ClCompile Include="src\Transform.cpp" />
     <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\pch.cpp" />

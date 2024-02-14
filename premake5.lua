@@ -1,5 +1,5 @@
 workspace "Project"
-	architecture "x64"
+	architecture "x32"
 	
 	configurations
 	{
@@ -22,18 +22,17 @@ project "Shard"
 		"%{prj.name}/**.h",
 		"%{prj.name}/**.cpp",
 		"%{prj.name}/**.hpp",
+		"%{prj.name}/**.c",
 		"%{prj.name}/**.inl"
 	}
 	
 	includedirs
 	{
-		"%{prj.name}/vendor/SDL2-2.28.5/include",
-		"%{prj.name}/vendor/SDL2_ttf-2.22.0/include",
-		"%{prj.name}/vendor/SDL2_image-2.8.2/include",
 		"%{prj.name}/vendor/glm",
 		"%{prj.name}/vendor/stb_image/include",
 		"%{prj.name}/vendor/tiny_obj/include",
 		"%{prj.name}/vendor/glew/include",
+		"%{prj.name}/vendor/glfw/include",
 		"%{prj.name}/include"
 	}
 
@@ -50,49 +49,36 @@ project "Game"
 	{
 		"%{prj.name}/**.h",
 		"%{prj.name}/**.cpp",
-		"%{prj.name}/**.hpp", 
+		"%{prj.name}/**.hpp",
+		"%{prj.name}/**.c",
 		"%{prj.name}/**.inl"
 	}
 	
 	includedirs
 	{
-		"%{wks.location}/Shard/vendor/SDL2-2.28.5/include",
-		"%{wks.location}/Shard/vendor/SDL2_ttf-2.22.0/include",
-		"%{wks.location}/Shard/vendor/SDL2_image-2.8.2/include",
 		"%{wks.location}/Shard/vendor/glm",
 		"%{wks.location}/Shard/vendor/stb_image/include",
 		"%{wks.location}/Shard/vendor/tiny_obj/include",
-		"%{wks.location}/Shard/vendor/glew/include",
+		"%{wks.location}/Shard/vendor/glad/include",
+		"%{wks.location}/Shard/vendor/glfw/include",
 		"%{wks.location}/Shard/include",
 		"%{prj.name}/include"
 	}
 
     libdirs
 	{
-		"%{wks.location}/Shard/vendor/SDL2-2.28.5/lib/x64",
-		"%{wks.location}/Shard/vendor/SDL2_ttf-2.22.0/lib/x64",
-		"%{wks.location}/Shard/vendor/SDL2_image-2.8.2/lib/x64",
-		"%{wks.location}/Shard/vendor/glew/lib"
+		"%{wks.location}/Shard/vendor/glfw/lib-vc2022"
 	}
 	
 	links
 	{
-		"SDL2.lib",
-		"SDL2_ttf.lib",
-		"SDL2_image.lib",
-		"opengl32.lib",
-		"glew32.lib",
-		"glu32.lib"
+		"glfw3_mt.lib",
+		"opengl32.lib"
 	}
 
     dependson
     {
-        "SDL2.lib",
-		"SDL2_ttf.lib",
-		"SDL2_image.lib",
-		"opengl32.lib",
-		"glew32.lib",
-		"glu32.lib"
+		"opengl32.lib"
     }
 	
 	filter "system:windows"
@@ -102,10 +88,6 @@ project "Game"
 		
 		postbuildcommands
 		{
-			("{COPY} ../Shard/vendor/SDL2-2.28.5/lib/x64/SDL2.dll" .. " ../bin/" .. outputdir .. "/%{prj.name}"),
-			("{COPY} ../Shard/vendor/SDL2_ttf-2.22.0/lib/x64/SDL2_ttf.dll" .. " ../bin/" .. outputdir .. "/%{prj.name}"),
-			("{COPY} ../Shard/vendor/SDL2_image-2.8.2/lib/x64/SDL2_image.dll" .. " ../bin/" .. outputdir .. "/%{prj.name}"),
-			("{COPY} ../Shard/vendor/glew/lib/glew32.dll" .. " ../bin/" .. outputdir .. "/%{prj.name}"),
 		}
 	
 	filter "configurations:Debug"

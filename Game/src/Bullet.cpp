@@ -59,7 +59,7 @@
 //
 //	Shard::Logger::log("INSIDE ONCOLLISIONENTER BULLETtt tttttttt@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", Shard::LoggerLevel::LOG_LEVEL_ALL);
 //
-//	if (body->parent->hasTag("Spaceship") == false) {
+//	if (body->parent->hasTag("Car") == false) {
 //		Shard::Logger::log("Boom! (bullet ded)");
 //		to_be_destroyed_ = true;
 //	}
