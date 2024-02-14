@@ -64,16 +64,16 @@ namespace Shard {
 			//cant remember if it should be one or zero here v, so this might fuck shit up
 			vertex = glm::vec3(m_model->getModelMatrix() * glm::vec4(vertex, 1.0));
 
-		min = glm::vec3{ FLOAT_MAX };
-		max = glm::vec3{ FLOAT_MIN };
+		auto minn = glm::vec3{ FLOAT_MAX };
+		auto maxx = glm::vec3{ FLOAT_MIN };
 
 		for (int i = 0; i < 8;  i++) {
-			min = glm::min(min, vertices[i]);
-			max = glm::max(max, vertices[i]);
+			minn = glm::min(minn, vertices[i]);
+			maxx = glm::max(maxx, vertices[i]);
 		}
 
-		m_boxBottomLeft = min;
-		m_boxTopRight = max;
+		m_boxBottomLeft = minn;
+		m_boxTopRight = maxx;
 	}
 
 	std::optional<glm::vec3> ColliderBox::checkCollision(Ray& ray)

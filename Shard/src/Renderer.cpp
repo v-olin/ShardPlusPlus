@@ -11,7 +11,7 @@ namespace Shard {
 		, m_shaderManager(shaderManager)
 		, m_resolution({ 1280, 760 })
 		, m_fieldOfView(45.f)
-		, m_projectionMatrix(glm::perspective(m_fieldOfView, m_resolution.x / m_resolution.y, 1.f, 100.f))
+		, m_projectionMatrix(glm::perspective(m_fieldOfView, m_resolution.x / m_resolution.y, 1.f, 300.f))
 		, m_drawColliders(true)
 		, m_window(window)
 	{
@@ -101,9 +101,6 @@ namespace Shard {
 			minMax[2].x
 		};
 
-		GLuint vaob;
-		GLuint bfo;
-
 		float vertices[] = {
 			min.x,	min.y,	 min.z,		// v0
 			min.x,	min.y,	 -max.z,	// v1
@@ -115,20 +112,56 @@ namespace Shard {
 			max.x,	max.y,	 min.z		// v7
 		};
 
-		glUseProgram(m_shaderManager.getShader("collider"));
+		GLuint indices[] = {
+			0, 2, 3,
+			0, 1, 2,
+			0, 1, 4,
+			1, 5, 4,
+			4, 5, 7,
+			6, 5, 7,
+			3, 2, 7,
+			6, 7, 2,
+			0, 3, 4,
+			4, 7, 3,
+			1, 6, 2,
+			1, 5, 6
+		};
 
-		m_shaderManager.SetVec3(m_shaderManager.getShader("collider"), toDraw->m_body->m_debugColor, "colorIn");
+		glm::mat4 modelMatrix = toDraw->m_model->getModelMatrix();
+		glm::mat4 viewMatrix = m_sceneManager.getCameraViewMatrix();
+		glm::mat4 mvpMatrix = m_projectionMatrix * viewMatrix * modelMatrix;
+
+		auto shader = m_shaderManager.getShader("collider");
+		glUseProgram(shader);
+
+		m_shaderManager.SetVec3(shader, toDraw->m_body->m_debugColor, "colorIn");
+		m_shaderManager.SetMat4x4(shader, mvpMatrix, "u_MVP");
+
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		GLuint vao;
+		GLuint vbo;
+		GLuint ebo;
 
-		glGenVertexArrays(1, &vaob);
-		glBindVertexArray(vaob);
-		glGenBuffers(1, &bfo);
-		glBindBuffer(GL_ARRAY_BUFFER, bfo);
+		glDisable(GL_CULL_FACE);
+		
+		glGenVertexArrays(1, &vao);
+		glBindVertexArray(vao);
+
+		glGenBuffers(1, &vbo);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-		glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * sizeof(float), 0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
 		glEnableVertexAttribArray(0);
-		glDrawArrays(GL_TRIANGLES, 0, 8 * 3);
+
+		glGenBuffers(1, &ebo);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+		//glVertexAttribPointer(1, 3, GL_UNSIGNED_INT, false, 0, 0);
+		//glEnableVertexAttribArray(1);
+
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);

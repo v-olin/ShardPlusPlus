@@ -115,6 +115,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)include\PhysicsManager.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\Renderer.h">
+      <Filter>include</Filter>
+    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)include\SAPEntry.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -928,8 +931,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\tiny_obj\include\tiny_obj_loader.h">
       <Filter>vendor\tiny_obj\include</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)include\Renderer.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)include\ColliderBox.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)src\AssetManager.cpp">
@@ -971,6 +972,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)src\PhysicsManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\Renderer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)src\SceneManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -986,6 +990,5 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\glm\detail\glm.cpp">
       <Filter>vendor\glm\detail</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)src\Renderer.cpp" />
   </ItemGroup>
 </Project>
