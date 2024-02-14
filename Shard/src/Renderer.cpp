@@ -137,7 +137,6 @@ namespace Shard {
 		m_shaderManager.SetVec3(shader, toDraw->m_body->m_debugColor, "colorIn");
 		m_shaderManager.SetMat4x4(shader, mvpMatrix, "u_MVP");
 
-
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		GLuint vao;
 		GLuint vbo;
@@ -158,10 +157,12 @@ namespace Shard {
 		glGenBuffers(1, &ebo);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-		//glVertexAttribPointer(1, 3, GL_UNSIGNED_INT, false, 0, 0);
-		//glEnableVertexAttribArray(1);
 
 		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+		glDeleteBuffers(1, &vao);
+		glDeleteBuffers(1, &vbo);
+		glDeleteBuffers(1, &ebo);
 
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
