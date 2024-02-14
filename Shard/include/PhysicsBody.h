@@ -74,4 +74,5 @@ namespace Shard {
 		long m_timeInterval;
 	};
 
+
 }

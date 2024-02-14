@@ -10,9 +10,12 @@
 #include <optional>
 #include <unordered_map>
 #include <functional>
+#include <unordered_map>
+#include <functional>
 
 namespace Shard {
 
+	PhysicsManager::PhysicsManager() { }
 	PhysicsManager::PhysicsManager() { }
 
 	PhysicsManager& PhysicsManager::getInstance() {
@@ -74,6 +77,7 @@ namespace Shard {
 
 	void PhysicsManager::addPhysicsObject(std::shared_ptr<PhysicsBody> body) {
 		// TODO: std::find? yea.
+		// TODO: std::find? yea.
 		bool exists = false;
 		for(size_t i = 0; i < all_physics_objects.size(); i++){
 			auto &other = all_physics_objects.at(i);
@@ -83,7 +87,12 @@ namespace Shard {
 			}
 		}
 		if (!exists) {
+		if (!exists) {
 			all_physics_objects.push_back(body);
+			makeInterval(AXIS_X, body);
+			makeInterval(AXIS_Y, body);
+			makeInterval(AXIS_Z, body);
+		}
 			makeInterval(AXIS_X, body);
 			makeInterval(AXIS_Y, body);
 			makeInterval(AXIS_Z, body);
@@ -91,6 +100,55 @@ namespace Shard {
 	}
 
 	void PhysicsManager::removePhysicsObject(std::shared_ptr<PhysicsBody> body) {
+		// TODO: remove body from all intervals, make sure to remove all edges from all edge_lists also
+		//and set traverse_edge_list = true for all axies
+		//find edges
+
+		auto delete_from_edge_list = [this, body](int axis) {
+			auto &edge_list = this->getEdgeList(axis);
+			edge_list.erase(std::remove_if(edge_list.begin(), edge_list.end(), [&](const IntervalEdge ie) -> bool {
+				return ie.interval->gob_body == body;
+			}), edge_list.end());
+		};
+
+		delete_from_edge_list(AXIS_X);
+		delete_from_edge_list(AXIS_Y);
+		delete_from_edge_list(AXIS_Z);
+
+		auto delete_from_interval_list = [this, body](int axis) {
+			auto &interval_list = getInterval(axis);
+			interval_list.erase(std::remove_if(interval_list.begin(), interval_list.end(), [&](const std::shared_ptr<Interval>& i) -> bool {
+				return i->gob_body == body;
+				}), interval_list.end());
+			};
+
+		delete_from_interval_list(AXIS_X);
+		delete_from_interval_list(AXIS_Y);
+		delete_from_interval_list(AXIS_Z);
+
+		auto shrink_overlap_mat = [this, body](int axis) {
+			auto& mat = getOverlapMatrix(axis);
+			auto len = mat.size();
+			for (size_t i = 0; i < mat.size(); i++) {
+				mat[i].erase(std::next(mat[i].begin(), len - 1));
+			}
+			mat.erase(std::next(mat.begin(), len - 1));
+			};
+		
+		shrink_overlap_mat(AXIS_X);
+		shrink_overlap_mat(AXIS_Y);
+		shrink_overlap_mat(AXIS_Z);
+
+		//remove from activeintervalks list
+		active_interval_list.erase(std::remove_if(active_interval_list.begin(), active_interval_list.end(), [&](const std::shared_ptr<Interval>& i) -> bool {
+			return i->gob_body == body;
+			}), active_interval_list.end());
+
+
+
+
+
+
 		// TODO: remove body from all intervals, make sure to remove all edges from all edge_lists also
 		//and set traverse_edge_list = true for all axies
 		//find edges
@@ -153,6 +211,11 @@ namespace Shard {
 		traverse_edge_list_y = true;
 		traverse_edge_list_z = true;
 
+
+		traverse_edge_list_x = true;
+		traverse_edge_list_y = true;
+		traverse_edge_list_z = true;
+
 	}
 
 	bool PhysicsManager::willTick() {
@@ -179,6 +242,7 @@ namespace Shard {
 
 		int i = 0;
 		bool remove = false;
+		for (CollidingObject& col : collisions) {
 		for (CollidingObject& col : collisions) {
 
 			// todo: if decide to translate, don't do that for kinematic objects
@@ -208,6 +272,7 @@ namespace Shard {
 
 			
 			std::optional<glm::vec2> impulse = getImpulseFromCollision(col.a, col.b);
+			std::optional<glm::vec2> impulse = getImpulseFromCollision(col.a, col.b);
 
 			if (impulse.has_value()) {
 				a_handler->onCollisionStay(col.b);
@@ -229,7 +294,9 @@ namespace Shard {
 		int removed = 0;
 		for (size_t idx : to_remove) {
 			auto iter = collisions.begin();
+			auto iter = collisions.begin();
 			std::advance(iter, idx-removed);
+			collisions.erase(iter);
 			collisions.erase(iter);
 			removed++;
 		}
@@ -249,6 +316,7 @@ namespace Shard {
 	bool PhysicsManager::findColliding(std::shared_ptr<PhysicsBody> a, std::shared_ptr<PhysicsBody> b) {
 		CollidingObject col { a, b };
 
+		for (auto &col_ : collisions) {
 		for (auto &col_ : collisions) {
 			if (col.equals(col_))
 				return true;
@@ -484,6 +552,11 @@ namespace Shard {
 		for (CollidingObject &col_obj : cols_to_check) {
 			possible_impulse = getImpulseFromCollision(col_obj.a, col_obj.b);
 
+		//collisions = sweepAndMotherfuckingPrune();
+		auto cols_to_check = sweepAndMotherfuckingPrune();
+		for (CollidingObject &col_obj : cols_to_check) {
+			possible_impulse = getImpulseFromCollision(col_obj.a, col_obj.b);
+
 			if (possible_impulse.has_value()) {
 				impulse = possible_impulse.value();
 
@@ -534,12 +607,17 @@ namespace Shard {
 
 				collisions.push_back(col_obj);
 
+				collisions.push_back(col_obj);
+
 
 			}
 		}
 	}
 
 	void PhysicsManager::checkForCollisions() {
+		//collisions.clear();
+		runCollisionCheck();
+		collision_last_frame = collisions.size();
 		//collisions.clear();
 		runCollisionCheck();
 		collision_last_frame = collisions.size();

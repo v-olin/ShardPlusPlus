@@ -21,6 +21,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Camera.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Collider.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\ColliderBox.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\ColliderBox.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\CollidingObject.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\CollisionHandler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Game.h" />

@@ -2,6 +2,7 @@
 #include "PhysicsManager.h"
 
 #include "ColliderBox.h"
+#include "ColliderBox.h"
 
 #include <limits>
 #include <algorithm>
@@ -59,6 +60,8 @@ namespace Shard {
 
 	void PhysicsBody::applyGravity(glm::vec3 dir, const float multiplier) {
 		addForce(dir * multiplier);
+	void PhysicsBody::applyGravity(glm::vec3 dir, const float multiplier) {
+		addForce(dir * multiplier);
 	}
 
 	void PhysicsBody::draw() {
@@ -106,9 +109,12 @@ namespace Shard {
 
 	void PhysicsBody::reflectForces(glm::vec3 impulse) {
 		glm::vec3 reflect(0,0, 0);
+	void PhysicsBody::reflectForces(glm::vec3 impulse) {
+		glm::vec3 reflect(0,0, 0);
 
 		reflect.x = impulse.x > 0 ? 1.f : -1.f;
 		reflect.y = impulse.y > 0 ? 1.f : -1.f;
+		reflect.z = impulse.z > 0 ? 1.f : -1.f;
 		reflect.z = impulse.z > 0 ? 1.f : -1.f;
 
 		m_force *= reflect;
@@ -118,6 +124,7 @@ namespace Shard {
 		m_force *= prop;
 	}
 
+	void PhysicsBody::addForce(glm::vec3 dir, const float force) {
 	void PhysicsBody::addForce(glm::vec3 dir, const float force) {
 		addForce(dir * force);
 	}

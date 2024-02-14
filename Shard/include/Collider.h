@@ -5,11 +5,15 @@
 #include <optional>
 #include <memory>
 #include <vector>
+#include <vector>
 
 #include "CollisionHandler.h"
 #include "Model.h"
 
 namespace Shard {
+
+    typedef struct Ray;
+    class ColliderBox;
 
     typedef struct Ray;
     class ColliderBox;
