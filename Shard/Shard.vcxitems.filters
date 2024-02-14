@@ -929,6 +929,7 @@
       <Filter>vendor\tiny_obj\include</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Renderer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\ColliderBox.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)src\AssetManager.cpp">

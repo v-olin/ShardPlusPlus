@@ -95,6 +95,7 @@
 #include <iostream>
 #include <memory>
 #include <conio.h>
+#include "main.h"
 
 #undef main
 #define FAST 100000000000;
