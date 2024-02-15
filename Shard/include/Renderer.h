@@ -4,6 +4,8 @@
 #include "TextureManager.h"
 #include "ShaderManager.h"
 
+#include "CubeMap.h"
+
 #include <glm.hpp>
 
 namespace Shard {
@@ -26,6 +28,11 @@ namespace Shard {
 		bool m_drawColliders;
 		GLFWwindow* m_window;
 
+		GLuint cubemap_tex_id{ 0 };
+		CubeMap* cubemap_model{ nullptr };
+		
+		GLuint LoadCubeMap(std::string cubemap_name);
+		void drawCubeMap();
 		void drawScene();
 		void drawModels();
 		void drawCollider(std::shared_ptr<GameObject> toDraw);

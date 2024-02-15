@@ -181,6 +181,7 @@ namespace Shard {
 
         ShaderManager& sm = ShaderManager::getInstance();
         sm.loadShader("collider", false);
+        sm.loadShader("cubemap", false);
 
         return;
 
