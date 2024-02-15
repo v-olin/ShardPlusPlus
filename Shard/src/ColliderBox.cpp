@@ -15,7 +15,8 @@ namespace Shard {
 		: Collider(game_obj, model)
 		, m_boxBottomLeft({ 0.f })
 		, m_boxTopRight({ 0.f })
-	{ }
+	{ 
+	}
 
 	void ColliderBox::recalculateBoundingBox()
 	{
@@ -61,10 +62,6 @@ namespace Shard {
 			{max.x,	max.y, min.z}	// v7
 		};
 
-		//for (auto &vertex : vertices)
-		//	//cant remember if it should be one or zero here v, so this might fuck shit up
-		//	vertex = glm::vec3(m_model->getModelMatrix() * glm::vec4(vertex, 1.0));
-
 		auto minn = glm::vec3{ FLOAT_MAX };
 		auto maxx = glm::vec3{ FLOAT_MIN };
 
@@ -75,6 +72,23 @@ namespace Shard {
 
 		m_boxBottomLeft = minn;
 		m_boxTopRight = maxx;
+
+		for (auto &vertex : vertices)
+			//cant remember if it should be one or zero here v, so this might fuck shit up
+			vertex = glm::vec3(m_model->getModelMatrix() * glm::vec4(vertex, 1.0));
+
+		auto min_trans = glm::vec3{ FLOAT_MAX };
+		auto max_trans = glm::vec3{ FLOAT_MIN };
+
+		for (int i = 0; i < 8;  i++) {
+			min_trans = glm::min(min_trans, vertices[i]);
+			max_trans = glm::max(max_trans, vertices[i]);
+		}
+
+		m_transformed_boxBottomLeft = min_trans;
+		m_transformed_boxTopRight = max_trans;
+
+
 	}
 
 	std::optional<glm::vec3> ColliderBox::checkCollision(Ray& ray)
@@ -94,4 +108,24 @@ namespace Shard {
 			{ m_boxBottomLeft.z, m_boxTopRight.z }
 		};
 	}
+	std::vector<glm::vec2> ColliderBox::getTransformedMinMaxDims() {
+		return {
+			{ m_transformed_boxBottomLeft.x, m_transformed_boxTopRight.x },
+			{ m_transformed_boxBottomLeft.y, m_transformed_boxTopRight.y },
+			{ m_transformed_boxBottomLeft.z, m_transformed_boxTopRight.z }
+		};
+
+		////TODO, WHY TF does * change the value of the vectors it takes in????
+		//auto bbl_copy = m_boxBottomLeft;
+		//auto btr_copy = m_boxTopRight;
+
+		//auto trans_boxBottomLeft = glm::vec3(m_model->getModelMatrix() * glm::vec4(bbl_copy, 1.0));
+		//auto trans_boxTopRight = glm::vec3(m_model->getModelMatrix() * glm::vec4(btr_copy, 1.0));
+		//return {
+		//	{ trans_boxBottomLeft.x, trans_boxTopRight.x },
+		//	{ trans_boxBottomLeft.y, trans_boxTopRight.y },
+		//	{ trans_boxBottomLeft.z, trans_boxTopRight.z }
+		//};
+	}
+
 }

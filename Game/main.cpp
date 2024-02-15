@@ -91,6 +91,7 @@
 #include "Logger.h"
 #include "Bootstrap.h"
 #include "Car.h"
+#include "Asteriod.h"
 #include "GameObjectManager.h"
 #include <iostream>
 #include <memory>
@@ -158,10 +159,30 @@ void GameTest::createCar() {
 	car->initialize();
 	Shard::Bootstrap::getInput().addListeners(car);
 }
+//void GameTest::createAsteroid(float x, float y) {
+//	auto asteroid = std::make_shared<Asteroid>();
+//	asteroid->initialize();
+//	Shard::GameObjectManager::getInstance().addGameObject(asteroid->shared_from_this());
+//	//TODO: this will have to be fixed
+//	//asteroid->body_->trans->x = x;
+//	//asteroid->body_->trans->y = y;
+//	asteroids.push_back(asteroid);
+//}
+
+void GameTest::createAsteroid(float x, float y, float z) {
+		
+	auto asteroid = std::make_shared<Asteroid>();
+	asteroid->initialize();
+	asteroid->m_model->translate({ x, y, z });
+	asteroid->m_model->scale({4,4,4});
+	asteroids.push_back(asteroid);
+
+}
 
 void GameTest::initalize() {
 	Shard::Logger::log("Initializing game");
 	createCar();
+	createAsteroid(-10, 0, 0);
 	//for(int i = 0; i < 100; i++)
 	//	createAsteroid(i%10, i%10);
 	Shard::Bootstrap::getInput().addListeners(shared_from_this());
