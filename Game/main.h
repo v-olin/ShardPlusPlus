@@ -18,6 +18,7 @@ public:
 	// void createShip();
 	void createCar();
 	void createAsteroid(float x, float y, float z);
+	void createFlatPlane(float x, float y, float z);
 
 	void update();
 	int getTargetFrameRate();

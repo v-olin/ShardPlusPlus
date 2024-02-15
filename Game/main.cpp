@@ -44,6 +44,14 @@ void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 
 		if (ie.key == GLFW_KEY_D)
 			sm.camera.move(Shard::Movement::RIGHT, 1.0f);
+
+		if (ie.key == GLFW_KEY_LEFT_SHIFT)
+			sm.camera.move(Shard::Movement::UP, 1.0f);
+
+		if (ie.key == GLFW_KEY_RIGHT_SHIFT)
+			sm.camera.move(Shard::Movement::DOWN, 1.0f);
+
+
 	}
 
 }
@@ -65,7 +73,17 @@ void GameTest::createAsteroid(float x, float y, float z) {
 	auto asteroid = std::make_shared<Asteroid>();
 	asteroid->initialize();
 	asteroid->m_model->translate({ x, y, z });
-	asteroid->m_model->scale({4,4,4});
+	asteroid->m_model->scale({ 10.0f, 10.0f, 10.0f });
+	asteroids.push_back(asteroid);
+
+}
+
+void GameTest::createFlatPlane(float x, float y, float z) {
+
+	auto asteroid = std::make_shared<Asteroid>();
+	asteroid->initialize();
+	asteroid->m_model->translate({ x, y, z });
+	asteroid->m_model->scale({ 250.0f, 1.0f, 250.0f });
 	asteroids.push_back(asteroid);
 
 }
@@ -73,7 +91,8 @@ void GameTest::createAsteroid(float x, float y, float z) {
 void GameTest::initalize() {
 	Shard::Logger::log("Initializing game");
 	createCar();
-	createAsteroid(10, 0, -10); // <-------------------------------------------------------------------------
+	createAsteroid(10, 0, -10);
+	createFlatPlane(0, -12, 0);
 	Shard::Bootstrap::getInput().addListeners(shared_from_this());
 }
 

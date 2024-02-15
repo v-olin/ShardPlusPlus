@@ -126,21 +126,49 @@ namespace Shard {
 		// TLDR: this is fucked
 		auto& gobs = GameObjectManager::getInstance().getObjects();
 
+		///////////////////
+		// POINT LIGHT
+		///////////////////
+		// Note: No model is being drawn to show
+		// the light source in the world.
+
+		glm::vec3 light_color{ 1.0f, 1.0f, 1.0f };
+		glm::vec3 light_position{ 0.0f, 10.0f, 0.0f };
+		float light_ambient_intensity{ 0.1f };
+		float light_diffuse_intensity{ 0.8f };
+		float light_specular_intensity{ 1.0f };
+
+		float attenuation_constant{ 1.0f };
+		float attenuation_linear{ 0.0f };
+		float attenuation_quadratic{ 0.001f };
+
+		///////////////////
+
 		for (std::shared_ptr<GameObject> gob : gobs) {
 			if (!gob->m_model->m_hasDedicatedShader) [[likely]] {
 				configureDefaultShader();
 			}
 
-			// this is fucked up
-			// glm::mat4 modelMatrix = gob->body_->trans->transformMatrix;
-			// much better :^)
 			glm::mat4 modelMatrix = gob->m_model->getModelMatrix();
 			glm::mat4 viewMatrix = m_sceneManager.getCameraViewMatrix();
 			glm::mat4 mvpMatrix = m_projectionMatrix * viewMatrix * modelMatrix;
+			auto camera_pos = m_sceneManager.camera.pos;
 
 			const GLuint defShader = m_shaderManager.getDefaultShader();
 			if (!gob->m_model->m_hasDedicatedShader) [[likely]] {
+				// Vertex shader uniforms
+				m_shaderManager.SetVec3(defShader, camera_pos, "u_ViewPosition");
+				m_shaderManager.SetMat4x4(defShader, modelMatrix, "u_ModelMatrix");
 				m_shaderManager.SetMat4x4(defShader, mvpMatrix, "u_MVP");
+				// Fragment shader uniforms
+				m_shaderManager.SetVec3(defShader, light_color, "u_LightColor");
+				m_shaderManager.SetVec3(defShader, light_position, "u_LightPosition");
+				m_shaderManager.SetFloat1(defShader, light_ambient_intensity, "u_LightAmbientIntensity");
+				m_shaderManager.SetFloat1(defShader, light_diffuse_intensity, "u_LightDiffuseIntensity");
+				m_shaderManager.SetFloat1(defShader, light_specular_intensity, "u_LightDpecularIntensity");
+				m_shaderManager.SetFloat1(defShader, attenuation_constant, "u_AttenuationConstant");
+				m_shaderManager.SetFloat1(defShader, attenuation_linear, "u_AttenuationLinear");
+				m_shaderManager.SetFloat1(defShader, attenuation_quadratic, "u_AttenuationQuadratic");
 			}
 
 			gob->m_model->Draw();
