@@ -155,7 +155,7 @@ namespace Shard {
 
 	void Renderer::drawCollider(std::shared_ptr<GameObject> toDraw) {
 
-		std::vector<glm::vec2> minMax = toDraw->m_body->m_collider->getMinMaxDims();
+		std::vector<glm::vec2> minMax = toDraw->m_body->m_collider->getTransformedMinMaxDims();
 
 		glm::vec3 max = glm::vec3{
 			minMax[0].y,
@@ -171,14 +171,14 @@ namespace Shard {
 
 		//removed - signs since min can already be negativ if neede, very bad!!
 		float vertices[] = {
-			min.x,	min.y, min.z,	// v0
-			min.x,	min.y, max.z,	// v1
-			max.x,	min.y, max.z,	// v2
-			max.x,	min.y, min.z,	// v3
-			min.x,	max.y, min.z,	// v4
-			min.x,	max.y, max.z,	// v5
-			max.x,	max.y, max.z,	// v6
-			max.x,	max.y, min.z	// v7
+			min.x,	min.y, max.z,	// v0
+			min.x,	min.y, min.z,	// v1
+			max.x,	min.y, min.z,	// v2
+			max.x,	min.y, max.z,	// v3
+			min.x,	max.y, max.z,	// v4
+			min.x,	max.y, min.z,	// v5
+			max.x,	max.y, min.z,	// v6
+			max.x,	max.y, max.z	// v7
 		};
 
 		GLuint indices[] = {
@@ -197,8 +197,9 @@ namespace Shard {
 		};
 
 		glm::mat4 modelMatrix = toDraw->m_model->getModelMatrix();
+		auto ma = glm::translate(glm::mat4(1.0f), toDraw->m_model->position());
 		glm::mat4 viewMatrix = m_sceneManager.getCameraViewMatrix();
-		glm::mat4 mvpMatrix = m_projectionMatrix * viewMatrix * modelMatrix;
+		glm::mat4 mvpMatrix = m_projectionMatrix * viewMatrix;// *ma;
 
 		auto shader = m_shaderManager.getShader("collider");
 		glUseProgram(shader);

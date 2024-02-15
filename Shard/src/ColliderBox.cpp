@@ -51,34 +51,27 @@ namespace Shard {
 		glm::vec3 min = m_model->min;
 
 		//removed - signs since min can already be negativ if neede, very bad!!
-		std::vector<glm::vec3> vertices{
-			{min.x,	min.y, min.z},	// v0
-			{min.x,	min.y, max.z},	// v1
-			{max.x,	min.y, max.z},	// v2
-			{max.x,	min.y, min.z},	// v3
-			{min.x,	max.y, min.z},	// v4
-			{min.x,	max.y, max.z},	// v5
-			{max.x,	max.y, max.z},	// v6
-			{max.x,	max.y, min.z}	// v7
+		std::vector<glm::vec3> vertices {
+			{min.x,	min.y, max.z},	// v0
+			{min.x,	min.y, min.z},	// v1
+			{max.x,	min.y, min.z},	// v2
+			{max.x,	min.y, max.z},	// v3
+			{min.x,	max.y, max.z},	// v4
+			{min.x,	max.y, min.z},	// v5
+			{max.x,	max.y, min.z},	// v6
+			{max.x,	max.y, max.z}	// v7
 		};
 
-		auto minn = glm::vec3{ FLOAT_MAX };
-		auto maxx = glm::vec3{ FLOAT_MIN };
-
-		for (int i = 0; i < 8;  i++) {
-			minn = glm::min(minn, vertices[i]);
-			maxx = glm::max(maxx, vertices[i]);
-		}
-
-		m_boxBottomLeft = minn;
-		m_boxTopRight = maxx;
-
+		// ymax stuck 0
+		// xmax stuck 0
+		// zmax stuck 0
+	
 		for (auto &vertex : vertices)
 			//cant remember if it should be one or zero here v, so this might fuck shit up
 			vertex = glm::vec3(m_model->getModelMatrix() * glm::vec4(vertex, 1.0));
 
-		auto min_trans = glm::vec3{ FLOAT_MAX };
-		auto max_trans = glm::vec3{ FLOAT_MIN };
+		auto min_trans = glm::vec3{ 9999999.0f };
+		auto max_trans = -min_trans;
 
 		for (int i = 0; i < 8;  i++) {
 			min_trans = glm::min(min_trans, vertices[i]);
@@ -88,6 +81,11 @@ namespace Shard {
 		m_transformed_boxBottomLeft = min_trans;
 		m_transformed_boxTopRight = max_trans;
 
+		auto minn = min_trans;
+		auto maxx = max_trans;
+
+		m_boxBottomLeft = glm::inverse(m_model->getModelMatrix()) * glm::vec4(minn, 1.0);
+		m_boxTopRight = glm::inverse(m_model->getModelMatrix()) * glm::vec4(maxx, 1.0);
 
 	}
 

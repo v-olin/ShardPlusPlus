@@ -328,8 +328,4 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\glad\glad.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\glm\detail\glm.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)res\shaders\cubemap.frag" />
-    <None Include="$(MSBuildThisFileDirectory)res\shaders\cubemap.vert" />
-  </ItemGroup>
 </Project>

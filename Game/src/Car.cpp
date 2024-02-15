@@ -123,17 +123,17 @@ void Car::update() {
 
 void Car::physicsUpdate() {
     if (turn_left)
-        m_body->addTorque({ 0, 0.1f, 0 });
+        m_body->addTorque({ 0, 0.05f, 0 });
     if (turn_right)
-        m_body->addTorque({ 0, -0.1f, 0 });
+        m_body->addTorque({ 0, -0.05f, 0 });
     if (backward)
         m_body->addForce(m_model->m_forward, 0.1f);
     if (forward)
         m_body->addForce(m_model->m_forward, -0.1f);
     if (pitch_up)
-        m_body->addTorque({ 0, 0, 0.1f });
+        m_body->addTorque({ 0, 0, 0.05f });
     if (pitch_down)
-        m_body->addTorque({ 0, 0, -0.1f });
+        m_body->addTorque({ 0, 0, -0.05f });
 }
 
 void Car::prePhysicsUpdate() {

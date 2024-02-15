@@ -42,15 +42,15 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\bin\Debug-windows-x86\Game\</OutDir>
-    <IntDir>..\bin-int\Debug-windows-x86\Game\</IntDir>
+    <OutDir>..\binn\Debug-windows-x86\Game\</OutDir>
+    <IntDir>..\binn-int\Debug-windows-x86\Game\</IntDir>
     <TargetName>Game</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>..\bin\Release-windows-x86\Game\</OutDir>
-    <IntDir>..\bin-int\Release-windows-x86\Game\</IntDir>
+    <OutDir>..\binn\Release-windows-x86\Game\</OutDir>
+    <IntDir>..\binn-int\Release-windows-x86\Game\</IntDir>
     <TargetName>Game</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
