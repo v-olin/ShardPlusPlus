@@ -32,7 +32,7 @@ void Asteroid::initialize()
 	m_body->m_drag = 0.1f;
 	m_body->m_stopOnCollision = true;
 	m_body->m_reflectOnCollision = true;
-	m_body->m_impartForce = false;
+	m_body->m_impartForce = true;
 	m_body->m_isKinematic = false;
     m_body->m_passThrough = false;
 

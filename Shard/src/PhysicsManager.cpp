@@ -624,7 +624,8 @@ namespace Shard {
 		if (overlap_x == 0 || overlap_y == 0 || overlap_z == 0)
 			return std::nullopt;
 
-		return std::optional<glm::vec3>({x, y, z});
+		auto v = glm::vec3{ x, y, z };
+		return std::optional<glm::vec3>(v + v * glm::vec3(15.0f));
 
 		/*
 		if (overlap_x == min_overlap)
