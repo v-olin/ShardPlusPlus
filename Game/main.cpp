@@ -10,15 +10,41 @@
 #include <conio.h>
 #include "main.h"
 
+#include "SceneManager.h"
+
 #undef main
 #define FAST 100000000000;
 #define SLOW 50;
 
-void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
-	if (et != Shard::EventType::MouseDown)
-		return;
+bool active{ false };
 
-	Shard::Logger::log("Event in game");
+void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
+
+	Shard::Logger::log("Jasdjhasdjhasjhaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+
+	static auto &sm = Shard::SceneManager::getInstance();
+
+	if (et == Shard::EventType::KeyDown)
+	{
+		if (ie.key == GLFW_KEY_TAB) {
+			active = !active;
+		}
+	}
+
+	if (active) {
+		Shard::Logger::log(("active status: " + std::to_string(active)).c_str());
+		if (ie.key == GLFW_KEY_W)
+			sm.camera.move(Shard::Movement::FORWARD, 1.0f);
+
+		if (ie.key == GLFW_KEY_S)
+			sm.camera.move(Shard::Movement::BACKWARD, 1.0f);
+
+		if (ie.key == GLFW_KEY_A)
+			sm.camera.move(Shard::Movement::LEFT, 1.0f);
+
+		if (ie.key == GLFW_KEY_D)
+			sm.camera.move(Shard::Movement::RIGHT, 1.0f);
+	}
 
 }
 int GameTest::getTargetFrameRate() {
@@ -47,7 +73,7 @@ void GameTest::createAsteroid(float x, float y, float z) {
 void GameTest::initalize() {
 	Shard::Logger::log("Initializing game");
 	createCar();
-	createAsteroid(10, 0, 0); // <-------------------------------------------------------------------------
+	createAsteroid(10, 0, -10); // <-------------------------------------------------------------------------
 	Shard::Bootstrap::getInput().addListeners(shared_from_this());
 }
 

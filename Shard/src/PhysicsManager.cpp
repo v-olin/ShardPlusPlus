@@ -489,7 +489,11 @@ namespace Shard {
 		float mass_total, mass_prop = 0.f;
 
 
-		//collisions = sweepAndMotherfuckingPrune();
+		// TODO:
+		/*
+			Add bob-box collision checking with non world-space axis aligned boxes
+			e.g. use SAT or transform one box into the others realm and do standard AABB there, whatever floats your boat bro
+		*/
 		auto cols_to_check = sweepAndMotherfuckingPrune();
 		for (CollidingObject &col_obj : cols_to_check) {
 			possible_impulse = getImpulseFromCollision(col_obj.a, col_obj.b);

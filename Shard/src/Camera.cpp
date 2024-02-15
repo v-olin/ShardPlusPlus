@@ -1,6 +1,7 @@
 #include "Camera.h"
 
 namespace Shard {
+
 	Camera::Camera()
 		:
 		pos(glm::vec3(0.0f, 5.0f, 25.0f)),
