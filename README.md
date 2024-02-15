@@ -1,2 +1,12 @@
 ## Shard++
 The project is about rewriting the game-engine "Shard" supplied in the course "TDA572 / DIT572 Game engine architecture" from C# to C++.
+
+**Some features:**
+- Cubemap
+- 3D model loading with materials that can be used for physically-based rendering
+- AABB collisionbox
+- Sweep and prune (SAP) collision detection in 3D
+- Event listeners for game objects (e.g. OnCollisionEnter, OnCollisionStay, OnCollisionExit)
+- Flight controls (euler angles, pitch, yaw, roll) for the player (which is a spaceship)
+- First person camera
+- Possible to use configuration file to use your own custom shader
