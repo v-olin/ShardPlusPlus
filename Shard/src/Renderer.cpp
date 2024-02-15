@@ -3,6 +3,10 @@
 #include "GameObjectManager.h"
 #include "Logger.h"
 
+#include <filesystem>
+
+#include <stb_image.h>
+
 namespace Shard {
 
 	Renderer::Renderer(SceneManager& sceneManager, TextureManager& texManager, ShaderManager& shaderManager, GLFWwindow* window)
@@ -20,6 +24,7 @@ namespace Shard {
 			Logger::log("Renderer already initialized, very bad!!", LOG_LEVEL_FATAL);
 		}
 		initialized = true;
+		LoadCubeMap("skybox");
 	}
 
 	void Renderer::render() {
@@ -40,14 +45,77 @@ namespace Shard {
 		glfwSwapBuffers(m_window);
 	}
 
-	void Renderer::drawScene() {
+	GLuint Renderer::LoadCubeMap(std::string cubemap_name)
+	{
+
+		cubemap_model = new CubeMap();
+
+		auto base_dir = "../Shard/res/cubemaps/" + cubemap_name + "/";
+		static std::vector<std::string> faces
+		{
+			base_dir + "right.jpg",
+			base_dir + "left.jpg",
+			base_dir + "top.jpg",
+			base_dir + "bottom.jpg",
+			base_dir + "front.jpg",
+			base_dir + "back.jpg"
+		};
+
+		glGenTextures(1, &cubemap_tex_id);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap_tex_id);
+
+		int width, height, nof_channels;
+		unsigned char* data;
+		for (unsigned int i = 0; i < faces.size(); i++)
+		{
+			data = stbi_load(faces[i].c_str(), &width, &height, &nof_channels, 0);
+			if (data) {
+				glTexImage2D(
+					GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+					0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data
+				);
+			}
+			else {
+				Logger::log("[LOG][Renderer::LoadCubeMap] stbi_load failed");
+				Logger::log((faces[i] + ", " + std::to_string(width) + ", " + std::to_string(height) + ", " + std::to_string(nof_channels)).c_str());
+				Logger::log("-------------------------------");
+				stbi_image_free(data);
+				std::exit(1);
+			}
+		}
+
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+		Logger::log(("Loaded cubemap: " + cubemap_name).c_str());
+
+	}
+
+	void Renderer::drawCubeMap()
+	{
+		static auto& sm = ShaderManager::getInstance();
+		auto shader = sm.getShader("cubemap");
+		
+		glUseProgram(shader);
+		
 		glm::mat4 viewMatrix = m_sceneManager.getCameraViewMatrix();
+		glm::mat4 mvpMatrix = m_projectionMatrix * glm::mat4(glm::mat3(viewMatrix));
+		sm.SetMat4x4(shader, mvpMatrix, "u_MVP");
 
-		// here we can draw a background or smth
+		glDepthFunc(GL_LEQUAL); // depth test passes when values are leq depth buffer's content
+		glActiveTexture(GL_TEXTURE0 + 2);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap_tex_id);
+		cubemap_model->Draw();
+		glDepthFunc(GL_LESS); // Set back to default
+		glUseProgram(0);
+	}
 
+	void Renderer::drawScene() {
 		drawModels();
-
-		// we can also draw sun or smth
+		drawCubeMap(); // <-- draw it last always
 	}
 
 	void Renderer::drawModels() {
