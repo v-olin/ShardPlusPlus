@@ -49,20 +49,21 @@ namespace Shard {
 		glm::vec3 max = m_model->max;
 		glm::vec3 min = m_model->min;
 
+		//removed - signs since min can already be negativ if neede, very bad!!
 		std::vector<glm::vec3> vertices{
-			{min.x,	min.y,	 min.z},	// v0
-			{min.x,	min.y,	 -max.z},	// v1
-			{max.x,	min.y,	 -max.z},	// v2
-			{max.x,	min.y,	 min.z},	// v3
-			{min.x,	max.y,	 min.z},	// v4
-			{min.x,	max.y,	 -max.z},	// v5
-			{max.x,	max.y,	 -max.z},	// v6
-			{max.x,	max.y,	 min.z}		// v7
+			{min.x,	min.y, min.z},	// v0
+			{min.x,	min.y, max.z},	// v1
+			{max.x,	min.y, max.z},	// v2
+			{max.x,	min.y, min.z},	// v3
+			{min.x,	max.y, min.z},	// v4
+			{min.x,	max.y, max.z},	// v5
+			{max.x,	max.y, max.z},	// v6
+			{max.x,	max.y, min.z}	// v7
 		};
 
-		for (auto &vertex : vertices)
-			//cant remember if it should be one or zero here v, so this might fuck shit up
-			vertex = glm::vec3(m_model->getModelMatrix() * glm::vec4(vertex, 1.0));
+		//for (auto &vertex : vertices)
+		//	//cant remember if it should be one or zero here v, so this might fuck shit up
+		//	vertex = glm::vec3(m_model->getModelMatrix() * glm::vec4(vertex, 1.0));
 
 		auto minn = glm::vec3{ FLOAT_MAX };
 		auto maxx = glm::vec3{ FLOAT_MIN };

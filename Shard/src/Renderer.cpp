@@ -101,15 +101,16 @@ namespace Shard {
 			minMax[2].x
 		};
 
+		//removed - signs since min can already be negativ if neede, very bad!!
 		float vertices[] = {
-			min.x,	min.y,	 min.z,		// v0
-			min.x,	min.y,	 -max.z,	// v1
-			max.x,	min.y,	 -max.z,	// v2
-			max.x,	min.y,	 min.z,		// v3
-			min.x,	max.y,	 min.z,		// v4
-			min.x,	max.y,	 -max.z,	// v5
-			max.x,	max.y,	 -max.z,	// v6
-			max.x,	max.y,	 min.z		// v7
+			min.x,	min.y, min.z,	// v0
+			min.x,	min.y, max.z,	// v1
+			max.x,	min.y, max.z,	// v2
+			max.x,	min.y, min.z,	// v3
+			min.x,	max.y, min.z,	// v4
+			min.x,	max.y, max.z,	// v5
+			max.x,	max.y, max.z,	// v6
+			max.x,	max.y, min.z	// v7
 		};
 
 		GLuint indices[] = {
