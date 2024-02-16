@@ -304,14 +304,15 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\vec3.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\vec4.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\vector_relational.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imconfig.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imgui.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imgui_impl_glfw.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imgui_impl_opengl3.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imgui_internal.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\stb_rect_pack.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\stb_textedit.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\stb_truetype.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui\imconfig.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui\imgui.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui\imgui_internal.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui\imstb_rectpack.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui\imstb_textedit.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui\imstb_truetype.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\stb_image\include\stb_image.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\tiny_obj\include\tiny_obj_loader.h" />
   </ItemGroup>
@@ -337,10 +338,12 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)src\TextureManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\glad\glad.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\glm\detail\glm.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imgui.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imgui_demo.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imgui_draw.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imgui_impl_glfw.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui\imgui.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui\imgui_demo.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui\imgui_draw.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui\imgui_tables.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui\imgui_widgets.cpp" />
   </ItemGroup>
 </Project>

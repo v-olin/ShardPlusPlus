@@ -23,9 +23,7 @@ project "Shard"
 		"%{prj.name}/**.cpp",
 		"%{prj.name}/**.hpp",
 		"%{prj.name}/**.c",
-		"%{prj.name}/**.inl",
-		"%{prj.name}/vendor/imgui-1.51/**.cpp",
-		"%{prj.name}/vendor/imgui-1.51/**.h"
+		"%{prj.name}/**.inl"
 	}
 	
 	includedirs
@@ -35,7 +33,7 @@ project "Shard"
 		"%{prj.name}/vendor/tiny_obj/include",
 		"%{prj.name}/vendor/glew/include",
 		"%{prj.name}/vendor/glfw/include",
-		"%{prj.name}/vendor/imgui-1.51",
+		"%{prj.name}/vendor/imgui",
 		"%{prj.name}/include"
 	}
 
@@ -54,9 +52,7 @@ project "Game"
 		"%{prj.name}/**.cpp",
 		"%{prj.name}/**.hpp",
 		"%{prj.name}/**.c",
-		"%{prj.name}/**.inl",
-		"%{prj.name}/vendor/imgui-1.51/**.cpp",
-		"%{prj.name}/vendor/imgui-1.51/**.h"
+		"%{prj.name}/**.inl"
 	}
 	
 	includedirs
@@ -66,8 +62,8 @@ project "Game"
 		"%{wks.location}/Shard/vendor/tiny_obj/include",
 		"%{wks.location}/Shard/vendor/glad/include",
 		"%{wks.location}/Shard/vendor/glfw/include",
+		"%{wks.location}/Shard/vendor/imgui",
 		"%{wks.location}/Shard/include",
-		"%{wks.location}/Shard/vendor/imgui-1.51",
 		"%{prj.name}/include"
 	}
 

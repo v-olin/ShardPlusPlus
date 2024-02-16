@@ -14,6 +14,7 @@ namespace Shard {
 	public:
 		GUI(GLFWwindow* window, SceneManager& sceneManager, Renderer& renderer);
 
+		void initialize();
 		void draw();
 		void addButton(std::string text);
 		void addSlider();

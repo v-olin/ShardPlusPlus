@@ -113,15 +113,20 @@ namespace Shard {
             std::exit(1);
         }
 
+        // TODO: why are shaders running 4.2 when the engine runs 4.6?
+        // I'm moving back to 4.2 for testing
+        //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 
-        // TODO: don't hardcode size
+        // TODO: don't hardcode size, this should be moved to the renderer
         m_Window = glfwCreateWindow(1280, 760, "ENGINE START... NO PROBLEM... 5 MINUTW... TIDIN TIDIN TIDIN... ENGINE KAPUTT!!!! (<game_name_here>)", 0, 0);
 
         if (m_Window == nullptr) {
             glfwTerminate();
+            // TODO: change to logger
             std::cout << "[LOG][GLFW_INIT] Failed to create window with OpenGL context (glfwCreateWindow).\n";
             std::exit(1);
         }
@@ -239,7 +244,6 @@ namespace Shard {
         ShaderManager& shm = ShaderManager::getInstance();
         Renderer renderer{ sm, tm, shm, m_Window };
         GUI gui{ m_Window, sm, renderer };
-        //gui = GUI(m_Window, sm, renderer);
 
         glEnable(GL_DEPTH_TEST);
         glDisable(GL_CULL_FACE);
@@ -317,6 +321,12 @@ namespace Shard {
                 
             }
         }
+
+        // TODO: cleanup!!
+        // Deletes all ImGUI instances
+        // ImGui_ImplOpenGL3_Shutdown();
+        // ImGui_ImplGlfw_Shutdown();
+        // ImGui::DestroyContext();
         
         Logger::log("Bing!", LOG_LEVEL_FATAL);
     }
