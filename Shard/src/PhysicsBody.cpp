@@ -197,6 +197,7 @@ namespace Shard {
 	void PhysicsBody::setBoxCollider() {
 		auto handler = std::dynamic_pointer_cast<CollisionHandler>(m_parent);
 		m_collider = std::make_shared<ColliderBox>(handler, m_bodyModel);
+		m_collider->recalculateBoundingBox();
 	}
 
 	std::optional<glm::vec3> PhysicsBody::checkCollision(Ray& ray) {

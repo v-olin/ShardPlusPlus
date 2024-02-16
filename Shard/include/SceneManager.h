@@ -20,9 +20,9 @@ namespace Shard {
 		//void Draw();
 		glm::mat4 getCameraViewMatrix();
 
+		Camera camera{};
 	private:
 		SceneManager() = default;
-		Camera camera;
 	};
 
 }

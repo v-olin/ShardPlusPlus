@@ -96,6 +96,9 @@ namespace Shard {
 		glm::vec3 m_forward;
 		glm::vec3 m_up;
 		glm::vec3 m_right;
+
+		glm::vec3 max;
+		glm::vec3 min;
 	};
 
 	void saveModelToOBJ(Model* model, std::string filename);

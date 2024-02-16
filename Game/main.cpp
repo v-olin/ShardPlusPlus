@@ -1,145 +1,58 @@
-//#include "main.h"
-//
-//#include "Logger.h"
-//#include "Bootstrap.h"
-//#include "Spaceship.h"
-//#include "GameObjectManager.h"
-//#include <iostream>
-//
-//#undef main
-//#define FAST 100000000000;
-//#define SLOW 50;
-//
-//GameTest::GameTest() {
-//	// Empty constructor.
-//}
-//
-//void GameTest::update() {
-//	std::string second_fps = std::to_string(Shard::Bootstrap::getSecondFPS());
-//	std::string fps = std::to_string(Shard::Bootstrap::getFPS());
-//	Shard::Display* display = Shard::Bootstrap::getDisplay();
-//	display->showText(("FPS: " + second_fps + " / " + fps).c_str(), 10, 10, 12, 255, 255, 255);
-//}
-//
-//int GameTest::getTargetFrameRate() {
-//	return SLOW	;
-//}
-//
-//void GameTest::createShip() {
-//	Shard::Logger::log("Creating spaceship");
-//	// shared_ptr<A> a( new A );
-//	spaceship = std::make_unique<Spaceship>();
-//	spaceship->initialize();
-//	Shard::GameObjectManager::getInstance().addGameObject(spaceship->shared_from_this());
-//	Shard::Bootstrap::getInput().addListeners(spaceship);
-//}
-//
-//void GameTest::createAsteroid(float x, float y) {
-//	auto asteroid = std::make_shared<Asteroid>();
-//	asteroid->initialize();
-//	Shard::GameObjectManager::getInstance().addGameObject(asteroid->shared_from_this());
-//	//TODO: this will have to be fixed
-//	//asteroid->body_->trans->x = x;
-//	//asteroid->body_->trans->y = y;
-//	asteroids.push_back(asteroid);
-//}
-//
-//void GameTest::initalize() {
-//	Shard::Logger::log("Initializing game");
-//	createShip();
-//	//for(int i = 0; i < 100; i++)
-//	//	createAsteroid(i%10, i%10);
-//	Shard::Bootstrap::getInput().addListeners(shared_from_this());
-//}
-//
-//void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
-//	if (et != Shard::EventType::MouseDown)
-//		return;
-//
-//	
-//	if (ie.button == SDL_BUTTON_LEFT) {
-//		for(int i = 0; i < 1; i++)
-//			createAsteroid(ie.x, ie.y);
-//	}
-//	else if (ie.button == SDL_BUTTON_RIGHT) {
-//		for (auto astr : asteroids) {
-//			astr->to_be_destroyed_ = true;
-//		}
-//		asteroids.clear();
-//	}
-//
-//}
-//
-//
-//int main() {
-//	Shard::Logger::log("Hello from game?!?!?");
-//
-//	Shard::Logger::log("Creating 'GameTest' object");
-//
-//	auto game = std::make_shared<GameTest>();
-//	Shard::Bootstrap::setRunningGame(game);
-//
-//	Shard::Logger::log("Runnning Bootstrap::Main");
-//	Shard::Bootstrap::Main({});
-//
-//	Shard::Logger::log("Exited out of Bootstrap::Main. Exiting program.");
-//	return 0;
-//}
-
 #include "PhysicsManager.h"
 #include "GameObject.h"
 #include "Logger.h"
 #include "Bootstrap.h"
 #include "Car.h"
+#include "Asteriod.h"
 #include "GameObjectManager.h"
 #include <iostream>
 #include <memory>
 #include <conio.h>
 #include "main.h"
 
+#include "SceneManager.h"
+
 #undef main
 #define FAST 100000000000;
 #define SLOW 50;
 
-/*
-void GameTest::createShip() {
-	Shard::Logger::log("Creating spaceship");
-	// shared_ptr<A> a( new A );
-	spaceship = std::make_unique<Spaceship>();
-	spaceship->initialize();
-	Shard::GameObjectManager::getInstance().addGameObject(spaceship->shared_from_this());
-	Shard::Bootstrap::getInput().addListeners(spaceship);
-}
-
-void GameTest::createAsteroid(float x, float y) {
-	auto asteroid = std::make_shared<Asteroid>();
-	asteroid->initialize();
-	Shard::GameObjectManager::getInstance().addGameObject(asteroid->shared_from_this());
-	//TODO: this will have to be fixed
-	//asteroid->body_->trans->x = x;
-	//asteroid->body_->trans->y = y;
-	asteroids.push_back(asteroid);
-}
-*/
+bool active{ false };
 
 void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
-	if (et != Shard::EventType::MouseDown)
-		return;
 
-	Shard::Logger::log("Event in game");
+	Shard::Logger::log("Jasdjhasdjhasjhaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
-	/*
-	if (ie.button == SDL_BUTTON_LEFT) {
-		for(int i = 0; i < 1; i++)
-			createAsteroid(ie.x, ie.y);
-	}
-	else if (ie.button == SDL_BUTTON_RIGHT) {
-		for (auto astr : asteroids) {
-			astr->to_be_destroyed_ = true;
+	static auto &sm = Shard::SceneManager::getInstance();
+
+	if (et == Shard::EventType::KeyDown)
+	{
+		if (ie.key == GLFW_KEY_TAB) {
+			active = !active;
 		}
-		asteroids.clear();
 	}
-	*/
+
+	if (active) {
+		Shard::Logger::log(("active status: " + std::to_string(active)).c_str());
+		if (ie.key == GLFW_KEY_W)
+			sm.camera.move(Shard::Movement::FORWARD, 1.0f);
+
+		if (ie.key == GLFW_KEY_S)
+			sm.camera.move(Shard::Movement::BACKWARD, 1.0f);
+
+		if (ie.key == GLFW_KEY_A)
+			sm.camera.move(Shard::Movement::LEFT, 1.0f);
+
+		if (ie.key == GLFW_KEY_D)
+			sm.camera.move(Shard::Movement::RIGHT, 1.0f);
+
+		if (ie.key == GLFW_KEY_LEFT_SHIFT)
+			sm.camera.move(Shard::Movement::UP, 1.0f);
+
+		if (ie.key == GLFW_KEY_RIGHT_SHIFT)
+			sm.camera.move(Shard::Movement::DOWN, 1.0f);
+
+
+	}
 
 }
 int GameTest::getTargetFrameRate() {
@@ -147,23 +60,47 @@ int GameTest::getTargetFrameRate() {
 }
 
 void GameTest::update() {
-	// std::string second_fps = std::to_string(Shard::Bootstrap::getSecondFPS());
-	// std::string fps = std::to_string(Shard::Bootstrap::getFPS());
-	// Shard::Display* display = Shard::Bootstrap::getDisplay();
-	// display->showText(("FPS: " + second_fps + " / " + fps).c_str(), 10, 10, 12, 255, 255, 255);
+	std::string second_fps = std::to_string(Shard::Bootstrap::getSecondFPS());
+	std::string fps = std::to_string(Shard::Bootstrap::getFPS());
+
+	/*Shard::Display* display = Shard::Bootstrap::getDisplay();
+	display->showText(("FPS: " + second_fps + " / " + fps).c_str(), 10, 10, 12, 255, 255, 255);*/
 }
 
 void GameTest::createCar() {
 	car = std::make_shared<Car>();
 	car->initialize();
+	car->m_body->recalculateColliders();
 	Shard::Bootstrap::getInput().addListeners(car);
+}
+
+void GameTest::createAsteroid(float x, float y, float z) {
+		
+	auto asteroid = std::make_shared<Asteroid>();
+	asteroid->initialize();
+	asteroid->m_model->translate({ x, y, z });
+	asteroid->m_model->scale({ 10.0f, 10.0f, 10.0f });
+	asteroid->m_body->recalculateColliders();
+	asteroids.push_back(asteroid);
+
+}
+
+void GameTest::createFlatPlane(float x, float y, float z) {
+
+	auto asteroid = std::make_shared<Asteroid>();
+	asteroid->initialize();
+	asteroid->m_model->translate({ x, y, z });
+	asteroid->m_model->scale({ 250.0f, 1.0f, 250.0f });
+	asteroid->m_body->recalculateColliders();
+	asteroids.push_back(asteroid);
+
 }
 
 void GameTest::initalize() {
 	Shard::Logger::log("Initializing game");
 	createCar();
-	//for(int i = 0; i < 100; i++)
-	//	createAsteroid(i%10, i%10);
+	createAsteroid(10, 0, -10);
+	//createFlatPlane(0, -12, 0);
 	Shard::Bootstrap::getInput().addListeners(shared_from_this());
 }
 

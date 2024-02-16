@@ -70,6 +70,7 @@ void Car::handleEvent(Shard::InputEvent ev, Shard::EventType et) {
 }
 
 void Car::initialize() {
+    m_model = std::make_shared<Shard::Model>("models/space-ship.obj");
 
     setPhysicsEnabled(); // sets body_ to a new PhysicBody(this ) and populates transform_
     /*body_->trans->x = 500.f;
@@ -92,9 +93,10 @@ void Car::initialize() {
 	m_body->m_drag = 0.1f;
 	m_body->m_stopOnCollision = true;
 	m_body->m_reflectOnCollision = true;
-	m_body->m_impartForce = false;
+	m_body->m_impartForce = true;
 	m_body->m_isKinematic = false;
     m_body->m_passThrough = false;
+    m_body->m_bodyModel = m_model;
 
     /*
         Short story:
@@ -107,8 +109,6 @@ void Car::initialize() {
             i hate this
             god help me
     */
-    m_model = std::make_shared<Shard::Model>("models/space-ship.obj");
-    m_body->m_bodyModel = m_model;
     m_body->setBoxCollider();
     
     GameObject::addTag("Car");
@@ -121,19 +121,22 @@ void Car::update() {
     //Shard::Bootstrap::getDisplay()->addToDraw(shared_from_this());
 }
 
+
 void Car::physicsUpdate() {
+    //if (in_collision)
+    //    return;
     if (turn_left)
-        m_body->addTorque({ 0, 0.1f, 0 });
+        m_body->addTorque({ 0, 0.05f, 0 });
     if (turn_right)
-        m_body->addTorque({ 0, -0.1f, 0 });
+        m_body->addTorque({ 0, -0.05f, 0 });
     if (backward)
         m_body->addForce(m_model->m_forward, 0.1f);
     if (forward)
         m_body->addForce(m_model->m_forward, -0.1f);
     if (pitch_up)
-        m_body->addTorque({ 0, 0, 0.1f });
+        m_body->addTorque({ 0, 0, 0.05f });
     if (pitch_down)
-        m_body->addTorque({ 0, 0, -0.1f });
+        m_body->addTorque({ 0, 0, -0.05f });
 }
 
 void Car::prePhysicsUpdate() {
@@ -148,19 +151,23 @@ void Car::checkDestroyMe() {
  }
 
 void Car::onCollisionEnter(std::shared_ptr<Shard::PhysicsBody> body) {
-    Shard::Logger::log("INDIDE ONCOLLISIONENTER Car");
+    in_collision = true;
+    Shard::Logger::log("on collsision ENTER CAR");
     if (!body->m_parent->hasTag("Bullet"))
         m_body->m_debugColor = { 1.0f, 0.0f, 0.0f };
     // TODO: Lower HP?
 }
 
 void Car::onCollisionExit(std::shared_ptr<Shard::PhysicsBody> body) {
+    Shard::Logger::log("on collsision EXIT CAR");
     m_body->m_debugColor = { 0, 1.0, 0.0f};
+    in_collision = false;
     // TODO: Not sure...
 }
 
 void Car::onCollisionStay(std::shared_ptr<Shard::PhysicsBody> body) {
     // TODO: Not sure...
+    Shard::Logger::log("on collsision STAY CAR");
     if (!body->m_parent->hasTag("Bullet"))
         m_body->m_debugColor = { 0.0f, 0.0f, 1.0f };
 }

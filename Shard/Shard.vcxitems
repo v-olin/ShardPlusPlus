@@ -21,9 +21,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Camera.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Collider.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\ColliderBox.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)include\ColliderBox.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\CollidingObject.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\CollisionHandler.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\CubeMap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Game.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\GameObject.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\GameObjectManager.h" />
@@ -313,6 +313,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Camera.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Collider.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\ColliderBox.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\CubeMap.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\GameObject.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\GameObjectManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\InputManager.cpp" />

@@ -42,8 +42,8 @@ project "Game"
 	language "C++"
 	links { "Shard" }
 	
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+	targetdir ("binn/" .. outputdir .. "/%{prj.name}")
+	objdir ("binn-int/" .. outputdir .. "/%{prj.name}")
 	
 	files
 	{

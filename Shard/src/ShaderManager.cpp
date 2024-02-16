@@ -64,7 +64,7 @@ namespace Shard {
 			//std::string msg = "Could not compile vertex shader " + vert_path;
 			std::string msg = getShaderInfoLog(v_shader);
 			LoggerLevel lvl = allow_errors ? LOG_LEVEL_ERROR : LOG_LEVEL_FATAL;
-			Logger::log(msg.c_str());
+			Logger::log(msg.c_str(), lvl);
 		}
 
 		glCompileShader(f_shader);
@@ -87,6 +87,7 @@ namespace Shard {
 		if (!linkShaderProgram(shader_program, allow_errors))
 			return 0;
 
+		m_Shaders[shader_name] = shader_program;
 		// create cache for newly loaded shader
 		m_shaderCaches[shader_program] = std::make_unique<ShaderUniformCache>(shader_program);
 

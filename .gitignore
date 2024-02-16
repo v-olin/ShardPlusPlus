@@ -1,7 +1,7 @@
 .vs
 **/*.vcxproj.user
 
-Debug-windows-x86_64
-bin-int
+binn
+binn-int
 
 Shard/x64

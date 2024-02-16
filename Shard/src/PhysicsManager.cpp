@@ -25,7 +25,10 @@ namespace Shard {
 	void PhysicsManager::makeInterval(int axis, std::shared_ptr<PhysicsBody> gob_body) {
 
 		// Check penetration level (sus)
-		auto min_max = gob_body->m_collider->getMinMaxDims();
+		//auto min_max = gob_body->m_collider->getMinMaxDims();
+		auto min_max = gob_body->m_collider->getTransformedMinMaxDims();
+
+		//	vertex = glm::vec3(m_model->getModelMatrix() * glm::vec4(vertex, 1.0));
 		auto& min_max_x = min_max[0];
 		auto& min_max_y = min_max[1];
 		auto& min_max_z = min_max[2];
@@ -78,20 +81,15 @@ namespace Shard {
 		// TODO: std::find? yea.
 		// TODO: std::find? yea.
 		bool exists = false;
-		for(size_t i = 0; i < all_physics_objects.size(); i++){
-			auto &other = all_physics_objects.at(i);
-			if (other->m_parent == body->m_parent){
+		for (size_t i = 0; i < all_physics_objects.size(); i++) {
+			auto& other = all_physics_objects.at(i);
+			if (other->m_parent == body->m_parent) {
 				exists = true;
 				break;
 			}
 		}
 		if (!exists) {
-		if (!exists) {
 			all_physics_objects.push_back(body);
-			makeInterval(AXIS_X, body);
-			makeInterval(AXIS_Y, body);
-			makeInterval(AXIS_Z, body);
-		}
 			makeInterval(AXIS_X, body);
 			makeInterval(AXIS_Y, body);
 			makeInterval(AXIS_Z, body);
@@ -236,6 +234,13 @@ namespace Shard {
 			collisions.erase(iter);
 			removed++;
 		}
+		if (removed > 0) {
+			traverse_edge_list_x = true;
+			traverse_edge_list_y = true;
+			traverse_edge_list_z = true;
+
+
+		}
 
 		// TODO: don't run if no game objects?
 		if (all_physics_objects.size() > 1)
@@ -274,8 +279,10 @@ namespace Shard {
 			return edge_list_x;
 		else if (axis == AXIS_Y)
 			return edge_list_y;
-		else // assuming z, not safe
+		else if (axis == AXIS_Z)
 			return edge_list_z;
+		else
+			assert(false);
 	}
 
 	std::vector<std::vector<int>>& PhysicsManager::getOverlapMatrix(int axis)
@@ -284,18 +291,22 @@ namespace Shard {
 			return overlap_mat_x;
 		else if (axis == AXIS_Y)
 			return overlap_mat_y;
-		else // assuming z (not safe lol)
+		else if (axis == AXIS_Z)
 			return overlap_mat_z;
+		else
+			assert(false);
 	}
 
 	bool& PhysicsManager::getTraverseEdgeListBool(int axis)
 	{
-		if (axis == 0)
+		if (axis == AXIS_X)
 			return traverse_edge_list_x;
-		else if (axis == 1)
+		else if (axis == AXIS_Y)
 			return traverse_edge_list_y;
-		else // assuming z (not safe lol)
+		else if (axis == AXIS_Z)
 			return traverse_edge_list_z;
+		else
+			assert(false);
 	}
 
 	void PhysicsManager::BubbleSort(int axis) {
@@ -304,7 +315,8 @@ namespace Shard {
 		for (size_t i = 0; i < n - 1; i++) {
 			for (size_t j = 0; j < n - 1 - i; j++) {
 				if (edge_list[j + 1].val < edge_list[j].val) {
-					auto &tmp = edge_list[j];
+					//this was not copy, maybe very bad!
+					auto tmp = edge_list[j];
 					edge_list[j] = edge_list[j + 1];
 					edge_list[j + 1] = tmp;
 				}
@@ -316,7 +328,6 @@ namespace Shard {
 
 		auto& edge_list = getEdgeList(axis);
 		auto& overlap_matrix = getOverlapMatrix(axis);
-		//TODO, reset overlapMatrix to 0
 
 		for (size_t i = 0; i < overlap_matrix.size(); i++) {
 			for (size_t j = 0; j < overlap_matrix.size(); j++) {
@@ -365,8 +376,8 @@ namespace Shard {
 		auto &edge_list = getEdgeList(axis);
 		for (size_t i = 0; i < edge_list.size(); i++) {
 			auto& interval = edge_list[i].interval;
-			auto min_maxes = interval->gob_body->m_collider->getMinMaxDims();
-			auto &min_max = min_maxes[axis];
+			auto min_maxes = interval->gob_body->m_collider->getTransformedMinMaxDims();
+			auto min_max = min_maxes[axis];
 			auto val = edge_list[i].is_b ? min_max[0] : min_max[1];
 			edge_list[i].val = val;
 		}
@@ -378,30 +389,37 @@ namespace Shard {
 
 		auto& edge_list = getEdgeList(axis);
 		auto& overlap_matrix = getOverlapMatrix(axis);
+		
 
 		//simple/nice case
 		if (!traverse_edge_list) {
 
 			//list is not sorted, interval values are updated
 			size_t n = edge_list.size();
+
 			for (size_t i = 0; i < n - 1; i++) {
 				for (size_t j = 0; j < n - 1 - i; j++) {
 					if (edge_list[j + 1].val < edge_list[j].val) {
-						int interval_a = findIntervalIdx(axis, edge_list[j].interval);
-						int interval_b = findIntervalIdx(axis, edge_list[j + 1].interval);
 
-						if (interval_a == -1 || interval_b == -1) {
-							Logger::log("oh fuck...(inside sweepAndMotherFuckingPrune\n");
-							std::exit(1);
+						if (edge_list[j + 1].is_b != edge_list[j].is_b) {
+							int interval_a = findIntervalIdx(axis, edge_list[j].interval);
+							int interval_b = findIntervalIdx(axis, edge_list[j + 1].interval);
+
+							if (interval_a == -1 || interval_b == -1) {
+								Logger::log("oh fuck...(inside sweepAndMotherFuckingPrune\n");
+								std::exit(1);
+							}
+
+							auto a = std::min(interval_a, interval_b);
+							auto b = std::max(interval_a, interval_b);
+
+							// Toggle between 0 (false) and 1 (true)
+							overlap_matrix[a][b] = overlap_matrix[a][b] == 0 ? 1 : 0;
+							//overlap_matrix[b][a] = overlap_matrix[b][a] == 0 ? 1 : 0;
 						}
 
-						auto a = std::min(interval_a, interval_b);
-						auto b = std::max(interval_a, interval_b);
-
-						// Toggle between 0 (false) and 1 (true)
-						overlap_matrix[a][b] = overlap_matrix[a][b] == 0 ? 1 : 0;
-
-						auto& tmp = edge_list[j];
+						//another unlucky non-copy
+						auto tmp = edge_list[j];
 						edge_list[j] = edge_list[j + 1];
 						edge_list[j + 1] = tmp;
 					}
@@ -449,7 +467,7 @@ namespace Shard {
 						col.a = gob_body_b;
 						col.b = gob_body_a;
 					}
-					if (!findColliding(col.a, col.b)) 
+					if(!findColliding(col.a, col.b))
 						collisions.push_back(col); 
 				}
 			}
@@ -473,7 +491,11 @@ namespace Shard {
 		float mass_total, mass_prop = 0.f;
 
 
-		//collisions = sweepAndMotherfuckingPrune();
+		// TODO:
+		/*
+			Add bob-box collision checking with non world-space axis aligned boxes
+			e.g. use SAT or transform one box into the others realm and do standard AABB there, whatever floats your boat bro
+		*/
 		auto cols_to_check = sweepAndMotherfuckingPrune();
 		for (CollidingObject &col_obj : cols_to_check) {
 			possible_impulse = getImpulseFromCollision(col_obj.a, col_obj.b);
@@ -526,7 +548,8 @@ namespace Shard {
 				(std::dynamic_pointer_cast<CollisionHandler>(col_obj.a->m_parent))->onCollisionEnter(col_obj.b);
 				(std::dynamic_pointer_cast<CollisionHandler>(col_obj.b->m_parent))->onCollisionEnter(col_obj.a);
 
-				collisions.push_back(col_obj);
+				if(!findColliding(col_obj.a->m_parent->m_body, col_obj.b->m_parent->m_body))
+					collisions.push_back(col_obj);
 			}
 		}
 	}
@@ -544,12 +567,12 @@ namespace Shard {
 			return std::nullopt;
 
 		// Check penetration level (sus)
-		const auto min_max_a = a->m_collider->getMinMaxDims();
+		const auto min_max_a = a->m_collider->getTransformedMinMaxDims();
 		const auto &min_max_x_a = min_max_a[0];
 		const auto &min_max_y_a = min_max_a[1];
 		const auto &min_max_z_a = min_max_a[2];
 		
-		const auto min_max_b = b->m_collider->getMinMaxDims();
+		const auto min_max_b = b->m_collider->getTransformedMinMaxDims();
 		const auto &min_max_x_b = min_max_b[0];
 		const auto &min_max_y_b = min_max_b[1];
 		const auto &min_max_z_b = min_max_b[2];
@@ -584,6 +607,10 @@ namespace Shard {
 			float overlap_start = std::max(a_start, b_start);
 			float overlap_end = std::min(a_end, b_end);
 			float overlap_distance = overlap_end - overlap_start;
+			//check if it should be negative
+			if (a_start < b_start)
+				overlap_distance *= -1;
+
 			return overlap_distance;
 		};
 
@@ -592,18 +619,22 @@ namespace Shard {
 		const float overlap_z = calculateOverlapDistance(min_max_z_a, min_max_z_b);
 
 		// Only interested in axis with shortest overlap
-		auto min_overlap = std::min({ overlap_x, overlap_y, overlap_z });
+		auto abs_over_x = abs(overlap_x);
+		auto abs_over_y = abs(overlap_y);
+		auto abs_over_z = abs(overlap_z);
+		auto min_overlap = std::min({ abs_over_x, abs_over_y, abs_over_z });
 
 		//branchless programming <3
-		auto x = overlap_x == min_overlap ? overlap_x : 0;
-		auto y = overlap_y == min_overlap ? overlap_y : 0;
-		auto z = overlap_z == min_overlap ? overlap_z : 0;
+		auto x = abs_over_x == min_overlap ? overlap_x : 0;
+		auto y = abs_over_y == min_overlap ? overlap_y : 0;
+		auto z = abs_over_z == min_overlap ? overlap_z : 0;
 	
 
-		if (x == 0 && y == 0 && z == 0)
+		if (overlap_x == 0 || overlap_y == 0 || overlap_z == 0)
 			return std::nullopt;
 
-		return std::optional<glm::vec3>({x, y, z});
+		auto v = glm::vec3{ x, y, z };
+		return std::optional<glm::vec3>(v + v * glm::vec3(15.0f));
 
 		/*
 		if (overlap_x == min_overlap)

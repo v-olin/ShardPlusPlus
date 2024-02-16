@@ -36,7 +36,7 @@ namespace Shard {
 		GLuint loadShader(std::string shader_name, bool allow_errors);
 
 		GLuint getShader(std::string shader_name) { 
-			return m_Shaders[shader_name];  
+			return m_Shaders.at(shader_name);  
 		};
 
 		void SetMat4x4(GLuint program, const glm::mat4x4& mat, const std::string& uniform_name);
