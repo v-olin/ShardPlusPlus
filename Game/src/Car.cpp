@@ -123,8 +123,8 @@ void Car::update() {
 
 
 void Car::physicsUpdate() {
-    //if (in_collision)
-    //    return;
+    if (!should_move)
+        return;
     if (turn_left)
         m_body->addTorque({ 0, 0.05f, 0 });
     if (turn_right)
@@ -151,7 +151,6 @@ void Car::checkDestroyMe() {
  }
 
 void Car::onCollisionEnter(std::shared_ptr<Shard::PhysicsBody> body) {
-    in_collision = true;
     Shard::Logger::log("on collsision ENTER CAR");
     if (!body->m_parent->hasTag("Bullet"))
         m_body->m_debugColor = { 1.0f, 0.0f, 0.0f };
@@ -161,7 +160,6 @@ void Car::onCollisionEnter(std::shared_ptr<Shard::PhysicsBody> body) {
 void Car::onCollisionExit(std::shared_ptr<Shard::PhysicsBody> body) {
     Shard::Logger::log("on collsision EXIT CAR");
     m_body->m_debugColor = { 0, 1.0, 0.0f};
-    in_collision = false;
     // TODO: Not sure...
 }
 

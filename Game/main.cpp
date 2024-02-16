@@ -29,7 +29,7 @@ void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 			active = !active;
 		}
 	}
-
+	car->should_move = !active;
 	if (active) {
 		Shard::Logger::log(("active status: " + std::to_string(active)).c_str());
 		if (ie.key == GLFW_KEY_W)
