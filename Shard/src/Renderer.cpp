@@ -1,3 +1,5 @@
+#include "../common.h"
+
 #include "Renderer.h"
 
 #include "GameObjectManager.h"

@@ -12,10 +12,11 @@
 
 namespace Shard {
 
-    typedef struct Ray;
-    class ColliderBox;
+	typedef struct Ray {
+		glm::vec3 origin{0.0f};
+		glm::vec3 dir{0.0f};
+	} Ray;
 
-    typedef struct Ray;
     class ColliderBox;
 
     class Collider : public std::enable_shared_from_this<Collider> {
@@ -29,7 +30,8 @@ namespace Shard {
         Collider(std::shared_ptr<CollisionHandler> gameObj, std::shared_ptr<Model> model);
 
         virtual void recalculateBoundingBox() = 0;
-        virtual std::optional<glm::vec3> checkCollision(Ray& ray) = 0;
+        //virtual std::optional<glm::vec3> checkCollision(Ray& ray) = 0;
+        virtual	std::optional<glm::vec3> checkCollision(Ray& ray) = 0;
         virtual std::vector<glm::vec2> getMinMaxDims() = 0;
         virtual std::vector<glm::vec2> getTransformedMinMaxDims() = 0;
         //virtual void draw(glm::vec3 color) = 0;

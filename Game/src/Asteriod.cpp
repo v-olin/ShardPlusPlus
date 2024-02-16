@@ -3,6 +3,9 @@
 #include "Bootstrap.h"
 #include "Logger.h"
 #include <memory>
+#define GLM_ENABLE_EXPERIMENTAL
+#include "gtx/string_cast.hpp"
+#include "common.h"
 
 void handleAsteroidInput(Shard::InputEvent ev, Shard::EventType et) {
 
@@ -14,6 +17,15 @@ Asteroid::Asteroid() : GameObject() {
 
 
 void Asteroid::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
+    if (et == Shard::EventType::MouseDown && ie.button == GLFW_MOUSE_BUTTON_1) {
+        auto point = Shard::PhysicsManager::getInstance().clickHitsBody(ie, m_body->shared_from_this());
+        if (point.has_value()) {
+            Shard::Logger::log(("Click intersected at: " + glm::to_string(point.value())).c_str());
+
+
+        }
+    }
+
     /*if (et == Shard::EventType::MouseDown && ie.button == GLFW_KE) {
         if ((m_body->checkCollisions(glm::vec2{ ie.x, ie.y })).has_value()) {
             torque_counter += 10;
