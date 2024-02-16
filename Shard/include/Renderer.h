@@ -3,6 +3,7 @@
 #include "SceneManager.h"
 #include "TextureManager.h"
 #include "ShaderManager.h"
+#include "GUI.h"
 
 #include "CubeMap.h"
 
@@ -14,6 +15,7 @@ namespace Shard {
 		Renderer(SceneManager& sceneManager,
 			TextureManager& texManager,
 			ShaderManager& shaderManager,
+			GUI& gui,
 			GLFWwindow* window);
 
 		void render();
@@ -25,6 +27,7 @@ namespace Shard {
 		SceneManager& m_sceneManager;
 		TextureManager& m_textureManager;
 		ShaderManager& m_shaderManager;
+		GUI& m_gui;
 		const glm::vec2 m_resolution;
 		const float m_fieldOfView;
 		glm::mat4 m_projectionMatrix;

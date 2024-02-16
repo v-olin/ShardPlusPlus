@@ -9,10 +9,15 @@
 
 namespace Shard {
 
-	Renderer::Renderer(SceneManager& sceneManager, TextureManager& texManager, ShaderManager& shaderManager, GLFWwindow* window)
+	Renderer::Renderer(SceneManager& sceneManager,
+		TextureManager& texManager,
+		ShaderManager& shaderManager,
+		GUI& gui,
+		GLFWwindow* window)
 		: m_sceneManager(sceneManager)
 		, m_textureManager(texManager)
 		, m_shaderManager(shaderManager)
+		, m_gui(gui)
 		, m_resolution({ 1280, 760 })
 		, m_fieldOfView(sceneManager.camera.fov)
 		, m_projectionMatrix(glm::perspective(sceneManager.camera.fov, m_resolution.x / m_resolution.y, 1.f, 300.f))
@@ -40,10 +45,14 @@ namespace Shard {
 
 		drawScene();
 
+
+
+		// Do this last, idk why
+		m_gui.draw();
+		
 		// should check for errors here
 		// surely there are no errors
 		// very bad!!
-
 		glfwSwapBuffers(m_window);
 	}
 

@@ -6,10 +6,9 @@
 
 namespace Shard {
 
-	GUI::GUI(GLFWwindow* window, SceneManager& sceneManager, Renderer& renderer)
+	GUI::GUI(GLFWwindow* window, SceneManager& sceneManager)
 		: m_window(window)
 		, m_sceneManager(sceneManager)
-		, m_renderer(renderer)
 		, m_guiIsFocused(false)
 		, m_focusedModel(nullptr)
 	{
@@ -31,8 +30,7 @@ namespace Shard {
 
 	void GUI::draw() {
 		
-		std::string second_fps = std::to_string(Shard::Bootstrap::getSecondFPS());
-		std::string fps = std::to_string(Shard::Bootstrap::getFPS());
+		float fps = Shard::Bootstrap::getFPS();
 
 		// potentially needed
 		ImGui_ImplOpenGL3_NewFrame();
@@ -40,17 +38,8 @@ namespace Shard {
 		ImGui::NewFrame();
 
 		if (ImGui::BeginMainMenuBar()) {
-			if (ImGui::BeginMenu("Camera")) {
-				ImGui::SliderFloat("FOV", &m_sceneManager.camera.fov, 20.f, 80.f);
-				ImGui::EndMenu();
-			}
-			if (ImGui::BeginMenu("Rendering")) {
-				ImGui::SliderFloat("Near plane", &m_renderer.m_nearPlane, 1.f, 100.f);
-				ImGui::SliderFloat("Far plane", &m_renderer.m_farPlane, 100.f, 1000.f);
-				ImGui::EndMenu();
-			}
 			if (ImGui::BeginMenu("FPS")) {
-				ImGui::Text("FPS: %.1f", second_fps + " / " + fps);
+				ImGui::Text("FPS: %.1f", fps);
 				ImGui::EndMenu();
 			}
 		

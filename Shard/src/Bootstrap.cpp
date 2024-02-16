@@ -242,8 +242,8 @@ namespace Shard {
         SceneManager& sm = SceneManager::getInstance();
         TextureManager& tm = TextureManager::getInstance();
         ShaderManager& shm = ShaderManager::getInstance();
-        Renderer renderer{ sm, tm, shm, m_Window };
-        GUI gui{ m_Window, sm, renderer };
+        GUI gui{ m_Window, sm };
+        Renderer renderer{ sm, tm, shm, gui, m_Window };
 
         glEnable(GL_DEPTH_TEST);
         glDisable(GL_CULL_FACE);
@@ -293,8 +293,6 @@ namespace Shard {
 
                 // Render code goes here
                 renderer.render();
-
-                gui.draw();
 
                 // this should be done in InputManager, very bad!!
                 glfwPollEvents();
