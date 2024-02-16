@@ -8,6 +8,7 @@
 class Car : public Shard::InputListener, public Shard::GameObject, public Shard::CollisionHandler {
 public:
 	bool forward, backward, turn_left, turn_right, pitch_up, pitch_down;
+	bool in_collision;
 
 	Car();
 

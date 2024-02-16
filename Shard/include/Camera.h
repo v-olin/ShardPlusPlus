@@ -23,7 +23,6 @@ namespace Shard {
 	};
 
 	class Camera {
-
 	public:
 		// Camera attributes
 		glm::vec3 pos;

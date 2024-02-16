@@ -70,7 +70,7 @@ namespace Shard {
 			//cant remember if it should be one or zero here v, so this might fuck shit up
 			vertex = glm::vec3(m_model->getModelMatrix() * glm::vec4(vertex, 1.0));
 
-		auto min_trans = glm::vec3{ 9999999.0f };
+		auto min_trans = glm::vec3{ 9999999.0f,  9999999.0f,  9999999.0f };
 		auto max_trans = -min_trans;
 
 		for (int i = 0; i < 8;  i++) {

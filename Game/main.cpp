@@ -60,11 +60,17 @@ int GameTest::getTargetFrameRate() {
 }
 
 void GameTest::update() {
+	std::string second_fps = std::to_string(Shard::Bootstrap::getSecondFPS());
+	std::string fps = std::to_string(Shard::Bootstrap::getFPS());
+
+	/*Shard::Display* display = Shard::Bootstrap::getDisplay();
+	display->showText(("FPS: " + second_fps + " / " + fps).c_str(), 10, 10, 12, 255, 255, 255);*/
 }
 
 void GameTest::createCar() {
 	car = std::make_shared<Car>();
 	car->initialize();
+	car->m_body->recalculateColliders();
 	Shard::Bootstrap::getInput().addListeners(car);
 }
 
@@ -74,6 +80,7 @@ void GameTest::createAsteroid(float x, float y, float z) {
 	asteroid->initialize();
 	asteroid->m_model->translate({ x, y, z });
 	asteroid->m_model->scale({ 10.0f, 10.0f, 10.0f });
+	asteroid->m_body->recalculateColliders();
 	asteroids.push_back(asteroid);
 
 }
@@ -84,6 +91,7 @@ void GameTest::createFlatPlane(float x, float y, float z) {
 	asteroid->initialize();
 	asteroid->m_model->translate({ x, y, z });
 	asteroid->m_model->scale({ 250.0f, 1.0f, 250.0f });
+	asteroid->m_body->recalculateColliders();
 	asteroids.push_back(asteroid);
 
 }
@@ -92,7 +100,7 @@ void GameTest::initalize() {
 	Shard::Logger::log("Initializing game");
 	createCar();
 	createAsteroid(10, 0, -10);
-	createFlatPlane(0, -12, 0);
+	//createFlatPlane(0, -12, 0);
 	Shard::Bootstrap::getInput().addListeners(shared_from_this());
 }
 

@@ -353,7 +353,6 @@ namespace Shard {
 							auto a = std::min(interval_a, interval_b);
 							auto b = std::max(interval_a, interval_b);
 							overlap_matrix[a][b] = 1; // TODO: should dis be 1??
-							overlap_matrix[b][a] = 1; // TODO: should dis be 1??
 						}
 					}
 				}
@@ -401,20 +400,23 @@ namespace Shard {
 			for (size_t i = 0; i < n - 1; i++) {
 				for (size_t j = 0; j < n - 1 - i; j++) {
 					if (edge_list[j + 1].val < edge_list[j].val) {
-						int interval_a = findIntervalIdx(axis, edge_list[j].interval);
-						int interval_b = findIntervalIdx(axis, edge_list[j + 1].interval);
 
-						if (interval_a == -1 || interval_b == -1) {
-							Logger::log("oh fuck...(inside sweepAndMotherFuckingPrune\n");
-							std::exit(1);
+						if (edge_list[j + 1].is_b != edge_list[j].is_b) {
+							int interval_a = findIntervalIdx(axis, edge_list[j].interval);
+							int interval_b = findIntervalIdx(axis, edge_list[j + 1].interval);
+
+							if (interval_a == -1 || interval_b == -1) {
+								Logger::log("oh fuck...(inside sweepAndMotherFuckingPrune\n");
+								std::exit(1);
+							}
+
+							auto a = std::min(interval_a, interval_b);
+							auto b = std::max(interval_a, interval_b);
+
+							// Toggle between 0 (false) and 1 (true)
+							overlap_matrix[a][b] = overlap_matrix[a][b] == 0 ? 1 : 0;
+							//overlap_matrix[b][a] = overlap_matrix[b][a] == 0 ? 1 : 0;
 						}
-
-						auto a = std::min(interval_a, interval_b);
-						auto b = std::max(interval_a, interval_b);
-
-						// Toggle between 0 (false) and 1 (true)
-						overlap_matrix[a][b] = overlap_matrix[a][b] == 0 ? 1 : 0;
-						//overlap_matrix[b][a] = overlap_matrix[b][a] == 0 ? 1 : 0;
 
 						//another unlucky non-copy
 						auto tmp = edge_list[j];
@@ -465,7 +467,7 @@ namespace Shard {
 						col.a = gob_body_b;
 						col.b = gob_body_a;
 					}
-					if (!findColliding(col.a, col.b)) 
+					if(!findColliding(col.a, col.b))
 						collisions.push_back(col); 
 				}
 			}
@@ -605,6 +607,10 @@ namespace Shard {
 			float overlap_start = std::max(a_start, b_start);
 			float overlap_end = std::min(a_end, b_end);
 			float overlap_distance = overlap_end - overlap_start;
+			//check if it should be negative
+			if (a_start < b_start)
+				overlap_distance *= -1;
+
 			return overlap_distance;
 		};
 
@@ -613,12 +619,15 @@ namespace Shard {
 		const float overlap_z = calculateOverlapDistance(min_max_z_a, min_max_z_b);
 
 		// Only interested in axis with shortest overlap
-		auto min_overlap = std::min({ overlap_x, overlap_y, overlap_z });
+		auto abs_over_x = abs(overlap_x);
+		auto abs_over_y = abs(overlap_y);
+		auto abs_over_z = abs(overlap_z);
+		auto min_overlap = std::min({ abs_over_x, abs_over_y, abs_over_z });
 
 		//branchless programming <3
-		auto x = overlap_x == min_overlap ? overlap_x : 0;
-		auto y = overlap_y == min_overlap ? overlap_y : 0;
-		auto z = overlap_z == min_overlap ? overlap_z : 0;
+		auto x = abs_over_x == min_overlap ? overlap_x : 0;
+		auto y = abs_over_y == min_overlap ? overlap_y : 0;
+		auto z = abs_over_z == min_overlap ? overlap_z : 0;
 	
 
 		if (overlap_x == 0 || overlap_y == 0 || overlap_z == 0)
