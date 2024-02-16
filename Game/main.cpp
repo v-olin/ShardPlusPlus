@@ -20,7 +20,6 @@ bool active{ false };
 
 void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 
-	Shard::Logger::log("Jasdjhasdjhasjhaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
 	static auto &sm = Shard::SceneManager::getInstance();
 
@@ -81,6 +80,8 @@ void GameTest::createAsteroid(float x, float y, float z) {
 	asteroid->m_model->translate({ x, y, z });
 	asteroid->m_model->scale({ 10.0f, 10.0f, 10.0f });
 	asteroid->m_body->recalculateColliders();
+
+    Shard::Bootstrap::getInput().addListeners(asteroid);
 	asteroids.push_back(asteroid);
 
 }

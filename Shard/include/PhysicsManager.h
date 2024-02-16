@@ -2,6 +2,7 @@
 
 #include "CollidingObject.h"
 #include "SAPEntry.h"
+#include "InputEvent.h"
 
 #include <vector>
 #include <list>
@@ -98,6 +99,9 @@ namespace Shard {
 
 		void runCollisionCheck();
 		void checkForCollisions();
+
+		std::optional<glm::vec3> clickHitsBody(InputEvent ie, std::shared_ptr<PhysicsBody> body);
+		Ray getRayFromClick(InputEvent ie);
 	private:
 	}; // end class
 	

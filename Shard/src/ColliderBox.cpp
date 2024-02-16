@@ -91,8 +91,43 @@ namespace Shard {
 
 	std::optional<glm::vec3> ColliderBox::checkCollision(Ray& ray)
 	{
-		// TODO: Box-ray collision
-		return std::nullopt;
+
+		// impl from: https://tavianator.com/2011/ray_box.html
+		auto min = m_transformed_boxBottomLeft;
+		auto max = m_transformed_boxTopRight;
+
+		double tmin = -99999999.0f, tmax = 99999999.0f;
+
+		if (ray.dir.x != 0.0) {
+			double tx1 = (min.x - ray.origin.x)/ray.dir.x;
+			double tx2 = (max.x - ray.origin.x)/ray.dir.x;
+
+			tmin = std::max(tmin, std::min(tx1, tx2));
+			tmax = std::min(tmax, std::max(tx1, tx2));
+		}
+
+		if (ray.dir.y != 0.0) {
+			double ty1 = (min.y - ray.origin.y)/ray.dir.y;
+			double ty2 = (max.y - ray.origin.y)/ray.dir.y;
+
+			tmin = std::max(tmin, std::min(ty1, ty2));
+			tmax = std::min(tmax, std::max(ty1, ty2));
+		}
+		if (ray.dir.z != 0.0) {
+			double tz1 = (min.z - ray.origin.z)/ray.dir.z;
+			double tz2 = (max.z - ray.origin.z)/ray.dir.z;
+
+			tmin = std::max(tmin, std::min(tz1, tz2));
+			tmax = std::min(tmax, std::max(tz1, tz2));
+		}
+	
+		if (tmax < tmin)
+			return std::nullopt;
+
+		auto len = tmin >= 0 ? tmin : tmax;
+		return ray.origin + ray.dir * (float)len;
+
+
 	}
 
 	std::vector<glm::vec2> ColliderBox::getMinMaxDims() {
