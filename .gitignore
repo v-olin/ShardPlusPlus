@@ -5,3 +5,5 @@ binn
 binn-int
 
 Shard/x64
+/bin/Debug-windows-x86_64/Shard
+/bin-int/Debug-windows-x86_64
