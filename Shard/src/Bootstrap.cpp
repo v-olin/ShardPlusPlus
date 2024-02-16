@@ -140,6 +140,9 @@ namespace Shard {
 
         glfwSetWindowUserPointer(m_Window, reinterpret_cast<void*>(&input));
 
+        // UNLIMITED FPS WHOOOOOOOOOOOO
+        glfwSwapInterval(0);
+
         /////////////////////
         // Initialize GLAD //
         /////////////////////
