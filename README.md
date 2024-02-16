@@ -12,3 +12,4 @@ The project is about rewriting the game-engine "Shard" supplied in the course "T
 - Flight controls (euler angles, pitch, yaw, roll) for the player (which is a spaceship)
 - First person camera
 - Possible to set your own default shader
+- Possible to click on screen and check if object is clicked
