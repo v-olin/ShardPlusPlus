@@ -18,13 +18,16 @@ namespace Shard {
 
 		void render();
 
+		float m_nearPlane = 1.f;
+		float m_farPlane = 300.f;
+
 	private:
 		SceneManager& m_sceneManager;
 		TextureManager& m_textureManager;
 		ShaderManager& m_shaderManager;
 		const glm::vec2 m_resolution;
 		const float m_fieldOfView;
-		const glm::mat4 m_projectionMatrix;
+		glm::mat4 m_projectionMatrix;
 		bool m_drawColliders;
 		GLFWwindow* m_window;
 

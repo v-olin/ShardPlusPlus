@@ -59,7 +59,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Shard\vendor\glm;..\Shard\vendor\stb_image\include;..\Shard\vendor\tiny_obj\include;..\Shard\vendor\glad\include;..\Shard\vendor\glfw\include;..\Shard\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Shard\vendor\glm;..\Shard\vendor\stb_image\include;..\Shard\vendor\tiny_obj\include;..\Shard\vendor\glad\include;..\Shard\vendor\glfw\include;..\Shard\include;..\Shard\vendor\imgui-1.51;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
@@ -76,7 +76,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Shard\vendor\glm;..\Shard\vendor\stb_image\include;..\Shard\vendor\tiny_obj\include;..\Shard\vendor\glad\include;..\Shard\vendor\glfw\include;..\Shard\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Shard\vendor\glm;..\Shard\vendor\stb_image\include;..\Shard\vendor\tiny_obj\include;..\Shard\vendor\glad\include;..\Shard\vendor\glfw\include;..\Shard\include;..\Shard\vendor\imgui-1.51;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>

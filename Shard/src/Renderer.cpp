@@ -14,8 +14,8 @@ namespace Shard {
 		, m_textureManager(texManager)
 		, m_shaderManager(shaderManager)
 		, m_resolution({ 1280, 760 })
-		, m_fieldOfView(45.f)
-		, m_projectionMatrix(glm::perspective(m_fieldOfView, m_resolution.x / m_resolution.y, 1.f, 300.f))
+		, m_fieldOfView(sceneManager.camera.fov)
+		, m_projectionMatrix(glm::perspective(sceneManager.camera.fov, m_resolution.x / m_resolution.y, 1.f, 300.f))
 		, m_drawColliders(true)
 		, m_window(window)
 	{
@@ -35,6 +35,8 @@ namespace Shard {
 		// stolen from old codebase
 		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		m_projectionMatrix = glm::perspective(m_sceneManager.camera.fov, m_resolution.x / m_resolution.y, 1.f, 300.f);
 
 		drawScene();
 

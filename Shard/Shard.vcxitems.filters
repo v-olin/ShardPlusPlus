@@ -49,6 +49,9 @@
     <Filter Include="vendor\glm\simd">
       <UniqueIdentifier>{1EFDF202-8A88-60C7-9399-E3BBFFA3BCC7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vendor\imgui-1.51">
+      <UniqueIdentifier>{6FD5666F-DBEB-6405-2463-F02690B8358D}</UniqueIdentifier>
+    </Filter>
     <Filter Include="vendor\stb_image">
       <UniqueIdentifier>{0DA0BA59-F998-D9AB-22CB-BE300E23B9B7}</UniqueIdentifier>
     </Filter>
@@ -89,6 +92,9 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)include\CubeMap.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\GUI.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Game.h">
@@ -928,6 +934,30 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\vector_relational.hpp">
       <Filter>vendor\glm</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imconfig.h">
+      <Filter>vendor\imgui-1.51</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imgui.h">
+      <Filter>vendor\imgui-1.51</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imgui_impl_glfw.h">
+      <Filter>vendor\imgui-1.51</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imgui_impl_opengl3.h">
+      <Filter>vendor\imgui-1.51</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imgui_internal.h">
+      <Filter>vendor\imgui-1.51</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\stb_rect_pack.h">
+      <Filter>vendor\imgui-1.51</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\stb_textedit.h">
+      <Filter>vendor\imgui-1.51</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\stb_truetype.h">
+      <Filter>vendor\imgui-1.51</Filter>
+    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\stb_image\include\stb_image.h">
       <Filter>vendor\stb_image\include</Filter>
     </ClInclude>
@@ -955,6 +985,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)src\CubeMap.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\GUI.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)src\GameObject.cpp">
@@ -995,6 +1028,21 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\glm\detail\glm.cpp">
       <Filter>vendor\glm\detail</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imgui.cpp">
+      <Filter>vendor\imgui-1.51</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imgui_demo.cpp">
+      <Filter>vendor\imgui-1.51</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imgui_draw.cpp">
+      <Filter>vendor\imgui-1.51</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imgui_impl_glfw.cpp">
+      <Filter>vendor\imgui-1.51</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imgui_impl_opengl3.cpp">
+      <Filter>vendor\imgui-1.51</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

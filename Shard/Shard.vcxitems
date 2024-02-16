@@ -24,6 +24,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)include\CollidingObject.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\CollisionHandler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\CubeMap.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\GUI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Game.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\GameObject.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\GameObjectManager.h" />
@@ -303,6 +304,14 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\vec3.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\vec4.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\vector_relational.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imconfig.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imgui.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imgui_impl_glfw.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imgui_impl_opengl3.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imgui_internal.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\stb_rect_pack.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\stb_textedit.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\stb_truetype.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\stb_image\include\stb_image.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\tiny_obj\include\tiny_obj_loader.h" />
   </ItemGroup>
@@ -314,6 +323,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Collider.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\ColliderBox.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\CubeMap.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\GUI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\GameObject.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\GameObjectManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\InputManager.cpp" />
@@ -327,5 +337,10 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)src\TextureManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\glad\glad.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\glm\detail\glm.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imgui.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imgui_demo.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imgui_draw.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imgui_impl_glfw.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui-1.51\imgui_impl_opengl3.cpp" />
   </ItemGroup>
 </Project>

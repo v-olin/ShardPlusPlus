@@ -10,7 +10,8 @@ namespace Shard {
 		worldUp(glm::vec3(0.0f, 1.0f, 0.0f)),
 		yaw(YAW),
 		pitch(PITCH),
-		movementSpeed(SPEED)
+		movementSpeed(SPEED),
+		fov(45.f)
 	{
 		right = glm::normalize(glm::cross(front, up));
 	}
