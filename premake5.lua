@@ -64,6 +64,7 @@ project "Game"
 		"%{wks.location}/Shard/vendor/glfw/include",
 		"%{wks.location}/Shard/vendor/imgui",
 		"%{wks.location}/Shard/include",
+		"%{wks.location}/Shard/common.h",
 		"%{prj.name}/include"
 	}
 

@@ -3,6 +3,7 @@
 #include "Bootstrap.h"
 #include "Logger.h"
 #include "ColliderBox.h"
+#include "SceneManager.h"
 
 #include <algorithm>
 #include <list>
@@ -12,6 +13,8 @@
 #include <functional>
 #include <unordered_map>
 #include <functional>
+
+#include "gtx/transform.hpp"
 
 namespace Shard {
 
@@ -651,5 +654,53 @@ namespace Shard {
 		// 100 megawhat?
 
 	}
+
+
+	//Klick -> collision with body
+
+	std::optional<glm::vec3> PhysicsManager::clickHitsBody(InputEvent ie, std::shared_ptr<PhysicsBody> body) {
+		auto ray = getRayFromClick(ie);
+		return body->checkCollision(ray);
+	}
+
+	Ray PhysicsManager::getRayFromClick(InputEvent ie) {
+
+		auto mouseX = ie.x;
+		auto mouseY = ie.y;
+		
+		// TODO: Don't hardcode
+		int windowWidth = 1280;
+		int windowHeight = 760;
+		
+		// Normalize mouse coordinates
+		float normalizedX = (2.0f * mouseX) / windowWidth - 1.0f;
+		float normalizedY = 1.0f - (2.0f * mouseY) / windowHeight;
+
+		// Create near and far points in view space
+		glm::vec4 nearPoint = glm::vec4(normalizedX, normalizedY, 0.0f, 1.0f);
+		glm::vec4 farPoint = glm::vec4(normalizedX, normalizedY, 1.0f, 1.0f);
+
+		// Invert the projection matrix to get view-to-world transformation
+		// PV^(-1)
+		auto P = glm::perspective(45.0f, 1280.0f / 760.0f, 1.f, 300.f);
+		auto V = SceneManager::getInstance().getCameraViewMatrix();
+		glm::mat4 invProjectionMatrix = glm::inverse(P*V);
+
+		// Unproject points to world space
+		glm::vec4 nearPointWorld = invProjectionMatrix * nearPoint;
+		glm::vec4 farPointWorld = invProjectionMatrix * farPoint;
+
+		// Divide by w component to get homogeneous coordinates
+		nearPointWorld /= nearPointWorld.w;
+		farPointWorld /= farPointWorld.w;
+
+		// Create ray direction
+		glm::vec3 rayDirection = glm::normalize(glm::vec3(farPointWorld - nearPointWorld));
+
+		// Create and return the ray
+		return Ray{ glm::vec3(nearPointWorld), rayDirection };
+
+	}
+
 
 }

@@ -3,10 +3,6 @@
 
 namespace Shard {
 
-	typedef struct Ray {
-		glm::vec3 origin;
-		glm::vec3 dir;
-	} Ray;
 
 	Collider::Collider()
 		: m_rotateAtOffset(false)
