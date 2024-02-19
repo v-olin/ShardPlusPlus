@@ -45,6 +45,7 @@ namespace Shard {
 		glActiveTexture(GL_TEXTURE0 + 6);
 		glBindTexture(GL_TEXTURE_2D, envmap_refmap_id);
 
+		//TODO, fix material values, now we have ice mountains
 		m_heightfield.loadHeightField("L3123F.png", "L3123F_downscaled.jpg", "L3123F_shininess.png");
 		m_heightfield.generateMesh(500, 500, 0);
 

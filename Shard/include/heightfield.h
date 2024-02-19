@@ -29,12 +29,15 @@ namespace Shard {
 		GLuint m_normalBuffer;
 		std::string m_diffuseTexturePath;
 		GLuint m_shaderProgram;
+
 		float m_mapSize;
+		float metalness{ 0.f };
+		float fresnel{ 0.f };
+		float shininess{ 1000.f };
 
-		float metalness{ 0.5f };
-		float fresnel{ 0.5f };
-		float shininess{ 1.0f };
-
+		//GLfloat water_metalness = 0.62f;
+		//GLfloat water_fresnel = 0.68f;
+		//GLfloat water_shininess = 5300.0f;
 		float m_octaves;
 		float m_height_scale;
 		int m_map_type;
