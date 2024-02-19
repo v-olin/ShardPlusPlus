@@ -18,20 +18,26 @@
 
 bool active{ false };
 
+bool is_rmb_down{ false };
+bool is_first_mouse{ false };
+float last_x{ 0.0f }, last_y{ 0.0f };
+
 void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 
 
 	static auto &sm = Shard::SceneManager::getInstance();
+	if (et == Shard::EventType::KeyUp)
+		return;
 
 	if (et == Shard::EventType::KeyDown)
 	{
 		if (ie.key == GLFW_KEY_TAB) {
 			active = !active;
+			Shard::Logger::log(("active status: " + std::to_string(active)).c_str());
 		}
 	}
 	car->should_move = !active;
 	if (active) {
-		Shard::Logger::log(("active status: " + std::to_string(active)).c_str());
 		if (ie.key == GLFW_KEY_W)
 			sm.camera.move(Shard::Movement::FORWARD, 1.0f);
 
@@ -51,11 +57,46 @@ void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 			sm.camera.move(Shard::Movement::DOWN, 1.0f);
 
 
+		//MouseCallback(GLFWwindow * window, double xpos, double ypos)
+		float xpos = static_cast<float>(ie.x);
+		float ypos = static_cast<float>(ie.y);
+
+		if (ie.button == GLFW_MOUSE_BUTTON_RIGHT && et == Shard::EventType::MouseUp) {
+			is_rmb_down = false;
+			is_first_mouse = true;
+		}
+		if (ie.button == GLFW_MOUSE_BUTTON_RIGHT && et == Shard::EventType::MouseDown) {
+			is_rmb_down = true;
+			last_x = xpos;
+			last_y = ypos;
+		}
+		if (et == Shard::EventType::MouseMotion){
+
+			if (is_first_mouse) {
+				last_x = xpos;
+				last_y = ypos;
+				is_first_mouse = false;
+				return;
+			}
+
+			if (is_rmb_down) {
+				float delta_x = xpos - last_x;
+				float delta_y = last_y - ypos;
+				last_x = xpos;
+				last_y = ypos;
+				float sensitivity = 0.05f;
+				delta_x *= sensitivity;
+				delta_y *= sensitivity;
+				sm.camera.rotate(delta_x, delta_y);
+			}
+
+		}
+	
 	}
 
 }
 int GameTest::getTargetFrameRate() {
-	return FAST	;
+	return 500	;
 }
 
 void GameTest::update() {

@@ -22,6 +22,11 @@ uniform float u_AttenuationQuadratic = 0.002;
 
 uniform vec3 u_ObjectColor;
 
+layout (binding = 6) uniform sampler2D reflectionMap;
+uniform float environment_multiplier = 1.0;
+uniform mat4 viewInverse;
+#define PI 3.14159265359
+
 out vec4 FragColor;
 
 vec3 CalculateColor() {
@@ -48,7 +53,25 @@ vec3 CalculateColor() {
 	diffuse *= attenuation;
 	specular *= attenuation;
 
-	vec3 final = u_ObjectColor * (ambient + diffuse + specular);
+	// Sample reflectance map
+
+	vec3 wo = -normalize(viewPositionWorldSpace);
+	vec3 n = normalize(normal_);
+	vec3 wi = (viewInverse * vec4(reflect(-wo, n), 0.0)).xyz;
+
+	float theta2 = acos(max(-1.0f, min(1.0f, wi.y)));
+	float phi2 = atan(wi.z, wi.x);
+	if(phi2 < 0.0f)
+		phi2 = phi2 + 2.0f * PI;
+
+	// ------------------------------v use material_shininess property in future
+	float roughness = sqrt(sqrt(2 / (0 + 2)));
+	vec2 lookup2 = vec2(phi2 / (2.0 * PI), 1 - theta2 / PI);
+	vec3 Li2 = environment_multiplier * texture(reflectionMap, lookup2, roughness * 7.0).rgb;
+
+	///////////////////////////////////////////////////////////////////////////
+
+	vec3 final = u_ObjectColor * Li2 * (ambient + diffuse + specular);
 	return final;
 
 }

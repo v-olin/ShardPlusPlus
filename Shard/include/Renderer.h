@@ -36,9 +36,13 @@ namespace Shard {
 
 		GLuint cubemap_tex_id{ 0 };
 		CubeMap* cubemap_model{ nullptr };
+
+		GLuint envmap_bg_id{ 0 };
+		GLuint envmap_refmap_id{ 0 };
 		
 		GLuint LoadCubeMap(std::string cubemap_name);
 		void drawCubeMap();
+		void drawBackground();
 		void drawScene();
 		void drawModels();
 		void drawCollider(std::shared_ptr<GameObject> toDraw);
