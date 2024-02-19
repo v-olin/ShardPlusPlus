@@ -25,6 +25,7 @@ namespace Shard {
 		, m_projectionMatrix(glm::perspective(sceneManager.camera.fov, m_resolution.x / m_resolution.y, 1.f, 300.f))
 		, m_drawColliders(true)
 		, m_window(window)
+		, m_heightfield(sceneManager)
 	{
 		static bool initialized = false;
 		if (initialized) {
@@ -34,11 +35,18 @@ namespace Shard {
 		
 		envmap_bg_id = m_textureManager.loadHdrTexture("001.hdr");
 		envmap_refmap_id = m_textureManager.loadHdrTexture("001_dl_0.hdr");
+		envmap_irrmap_id = m_textureManager.loadHdrTexture("001_irradiance.hdr");
+
+			
+
 
 		glActiveTexture(GL_TEXTURE0 + 5);
 		glBindTexture(GL_TEXTURE_2D, envmap_bg_id);
 		glActiveTexture(GL_TEXTURE0 + 6);
 		glBindTexture(GL_TEXTURE_2D, envmap_refmap_id);
+
+		m_heightfield.loadHeightField("L3123F.png", "L3123F_downscaled.jpg", "L3123F_shininess.png");
+		m_heightfield.generateMesh(500, 500, 0);
 
 	}
 
@@ -188,7 +196,11 @@ namespace Shard {
 	}
 
 	void Renderer::drawScene() {
+		
+
+
 		drawBackground(); // <-- draw it last always
+		m_heightfield.submitTriangles(m_sceneManager.getCameraViewMatrix(), m_projectionMatrix, envmap_bg_id, envmap_irrmap_id, envmap_refmap_id);
 		drawModels();
 	}
 
@@ -206,16 +218,17 @@ namespace Shard {
 		// Note: No model is being drawn to show
 		// the light source in the world.
 
-		glm::vec3 light_color{ 1.0f, 1.0f, 1.0f };
-		glm::vec3 light_position{ 0.0f, 10.0f, 0.0f };
-		float light_ambient_intensity{ 0.1f };
-		float light_diffuse_intensity{ 0.8f };
-		float light_specular_intensity{ 1.0f };
+		//glm::vec3 light_color{ 1.0f, 1.0f, 1.0f };
+		//glm::vec3 light_position{ 0.0f, 10.0f, 0.0f }; //<-----------------------------------------
+		//float light_ambient_intensity{ 0.1f };
+		//float light_diffuse_intensity{ 0.8f };
+		//float light_specular_intensity{ 1.0f };
 
-		float attenuation_constant{ 1.0f };
-		float attenuation_linear{ 0.0f };
-		float attenuation_quadratic{ 0.001f };
-
+		//float attenuation_constant{ 1.0f };
+		//float attenuation_linear{ 0.0f };
+		//float attenuation_quadratic{ 0.001f };
+	
+		auto& sun = SceneManager::getInstance().sun;
 		const GLuint defShader = m_shaderManager.getDefaultShader();
 		glUseProgram(defShader);
 
@@ -239,14 +252,14 @@ namespace Shard {
 				m_shaderManager.SetMat4x4(defShader, mvp, "u_MVP");
 				m_shaderManager.SetMat4x4(defShader, modelMatrix, "u_ModelMatrix");
 				// Fragment shader uniforms
-				m_shaderManager.SetVec3(defShader, light_color, "u_LightColor");
-				m_shaderManager.SetVec3(defShader, light_position, "u_LightPosition");
-				m_shaderManager.SetFloat1(defShader, light_ambient_intensity, "u_LightAmbientIntensity");
-				m_shaderManager.SetFloat1(defShader, light_diffuse_intensity, "u_LightDiffuseIntensity");
-				m_shaderManager.SetFloat1(defShader, light_specular_intensity, "u_LightDpecularIntensity");
-				m_shaderManager.SetFloat1(defShader, attenuation_constant, "u_AttenuationConstant");
-				m_shaderManager.SetFloat1(defShader, attenuation_linear, "u_AttenuationLinear");
-				m_shaderManager.SetFloat1(defShader, attenuation_quadratic, "u_AttenuationQuadratic");
+				m_shaderManager.SetVec3(defShader, sun.light_color, "u_LightColor");
+				m_shaderManager.SetVec3(defShader, sun.light_position, "u_LightPosition");
+				m_shaderManager.SetFloat1(defShader, sun.light_ambient_intensity, "u_LightAmbientIntensity");
+				m_shaderManager.SetFloat1(defShader, sun.light_diffuse_intensity, "u_LightDiffuseIntensity");
+				m_shaderManager.SetFloat1(defShader, sun.light_specular_intensity, "u_LightDpecularIntensity");
+				m_shaderManager.SetFloat1(defShader, sun.attenuation_constant, "u_AttenuationConstant");
+				m_shaderManager.SetFloat1(defShader, sun.attenuation_linear, "u_AttenuationLinear");
+				m_shaderManager.SetFloat1(defShader, sun.attenuation_quadratic, "u_AttenuationQuadratic");
 			}
 
 			gob->m_model->Draw();

@@ -28,10 +28,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Game.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\GameObject.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\GameObjectManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\heightfield.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\InputEvent.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\InputManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Logger.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Model.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\noise.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\PhysicsBody.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\PhysicsManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Renderer.h" />
@@ -327,9 +329,11 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)src\GUI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\GameObject.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\GameObjectManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\heightfield.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\InputManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Logger.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Model.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\noise.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\PhysicsBody.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\PhysicsManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Renderer.cpp" />
