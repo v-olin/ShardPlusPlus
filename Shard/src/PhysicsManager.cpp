@@ -211,9 +211,11 @@ namespace Shard {
 			}
 
 			
-			std::optional<glm::vec2> impulse = getImpulseFromCollision(col.a, col.b);
+			std::optional<glm::vec3> impulse = getImpulseFromCollision(col.a, col.b);
+			//if we have a collision, run the impulse stuff
 
 			if (impulse.has_value()) {
+				runCollisionReaction(impulse.value(), col);
 				a_handler->onCollisionStay(col.b);
 				b_handler->onCollisionStay(col.a);
 			}
@@ -480,6 +482,8 @@ namespace Shard {
 
 	}
 
+
+
 	void PhysicsManager::runCollisionCheck() {
 
 		/*
@@ -491,7 +495,6 @@ namespace Shard {
 
 		glm::vec3 impulse;
 		std::optional<glm::vec3> possible_impulse;
-		float mass_total, mass_prop = 0.f;
 
 
 		// TODO:
@@ -505,48 +508,7 @@ namespace Shard {
 
 			if (possible_impulse.has_value()) {
 				impulse = possible_impulse.value();
-
-				if (!col_obj.a->m_passThrough && !col_obj.b->m_passThrough) {
-					mass_total = col_obj.a->m_mass + col_obj.b->m_mass;
-
-					if (col_obj.a->m_isKinematic)
-						mass_prop = 1.f;
-					else
-						mass_prop = col_obj.a->m_mass / mass_total;
-
-					if (col_obj.a->m_impartForce) {
-						col_obj.a->impartForces(col_obj.b, mass_prop);
-						col_obj.a->reduceForces(1.f - mass_prop);
-					}
-
-					if (!col_obj.b->m_isKinematic) {
-						glm::vec3 force{ -impulse.x, -impulse.y, -impulse.z};
-						col_obj.b->m_parent->m_model->translate(force * mass_prop);
-						mass_prop = 1.f - mass_prop;
-					}
-					else {
-						mass_prop = 1.f;
-					}
-
-					if (!col_obj.a->m_isKinematic) {
-						glm::vec3 force{ impulse.x, impulse.y, impulse.z};
-						col_obj.a->m_parent->m_model->translate(force * mass_prop);
-					}
-					
-					if (col_obj.a->m_stopOnCollision)
-						col_obj.a->stopForces();
-
-					if (col_obj.b->m_stopOnCollision)
-						col_obj.b->stopForces();
-
-
-
-					if (col_obj.a->m_reflectOnCollision)
-						col_obj.a->reflectForces(impulse);
-					if (col_obj.b->m_reflectOnCollision)
-						col_obj.b->reflectForces(impulse);
-
-				}
+				runCollisionReaction(impulse, col_obj);
 
 				(std::dynamic_pointer_cast<CollisionHandler>(col_obj.a->m_parent))->onCollisionEnter(col_obj.b);
 				(std::dynamic_pointer_cast<CollisionHandler>(col_obj.b->m_parent))->onCollisionEnter(col_obj.a);
@@ -653,6 +615,51 @@ namespace Shard {
 		// uuuuuuuuuuuuuuhhhh.............. no penetration... but collided?
 		// 100 megawhat?
 
+	}
+
+	void PhysicsManager::runCollisionReaction(glm::vec3 impulse, CollidingObject col_obj) {
+
+		float mass_total, mass_prop = 0.f;
+		if (!col_obj.a->m_passThrough && !col_obj.b->m_passThrough) {
+			mass_total = col_obj.a->m_mass + col_obj.b->m_mass;
+		
+			if (col_obj.a->m_isKinematic)
+				mass_prop = 1.f;
+			else
+				mass_prop = col_obj.a->m_mass / mass_total;
+		
+			if (col_obj.a->m_impartForce) {
+				col_obj.a->impartForces(col_obj.b, mass_prop);
+				col_obj.a->reduceForces(1.f - mass_prop);
+			}
+		
+			if (!col_obj.b->m_isKinematic) {
+				glm::vec3 force{ -impulse.x, -impulse.y, -impulse.z};
+				col_obj.b->m_parent->m_model->translate(force * mass_prop);
+				mass_prop = 1.f - mass_prop;
+			}
+			else {
+				mass_prop = 1.f;
+			}
+		
+			if (!col_obj.a->m_isKinematic) {
+				glm::vec3 force{ impulse.x, impulse.y, impulse.z};
+				col_obj.a->m_parent->m_model->translate(force * mass_prop);
+			}
+			
+			if (col_obj.a->m_stopOnCollision)
+				col_obj.a->stopForces();
+		
+			if (col_obj.b->m_stopOnCollision)
+				col_obj.b->stopForces();
+		
+		
+		
+			if (col_obj.a->m_reflectOnCollision)
+				col_obj.a->reflectForces(impulse);
+			if (col_obj.b->m_reflectOnCollision)
+				col_obj.b->reflectForces(impulse);
+		}
 	}
 
 
