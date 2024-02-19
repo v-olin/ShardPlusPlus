@@ -97,6 +97,7 @@ namespace Shard {
 
 		std::optional<glm::vec3> getImpulseFromCollision(std::shared_ptr<PhysicsBody> a, std::shared_ptr<PhysicsBody> b);
 
+		void runCollisionReaction(glm::vec3 impulse, CollidingObject col_obj);
 		void runCollisionCheck();
 		void checkForCollisions();
 
