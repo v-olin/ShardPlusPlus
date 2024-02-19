@@ -35,6 +35,7 @@ namespace Shard {
 		float pitch;
 		// Camera options
 		float movementSpeed;
+		float fov;
 		
 		Camera();
 		

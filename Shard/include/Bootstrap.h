@@ -6,6 +6,7 @@
 #include "GameObject.h"
 #include "InputManager.h"
 #include "PhysicsManager.h"
+#include "GUI.h"
 
 #include <memory>
 #include <string>
@@ -15,7 +16,6 @@
 class GLFWwindow;
 
 namespace Shard {
-
 
 	class Bootstrap {
 
@@ -43,6 +43,7 @@ namespace Shard {
 		static void setupEnvironmentVariables(std::string path);
 
 		inline static ::GLFWwindow* m_Window;
+
 	private:
 		inline static bool running_game_set;
 		inline static std::shared_ptr<Game> running_game;

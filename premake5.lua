@@ -33,6 +33,7 @@ project "Shard"
 		"%{prj.name}/vendor/tiny_obj/include",
 		"%{prj.name}/vendor/glew/include",
 		"%{prj.name}/vendor/glfw/include",
+		"%{prj.name}/vendor/imgui",
 		"%{prj.name}/include"
 	}
 
@@ -61,6 +62,7 @@ project "Game"
 		"%{wks.location}/Shard/vendor/tiny_obj/include",
 		"%{wks.location}/Shard/vendor/glad/include",
 		"%{wks.location}/Shard/vendor/glfw/include",
+		"%{wks.location}/Shard/vendor/imgui",
 		"%{wks.location}/Shard/include",
 		"%{wks.location}/Shard/common.h",
 		"%{prj.name}/include"

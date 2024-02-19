@@ -11,13 +11,18 @@
 
 namespace Shard {
 
-	Renderer::Renderer(SceneManager& sceneManager, TextureManager& texManager, ShaderManager& shaderManager, GLFWwindow* window)
+	Renderer::Renderer(SceneManager& sceneManager,
+		TextureManager& texManager,
+		ShaderManager& shaderManager,
+		GUI& gui,
+		GLFWwindow* window)
 		: m_sceneManager(sceneManager)
 		, m_textureManager(texManager)
 		, m_shaderManager(shaderManager)
+		, m_gui(gui)
 		, m_resolution({ 1280, 760 })
-		, m_fieldOfView(45.f)
-		, m_projectionMatrix(glm::perspective(m_fieldOfView, m_resolution.x / m_resolution.y, 1.f, 300.f))
+		, m_fieldOfView(sceneManager.camera.fov)
+		, m_projectionMatrix(glm::perspective(sceneManager.camera.fov, m_resolution.x / m_resolution.y, 1.f, 300.f))
 		, m_drawColliders(true)
 		, m_window(window)
 	{
@@ -38,12 +43,18 @@ namespace Shard {
 		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		m_projectionMatrix = glm::perspective(m_sceneManager.camera.fov, m_resolution.x / m_resolution.y, 1.f, 300.f);
+
 		drawScene();
 
+
+
+		// Do this last, idk why
+		m_gui.draw();
+		
 		// should check for errors here
 		// surely there are no errors
 		// very bad!!
-
 		glfwSwapBuffers(m_window);
 	}
 
