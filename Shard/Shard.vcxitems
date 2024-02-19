@@ -346,4 +346,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui\imgui_tables.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui\imgui_widgets.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)res\shaders\background.frag" />
+    <None Include="$(MSBuildThisFileDirectory)res\shaders\background.vert" />
+  </ItemGroup>
 </Project>

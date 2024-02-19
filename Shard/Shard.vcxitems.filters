@@ -1054,4 +1054,8 @@
       <Filter>vendor\imgui</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)res\shaders\background.frag" />
+    <None Include="$(MSBuildThisFileDirectory)res\shaders\background.vert" />
+  </ItemGroup>
 </Project>

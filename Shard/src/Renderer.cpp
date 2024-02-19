@@ -31,7 +31,15 @@ namespace Shard {
 			Logger::log("Renderer already initialized, very bad!!", LOG_LEVEL_FATAL);
 		}
 		initialized = true;
-		LoadCubeMap("skybox");
+		
+		envmap_bg_id = m_textureManager.loadHdrTexture("001.hdr");
+		envmap_refmap_id = m_textureManager.loadHdrTexture("001_dl_0.hdr");
+
+		glActiveTexture(GL_TEXTURE0 + 5);
+		glBindTexture(GL_TEXTURE_2D, envmap_bg_id);
+		glActiveTexture(GL_TEXTURE0 + 6);
+		glBindTexture(GL_TEXTURE_2D, envmap_refmap_id);
+
 	}
 
 	void Renderer::render() {
@@ -126,9 +134,62 @@ namespace Shard {
 		glUseProgram(0);
 	}
 
+	void Renderer::drawBackground() {
+		static auto& sm = ShaderManager::getInstance();
+		auto bg_shader = sm.loadShader("background", false);
+		glUseProgram(bg_shader);
+
+		static float environment_multiplier = 1.0f;
+		glm::mat4 viewMatrix = m_sceneManager.getCameraViewMatrix();
+		auto VP = m_projectionMatrix * viewMatrix;
+		auto camera_pos = m_sceneManager.camera.pos;
+
+		sm.SetFloat1(bg_shader, environment_multiplier, "environment_multiplier");
+		sm.SetMat4x4(bg_shader, inverse(VP), "inv_PV");
+		sm.SetVec3(bg_shader, camera_pos,  "camera_pos");
+		
+		GLboolean previous_depth_state;
+		glGetBooleanv(GL_DEPTH_TEST, &previous_depth_state);
+		glDisable(GL_DEPTH_TEST);
+
+		static GLuint VAO = 0;
+		static GLuint VBO = 0;
+		static int nofVertices = 6;
+		
+		if (VAO == 0)
+		{ // do this initialization first time the function is called.
+			static const float positions[] = { -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 1.0f,
+												   -1.0f, -1.0f, 1.0f, 1.0f,  -1.0f, 1.0f };
+			
+			glGenVertexArrays(1, &VAO);
+			glBindVertexArray(VAO);
+			
+			glGenBuffers(1, &VBO);
+			glBindBuffer(GL_ARRAY_BUFFER, VBO);
+			glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), positions, GL_STATIC_DRAW);
+
+			glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0);
+			glEnableVertexAttribArray(0);
+			
+			glBindVertexArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		}
+
+		glBindVertexArray(VAO);
+		glDrawArrays(GL_TRIANGLES, 0, nofVertices);
+
+		if (previous_depth_state)
+			glEnable(GL_DEPTH_TEST);
+		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glUseProgram(0);
+	}
+
 	void Renderer::drawScene() {
+		drawBackground(); // <-- draw it last always
 		drawModels();
-		drawCubeMap(); // <-- draw it last always
 	}
 
 	void Renderer::drawModels() {
@@ -155,7 +216,15 @@ namespace Shard {
 		float attenuation_linear{ 0.0f };
 		float attenuation_quadratic{ 0.001f };
 
-		///////////////////
+		const GLuint defShader = m_shaderManager.getDefaultShader();
+		glUseProgram(defShader);
+
+		glm::mat4 viewMatrix = m_sceneManager.getCameraViewMatrix();
+		auto VP = m_projectionMatrix * viewMatrix;
+		auto camera_pos = m_sceneManager.camera.pos;
+
+		m_shaderManager.SetMat4x4(defShader, glm::inverse(viewMatrix) ,"viewInverse");
+		m_shaderManager.SetVec3(defShader, camera_pos, "u_ViewPosition");
 
 		for (std::shared_ptr<GameObject> gob : gobs) {
 			if (!gob->m_model->m_hasDedicatedShader) [[likely]] {
@@ -163,16 +232,12 @@ namespace Shard {
 			}
 
 			glm::mat4 modelMatrix = gob->m_model->getModelMatrix();
-			glm::mat4 viewMatrix = m_sceneManager.getCameraViewMatrix();
-			glm::mat4 mvpMatrix = m_projectionMatrix * viewMatrix * modelMatrix;
-			auto camera_pos = m_sceneManager.camera.pos;
+			auto mvp = VP * modelMatrix;
 
-			const GLuint defShader = m_shaderManager.getDefaultShader();
 			if (!gob->m_model->m_hasDedicatedShader) [[likely]] {
 				// Vertex shader uniforms
-				m_shaderManager.SetVec3(defShader, camera_pos, "u_ViewPosition");
+				m_shaderManager.SetMat4x4(defShader, mvp, "u_MVP");
 				m_shaderManager.SetMat4x4(defShader, modelMatrix, "u_ModelMatrix");
-				m_shaderManager.SetMat4x4(defShader, mvpMatrix, "u_MVP");
 				// Fragment shader uniforms
 				m_shaderManager.SetVec3(defShader, light_color, "u_LightColor");
 				m_shaderManager.SetVec3(defShader, light_position, "u_LightPosition");
