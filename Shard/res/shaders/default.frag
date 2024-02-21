@@ -5,6 +5,8 @@ in vec2 texCoord_;
 
 in vec3 positionWorldSpace;
 in vec3 viewPositionWorldSpace;
+in vec3 viewPositionViewSpace;
+in vec3 viewSpaceNormal_;
 
 ///////////
 // Light //
@@ -55,8 +57,8 @@ vec3 CalculateColor() {
 
 	// Sample reflectance map
 
-	vec3 wo = -normalize(viewPositionWorldSpace);
-	vec3 n = normalize(normal_);
+	vec3 wo = -normalize(viewPositionViewSpace);
+	vec3 n = normalize(viewSpaceNormal_);
 	vec3 wi = (viewInverse * vec4(reflect(-wo, n), 0.0)).xyz;
 
 	float theta2 = acos(max(-1.0f, min(1.0f, wi.y)));
@@ -65,13 +67,13 @@ vec3 CalculateColor() {
 		phi2 = phi2 + 2.0f * PI;
 
 	// ------------------------------v use material_shininess property in future
-	float roughness = sqrt(sqrt(2 / (0 + 2)));
+	float roughness = sqrt(sqrt(2 / (1000 + 2)));
 	vec2 lookup2 = vec2(phi2 / (2.0 * PI), 1 - theta2 / PI);
 	vec3 Li2 = environment_multiplier * texture(reflectionMap, lookup2, roughness * 7.0).rgb;
 
 	///////////////////////////////////////////////////////////////////////////
 
-	vec3 final = u_ObjectColor * Li2 * (ambient + diffuse + specular);
+	vec3 final = u_ObjectColor * (ambient + diffuse + Li2*specular);
 	return final;
 
 }

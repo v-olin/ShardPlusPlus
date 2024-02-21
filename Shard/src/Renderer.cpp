@@ -250,6 +250,7 @@ namespace Shard {
 
 			if (!gob->m_model->m_hasDedicatedShader) [[likely]] {
 				// Vertex shader uniforms
+				m_shaderManager.SetMat4x4(defShader, viewMatrix, "u_ViewMatrix");
 				m_shaderManager.SetMat4x4(defShader, mvp, "u_MVP");
 				m_shaderManager.SetMat4x4(defShader, modelMatrix, "u_ModelMatrix");
 				// Fragment shader uniforms

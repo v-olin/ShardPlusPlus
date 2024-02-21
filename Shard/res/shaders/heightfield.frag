@@ -182,7 +182,7 @@ void main(){
 
 	float shininess = texture2D(shinyTexture, texCoord.xy).r;
 
-	final += indirect * shininess;
+	final += indirect;// * shininess;
 
 	if (any(isnan(final)))
 	{

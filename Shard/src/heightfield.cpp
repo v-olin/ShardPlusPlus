@@ -380,7 +380,7 @@ namespace Shard {
 		//sm.SetMat4x4(m_shaderProgram, lightMatrix, "lightMatrix");
 
 		//uniform mat4 normalMatrix;
-		sm.SetMat4x4(m_shaderProgram, inverse(transpose(viewMatrix * glm::mat4(1.0f))), "normalMatrix");
+		sm.SetMat4x4(m_shaderProgram, inverse(transpose(viewMatrix)), "normalMatrix");
 	
 		//uniform mat4 modelViewMatrix;
 		sm.SetMat4x4(m_shaderProgram, viewMatrix * glm::mat4(1.0f), "modelViewMatrix");
