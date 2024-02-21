@@ -50,8 +50,8 @@ namespace Shard {
 
 		auto base_dir = "../Shard/res/heightfields/";
 		loadHeightFieldTexture(&m_texid_hf, base_dir + heightFieldName);
-		loadDiffuseTexture(&m_texid_shininess, base_dir + diffuseName);
-		loadDiffuseTexture(&m_texid_diffuse, base_dir + shinyName);
+		loadDiffuseTexture(&m_texid_shininess, base_dir + shinyName);
+		loadDiffuseTexture(&m_texid_diffuse, base_dir + diffuseName);
 		m_map_type = LOADED;
 	}
 
