@@ -24,13 +24,17 @@ bool is_rmb_down{ false };
 bool is_first_mouse{ false };
 float last_x{ 0.0f }, last_y{ 0.0f };
 
+bool c_forward;
+bool c_backward;
+bool c_left;
+bool c_right;
+bool c_up;
+bool c_down;
 void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 
 
 	static auto &sm = Shard::SceneManager::getInstance();
-	if (et == Shard::EventType::KeyUp)
-		return;
-
+	
 	if (et == Shard::EventType::KeyDown)
 	{
 		if (ie.key == GLFW_KEY_1)
@@ -54,23 +58,25 @@ void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 	}
 	car->should_move = !is_rmb_down;// cameraStatus != Shard::CameraView::FREE;
 	if ((cameraStatus == Shard::CameraView::FREE || cameraStatus == Shard::CameraView::LOCK) && is_rmb_down) {
-		if (ie.key == GLFW_KEY_W)
-			sm.camera.move(Shard::Movement::FORWARD, 1.0f);
-
-		if (ie.key == GLFW_KEY_S)
-			sm.camera.move(Shard::Movement::BACKWARD, 1.0f);
-
-		if (ie.key == GLFW_KEY_A)
-			sm.camera.move(Shard::Movement::LEFT, 1.0f);
-
-		if (ie.key == GLFW_KEY_D)
-			sm.camera.move(Shard::Movement::RIGHT, 1.0f);
-
-		if (ie.key == GLFW_KEY_LEFT_SHIFT)
-			sm.camera.move(Shard::Movement::UP, 1.0f);
-
-		if (ie.key == GLFW_KEY_RIGHT_SHIFT)
-			sm.camera.move(Shard::Movement::DOWN, 1.0f);
+		auto keyDown = et == Shard::EventType::KeyDown;
+		if (et == Shard::EventType::KeyDown || et == Shard::EventType::KeyUp) {
+			if (ie.key == GLFW_KEY_W) 
+				c_forward = keyDown;
+			if (ie.key == GLFW_KEY_S) 
+				c_backward = keyDown;
+			if (ie.key == GLFW_KEY_A)
+				c_left = keyDown;
+			if (ie.key == GLFW_KEY_D)
+				c_right = keyDown;
+			if (ie.key == GLFW_KEY_LEFT_SHIFT)
+				c_up = keyDown;
+			if (ie.key == GLFW_KEY_LEFT_CONTROL)
+				c_down = keyDown;
+			if (keyDown && ie.key == GLFW_KEY_UP)
+				sm.camera.movementSpeed += 10;
+			if (keyDown && ie.key == GLFW_KEY_DOWN)
+				sm.camera.movementSpeed -= 10;
+		}
 	}
 
 
@@ -124,6 +130,19 @@ void GameTest::update() {
 	std::string fps = std::to_string(Shard::Bootstrap::getFPS());
 
 	static auto &sm = Shard::SceneManager::getInstance();
+	auto dt = Shard::Bootstrap::getDeltaTime();
+	if(c_forward)
+		sm.camera.move(Shard::Movement::FORWARD, dt);
+	if(c_backward)
+		sm.camera.move(Shard::Movement::BACKWARD, dt);
+	if(c_left)
+		sm.camera.move(Shard::Movement::LEFT, dt);
+	if(c_right)
+		sm.camera.move(Shard::Movement::RIGHT, dt);
+	if(c_up)
+		sm.camera.move(Shard::Movement::UP, dt);
+	if(c_down)
+		sm.camera.move(Shard::Movement::DOWN, dt);
 	sm.camera.updateCameraToPlayer();
 
 	/*Shard::Display* display = Shard::Bootstrap::getDisplay();
@@ -172,6 +191,9 @@ void GameTest::initalize() {
 	createAsteroid(10, 0, -10);
 	//createFlatPlane(0, -12, 0);
 	Shard::Bootstrap::getInput().addListeners(shared_from_this());
+	static auto &sm = Shard::SceneManager::getInstance();
+	sm.camera.movementSpeed = 100;
+
 }
 
 int main() {

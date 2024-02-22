@@ -41,9 +41,9 @@ namespace Shard {
 		if (direction == LEFT)
 			pos = glm::translate(-right * speed) * glm::vec4(pos, 1.0f);
 		if (direction == UP)
-			pos = glm::translate(worldUp * speed) * glm::vec4(pos, 1.0f);
+			pos = glm::translate(up * speed) * glm::vec4(pos, 1.0f);
 		if (direction == DOWN)
-			pos = glm::translate(-worldUp * speed) * glm::vec4(pos, 1.0f);
+			pos = glm::translate(-up * speed) * glm::vec4(pos, 1.0f);
 	}
 
 	void Camera::setPlayerGameObj(std::shared_ptr<GameObject> game_obj) {
