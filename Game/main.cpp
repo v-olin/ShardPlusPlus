@@ -16,7 +16,9 @@
 #define FAST 100000000000;
 #define SLOW 50;
 
-bool active{ false };
+Shard::CameraView cameraStatus{ Shard::CameraView::FREE };
+std::string cameraStatusStr[] = { "First person", "Third person", "Lock", "Free" };
+
 
 bool is_rmb_down{ false };
 bool is_first_mouse{ false };
@@ -31,13 +33,22 @@ void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 
 	if (et == Shard::EventType::KeyDown)
 	{
-		if (ie.key == GLFW_KEY_TAB) {
-			active = !active;
-			Shard::Logger::log(("active status: " + std::to_string(active)).c_str());
+		if (ie.key == GLFW_KEY_1)
+			sm.camera.status = Shard::CameraView::FIRST_PERSON;
+		if (ie.key == GLFW_KEY_2)
+			sm.camera.status = Shard::CameraView::THIRD_PERSON;
+		if (ie.key == GLFW_KEY_3)
+			sm.camera.status = Shard::CameraView::FREE;
+		if (ie.key == GLFW_KEY_4)
+			sm.camera.status = Shard::CameraView::LOCK;
+
+		if (cameraStatus != sm.camera.status) {
+			cameraStatus = sm.camera.status;
+			Shard::Logger::log(("Camera status: " + cameraStatusStr[(int)cameraStatus]).c_str());
 		}
 	}
-	car->should_move = !active;
-	if (active) {
+	car->should_move = !is_rmb_down;// cameraStatus != Shard::CameraView::FREE;
+	if ((cameraStatus == Shard::CameraView::FREE || cameraStatus == Shard::CameraView::LOCK) && is_rmb_down) {
 		if (ie.key == GLFW_KEY_W)
 			sm.camera.move(Shard::Movement::FORWARD, 1.0f);
 
@@ -55,21 +66,25 @@ void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 
 		if (ie.key == GLFW_KEY_RIGHT_SHIFT)
 			sm.camera.move(Shard::Movement::DOWN, 1.0f);
+	}
 
 
-		//MouseCallback(GLFWwindow * window, double xpos, double ypos)
-		float xpos = static_cast<float>(ie.x);
-		float ypos = static_cast<float>(ie.y);
+	//MouseCallback(GLFWwindow * window, double xpos, double ypos)
+	float xpos = static_cast<float>(ie.x);
+	float ypos = static_cast<float>(ie.y);
 
-		if (ie.button == GLFW_MOUSE_BUTTON_RIGHT && et == Shard::EventType::MouseUp) {
-			is_rmb_down = false;
-			is_first_mouse = true;
-		}
-		if (ie.button == GLFW_MOUSE_BUTTON_RIGHT && et == Shard::EventType::MouseDown) {
-			is_rmb_down = true;
-			last_x = xpos;
-			last_y = ypos;
-		}
+	if (ie.button == GLFW_MOUSE_BUTTON_RIGHT && et == Shard::EventType::MouseUp) {
+		is_rmb_down = false;
+		is_first_mouse = true;
+	}
+	if (ie.button == GLFW_MOUSE_BUTTON_RIGHT && et == Shard::EventType::MouseDown) {
+		is_rmb_down = true;
+		last_x = xpos;
+		last_y = ypos;
+	}
+
+		
+	if (cameraStatus == Shard::CameraView::FREE) {
 		if (et == Shard::EventType::MouseMotion){
 
 			if (is_first_mouse) {
@@ -103,6 +118,9 @@ void GameTest::update() {
 	std::string second_fps = std::to_string(Shard::Bootstrap::getSecondFPS());
 	std::string fps = std::to_string(Shard::Bootstrap::getFPS());
 
+	static auto &sm = Shard::SceneManager::getInstance();
+	sm.camera.updateCameraToPlayer();
+
 	/*Shard::Display* display = Shard::Bootstrap::getDisplay();
 	display->showText(("FPS: " + second_fps + " / " + fps).c_str(), 10, 10, 12, 255, 255, 255);*/
 }
@@ -112,6 +130,11 @@ void GameTest::createCar() {
 	car->initialize();
 	car->m_body->recalculateColliders();
 	Shard::Bootstrap::getInput().addListeners(car);
+
+	static auto &sm = Shard::SceneManager::getInstance();
+	sm.camera.setPlayerGameObj(car);
+	sm.camera.setFirstPersonOffset(glm::vec3(-9, 8, 0));
+	sm.camera.setThirdPersonOffset(glm::vec3(50, 25, 0), glm::vec3(0, 15, 0));
 }
 
 void GameTest::createAsteroid(float x, float y, float z) {
