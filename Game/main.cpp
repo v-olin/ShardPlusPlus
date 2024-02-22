@@ -41,6 +41,11 @@ void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 			sm.camera.status = Shard::CameraView::FREE;
 		if (ie.key == GLFW_KEY_4)
 			sm.camera.status = Shard::CameraView::LOCK;
+		if (ie.key == GLFW_KEY_5)
+			sm.camera.setPlayerGameObj(asteroids[0]);
+		if (ie.key == GLFW_KEY_6)
+			sm.camera.setPlayerGameObj(car);
+
 
 		if (cameraStatus != sm.camera.status) {
 			cameraStatus = sm.camera.status;
