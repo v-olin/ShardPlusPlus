@@ -30,6 +30,7 @@ bool c_left;
 bool c_right;
 bool c_up;
 bool c_down;
+
 void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 
 
@@ -87,6 +88,13 @@ void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 	if (ie.button == GLFW_MOUSE_BUTTON_RIGHT && et == Shard::EventType::MouseUp) {
 		is_rmb_down = false;
 		is_first_mouse = true;
+		c_forward = false;
+		c_backward = false;
+		c_left = false;
+		c_right = false;
+		c_up = false;
+		c_down = false;
+
 	}
 	if (ie.button == GLFW_MOUSE_BUTTON_RIGHT && et == Shard::EventType::MouseDown) {
 		is_rmb_down = true;
@@ -143,7 +151,11 @@ void GameTest::update() {
 		sm.camera.move(Shard::Movement::UP, dt);
 	if(c_down)
 		sm.camera.move(Shard::Movement::DOWN, dt);
+
+
+
 	sm.camera.updateCameraToPlayer();
+
 
 	/*Shard::Display* display = Shard::Bootstrap::getDisplay();
 	display->showText(("FPS: " + second_fps + " / " + fps).c_str(), 10, 10, 12, 255, 255, 255);*/
