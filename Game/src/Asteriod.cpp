@@ -37,7 +37,7 @@ void Asteroid::initialize()
 {
     m_model = std::make_shared<Shard::Model>("models/cube.obj");
     setPhysicsEnabled();
-    m_body->m_mass = 10.f;
+    m_body->m_mass = .1f;
     m_body->m_maxForce = glm::vec3{ 0.2f };
     m_body->m_angularDrag = glm::vec3{ 0.01f };
     m_body->m_maxTorque = glm::vec3{ 10.0f, 10.0f, 10.0f };
@@ -63,13 +63,13 @@ void Asteroid::physicsUpdate() {
 
 void Asteroid::onCollisionEnter(std::shared_ptr<Shard::PhysicsBody> body) {
 
-       m_body->m_debugColor = { 1.0f, 0.0f, 0.0f };
+    m_body->m_debugColor = { 1.0f, 0.0f, 0.0f };
     Shard::Logger::log("on collsision ENTER ASTEROID");
 
-  /*  if (body->m_parent->hasTag("Bullet")) {
-        to_be_destroyed_ = true;
+    if (body->m_parent->hasTag("Bullet")) {
+        m_toBeDestroyed = true;
 		Shard::Logger::log("Boom!");
-    }*/
+    }
 
 }
 

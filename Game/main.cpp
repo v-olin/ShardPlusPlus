@@ -50,6 +50,9 @@ void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 			sm.camera.setPlayerGameObj(asteroids[0]);
 		if (ie.key == GLFW_KEY_6)
 			sm.camera.setPlayerGameObj(car);
+		if (ie.key == GLFW_KEY_SPACE)
+			createBullet();
+
 
 
 		if (cameraStatus != sm.camera.status) {
@@ -77,6 +80,7 @@ void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 				sm.camera.movementSpeed += 10;
 			if (keyDown && ie.key == GLFW_KEY_DOWN)
 				sm.camera.movementSpeed -= 10;
+
 		}
 	}
 
@@ -171,6 +175,21 @@ void GameTest::createCar() {
 	sm.camera.setPlayerGameObj(car);
 	sm.camera.setFirstPersonOffset(glm::vec3(-9, 8, 0));
 	sm.camera.setThirdPersonOffset(glm::vec3(50, 25, 0), glm::vec3(0, 15, 0));
+}
+
+
+void GameTest::createBullet() {
+	auto bullet = std::make_shared<Bullet>();
+	bullet->initialize();
+	bullet->m_model->translate(car->m_model->position());
+	bullet->m_model->m_rotMatrix = car->m_model->getRotationMatrix();
+	//auto rotMat = car->m_model->getRotationMatrix();
+	//bullet->m_model->m_forward = rotMat * bullet->m_model->m_forward;
+	//bullet->m_model->m_right = rotMat * bullet->m_model->m_right;
+	//bullet->m_model->m_up = rotMat * bullet->m_model->m_up;
+	bullet->m_body->recalculateColliders();
+	bullets.push_back(bullet);
+
 }
 
 void GameTest::createAsteroid(float x, float y, float z) {

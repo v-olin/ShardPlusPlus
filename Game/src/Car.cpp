@@ -45,6 +45,7 @@ void Car::handleEvent(Shard::InputEvent ev, Shard::EventType et) {
 
         if (ev.key == GLFW_KEY_LEFT_SHIFT)
             pitch_down = true;
+            
     }
     else if (et == Shard::EventType::KeyUp)
     {
