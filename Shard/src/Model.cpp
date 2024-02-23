@@ -24,7 +24,11 @@
 #include <stb_image.h>
 
 #include <filesystem>
+#include <limits>
 
+
+#define MAX std::numeric_limits<float>::max()
+#define MIN std::numeric_limits<float>::min()
 namespace Shard {
 
 	namespace file_util {
@@ -231,6 +235,8 @@ namespace Shard {
 		, m_forward({ 1.f, 0, 0 })
 		, m_up({ 0, 1.f, 0})
 		, m_right({ 0, 0, 1.f})
+		, max(MIN)
+		, min(MAX)
 	{
 		std::string filename, extension, directory;
 

@@ -170,7 +170,6 @@ void GameTest::createCar() {
 	car->initialize();
 	car->m_body->recalculateColliders();
 	Shard::Bootstrap::getInput().addListeners(car);
-
 	static auto &sm = Shard::SceneManager::getInstance();
 	sm.camera.setPlayerGameObj(car);
 	sm.camera.setFirstPersonOffset(glm::vec3(-9, 8, 0));
@@ -183,26 +182,23 @@ void GameTest::createBullet() {
 	bullet->initialize();
 	bullet->m_model->translate(car->m_model->position());
 	bullet->m_model->m_rotMatrix = car->m_model->getRotationMatrix();
-	//auto rotMat = car->m_model->getRotationMatrix();
-	//bullet->m_model->m_forward = rotMat * bullet->m_model->m_forward;
-	//bullet->m_model->m_right = rotMat * bullet->m_model->m_right;
-	//bullet->m_model->m_up = rotMat * bullet->m_model->m_up;
 	bullet->m_body->recalculateColliders();
 	bullets.push_back(bullet);
-
 }
 
 void GameTest::createAsteroid(float x, float y, float z) {
-		
 	auto asteroid = std::make_shared<Asteroid>();
 	asteroid->initialize();
 	asteroid->m_model->translate({ x, y, z });
 	asteroid->m_model->scale({ 10.0f, 10.0f, 10.0f });
 	asteroid->m_body->recalculateColliders();
-
+	int posX = (rand() % 10 > 5) ? 1 : -1;
+	int posY = (rand() % 10 > 5) ? 1 : -1;
+	int posZ = (rand() % 10 > 5) ? 1 : -1;
+	auto dir = normalize(glm::vec3(rand()*posX, rand()*posY, rand()*posZ));
+	asteroid->m_body->addForce(dir, 0.2f);
     Shard::Bootstrap::getInput().addListeners(asteroid);
 	asteroids.push_back(asteroid);
-
 }
 
 void GameTest::createFlatPlane(float x, float y, float z) {
@@ -219,7 +215,13 @@ void GameTest::createFlatPlane(float x, float y, float z) {
 void GameTest::initalize() {
 	Shard::Logger::log("Initializing game");
 	createCar();
-	createAsteroid(10, 0, -10);
+	int max = 400;
+	for (int i = 0; i < 100; i++) {
+
+		auto pos = glm::vec3(rand() % max, rand() % max, rand() % max) - glm::vec3(max/2);
+		createAsteroid(pos.x, pos.y, pos.z);
+	}
+
 	//createFlatPlane(0, -12, 0);
 	Shard::Bootstrap::getInput().addListeners(shared_from_this());
 	static auto &sm = Shard::SceneManager::getInstance();

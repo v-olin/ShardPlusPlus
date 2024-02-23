@@ -51,6 +51,9 @@ public:
 	void onCollisionEnter(std::shared_ptr<Shard::PhysicsBody> body) override;
 	void onCollisionExit(std::shared_ptr<Shard::PhysicsBody> body) override ;
 	void onCollisionStay(std::shared_ptr<Shard::PhysicsBody> body) override;
+	private:
+		long long m_spawntime;
+		long long m_lifetime;
 
 
 };
