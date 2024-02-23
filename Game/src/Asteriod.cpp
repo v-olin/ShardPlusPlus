@@ -35,7 +35,7 @@ void Asteroid::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 
 void Asteroid::initialize()
 {
-    m_model = std::make_shared<Shard::Model>("models/cube.obj");
+    m_model = std::make_shared<Shard::Model>("models/Asteroid.obj");
     setPhysicsEnabled();
     m_body->m_mass = .1f;
     m_body->m_maxForce = glm::vec3{ 0.1f };

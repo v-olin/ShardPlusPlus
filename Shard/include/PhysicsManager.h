@@ -17,6 +17,7 @@ namespace Shard {
 			: active(active)
 			, gob_body(body) {}
 		bool active{ false };
+		int idx;
 		std::shared_ptr<PhysicsBody> gob_body{ nullptr };
 	} Interval;
 
@@ -81,7 +82,8 @@ namespace Shard {
 		std::vector<IntervalEdge>& getEdgeList(int axis);
 		std::vector<std::vector<int>>& getOverlapMatrix(int axis);
 		bool& getTraverseEdgeListBool(int axis);
-		int findIntervalIdx(int axis, std::shared_ptr<Interval> interval);
+		//int findIntervalIdx(int axis, std::shared_ptr<Interval> interval);
+		void resetIdx(int axis);
 		void BubbleSort(int axis);
 		void TraverseEdgeList(int axis);
 

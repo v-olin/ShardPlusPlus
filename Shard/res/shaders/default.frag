@@ -22,7 +22,9 @@ uniform float u_AttenuationQuadratic = 0.002;
 
 uniform vec3 u_ObjectColor;
 
+layout (binding = 9) uniform sampler2D colorTex;
 layout (binding = 6) uniform sampler2D reflectionMap;
+uniform bool hasColTex;
 uniform float environment_multiplier = 1.0;
 uniform mat4 viewInverse;
 #define PI 3.14159265359
@@ -47,11 +49,11 @@ vec3 CalculateColor() {
 	vec3 specular = pow(max(dot(viewDir, reflectDir), 0.0), 16) * u_LightDpecularIntensity * u_LightColor;
 
 	// Apply attenuation
-	float dist = length(lightVec);
-	float attenuation = 1.0 / (u_AttenuationConstant + u_AttenuationLinear * dist + u_AttenuationQuadratic * dist * dist);
-	ambient *= attenuation;
-	diffuse *= attenuation;
-	specular *= attenuation;
+//	float dist = length(lightVec);
+//	float attenuation = 1.0 / (u_AttenuationConstant + u_AttenuationLinear * dist + u_AttenuationQuadratic * dist * dist);
+//	ambient *= attenuation;
+//	diffuse *= attenuation;
+//	specular *= attenuation;
 
 	// Sample reflectance map
 
@@ -71,7 +73,13 @@ vec3 CalculateColor() {
 
 	///////////////////////////////////////////////////////////////////////////
 
-	vec3 final = u_ObjectColor * Li2 * (ambient + diffuse + specular);
+	vec3 color = u_ObjectColor;
+	if(hasColTex)
+		color = texture(colorTex, texCoord_.xy).rgb;
+//		color = vec3(1.0, 0, 1.0);
+	vec3 final = color * Li2 * (ambient + diffuse + specular);
+//	vec3 final = u_ObjectColor * Li2 * (ambient + diffuse + specular);
+
 	return final;
 
 }

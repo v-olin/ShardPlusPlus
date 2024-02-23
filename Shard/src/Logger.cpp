@@ -7,6 +7,7 @@ namespace Shard {
 	}
 
 	void Logger::log(std::string msg, LoggerLevel level) {
+		return;
 		if (level <= getInstance().logg_level) {
 			std::cout << msg << std::endl;
 		}

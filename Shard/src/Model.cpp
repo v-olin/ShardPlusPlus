@@ -553,6 +553,13 @@ namespace Shard {
 		for (auto& mesh : m_meshes) {
 			const Material& mat = m_materials[mesh.m_material_idx];
 			sm.SetVec3(sm.getDefaultShader(), mat.m_color, "u_ObjectColor");
+			if (mat.m_color_texture.gl_id > 0) {
+				glActiveTexture(GL_TEXTURE0 + 9);
+				glBindTexture(GL_TEXTURE_2D, mat.m_color_texture.gl_id);
+				sm.SetInteger1(sm.getDefaultShader(), 1, "hasColTex");
+			}else
+				sm.SetInteger1(sm.getDefaultShader(), 0, "hasColTex");
+
 			glDrawArrays(GL_TRIANGLES, mesh.m_start_index, (GLsizei)mesh.m_number_of_vertices);
 		}
 		glBindVertexArray(0);
