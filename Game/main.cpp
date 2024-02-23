@@ -8,6 +8,7 @@
 #include <iostream>
 #include <memory>
 #include <conio.h>
+#include <math.h>
 #include "main.h"
 
 #include "SceneManager.h"
@@ -185,7 +186,9 @@ void GameTest::createBullet() {
 	bullet->m_body->recalculateColliders();
 	bullets.push_back(bullet);
 }
-
+float randf() {
+	return static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+}
 void GameTest::createAsteroid(float x, float y, float z) {
 	auto asteroid = std::make_shared<Asteroid>();
 	asteroid->initialize();
@@ -197,6 +200,7 @@ void GameTest::createAsteroid(float x, float y, float z) {
 	int posZ = (rand() % 10 > 5) ? 1 : -1;
 	auto dir = normalize(glm::vec3(rand()*posX, rand()*posY, rand()*posZ));
 	asteroid->m_body->addForce(dir, 0.2f);
+	asteroid->m_body->addTorque({ 1*randf(), 1*randf(), 1*randf()});
     Shard::Bootstrap::getInput().addListeners(asteroid);
 	asteroids.push_back(asteroid);
 }
@@ -215,9 +219,8 @@ void GameTest::createFlatPlane(float x, float y, float z) {
 void GameTest::initalize() {
 	Shard::Logger::log("Initializing game");
 	createCar();
-	int max = 400;
-	for (int i = 0; i < 100; i++) {
-
+	int max = 300;
+	for (int i = 0; i < 200; i++) {
 		auto pos = glm::vec3(rand() % max, rand() % max, rand() % max) - glm::vec3(max/2);
 		createAsteroid(pos.x, pos.y, pos.z);
 	}

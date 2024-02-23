@@ -3,6 +3,7 @@
 #include "Renderer.h"
 
 #include "GameObjectManager.h"
+#include "Bootstrap.h"
 #include "Logger.h"
 
 #include <filesystem>
@@ -22,7 +23,7 @@ namespace Shard {
 		, m_gui(gui)
 		, m_resolution({ 1280, 760 })
 		, m_fieldOfView(sceneManager.camera.fov)
-		, m_projectionMatrix(glm::perspective(sceneManager.camera.fov, m_resolution.x / m_resolution.y, 1.f, 300.f))
+		, m_projectionMatrix(glm::perspective(sceneManager.camera.fov, m_resolution.x / m_resolution.y, 1.f, 1000.f))
 		, m_drawColliders(true)
 		, m_window(window)
 	{
@@ -51,7 +52,7 @@ namespace Shard {
 		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		m_projectionMatrix = glm::perspective(m_sceneManager.camera.fov, m_resolution.x / m_resolution.y, 1.f, 300.f);
+		m_projectionMatrix = glm::perspective(m_sceneManager.camera.fov, m_resolution.x / m_resolution.y, 1.f, 5000.f);
 
 		drawScene();
 
@@ -251,7 +252,7 @@ namespace Shard {
 
 			gob->m_model->Draw();
 
-			if (true) { // if debug
+			if (Bootstrap::getEnvironmentVariable("physics_debug") == "1") { // if debug
 				drawCollider(gob);
 			}
 		}
@@ -315,6 +316,7 @@ namespace Shard {
 		m_shaderManager.SetVec3(shader, toDraw->m_body->m_debugColor, "colorIn");
 		m_shaderManager.SetMat4x4(shader, mvpMatrix, "u_MVP");
 
+
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		static GLuint vao = 0;
 		static GLuint vbo = 0;
@@ -339,15 +341,12 @@ namespace Shard {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
+
 		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-
-		glDeleteBuffers(1, &vao);
-		glDeleteBuffers(1, &vbo);
-		glDeleteBuffers(1, &ebo);
-
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glUseProgram(0);
 	}
 
 	void Renderer::configureDefaultShader() {

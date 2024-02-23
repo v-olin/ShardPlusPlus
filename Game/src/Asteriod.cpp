@@ -38,7 +38,7 @@ void Asteroid::initialize()
     m_model = std::make_shared<Shard::Model>("models/cube.obj");
     setPhysicsEnabled();
     m_body->m_mass = .1f;
-    m_body->m_maxForce = glm::vec3{ 0.01f };
+    m_body->m_maxForce = glm::vec3{ 0.1f };
     m_body->m_angularDrag = glm::vec3{ 0.f };
     m_body->m_maxTorque = glm::vec3{ 10.0f, 10.0f, 10.0f };
 	m_body->m_drag = 0.f;
