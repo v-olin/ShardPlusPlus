@@ -238,7 +238,7 @@ namespace Shard {
         time_in_milliseconds_start = start_time;
         last_tick = start_time;
 
-        phys.gravity_modifier = 0.1f;
+        phys.gravity_modifier = 10.f;
 
         phys_debug = getEnvironmentVariable("physics_debug") == "1";
 

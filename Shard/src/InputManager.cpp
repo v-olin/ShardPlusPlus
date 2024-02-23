@@ -31,6 +31,10 @@ namespace Shard {
 
 	void InputManager::informListeners(InputEvent ie, EventType et) {
 		int idx = 0;
+		if (et == MouseDown || et == MouseUp) {
+			auto hit_bod = PhysicsManager::getInstance().getClickedBody(ie);
+			ie.body = hit_bod.value_or(nullptr);
+		}
 		while (idx < myListeners.size()) {
 			myListeners[idx++]->handleEvent(ie, et);
 		}
@@ -99,7 +103,7 @@ namespace Shard {
 		glfwGetCursorPos(window, &x, &y);
 		ie.x = x;
 		ie.y = y;
-
+		
 		EventType ev = action == GLFW_PRESS ? MouseDown : MouseUp;
 		input_manager->event_queue.push({ ie, ev });
 		//input_manager->informListeners(ie, ev);

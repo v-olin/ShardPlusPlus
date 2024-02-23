@@ -53,6 +53,9 @@ void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 			sm.camera.setPlayerGameObj(car);
 		if (ie.key == GLFW_KEY_SPACE)
 			createBullet();
+		if (ie.key == GLFW_KEY_R)
+			sm.camera.setPlayerGameObj(car);
+
 
 
 
@@ -78,9 +81,9 @@ void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 			if (ie.key == GLFW_KEY_LEFT_CONTROL)
 				c_down = keyDown;
 			if (keyDown && ie.key == GLFW_KEY_UP)
-				sm.camera.movementSpeed += 10;
+				sm.camera.movementSpeed += 100;
 			if (keyDown && ie.key == GLFW_KEY_DOWN)
-				sm.camera.movementSpeed -= 10;
+				sm.camera.movementSpeed -= 100;
 
 		}
 	}
@@ -181,6 +184,7 @@ void GameTest::createCar() {
 void GameTest::createBullet() {
 	auto bullet = std::make_shared<Bullet>();
 	bullet->initialize();
+	bullet->m_model->scale({10, 10, 10});
 	bullet->m_model->translate(car->m_model->position());
 	bullet->m_model->m_rotMatrix = car->m_model->getRotationMatrix();
 	bullet->m_body->recalculateColliders();
@@ -191,9 +195,11 @@ float randf() {
 }
 void GameTest::createAsteroid(float x, float y, float z) {
 	auto asteroid = std::make_shared<Asteroid>();
+	asteroid->m_model = std::make_shared<Shard::Model>(parent);
 	asteroid->initialize();
 	asteroid->m_model->translate({ x, y, z });
-	asteroid->m_model->scale({ 0.05f, .05f, .05f });
+	float scale = ((rand() % 50) +1) / 100.f;
+	asteroid->m_model->scale({ scale, scale, scale });
 	asteroid->m_body->recalculateColliders();
 	int posX = (rand() % 10 > 5) ? 1 : -1;
 	int posY = (rand() % 10 > 5) ? 1 : -1;
@@ -202,24 +208,16 @@ void GameTest::createAsteroid(float x, float y, float z) {
 	asteroid->m_body->addForce(dir, 0.2f);
 	asteroid->m_body->addTorque({ 1*randf(), 1*randf(), 1*randf()});
     Shard::Bootstrap::getInput().addListeners(asteroid);
+
 	asteroids.push_back(asteroid);
 }
 
-void GameTest::createFlatPlane(float x, float y, float z) {
-
-	auto asteroid = std::make_shared<Asteroid>();
-	asteroid->initialize();
-	asteroid->m_model->translate({ x, y, z });
-	asteroid->m_model->scale({ 250.0f, 1.0f, 250.0f });
-	asteroid->m_body->recalculateColliders();
-	asteroids.push_back(asteroid);
-
-}
 
 void GameTest::initalize() {
 	Shard::Logger::log("Initializing game");
 	createCar();
-	int max = 20;
+	int max = 100;
+	parent = std::make_shared<Shard::Model>("models/asteroid_fixed.obj");
 	for (int i = 0; i < 200; i++) {
 		auto pos = glm::vec3(rand() % max, rand() % max, rand() % max) - glm::vec3(max/2);
 		createAsteroid(pos.x, pos.y, pos.z);

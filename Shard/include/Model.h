@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <glm.hpp>
+#include <memory>
 
 namespace Shard {
 
@@ -51,7 +52,9 @@ namespace Shard {
 	class Model	{
 	public:
 		Model(std::string path);
+		Model(std::shared_ptr<Model> src);
 		~Model();
+
 
 		glm::vec3 position();
 		glm::vec3 rotation();
@@ -73,10 +76,6 @@ namespace Shard {
 		std::vector<Material> m_materials;
 		// A model will contain one or more "Meshes"
 		std::vector<Mesh> m_meshes;
-		// Buffers on CPU
-		std::vector<glm::vec3> m_positions;
-		std::vector<glm::vec3> m_normals;
-		std::vector<glm::vec2> m_texture_coordinates;
 		// Buffers on GPU
 		uint32_t m_positions_bo;
 		uint32_t m_normals_bo;
@@ -100,12 +99,4 @@ namespace Shard {
 		glm::vec3 max;
 		glm::vec3 min;
 	};
-
-	void saveModelToOBJ(Model* model, std::string filename);
-	void saveModelMaterialsToMTL(Model* model, std::string filename);
-
-	// no implementation, very bad!!
-	void freeModel(Model* model);
-	void render(const Model* model, const bool submitMaterials = true);
-
 }

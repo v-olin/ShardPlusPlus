@@ -20,6 +20,7 @@ namespace Shard {
         GameObject(const std::shared_ptr<GameObject> src) {
             m_body = src->m_body;
             m_tags = src->m_tags;
+            m_model = std::make_shared<Model>(Model(m_model));
         }
 
         virtual ~GameObject() {}

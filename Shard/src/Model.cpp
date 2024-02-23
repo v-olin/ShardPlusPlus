@@ -178,6 +178,7 @@ namespace Shard {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 16);
 
+		stbi_image_free(data);
 		glBindTexture(GL_TEXTURE_2D, 0);
 		return true;
 	}
@@ -225,6 +226,25 @@ namespace Shard {
 	}
 
 
+	Model::Model(std::shared_ptr<Model> src) {
+		this->m_name = src->m_name;
+		this->m_filename = src->m_filename;
+		this->m_materials = src->m_materials;
+		this->m_meshes = src->m_meshes;
+		this->m_positions_bo = src->m_positions_bo;
+		this->m_normals_bo = src->m_normals_bo;
+		this->m_texture_coordinates_bo = src->m_texture_coordinates_bo;
+		this->m_vaob = src->m_vaob;
+		this->m_hasDedicatedShader = src->m_hasDedicatedShader;
+		this->m_transMatrix = src->m_transMatrix;
+		this->m_rotMatrix = src->m_rotMatrix;
+		this->m_lastTransMatrix = src->m_lastTransMatrix;
+		this->m_forward = src->m_forward;
+		this->m_up = src->m_up;
+		this->m_right = src->m_right;
+		this->max = src->max;
+		this->min = src->min;
+	}
 	Model::Model(std::string path)
 		: m_hasDedicatedShader(false)
 		//, m_transformMatrix(glm::mat4(1.f))
@@ -323,6 +343,10 @@ namespace Shard {
 		{
 			number_of_vertices += shape.mesh.indices.size();
 		}
+		std::vector<glm::vec3> m_positions;
+		std::vector<glm::vec3> m_normals;
+		std::vector<glm::vec2> m_texture_coordinates;
+
 		m_positions.resize(number_of_vertices);
 		m_normals.resize(number_of_vertices);
 		m_texture_coordinates.resize(number_of_vertices);
@@ -632,134 +656,4 @@ namespace Shard {
 		}
 		mat_file.close();
 	}
-
-	void saveModelToOBJ(Model* model, std::string filename)
-	{
-		std::string directory;
-		filename = file_util::normalise(filename);
-		directory = file_util::parent_path(filename);
-		filename = file_util::file_stem(filename);
-
-		///////////////////////////////////////////////////////////////////////
-		// Save Materials
-		///////////////////////////////////////////////////////////////////////
-		saveModelMaterialsToMTL(model, directory + filename + ".mtl");
-
-		///////////////////////////////////////////////////////////////////////
-		// Save geometry
-		///////////////////////////////////////////////////////////////////////
-		std::ofstream obj_file(directory + filename + ".obj");
-		if (!obj_file.is_open())
-		{
-			std::cout << "Could not open file " << filename << " for writing.\n";
-			return;
-		}
-		obj_file << "# Exported by Chalmers Graphics Group\n";
-		obj_file << "mtllib " << filename << ".mtl\n";
-		int vertex_counter = 1;
-		for (auto mesh : model->m_meshes)
-		{
-			obj_file << "o " << mesh.m_name << "\n";
-			obj_file << "g " << mesh.m_name << "\n";
-			obj_file << "usemtl " << model->m_materials[mesh.m_material_idx].m_name << "\n";
-			for (uint32_t i = mesh.m_start_index; i < mesh.m_start_index + mesh.m_number_of_vertices; i++)
-			{
-				obj_file << "v " << model->m_positions[i].x << " " << model->m_positions[i].y << " "
-					<< model->m_positions[i].z << "\n";
-			}
-			for (uint32_t i = mesh.m_start_index; i < mesh.m_start_index + mesh.m_number_of_vertices; i++)
-			{
-				obj_file << "vn " << model->m_normals[i].x << " " << model->m_normals[i].y << " "
-					<< model->m_normals[i].z << "\n";
-			}
-			for (uint32_t i = mesh.m_start_index; i < mesh.m_start_index + mesh.m_number_of_vertices; i++)
-			{
-				obj_file << "vt " << model->m_texture_coordinates[i].x << " " << model->m_texture_coordinates[i].y
-					<< "\n";
-			}
-			int number_of_faces = mesh.m_number_of_vertices / 3;
-			for (int i = 0; i < number_of_faces; i++)
-			{
-				obj_file << "f " << vertex_counter << "/" << vertex_counter << "/" << vertex_counter << " "
-					<< vertex_counter + 1 << "/" << vertex_counter + 1 << "/" << vertex_counter + 1 << " "
-					<< vertex_counter + 2 << "/" << vertex_counter + 2 << "/" << vertex_counter + 2 << "\n";
-				vertex_counter += 3;
-			}
-		}
-	}
-
-	///////////////////////////////////////////////////////////////////////
-	// Loop through all Meshes in the Model and render them
-	///////////////////////////////////////////////////////////////////////
-	//void render(const Model* model, const bool submitMaterials)
-	//{
-	//	GLint current_program = 0;
-	//	glGetIntegerv(GL_CURRENT_PROGRAM, &current_program);
-	//
-	//	glBindVertexArray(model->m_vaob);
-	//	for (auto& mesh : model->m_meshes)
-	//	{
-	//		if (submitMaterials)
-	//		{
-	//			const Material& material = model->m_materials[mesh.m_material_idx];
-	//
-	//			bool has_color_texture = material.m_color_texture.valid;
-	//			bool has_metalness_texture = material.m_metalness_texture.valid;
-	//			bool has_fresnel_texture = material.m_fresnel_texture.valid;
-	//			bool has_shininess_texture = material.m_shininess_texture.valid;
-	//			bool has_emission_texture = material.m_emission_texture.valid;
-	//			if (has_color_texture)
-	//			{
-	//				glActiveTexture(GL_TEXTURE0);
-	//				glBindTexture(GL_TEXTURE_2D, material.m_color_texture.gl_id);
-	//			}
-	//			// Actually unused in the labs
-	//			/*
-	//			if ( has_metalness_texture )
-	//			{
-	//				glActiveTexture( GL_TEXTURE2 );
-	//				glBindTexture( GL_TEXTURE_2D, material.m_metalness_texture.gl_id );
-	//			}
-	//			if ( has_fresnel_texture )
-	//			{
-	//				glActiveTexture( GL_TEXTURE3 );
-	//				glBindTexture( GL_TEXTURE_2D, material.m_fresnel_texture.gl_id );
-	//			}
-	//			if ( has_shininess_texture )
-	//			{
-	//				glActiveTexture( GL_TEXTURE4 );
-	//				glBindTexture( GL_TEXTURE_2D, material.m_shininess_texture.gl_id );
-	//			}
-	//			*/
-	//			if (has_emission_texture)
-	//			{
-	//				glActiveTexture(GL_TEXTURE5);
-	//				glBindTexture(GL_TEXTURE_2D, material.m_emission_texture.gl_id);
-	//			}
-	//			glActiveTexture(GL_TEXTURE0);
-	//
-	//			// TODO: Set using shader::SetUniform*
-	//			/*
-	//			GLUtility::setUniformSlow(current_program, "has_color_texture", has_color_texture);
-	//			GLUtility::setUniformSlow(current_program, "has_emission_texture", has_emission_texture);
-	//			GLUtility::setUniformSlow(current_program, "material_color", material.m_color);
-	//			GLUtility::setUniformSlow(current_program, "material_metalness", material.m_metalness);
-	//			GLUtility::setUniformSlow(current_program, "material_fresnel", material.m_fresnel);
-	//			GLUtility::setUniformSlow(current_program, "material_shininess", material.m_shininess);
-	//			GLUtility::setUniformSlow(current_program, "material_emission", material.m_emission);
-	//			*/
-	//
-	//			// Actually unused in the labs
-	//			/*
-	//			setUniformSlow( current_program, "has_metalness_texture", has_metalness_texture );
-	//			setUniformSlow( current_program, "has_fresnel_texture", has_fresnel_texture );
-	//			setUniformSlow( current_program, "has_shininess_texture", has_shininess_texture );
-	//			*/
-	//		}
-	//		glDrawArrays(GL_TRIANGLES, mesh.m_start_index, (GLsizei)mesh.m_number_of_vertices);
-	//	}
-	//	glBindVertexArray(0);
-	//}
-	
-
 }

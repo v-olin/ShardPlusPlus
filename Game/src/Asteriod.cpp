@@ -18,11 +18,9 @@ Asteroid::Asteroid() : GameObject() {
 
 void Asteroid::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
     if (et == Shard::EventType::MouseDown && ie.button == GLFW_MOUSE_BUTTON_1) {
-        auto point = Shard::PhysicsManager::getInstance().clickHitsBody(ie, m_body->shared_from_this());
-        if (point.has_value()) {
-            Shard::Logger::log(("Click intersected at: " + glm::to_string(point.value())).c_str());
-
-
+        if (ie.body == m_body) {
+	        static auto &sm = Shard::SceneManager::getInstance();
+            sm.camera.setPlayerGameObj(shared_from_this());
         }
     }
 
@@ -35,7 +33,7 @@ void Asteroid::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 
 void Asteroid::initialize()
 {
-    m_model = std::make_shared<Shard::Model>("models/Asteroid.obj");
+    //m_model = std::make_shared<Shard::Model>("models/asteroid_fixed.obj");
     setPhysicsEnabled();
     m_body->m_mass = .1f;
     m_body->m_maxForce = glm::vec3{ 0.1f };
@@ -47,6 +45,7 @@ void Asteroid::initialize()
 	m_body->m_impartForce = true;
 	m_body->m_isKinematic = false;
     m_body->m_passThrough = false;
+    m_body->m_usesGravity = false;
 
     m_body->m_bodyModel = m_model;
     m_body->setBoxCollider();

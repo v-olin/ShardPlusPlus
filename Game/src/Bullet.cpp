@@ -13,7 +13,7 @@ Bullet::Bullet() : GameObject()
 }
 
 void Bullet::initialize() {
-	m_model = std::make_shared<Shard::Model>("models/cube.obj");
+	m_model = std::make_shared<Shard::Model>("models/bullet_best.obj");
 	//m_model->m_forward = glm::vec3(-1, 0, 0);
     setPhysicsEnabled();
     m_body->m_mass = 1.f;

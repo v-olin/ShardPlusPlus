@@ -16,6 +16,8 @@
 
 #include "gtx/transform.hpp"
 
+#define MAX std::numeric_limits<float>::max()
+
 namespace Shard {
 
 	PhysicsManager::PhysicsManager() { }
@@ -674,10 +676,36 @@ namespace Shard {
 	}
 
 
+
+
+	std::optional<std::shared_ptr<PhysicsBody>> PhysicsManager::getClickedBody(InputEvent ie) {
+
+	    static auto &sm = Shard::SceneManager::getInstance();
+		glm::vec3 closest_hit(MAX);
+		auto min_dist = glm::length(sm.camera.pos - closest_hit);
+		std::shared_ptr<PhysicsBody> hit_bod{ nullptr };
+		
+		for (auto& body : all_physics_objects) {
+			auto point = clickHitsBody(ie, body);
+			if (point.has_value()) {
+				auto new_dist = glm::length(sm.camera.pos - point.value());
+				if (new_dist < min_dist) {
+					hit_bod = body;
+					closest_hit = point.value();
+					min_dist = new_dist;
+				}
+			}
+		}
+		if (hit_bod == nullptr)
+			return std::nullopt;
+		return std::optional<std::shared_ptr<PhysicsBody>>(hit_bod);
+			
+	}
 	//Klick -> collision with body
 
 	std::optional<glm::vec3> PhysicsManager::clickHitsBody(InputEvent ie, std::shared_ptr<PhysicsBody> body) {
 		auto ray = getRayFromClick(ie);
+
 		return body->checkCollision(ray);
 	}
 
@@ -700,7 +728,7 @@ namespace Shard {
 
 		// Invert the projection matrix to get view-to-world transformation
 		// PV^(-1)
-		auto P = glm::perspective(45.0f, 1280.0f / 760.0f, 1.f, 300.f);
+		auto P = glm::perspective(45.0f, 1280.0f / 760.0f, 1.f, 5000.f);
 		auto V = SceneManager::getInstance().getCameraViewMatrix();
 		glm::mat4 invProjectionMatrix = glm::inverse(P*V);
 

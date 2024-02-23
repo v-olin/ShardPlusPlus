@@ -23,7 +23,7 @@ namespace Shard {
 		, m_gui(gui)
 		, m_resolution({ 1280, 760 })
 		, m_fieldOfView(sceneManager.camera.fov)
-		, m_projectionMatrix(glm::perspective(sceneManager.camera.fov, m_resolution.x / m_resolution.y, 1.f, 1000.f))
+		, m_projectionMatrix(glm::perspective(sceneManager.camera.fov, m_resolution.x / m_resolution.y, 1.f, 5000.f))
 		, m_drawColliders(true)
 		, m_window(window)
 	{
@@ -245,9 +245,9 @@ namespace Shard {
 				m_shaderManager.SetFloat1(defShader, light_ambient_intensity, "u_LightAmbientIntensity");
 				m_shaderManager.SetFloat1(defShader, light_diffuse_intensity, "u_LightDiffuseIntensity");
 				m_shaderManager.SetFloat1(defShader, light_specular_intensity, "u_LightDpecularIntensity");
-				m_shaderManager.SetFloat1(defShader, attenuation_constant, "u_AttenuationConstant");
-				m_shaderManager.SetFloat1(defShader, attenuation_linear, "u_AttenuationLinear");
-				m_shaderManager.SetFloat1(defShader, attenuation_quadratic, "u_AttenuationQuadratic");
+				//m_shaderManager.SetFloat1(defShader, attenuation_constant, "u_AttenuationConstant");
+				//m_shaderManager.SetFloat1(defShader, attenuation_linear, "u_AttenuationLinear");
+				//m_shaderManager.SetFloat1(defShader, attenuation_quadratic, "u_AttenuationQuadratic");
 			}
 
 			gob->m_model->Draw();

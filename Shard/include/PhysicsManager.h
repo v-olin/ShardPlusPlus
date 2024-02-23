@@ -103,6 +103,8 @@ namespace Shard {
 		void runCollisionCheck();
 		void checkForCollisions();
 
+
+		std::optional<std::shared_ptr<PhysicsBody>> getClickedBody(InputEvent ie);
 		std::optional<glm::vec3> clickHitsBody(InputEvent ie, std::shared_ptr<PhysicsBody> body);
 		Ray getRayFromClick(InputEvent ie);
 	private:
