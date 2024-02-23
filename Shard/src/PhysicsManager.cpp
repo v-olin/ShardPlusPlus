@@ -270,6 +270,7 @@ namespace Shard {
 		return false;
 	}
 
+	//TODO, remove this and move ids into an intervall, and set ids in add/remove object
 	int PhysicsManager::findIntervalIdx(int axis, std::shared_ptr<Interval> interval) {
 		auto& intervals = getInterval(axis);
 		for (size_t i = 0; i < intervals.size(); i++) {

@@ -74,7 +74,7 @@ namespace Shard {
 		auto rotation = player_game_obj->m_model->getRotationMatrix();
 		if (status == CameraView::LOCK) {
 			front = normalize(playerPos - pos);
-			right = normalize(glm::cross(front, up));
+			right = normalize(glm::cross(front, worldUp));
 			up = glm::normalize(glm::cross(right, front));
 			return;
 		}

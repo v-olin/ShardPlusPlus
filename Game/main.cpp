@@ -219,8 +219,8 @@ void GameTest::createFlatPlane(float x, float y, float z) {
 void GameTest::initalize() {
 	Shard::Logger::log("Initializing game");
 	createCar();
-	int max = 300;
-	for (int i = 0; i < 200; i++) {
+	int max = 1000;
+	for (int i = 0; i < 700; i++) {
 		auto pos = glm::vec3(rand() % max, rand() % max, rand() % max) - glm::vec3(max/2);
 		createAsteroid(pos.x, pos.y, pos.z);
 	}
