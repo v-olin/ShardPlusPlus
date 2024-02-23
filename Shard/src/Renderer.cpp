@@ -136,7 +136,7 @@ namespace Shard {
 
 	void Renderer::drawBackground() {
 		static auto& sm = ShaderManager::getInstance();
-		auto bg_shader = sm.loadShader("background", false);
+		auto bg_shader = sm.getShader("background");
 		glUseProgram(bg_shader);
 
 		static float environment_multiplier = 1.0f;
@@ -287,6 +287,8 @@ namespace Shard {
 			max.x,	max.y, max.z	// v7
 		};
 
+		
+
 		GLuint indices[] = {
 			0, 2, 3,
 			0, 1, 2,
@@ -303,7 +305,7 @@ namespace Shard {
 		};
 
 		glm::mat4 modelMatrix = toDraw->m_model->getModelMatrix();
-		auto ma = glm::translate(glm::mat4(1.0f), toDraw->m_model->position());
+		glm::mat4 ma = glm::translate(glm::mat4(1.0f), toDraw->m_model->position());
 		glm::mat4 viewMatrix = m_sceneManager.getCameraViewMatrix();
 		glm::mat4 mvpMatrix = m_projectionMatrix * viewMatrix;// *ma;
 
@@ -314,23 +316,26 @@ namespace Shard {
 		m_shaderManager.SetMat4x4(shader, mvpMatrix, "u_MVP");
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		GLuint vao;
-		GLuint vbo;
-		GLuint ebo;
+		static GLuint vao = 0;
+		static GLuint vbo = 0;
+		static GLuint ebo = 0;
 
 		glDisable(GL_CULL_FACE);
 		
-		glGenVertexArrays(1, &vao);
+		if (vao == 0)
+			glGenVertexArrays(1, &vao);
 		glBindVertexArray(vao);
 
-		glGenBuffers(1, &vbo);
+		if (vbo == 0)
+			glGenBuffers(1, &vbo);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
 		glEnableVertexAttribArray(0);
 
-		glGenBuffers(1, &ebo);
+		if (ebo == 0)
+			glGenBuffers(1, &ebo);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
