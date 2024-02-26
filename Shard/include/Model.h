@@ -68,6 +68,13 @@ namespace Shard {
 		void scale(const glm::vec3& scale);
 		glm::mat4 getModelMatrix();
 
+		// Buffers on CPU
+		std::vector<glm::vec3> m_positions;
+		std::vector<glm::vec3> m_normals;
+		std::vector<glm::vec2> m_texture_coordinates;
+
+
+
 		// The name of the whole model
 		std::string m_name;
 		// The filename of this model

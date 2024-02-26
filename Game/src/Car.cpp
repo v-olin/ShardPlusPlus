@@ -153,8 +153,9 @@ void Car::checkDestroyMe() {
 
 void Car::onCollisionEnter(std::shared_ptr<Shard::PhysicsBody> body) {
     Shard::Logger::log("on collsision ENTER CAR");
-    if (!body->m_parent->hasTag("Bullet"))
+    if (!body->m_parent->hasTag("Bullet")) {
         m_body->m_debugColor = { 1.0f, 0.0f, 0.0f };
+    }
     // TODO: Lower HP?
 }
 

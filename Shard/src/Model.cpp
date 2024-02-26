@@ -343,9 +343,9 @@ namespace Shard {
 		{
 			number_of_vertices += shape.mesh.indices.size();
 		}
-		std::vector<glm::vec3> m_positions;
-		std::vector<glm::vec3> m_normals;
-		std::vector<glm::vec2> m_texture_coordinates;
+		//std::vector<glm::vec3> m_positions;
+		//std::vector<glm::vec3> m_normals;
+		//std::vector<glm::vec2> m_texture_coordinates;
 
 		m_positions.resize(number_of_vertices);
 		m_normals.resize(number_of_vertices);
