@@ -60,7 +60,10 @@ namespace Shard {
 		void generateMesh(int tesselation, float size, int seed);
 
 		/// Render height map
-		void submitTriangles(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix, GLuint envMap, GLuint irradMap, GLuint refMap);
+		void submitTriangles(const glm::mat4& viewMatrix,
+			const glm::mat4& projectionMatrix,
+			GLuint envMap, GLuint irradMap, GLuint refMap,
+			GLuint shadowMap, bool drawingShadowMap = false);
 
 	private:
 		//SceneContext& sceneContext;

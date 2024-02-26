@@ -24,6 +24,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)include\CollidingObject.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\CollisionHandler.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\CubeMap.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\FBO.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\GUI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Game.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\GameObject.h" />
@@ -326,6 +327,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Collider.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\ColliderBox.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\CubeMap.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\FBO.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\GUI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\GameObject.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\GameObjectManager.cpp" />

@@ -309,22 +309,15 @@ namespace Shard {
 			indices.data(), GL_STATIC_DRAW);
 
 
-		m_shaderProgram = ShaderManager::getInstance().loadShader("heightfield", false);
-	/*	m_shaderProgram = labhelper::loadShaderProgram(
-			"../project/heightfield.vert",
-			"../project/heightfield.frag"
-		);*/
-
-		// generate a mesh in range -1 to 1 in x and z
-		// (y is 0 but will be altered in height field vertex shader)
+		m_shaderProgram = ShaderManager::getInstance().getShader("heightfield");
 	}
 
 	void HeightField::submitTriangles(const glm::mat4& viewMatrix, 
 		const glm::mat4& projectionMatrix,
-		GLuint envMap, GLuint irradMap, GLuint refMap)
+		GLuint envMap, GLuint irradMap, GLuint refMap,
+		GLuint shadowMap, bool drawingShadowMap)
 	{
-		if(m_vao == UINT32_MAX)
-		{
+		if(m_vao == UINT32_MAX) {
 			Logger::log("No vertex array is generated, cannot draw anything.", LOG_LEVEL_FATAL);
 			return;
 		}
@@ -351,19 +344,24 @@ namespace Shard {
 			glActiveTexture(GL_TEXTURE5);
 			glBindTexture(GL_TEXTURE_2D, m_customRoughness);
 		}
-		glActiveTexture(GL_TEXTURE6);
 
+		glActiveTexture(GL_TEXTURE6);
 		glBindTexture(GL_TEXTURE_2D, envMap);
 		glActiveTexture(GL_TEXTURE7);
 		glBindTexture(GL_TEXTURE_2D, irradMap);
 		glActiveTexture(GL_TEXTURE8);
 		glBindTexture(GL_TEXTURE_2D, refMap);
+		glActiveTexture(GL_TEXTURE9);
+		glBindTexture(GL_TEXTURE_2D, shadowMap);
 
 		auto& sm = ShaderManager::getInstance();
 
-		sm.SetMat4x4(m_shaderProgram,projectionMatrix * viewMatrix * glm::mat4(1.f),  "modelViewProjectionMatrix");
+		sm.SetInteger1(m_shaderProgram, drawingShadowMap ? 1 : 0, "drawingShadowMap");
 
-		//sm.SetFloat1(m_shaderProgram, m_height_scale, "heightScale");
+		glm::mat4 mvp = projectionMatrix * viewMatrix * glm::mat4(1.f);
+		sm.SetMat4x4(m_shaderProgram, mvp,  "modelViewProjectionMatrix");
+
+		sm.SetFloat1(m_shaderProgram, 1.f, "heightScale");
 
 		sm.SetInteger1(m_shaderProgram, m_map_type, "mapType");
 
@@ -393,6 +391,12 @@ namespace Shard {
 	
 		// uniform float material_shininess;
 		sm.SetFloat1(m_shaderProgram, shininess, "material_shininess");
+
+		// mat4 lightMatrix = translate(vec3(0.5f)) * scale(vec3(0.5f)) * lightProjectionMatrix * lightViewMatrix * inverse(viewMatrix);
+		glm::mat4 lightViewMatrix = glm::lookAt(m_scene_manager.sun.light_position, glm::vec3(0.f), glm::vec3(0.f, 1.f, 0.f));
+		glm::mat4 lightProjMatrix = glm::perspective(glm::radians(45.f), 1.f, 1.f, 1000.f);
+		glm::mat4 lightMatrix = glm::translate(glm::vec3(0.5f)) * glm::scale(glm::vec3(0.5f)) * lightProjMatrix * lightViewMatrix * inverse(viewMatrix);
+		sm.SetMat4x4(m_shaderProgram, lightMatrix, "lightMatrix");
 
 
 		glBindVertexArray(m_vao);

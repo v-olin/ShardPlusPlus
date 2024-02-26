@@ -32,13 +32,12 @@ namespace Shard {
 			Logger::log("Renderer already initialized, very bad!!", LOG_LEVEL_FATAL);
 		}
 		initialized = true;
+
+		loadRequiredShaders();
 		
 		envmap_bg_id = m_textureManager.loadHdrTexture("001.hdr");
 		envmap_refmap_id = m_textureManager.loadHdrTexture("001_dl_0.hdr");
 		envmap_irrmap_id = m_textureManager.loadHdrTexture("001_irradiance.hdr");
-
-			
-
 
 		glActiveTexture(GL_TEXTURE0 + 5);
 		glBindTexture(GL_TEXTURE_2D, envmap_bg_id);
@@ -49,26 +48,94 @@ namespace Shard {
 		m_heightfield.loadHeightField("L3123F.png", "L3123F_downscaled.jpg", "L3123F_shininess.png");
 		m_heightfield.generateMesh(500, 500, 0);
 
+		m_shadowMapFB.resize(1024, 1024);
+		glBindTexture(GL_TEXTURE_2D, m_shadowMapFB.depthBuffer);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+
+		glEnable(GL_DEPTH_TEST); // z-buffering
+		glEnable(GL_CULL_FACE); // backface culling
+
+	}
+
+	void Renderer::loadRequiredShaders() {
+		bool allow_errors = false;
+
+#ifdef _DEBUG
+		allow_errors = true;
+#endif
+
+		for (const auto& shader : m_requiredShaders) {
+			m_shaderManager.loadShader(shader, allow_errors);
+		}
 	}
 
 	void Renderer::render() {
+		/////////////////////////////////////////////////////////////
+		// Reset viewport
+		/////////////////////////////////////////////////////////////
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glViewport(0, 0, (int)(m_resolution.x), (int)(m_resolution.y));
-
-		// i have no fucking idea what this does (???)
-		// stolen from old codebase
 		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		m_projectionMatrix = glm::perspective(m_sceneManager.camera.fov, m_resolution.x / m_resolution.y, 1.f, 300.f);
+		// TODO: this is very weird!! need to recompute it every frame anyway!!
+		m_projectionMatrix = glm::perspective(m_sceneManager.camera.fov, m_resolution.x / m_resolution.y, m_nearPlane, m_farPlane);
 
-		drawScene();
+		glm::mat4 camViewMat = glm::lookAt(
+			m_sceneManager.camera.pos,
+			m_sceneManager.camera.pos + m_sceneManager.camera.front,
+			glm::vec3(0.f, 1.f, 0.f)
+		);
 
+		glm::mat4 camProjMat = glm::perspective(
+			glm::radians(45.f),
+			float(m_resolution.x) / float(m_resolution.y),
+			m_nearPlane, m_farPlane
+		);
 
+		glm::mat4 sunViewMat = glm::lookAt(
+			m_sceneManager.sun.light_position,
+			glm::vec3(0.f),
+			glm::vec3(0.f, 1.f, 0.f) // this may be fucked!!
+		);
 
+		glm::mat4 sunProjMat = glm::perspective(
+			glm::radians(45.f),
+			1.f, m_nearPlane, m_farPlane
+		);
+
+		/////////////////////////////////////////////////////////////
+		// Draw shadow map
+		/////////////////////////////////////////////////////////////
+		
+		glBindFramebuffer(GL_FRAMEBUFFER, m_shadowMapFB.frameBufferId);
+		glViewport(0, 0, m_shadowMapFB.width, m_shadowMapFB.height);
+		glClearColor(1.0, 1.0, 1.0, 1.0);
+		glClearDepth(1.0);
+		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+		drawScene(sunViewMat, sunProjMat, true);
+		
+		
+		/////////////////////////////////////////////////////////////
+		// Render main pass
+		/////////////////////////////////////////////////////////////
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glViewport(0, 0, m_resolution.x, m_resolution.y);
+		glClearColor(0.2f, 0.2f, 0.8f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		drawBackground();
+		drawScene(camViewMat, camProjMat);
+
+		/////////////////////////////////////////////////////////////
+		// BORING STUFF!! TRUE!
+		/////////////////////////////////////////////////////////////
 		// Do this last, idk why
 		m_gui.draw();
-		
+
 		// should check for errors here
 		// surely there are no errors
 		// very bad!!
@@ -145,7 +212,7 @@ namespace Shard {
 
 	void Renderer::drawBackground() {
 		static auto& sm = ShaderManager::getInstance();
-		auto bg_shader = sm.loadShader("background", false);
+		auto bg_shader = sm.getShader("background");
 		glUseProgram(bg_shader);
 
 		static float environment_multiplier = 1.0f;
@@ -196,77 +263,81 @@ namespace Shard {
 		glUseProgram(0);
 	}
 
-	void Renderer::drawScene() {
-		
-
-
-		drawBackground(); // <-- draw it last always
-		m_heightfield.submitTriangles(m_sceneManager.getCameraViewMatrix(), m_projectionMatrix, envmap_bg_id, envmap_irrmap_id, envmap_refmap_id);
-		drawModels();
+	void Renderer::drawScene(glm::mat4 viewMatrix, glm::mat4 projMatrix, bool drawingShadowMap) {
+		m_heightfield.submitTriangles(viewMatrix, projMatrix, envmap_bg_id, envmap_irrmap_id, envmap_refmap_id, m_shadowMapFB.frameBufferId, drawingShadowMap);
+		drawModels(viewMatrix, projMatrix, drawingShadowMap);
 	}
 
-	void Renderer::drawModels() {
-		// TODO: this is fucked, they should come from sceneManager
-		// but because models are not transforms this is fucked
-		// physicsbodies should not have transforms, they should
-		// be based on the model
-		// TLDR: this is fucked
+	void Renderer::drawModels(glm::mat4 viewMatrix, glm::mat4 projMatrix, bool drawingShadowMap) {
 		auto& gobs = GameObjectManager::getInstance().getObjects();
 
-		///////////////////
-		// POINT LIGHT
-		///////////////////
-		// Note: No model is being drawn to show
-		// the light source in the world.
-
-		//glm::vec3 light_color{ 1.0f, 1.0f, 1.0f };
-		//glm::vec3 light_position{ 0.0f, 10.0f, 0.0f }; //<-----------------------------------------
-		//float light_ambient_intensity{ 0.1f };
-		//float light_diffuse_intensity{ 0.8f };
-		//float light_specular_intensity{ 1.0f };
-
-		//float attenuation_constant{ 1.0f };
-		//float attenuation_linear{ 0.0f };
-		//float attenuation_quadratic{ 0.001f };
-	
 		auto& sun = SceneManager::getInstance().sun;
-		const GLuint defShader = m_shaderManager.getDefaultShader();
-		glUseProgram(defShader);
+		const GLuint shader = drawingShadowMap
+									? m_shaderManager.getShader("shadowMap")
+									: m_shaderManager.getDefaultShader();
 
-		glm::mat4 viewMatrix = m_sceneManager.getCameraViewMatrix();
-		auto VP = m_projectionMatrix * viewMatrix;
+		glUseProgram(shader);
+
+		auto pv = projMatrix * viewMatrix;
 		auto camera_pos = m_sceneManager.camera.pos;
 
-		m_shaderManager.SetMat4x4(defShader, glm::inverse(viewMatrix) ,"viewInverse");
-		m_shaderManager.SetVec3(defShader, camera_pos, "u_ViewPosition");
+		// copy paste, very bad!! ^v^ uwu
+		glm::mat4 sunViewMat = glm::lookAt(
+			m_sceneManager.sun.light_position,
+			glm::vec3(0.f),
+			glm::vec3(0.f, 1.f, 0.f) // this may be fucked!!
+		);
+
+		glm::mat4 sunProjMat = glm::perspective(
+			glm::radians(45.f),
+			1.f, m_nearPlane, m_farPlane
+		);
+
+		if (!drawingShadowMap) {
+			m_shaderManager.SetMat4x4(shader, glm::inverse(viewMatrix) ,"viewInverse");
+			glActiveTexture(GL_TEXTURE9);
+			glBindTexture(GL_TEXTURE_2D, m_shadowMapFB.depthBuffer);
+
+			glm::mat4 lightMatrix =
+				glm::translate(glm::vec3(0.5f)) * glm::scale(glm::vec3(0.5f)) * sunProjMat * sunViewMat * glm::inverse(viewMatrix);
+			glm::vec4 viewSpaceLightPosition = viewMatrix * glm::vec4(m_sceneManager.sun.light_position, 1.0f);
+
+			m_shaderManager.SetVec3(shader, viewSpaceLightPosition, "viewSpaceLightPosition");
+			m_shaderManager.SetMat4x4(shader, lightMatrix, "lightMatrix");
+		}
 
 		for (std::shared_ptr<GameObject> gob : gobs) {
-			if (!gob->m_model->m_hasDedicatedShader) [[likely]] {
-				configureDefaultShader();
-			}
 
 			glm::mat4 modelMatrix = gob->m_model->getModelMatrix();
-			auto mvp = VP * modelMatrix;
+			auto mvp = pv * modelMatrix;
 
-			if (!gob->m_model->m_hasDedicatedShader) [[likely]] {
+			m_shaderManager.SetMat4x4(shader, mvp, "modelViewProjMat");
+
+			if (!drawingShadowMap && !gob->m_model->m_hasDedicatedShader) {
+				m_shaderManager.SetMat4x4(shader, viewMatrix * modelMatrix, "modelViewMatrix");
+				glm::mat4 normalMat = glm::inverse(glm::transpose(viewMatrix * modelMatrix));
+				m_shaderManager.SetMat4x4(shader, normalMat, "normalMatrix");
+
+				/* OLD UNIFORMS
 				// Vertex shader uniforms
-				m_shaderManager.SetMat4x4(defShader, viewMatrix, "u_ViewMatrix");
-				m_shaderManager.SetMat4x4(defShader, mvp, "u_MVP");
-				m_shaderManager.SetMat4x4(defShader, modelMatrix, "u_ModelMatrix");
+				m_shaderManager.SetMat4x4(shader, viewMatrix, "u_ViewMatrix");
+				m_shaderManager.SetMat4x4(shader, mvp, "u_MVP");
+				m_shaderManager.SetMat4x4(shader, modelMatrix, "u_ModelMatrix");
 				// Fragment shader uniforms
-				m_shaderManager.SetVec3(defShader, sun.light_color, "u_LightColor");
-				m_shaderManager.SetVec3(defShader, sun.light_position, "u_LightPosition");
-				m_shaderManager.SetFloat1(defShader, sun.light_ambient_intensity, "u_LightAmbientIntensity");
-				m_shaderManager.SetFloat1(defShader, sun.light_diffuse_intensity, "u_LightDiffuseIntensity");
-				m_shaderManager.SetFloat1(defShader, sun.light_specular_intensity, "u_LightDpecularIntensity");
-				m_shaderManager.SetFloat1(defShader, sun.attenuation_constant, "u_AttenuationConstant");
-				m_shaderManager.SetFloat1(defShader, sun.attenuation_linear, "u_AttenuationLinear");
-				m_shaderManager.SetFloat1(defShader, sun.attenuation_quadratic, "u_AttenuationQuadratic");
+				m_shaderManager.SetVec3(shader, sun.light_color, "u_LightColor");
+				m_shaderManager.SetVec3(shader, sun.light_position, "u_LightPosition");
+				m_shaderManager.SetFloat1(shader, sun.light_ambient_intensity, "u_LightAmbientIntensity");
+				m_shaderManager.SetFloat1(shader, sun.light_diffuse_intensity, "u_LightDiffuseIntensity");
+				m_shaderManager.SetFloat1(shader, sun.light_specular_intensity, "u_LightDpecularIntensity");
+				m_shaderManager.SetFloat1(shader, sun.attenuation_constant, "u_AttenuationConstant");
+				m_shaderManager.SetFloat1(shader, sun.attenuation_linear, "u_AttenuationLinear");
+				m_shaderManager.SetFloat1(shader, sun.attenuation_quadratic, "u_AttenuationQuadratic");
+				*/
 			}
 
 			gob->m_model->Draw();
 
-			if (true) { // if debug
+			if (false) { // if debug
 				drawCollider(gob);
 			}
 		}
@@ -329,23 +400,26 @@ namespace Shard {
 		m_shaderManager.SetMat4x4(shader, mvpMatrix, "u_MVP");
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		GLuint vao;
-		GLuint vbo;
-		GLuint ebo;
+		static GLuint vao = 0;
+		static GLuint vbo = 0;
+		static GLuint ebo = 0;
 
 		glDisable(GL_CULL_FACE);
 		
-		glGenVertexArrays(1, &vao);
+		if (vao == 0)
+			glGenVertexArrays(1, &vao);
 		glBindVertexArray(vao);
 
-		glGenBuffers(1, &vbo);
+		if (vbo == 0)
+			glGenBuffers(1, &vbo);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
 		glEnableVertexAttribArray(0);
 
-		glGenBuffers(1, &ebo);
+		if (ebo == 0)
+			glGenBuffers(1, &ebo);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 

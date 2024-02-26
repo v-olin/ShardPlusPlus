@@ -1,7 +1,10 @@
 #version 420
+
 ///////////////////////////////////////////////////////////////////////////////
 // Input vertex attributes
 ///////////////////////////////////////////////////////////////////////////////
+layout(binding = 0) uniform sampler2D heightMap;
+
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normal;
 layout(location = 2) in vec2 texCoordIn;
@@ -21,7 +24,6 @@ uniform int mapType;
 
 uniform uint noiseSeed;
 uniform float heightMapSize;
-
 uniform float heightScale;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -32,8 +34,6 @@ out vec3 colorPosition;
 out vec3 viewSpacePosition;
 out vec3 viewSpaceNormal;
 out vec4 shadowMapCoord;
-
-layout(binding = 0) uniform sampler2D heightMap;
 
 float getHeight(vec2 pos)
 {
@@ -77,8 +77,7 @@ void main()
 	vec3 pos = position;
     vec3 norm = normal;
 
-	if (mapType != GENERATED)
-    {
+	if (mapType == LOADED) {
         vec4 textureColor = texture2D(heightMap, texCoordIn.xy);
 		pos.y = length(textureColor.xyz) * 40 - 20;
 

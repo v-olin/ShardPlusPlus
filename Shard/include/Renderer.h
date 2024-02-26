@@ -4,6 +4,7 @@
 #include "TextureManager.h"
 #include "ShaderManager.h"
 #include "GUI.h"
+#include "FBO.h"
 
 #include "CubeMap.h"
 #include "heightfield.h"
@@ -35,19 +36,30 @@ namespace Shard {
 		glm::mat4 m_projectionMatrix;
 		bool m_drawColliders;
 		GLFWwindow* m_window;
+		FBO m_shadowMapFB;
 
 		GLuint cubemap_tex_id{ 0 };
 		CubeMap* cubemap_model{ nullptr };
+
+		const std::vector<std::string> m_requiredShaders{
+			"background",
+			"collider",
+			"cubemap",
+			"default",
+			"heightfield",
+			"shadowMap"
+		};
 
 		GLuint envmap_bg_id{ 0 };
 		GLuint envmap_refmap_id{ 0 };
 		GLuint envmap_irrmap_id{ 0 };
 		
+		void loadRequiredShaders();
 		GLuint LoadCubeMap(std::string cubemap_name);
 		void drawCubeMap();
 		void drawBackground();
-		void drawScene();
-		void drawModels();
+		void drawScene(glm::mat4 viewMatrix, glm::mat4 projMatrix, bool drawingShadowMap = false);
+		void drawModels(glm::mat4 viewMatrix, glm::mat4 projMatrix, bool drawingShadowMap = false);
 		void drawCollider(std::shared_ptr<GameObject> toDraw);
 		void configureDefaultShader();
 	};

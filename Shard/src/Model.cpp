@@ -546,7 +546,7 @@ namespace Shard {
 		static ShaderManager& sm = ShaderManager::getInstance();
 		for (auto& mesh : m_meshes) {
 			const Material& mat = m_materials[mesh.m_material_idx];
-			sm.SetVec3(sm.getDefaultShader(), mat.m_color, "u_ObjectColor");
+			sm.SetVec3(sm.getDefaultShader(), mat.m_color, "matColor");
 			glDrawArrays(GL_TRIANGLES, mesh.m_start_index, (GLsizei)mesh.m_number_of_vertices);
 		}
 		glBindVertexArray(0);
