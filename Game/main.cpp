@@ -216,9 +216,9 @@ void GameTest::createAsteroid(float x, float y, float z) {
 void GameTest::initalize() {
 	Shard::Logger::log("Initializing game");
 	createCar();
-	int max = 100;
+	int max = 10;
 	parent = std::make_shared<Shard::Model>("models/asteroid_fixed.obj");
-	for (int i = 0; i < 200; i++) {
+	for (int i = 0; i < 10; i++) {
 		auto pos = glm::vec3(rand() % max, rand() % max, rand() % max) - glm::vec3(max/2);
 		createAsteroid(pos.x, pos.y, pos.z);
 	}

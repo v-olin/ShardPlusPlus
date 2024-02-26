@@ -1,6 +1,8 @@
 #include "../common.h"
 
 #include "Renderer.h"
+#include "Pathtracer.h"
+#include "embree.h"
 
 #include "GameObjectManager.h"
 #include "Bootstrap.h"
@@ -23,7 +25,7 @@ namespace Shard {
 		, m_gui(gui)
 		, m_resolution({ 1280, 760 })
 		, m_fieldOfView(sceneManager.camera.fov)
-		, m_projectionMatrix(glm::perspective(sceneManager.camera.fov, m_resolution.x / m_resolution.y, 1.f, 5000.f))
+		, m_projectionMatrix(glm::perspective(sceneManager.camera.fov, m_resolution.x / m_resolution.y, 1.f, 300.f))
 		, m_drawColliders(true)
 		, m_window(window)
 	{
@@ -41,6 +43,38 @@ namespace Shard {
 		glActiveTexture(GL_TEXTURE0 + 6);
 		glBindTexture(GL_TEXTURE_2D, envmap_refmap_id);
 
+
+		///////////////////////////////////////////////////////////////////////////
+		// Generate result texture
+		///////////////////////////////////////////////////////////////////////////
+		glGenTextures(1, &m_pathtracerTxtId);
+		glActiveTexture(GL_TEXTURE0 + 7);
+		glBindTexture(GL_TEXTURE_2D, m_pathtracerTxtId);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		///////////////////////////////////////////////////////////////////////////
+		// Initial path-tracer settings
+		///////////////////////////////////////////////////////////////////////////
+		PathTracer::settings.max_bounces = 8;
+		PathTracer::settings.max_paths_per_pixel = 0; // 0 = Infinite
+		PathTracer::settings.subsampling = 4;
+
+		///////////////////////////////////////////////////////////////////////////
+		// Set up light sources
+		///////////////////////////////////////////////////////////////////////////
+		PathTracer::point_light.intensity_multiplier = 2500.0f;
+		PathTracer::point_light.color = vec3(1.f, 1.f, 1.f);
+		PathTracer::point_light.position = vec3(10.0f, 25.0f, 20.0f);
+
+		///////////////////////////////////////////////////////////////////////////
+		// Load environment map
+		///////////////////////////////////////////////////////////////////////////
+		//todo, use texturemanager
+		PathTracer::environment.map.load("../Shard/res/envmaps/001.hdr");
+		PathTracer::environment.multiplier = 1.0f;
+
 	}
 
 	void Renderer::render() {
@@ -52,7 +86,7 @@ namespace Shard {
 		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		m_projectionMatrix = glm::perspective(m_sceneManager.camera.fov, m_resolution.x / m_resolution.y, 1.f, 5000.f);
+		m_projectionMatrix = glm::perspective(m_sceneManager.camera.fov, m_resolution.x / m_resolution.y, 1.f, 300.f);
 
 		drawScene();
 
@@ -189,10 +223,146 @@ namespace Shard {
 	}
 
 	void Renderer::drawScene() {
-		drawBackground(); // <-- draw it last always
-		drawModels();
+		static bool loadedObjs = false;
+		auto cam = SceneManager::getInstance().camera;
+		static glm::vec3 cam_forward;
+		static glm::vec3 cam_up;
+		static glm::vec3 cam_right;
+		static glm::vec3 cam_pos;
+
+
+		auto camMoved = cam_forward != cam.front ||
+			cam_up != cam.up ||
+			cam_right != cam.right ||
+			cam_pos != cam.pos;
+
+
+		if (!loadedObjs && m_usePathTracing) {
+			PathTracer::reinitScene();
+
+			// Add models to PathTracer scene
+
+			auto& gobs = GameObjectManager::getInstance().getObjects();
+			for (auto& gob : gobs)
+			{
+				PathTracer::addModel(gob->m_model.get(), gob->m_model->getModelMatrix());
+			}
+			PathTracer::buildBVH();
+			PathTracer::restart();
+			loadedObjs = true;
+		}
+		if (camMoved && m_usePathTracing){
+			cam_forward = cam.front;
+			cam_up = cam.up;
+			cam_right = cam.right;
+			cam_pos = cam.pos;
+			PathTracer::restart();
+		}
+
+		if (m_usePathTracing) {
+			//assuming initializing and all objects have been added
+			drawPathTracedScene();
+		}
+		else {
+			drawBackground(); // <-- draw it last always
+			drawModels();
+		}
 	}
 
+	void Renderer::drawPathTracedScene(){
+
+		{ ///////////////////////////////////////////////////////////////////////
+			// If first frame, or window resized, or subsampling changes,
+			// inform the PathTracer
+			///////////////////////////////////////////////////////////////////////
+			int w, h;
+			glfwGetWindowSize(m_window, &w, &h);
+			static int old_subsampling;
+			if (m_windowWidth != w || m_windowHeight != h || old_subsampling != PathTracer::settings.subsampling)
+			{
+				PathTracer::resize(w, h);
+				m_windowWidth = w;
+				m_windowWidth = h;
+				old_subsampling = PathTracer::settings.subsampling;
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////
+		// Trace one path per pixel
+		///////////////////////////////////////////////////////////////////////////
+		auto& camera = SceneManager::getInstance().camera;
+		mat4 viewMatrix = glm::lookAt(camera.pos, camera.pos + camera.front, camera.worldUp);
+		mat4 projMatrix = glm::perspective(radians(45.0f),
+			float(PathTracer::rendered_image.width)
+			/ float(PathTracer::rendered_image.height),
+			0.1f, 100.0f);
+		PathTracer::tracePaths(viewMatrix, projMatrix);
+
+		///////////////////////////////////////////////////////////////////////////
+		// Copy pathtraced image to texture for display
+		///////////////////////////////////////////////////////////////////////////
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, m_pathtracerTxtId);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, PathTracer::rendered_image.width,
+			PathTracer::rendered_image.height, 0, GL_RGB, GL_FLOAT, PathTracer::rendered_image.getPtr());
+
+		///////////////////////////////////////////////////////////////////////////
+		// Render a fullscreen quad, textured with our pathtraced image.
+		///////////////////////////////////////////////////////////////////////////
+		glViewport(0, 0, m_windowWidth, m_windowHeight);
+		glClearColor(0.1f, 0.1f, 0.6f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_CULL_FACE);
+		//SDL_GetWindowSize(g_window, &windowWidth, &windowHeight);
+		glfwGetWindowSize(m_window, &m_windowWidth, &m_windowHeight);
+		//glUseProgram(shaderProgram);
+		//labhelper::drawFullScreenQuad();
+
+
+		static auto& sm = ShaderManager::getInstance();
+		auto bg_shader = sm.getShader("copyTexture");
+		glUseProgram(bg_shader);
+		
+		GLboolean previous_depth_state;
+		glGetBooleanv(GL_DEPTH_TEST, &previous_depth_state);
+		glDisable(GL_DEPTH_TEST);
+
+		static GLuint VAO = 0;
+		static GLuint VBO = 0;
+		static int nofVertices = 6;
+		
+		if (VAO == 0)
+		{ // do this initialization first time the function is called.
+			static const float positions[] = { -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 1.0f,
+												   -1.0f, -1.0f, 1.0f, 1.0f,  -1.0f, 1.0f };
+			
+			glGenVertexArrays(1, &VAO);
+			glBindVertexArray(VAO);
+			
+			glGenBuffers(1, &VBO);
+			glBindBuffer(GL_ARRAY_BUFFER, VBO);
+			glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), positions, GL_STATIC_DRAW);
+
+			glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0);
+			glEnableVertexAttribArray(0);
+			
+			glBindVertexArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		}
+		glBindVertexArray(VAO);
+		glDrawArrays(GL_TRIANGLES, 0, nofVertices);
+
+		if (previous_depth_state)
+			glEnable(GL_DEPTH_TEST);
+		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glUseProgram(0);
+
+
+	}
 	void Renderer::drawModels() {
 		// TODO: this is fucked, they should come from sceneManager
 		// but because models are not transforms this is fucked

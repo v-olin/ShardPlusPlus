@@ -244,6 +244,10 @@ namespace Shard {
 		this->m_right = src->m_right;
 		this->max = src->max;
 		this->min = src->min;
+		this->m_positions = src->m_positions;
+		this->m_normals = src->m_normals;
+		this->m_texture_coordinates = src->m_texture_coordinates;
+
 	}
 	Model::Model(std::string path)
 		: m_hasDedicatedShader(false)

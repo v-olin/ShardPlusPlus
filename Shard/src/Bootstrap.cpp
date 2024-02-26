@@ -192,6 +192,8 @@ namespace Shard {
         sm.loadShader("collider", false);
         sm.loadShader("cubemap", false);
         sm.loadShader("background", false);
+        sm.loadShader("simple", false);
+        sm.loadShader("copyTexture", false);
 
         return;
 
