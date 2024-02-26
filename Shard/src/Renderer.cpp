@@ -224,19 +224,6 @@ namespace Shard {
 
 	void Renderer::drawScene() {
 		static bool loadedObjs = false;
-		auto cam = SceneManager::getInstance().camera;
-		static glm::vec3 cam_forward;
-		static glm::vec3 cam_up;
-		static glm::vec3 cam_right;
-		static glm::vec3 cam_pos;
-
-
-		auto camMoved = cam_forward != cam.front ||
-			cam_up != cam.up ||
-			cam_right != cam.right ||
-			cam_pos != cam.pos;
-
-
 		if (!loadedObjs && m_usePathTracing) {
 			PathTracer::reinitScene();
 
@@ -251,14 +238,7 @@ namespace Shard {
 			PathTracer::restart();
 			loadedObjs = true;
 		}
-		if (camMoved && m_usePathTracing){
-			cam_forward = cam.front;
-			cam_up = cam.up;
-			cam_right = cam.right;
-			cam_pos = cam.pos;
-			PathTracer::restart();
-		}
-
+	
 		if (m_usePathTracing) {
 			//assuming initializing and all objects have been added
 			drawPathTracedScene();

@@ -5,6 +5,7 @@
 #include "Car.h"
 #include "Asteriod.h"
 #include "GameObjectManager.h"
+#include "Pathtracer.h"
 #include <iostream>
 #include <memory>
 #include <conio.h>
@@ -130,6 +131,7 @@ void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 				delta_x *= sensitivity;
 				delta_y *= sensitivity;
 				sm.camera.rotate(delta_x, delta_y);
+				Shard::PathTracer::restart();
 			}
 
 		}
@@ -161,6 +163,9 @@ void GameTest::update() {
 		sm.camera.move(Shard::Movement::DOWN, dt);
 
 
+
+	if (c_forward || c_backward || c_left || c_right || c_up || c_down)
+		Shard::PathTracer::restart();
 
 	sm.camera.updateCameraToPlayer();
 
