@@ -57,6 +57,11 @@ void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 		if (ie.key == GLFW_KEY_R)
 			sm.camera.setPlayerGameObj(car);
 
+			if (ie.key == GLFW_KEY_P){
+				auto sampling = Shard::PathTracer::settings.subsampling == 1 ? 4 : 1;
+				Shard::PathTracer::settings.subsampling = sampling; 
+				Shard::PathTracer::restart();
+			}
 
 
 
@@ -69,6 +74,9 @@ void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 	if ((cameraStatus == Shard::CameraView::FREE || cameraStatus == Shard::CameraView::LOCK) && is_rmb_down) {
 		auto keyDown = et == Shard::EventType::KeyDown;
 		if (et == Shard::EventType::KeyDown || et == Shard::EventType::KeyUp) {
+		
+
+
 			if (ie.key == GLFW_KEY_W) 
 				c_forward = keyDown;
 			if (ie.key == GLFW_KEY_S) 
@@ -223,7 +231,7 @@ void GameTest::initalize() {
 	createCar();
 	int max = 10;
 	parent = std::make_shared<Shard::Model>("models/asteroid_fixed.obj");
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 0; i++) {
 		auto pos = glm::vec3(rand() % max, rand() % max, rand() % max) - glm::vec3(max/2);
 		createAsteroid(pos.x, pos.y, pos.z);
 	}

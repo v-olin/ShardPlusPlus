@@ -57,14 +57,14 @@ namespace Shard {
 		///////////////////////////////////////////////////////////////////////////
 		// Initial path-tracer settings
 		///////////////////////////////////////////////////////////////////////////
-		PathTracer::settings.max_bounces = 8;
+		PathTracer::settings.max_bounces = 2;
 		PathTracer::settings.max_paths_per_pixel = 0; // 0 = Infinite
 		PathTracer::settings.subsampling = 4;
 
 		///////////////////////////////////////////////////////////////////////////
 		// Set up light sources
 		///////////////////////////////////////////////////////////////////////////
-		PathTracer::point_light.intensity_multiplier = 2500.0f;
+		PathTracer::point_light.intensity_multiplier = 100.0f;
 		PathTracer::point_light.color = vec3(1.f, 1.f, 1.f);
 		PathTracer::point_light.position = vec3(10.0f, 25.0f, 20.0f);
 
