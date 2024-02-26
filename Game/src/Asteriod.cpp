@@ -55,6 +55,7 @@ void Asteroid::initialize()
 
 }
 void Asteroid::update(){
+    //restart camera
 }
 
 void Asteroid::physicsUpdate() {

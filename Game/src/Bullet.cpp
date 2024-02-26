@@ -39,6 +39,8 @@ void Bullet::initialize() {
 void Bullet::physicsUpdate() {
 	//fucking car is reversed, very bad!!!
 	m_body->addForce(m_model->m_forward, -1.f);
+
+    //restart camera
 }
 
 void Bullet::update() {
