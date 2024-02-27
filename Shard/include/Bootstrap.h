@@ -38,13 +38,17 @@ namespace Shard {
 		static InputManager& getInput();
 		static AssetManager& getAssetManager();
 		static void setRunningGame(std::shared_ptr<Game> game);
+		static void setUsePathTracing(bool enabled);
+		static bool getUsePathTracing();
 
 		static void setup();
 		static void setupEnvironmentVariables(std::string path);
 
 		inline static ::GLFWwindow* m_Window;
 
+
 	private:
+		inline static bool use_path_tracing;
 		inline static bool running_game_set;
 		inline static std::shared_ptr<Game> running_game;
 		inline static InputManager input;

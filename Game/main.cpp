@@ -57,11 +57,17 @@ void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 		if (ie.key == GLFW_KEY_R)
 			sm.camera.setPlayerGameObj(car);
 
-			if (ie.key == GLFW_KEY_P){
-				auto sampling = Shard::PathTracer::settings.subsampling == 1 ? 4 : 1;
-				Shard::PathTracer::settings.subsampling = sampling; 
-				Shard::PathTracer::restart();
-			}
+		if (ie.key == GLFW_KEY_P){
+			auto sampling = Shard::PathTracer::settings.subsampling == 1 ? 4 : 1;
+			Shard::PathTracer::settings.subsampling = sampling; 
+			Shard::PathTracer::restart();
+		}
+		if (ie.key == GLFW_KEY_R) {
+			static bool usePathTracing = false;
+			usePathTracing = !usePathTracing;
+			Shard::Bootstrap::setUsePathTracing(usePathTracing);
+		}
+
 
 
 

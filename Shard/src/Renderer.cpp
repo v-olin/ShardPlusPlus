@@ -215,6 +215,9 @@ namespace Shard {
 	}
 
 	void Renderer::drawBackground() {
+		
+
+
 		static auto& sm = ShaderManager::getInstance();
 		auto bg_shader = sm.getShader("background");
 		glUseProgram(bg_shader);
@@ -296,15 +299,15 @@ namespace Shard {
 			m_sceneManager.camera.pos,
 			m_sceneManager.camera.pos + m_sceneManager.camera.front,
 			glm::vec3(0.f, 1.f, 0.f)
-		);
+			);
 
-		glm::mat4 projMat = glm::perspective(
-			glm::radians(m_sceneManager.camera.fov),
-			float(m_resolution.x) / float(m_resolution.y),
-			m_nearPlane, m_farPlane
-		);
+			glm::mat4 projMat = glm::perspective(
+				glm::radians(m_sceneManager.camera.fov),
+				float(m_resolution.x) / float(m_resolution.y),
+				m_nearPlane, m_farPlane
+			);
 
-		m_heightfield.submitTriangles(viewMat, projMat, envmap_bg_id, envmap_irrmap_id, envmap_refmap_id);
+			m_heightfield.submitTriangles(viewMat, projMat, envmap_bg_id, envmap_irrmap_id, envmap_refmap_id);
 			drawModels();
 		}
 	}
@@ -341,7 +344,7 @@ namespace Shard {
 		///////////////////////////////////////////////////////////////////////////
 		// Copy pathtraced image to texture for display
 		///////////////////////////////////////////////////////////////////////////
-		glActiveTexture(GL_TEXTURE0);
+		glActiveTexture(GL_TEXTURE7);
 		glBindTexture(GL_TEXTURE_2D, m_pathtracerTxtId);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, PathTracer::rendered_image.width,
 			PathTracer::rendered_image.height, 0, GL_RGB, GL_FLOAT, PathTracer::rendered_image.getPtr());

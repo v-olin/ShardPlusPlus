@@ -43,7 +43,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)include\StringUtility.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\TextureManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\embree.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\heightfield.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\material.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\noise.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\sampling.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\embree2\include\embree2\rtcore.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\embree2\include\embree2\rtcore_builder.h" />
@@ -52,8 +54,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\embree2\include\embree2\rtcore_ray.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\embree2\include\embree2\rtcore_scene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\embree2\include\embree2\rtcore_version.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)include\heightfield.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)include\noise.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glad\include\KHR\khrplatform.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glad\include\glad\glad.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glfw\include\GLFW\glfw3.h" />
@@ -355,10 +355,10 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)src\ShaderManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\TextureManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\embree.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)src\material.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)src\sampling.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\heightfield.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\material.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\noise.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\sampling.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\glad\glad.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\glm\detail\glm.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui\imgui.cpp" />

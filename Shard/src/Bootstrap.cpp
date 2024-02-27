@@ -102,6 +102,12 @@ namespace Shard {
        millis_per_frame = 1000 / target_frame_rate;
        running_game_set = true;
     }
+    void Bootstrap::setUsePathTracing(bool enabled) {
+        use_path_tracing = enabled;
+    }
+    bool Bootstrap::getUsePathTracing() {
+        return use_path_tracing;
+    }
 
     void Bootstrap::setup() {
 
@@ -261,6 +267,8 @@ namespace Shard {
             running_game->update();
 
             if(running_game->isRunning()){
+
+                renderer.m_usePathTracing = use_path_tracing;
 
 				// Get input, which works at 50 FPS to make sure it doesn't interfere with the 
 				// variable frame rates.
