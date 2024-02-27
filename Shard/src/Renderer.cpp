@@ -17,7 +17,7 @@ namespace Shard {
 	Renderer::Renderer(SceneManager& sceneManager,
 		TextureManager& texManager,
 		ShaderManager& shaderManager,
-		GUI& gui,
+		GUI* gui,
 		GLFWwindow* window)
 		: m_sceneManager(sceneManager)
 		, m_textureManager(texManager)
@@ -27,7 +27,7 @@ namespace Shard {
 		, m_nearPlane(1.f)
 		, m_farPlane(1000.f)
 		, m_fieldOfView(sceneManager.camera.fov)
-		, m_projectionMatrix(glm::mat4(1.f)) // recomputed every frame anyway
+		, m_projectionMatrix(glm::perspective(sceneManager.camera.fov, float(m_resolution.x) / float(m_resolution.y), m_nearPlane, m_farPlane))
 		, m_drawColliders(true)
 		, m_window(window)
 		, m_heightfield(sceneManager)
@@ -106,22 +106,6 @@ namespace Shard {
 		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// TODO: this is very weird!! need to recompute it every frame anyway!!
-		m_projectionMatrix = glm::perspective(m_sceneManager.camera.fov, m_resolution.x / m_resolution.y, m_nearPlane, m_farPlane);
-
-		glm::mat4 camViewMat = glm::lookAt(
-			m_sceneManager.camera.pos,
-			m_sceneManager.camera.pos + m_sceneManager.camera.front,
-			glm::vec3(0.f, 1.f, 0.f)
-		);
-
-		glm::mat4 camProjMat = glm::perspective(
-			glm::radians(45.f),
-			float(m_resolution.x) / float(m_resolution.y),
-			m_nearPlane, m_farPlane
-		);
-
-		
 		/////////////////////////////////////////////////////////////
 		// Render main pass
 		/////////////////////////////////////////////////////////////
@@ -138,7 +122,7 @@ namespace Shard {
 		// BORING STUFF!! TRUE!
 		/////////////////////////////////////////////////////////////
 		// Do this last, idk why
-		m_gui.draw();
+		m_gui->draw();
 
 		// should check for errors here
 		// surely there are no errors
@@ -203,7 +187,7 @@ namespace Shard {
 		glUseProgram(shader);
 		
 		glm::mat4 viewMatrix = m_sceneManager.getCameraViewMatrix();
-		glm::mat4 mvpMatrix = m_projectionMatrix * glm::mat4(glm::mat3(viewMatrix));
+		glm::mat4 mvpMatrix = m_projectionMatrix * viewMatrix;
 		sm.SetMat4x4(shader, mvpMatrix, "u_MVP");
 
 		glDepthFunc(GL_LEQUAL); // depth test passes when values are leq depth buffer's content
@@ -302,7 +286,7 @@ namespace Shard {
 			);
 
 			glm::mat4 projMat = glm::perspective(
-				glm::radians(m_sceneManager.camera.fov),
+				m_sceneManager.camera.fov,
 				float(m_resolution.x) / float(m_resolution.y),
 				m_nearPlane, m_farPlane
 			);
@@ -335,7 +319,7 @@ namespace Shard {
 		///////////////////////////////////////////////////////////////////////////
 		auto& camera = SceneManager::getInstance().camera;
 		mat4 viewMatrix = glm::lookAt(camera.pos, camera.pos + camera.front, camera.worldUp);
-		mat4 projMatrix = glm::perspective(radians(45.0f),
+		mat4 projMatrix = glm::perspective(45.0f,
 			float(PathTracer::rendered_image.width)
 			/ float(PathTracer::rendered_image.height),
 			0.1f, 100.0f);
@@ -417,7 +401,7 @@ namespace Shard {
 		);
 
 		glm::mat4 projMatrix = glm::perspective(
-			glm::radians(45.f),
+			45.f,
 			float(m_resolution.x) / float(m_resolution.y),
 			m_nearPlane, m_farPlane
 		);
@@ -458,7 +442,6 @@ namespace Shard {
 			}
 
 			gob->m_model->Draw();
-
 			if (Bootstrap::getEnvironmentVariable("physics_debug") == "1") { // if debug
 				drawCollider(gob);
 			}

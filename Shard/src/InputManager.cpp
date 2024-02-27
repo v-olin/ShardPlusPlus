@@ -32,6 +32,8 @@ namespace Shard {
 	void InputManager::informListeners(InputEvent ie, EventType et) {
 		int idx = 0;
 		if (et == MouseDown || et == MouseUp) {
+			if (ie.y < 20 || Bootstrap::gui->isFocused())
+				return;
 			auto hit_bod = PhysicsManager::getInstance().getClickedBody(ie);
 			ie.body = hit_bod.value_or(nullptr);
 		}
