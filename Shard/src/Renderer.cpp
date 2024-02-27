@@ -21,45 +21,90 @@ namespace Shard {
 		, m_shaderManager(shaderManager)
 		, m_gui(gui)
 		, m_resolution({ 1280, 760 })
+		, m_nearPlane(1.f)
+		, m_farPlane(1000.f)
 		, m_fieldOfView(sceneManager.camera.fov)
-		, m_projectionMatrix(glm::perspective(sceneManager.camera.fov, m_resolution.x / m_resolution.y, 1.f, 300.f))
+		, m_projectionMatrix(glm::mat4(1.f)) // recomputed every frame anyway
 		, m_drawColliders(true)
 		, m_window(window)
+		, m_heightfield(sceneManager)
 	{
 		static bool initialized = false;
 		if (initialized) {
 			Logger::log("Renderer already initialized, very bad!!", LOG_LEVEL_FATAL);
 		}
 		initialized = true;
+
+		loadRequiredShaders();
 		
 		envmap_bg_id = m_textureManager.loadHdrTexture("001.hdr");
 		envmap_refmap_id = m_textureManager.loadHdrTexture("001_dl_0.hdr");
+		envmap_irrmap_id = m_textureManager.loadHdrTexture("001_irradiance.hdr");
 
-		glActiveTexture(GL_TEXTURE0 + 5);
-		glBindTexture(GL_TEXTURE_2D, envmap_bg_id);
-		glActiveTexture(GL_TEXTURE0 + 6);
-		glBindTexture(GL_TEXTURE_2D, envmap_refmap_id);
+		//TODO, fix material values, now we have ice mountains
+		//m_heightfield.loadHeightField("L3123F.png", "L3123F_downscaled.jpg", "L3123F_shininess.png");
+		const float size = 1000.f;
+		m_heightfield.generateMesh(size, size, 982374);
 
+		glEnable(GL_DEPTH_TEST); // z-buffering
+		glEnable(GL_CULL_FACE); // backface culling
+	}
+
+	void Renderer::loadRequiredShaders() {
+		bool allow_errors = false;
+
+#ifdef _DEBUG
+		allow_errors = true;
+#endif
+
+		for (const auto& shader : m_requiredShaders) {
+			m_shaderManager.loadShader(shader, allow_errors);
+		}
 	}
 
 	void Renderer::render() {
+		/////////////////////////////////////////////////////////////
+		// Reset viewport
+		/////////////////////////////////////////////////////////////
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glViewport(0, 0, (int)(m_resolution.x), (int)(m_resolution.y));
-
-		// i have no fucking idea what this does (???)
-		// stolen from old codebase
 		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		m_projectionMatrix = glm::perspective(m_sceneManager.camera.fov, m_resolution.x / m_resolution.y, 1.f, 300.f);
+		// TODO: this is very weird!! need to recompute it every frame anyway!!
+		m_projectionMatrix = glm::perspective(m_sceneManager.camera.fov, m_resolution.x / m_resolution.y, m_nearPlane, m_farPlane);
 
+		glm::mat4 camViewMat = glm::lookAt(
+			m_sceneManager.camera.pos,
+			m_sceneManager.camera.pos + m_sceneManager.camera.front,
+			glm::vec3(0.f, 1.f, 0.f)
+		);
+
+		glm::mat4 camProjMat = glm::perspective(
+			glm::radians(45.f),
+			float(m_resolution.x) / float(m_resolution.y),
+			m_nearPlane, m_farPlane
+		);
+
+		
+		/////////////////////////////////////////////////////////////
+		// Render main pass
+		/////////////////////////////////////////////////////////////
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glViewport(0, 0, m_resolution.x, m_resolution.y);
+		glClearColor(0.2f, 0.2f, 0.8f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		drawBackground();
 		drawScene();
 
-
-
+		/////////////////////////////////////////////////////////////
+		// BORING STUFF!! TRUE!
+		/////////////////////////////////////////////////////////////
 		// Do this last, idk why
 		m_gui.draw();
-		
+
 		// should check for errors here
 		// surely there are no errors
 		// very bad!!
@@ -127,7 +172,7 @@ namespace Shard {
 		sm.SetMat4x4(shader, mvpMatrix, "u_MVP");
 
 		glDepthFunc(GL_LEQUAL); // depth test passes when values are leq depth buffer's content
-		glActiveTexture(GL_TEXTURE0 + 2);
+		glActiveTexture(GL_TEXTURE2);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap_tex_id);
 		cubemap_model->Draw();
 		glDepthFunc(GL_LESS); // Set back to default
@@ -136,8 +181,11 @@ namespace Shard {
 
 	void Renderer::drawBackground() {
 		static auto& sm = ShaderManager::getInstance();
-		auto bg_shader = sm.loadShader("background", false);
+		auto bg_shader = sm.getShader("background");
 		glUseProgram(bg_shader);
+
+		glActiveTexture(GL_TEXTURE10); // DO NOT CHANGE TO 5 !!!!!! VERY BAD!!!
+		glBindTexture(GL_TEXTURE_2D, envmap_bg_id);
 
 		static float environment_multiplier = 1.0f;
 		glm::mat4 viewMatrix = m_sceneManager.getCameraViewMatrix();
@@ -188,70 +236,76 @@ namespace Shard {
 	}
 
 	void Renderer::drawScene() {
-		drawBackground(); // <-- draw it last always
+		glm::mat4 viewMat = glm::lookAt(
+			m_sceneManager.camera.pos,
+			m_sceneManager.camera.pos + m_sceneManager.camera.front,
+			glm::vec3(0.f, 1.f, 0.f)
+		);
+
+		glm::mat4 projMat = glm::perspective(
+			glm::radians(m_sceneManager.camera.fov),
+			float(m_resolution.x) / float(m_resolution.y),
+			m_nearPlane, m_farPlane
+		);
+
+		m_heightfield.submitTriangles(viewMat, projMat, envmap_bg_id, envmap_irrmap_id, envmap_refmap_id);
 		drawModels();
 	}
 
 	void Renderer::drawModels() {
-		// TODO: this is fucked, they should come from sceneManager
-		// but because models are not transforms this is fucked
-		// physicsbodies should not have transforms, they should
-		// be based on the model
-		// TLDR: this is fucked
 		auto& gobs = GameObjectManager::getInstance().getObjects();
+		auto& sun = SceneManager::getInstance().sun;
 
-		///////////////////
-		// POINT LIGHT
-		///////////////////
-		// Note: No model is being drawn to show
-		// the light source in the world.
+		glm::mat4 viewMatrix = glm::lookAt(
+			m_sceneManager.camera.pos,
+			m_sceneManager.camera.pos + m_sceneManager.camera.front,
+			glm::vec3(0.f, 1.f, 0.f)
+		);
 
-		glm::vec3 light_color{ 1.0f, 1.0f, 1.0f };
-		glm::vec3 light_position{ 0.0f, 10.0f, 0.0f };
-		float light_ambient_intensity{ 0.1f };
-		float light_diffuse_intensity{ 0.8f };
-		float light_specular_intensity{ 1.0f };
+		glm::mat4 projMatrix = glm::perspective(
+			glm::radians(45.f),
+			float(m_resolution.x) / float(m_resolution.y),
+			m_nearPlane, m_farPlane
+		);
 
-		float attenuation_constant{ 1.0f };
-		float attenuation_linear{ 0.0f };
-		float attenuation_quadratic{ 0.001f };
+		const auto shader = m_shaderManager.getDefaultShader();
+		glUseProgram(shader);
 
-		const GLuint defShader = m_shaderManager.getDefaultShader();
-		glUseProgram(defShader);
+		glActiveTexture(GL_TEXTURE6);
+		glBindTexture(GL_TEXTURE_2D, envmap_bg_id);
+		glActiveTexture(GL_TEXTURE7);
+		glBindTexture(GL_TEXTURE_2D, envmap_irrmap_id);
+		glActiveTexture(GL_TEXTURE8);
+		glBindTexture(GL_TEXTURE_2D, envmap_refmap_id);
+		glActiveTexture(0);
 
-		glm::mat4 viewMatrix = m_sceneManager.getCameraViewMatrix();
-		auto VP = m_projectionMatrix * viewMatrix;
+		auto pv = projMatrix * viewMatrix;
 		auto camera_pos = m_sceneManager.camera.pos;
+		auto& sm = m_shaderManager;
 
-		m_shaderManager.SetMat4x4(defShader, glm::inverse(viewMatrix) ,"viewInverse");
-		m_shaderManager.SetVec3(defShader, camera_pos, "u_ViewPosition");
+		glm::vec4 viewSpaceLightPosition = viewMatrix * glm::vec4(m_sceneManager.sun.light_position, 1.0f);
+		sm.SetVec3(shader, viewSpaceLightPosition, "viewSpaceLightPosition");
+		sm.SetMat4x4(shader, glm::inverse(viewMatrix), "viewInverse");
 
 		for (std::shared_ptr<GameObject> gob : gobs) {
-			if (!gob->m_model->m_hasDedicatedShader) [[likely]] {
-				configureDefaultShader();
-			}
 
 			glm::mat4 modelMatrix = gob->m_model->getModelMatrix();
-			auto mvp = VP * modelMatrix;
+			auto mvp = pv * modelMatrix;
+
 
 			if (!gob->m_model->m_hasDedicatedShader) [[likely]] {
-				// Vertex shader uniforms
-				m_shaderManager.SetMat4x4(defShader, mvp, "u_MVP");
-				m_shaderManager.SetMat4x4(defShader, modelMatrix, "u_ModelMatrix");
-				// Fragment shader uniforms
-				m_shaderManager.SetVec3(defShader, light_color, "u_LightColor");
-				m_shaderManager.SetVec3(defShader, light_position, "u_LightPosition");
-				m_shaderManager.SetFloat1(defShader, light_ambient_intensity, "u_LightAmbientIntensity");
-				m_shaderManager.SetFloat1(defShader, light_diffuse_intensity, "u_LightDiffuseIntensity");
-				m_shaderManager.SetFloat1(defShader, light_specular_intensity, "u_LightDpecularIntensity");
-				m_shaderManager.SetFloat1(defShader, attenuation_constant, "u_AttenuationConstant");
-				m_shaderManager.SetFloat1(defShader, attenuation_linear, "u_AttenuationLinear");
-				m_shaderManager.SetFloat1(defShader, attenuation_quadratic, "u_AttenuationQuadratic");
+				glm::mat4 normalMat = glm::inverse(glm::transpose(viewMatrix * modelMatrix));
+				sm.SetMat4x4(shader, normalMat, "normalMatrix");
+				sm.SetMat4x4(shader, viewMatrix * modelMatrix, "modelViewMatrix");
+				sm.SetMat4x4(shader, mvp, "modelViewProjMatrix");
+				sm.SetFloat1(shader, 1.f, "environment_multiplier");
+				sm.SetFloat1(shader, 1000.f, "point_light_intensity_multiplier");
+				
 			}
 
 			gob->m_model->Draw();
 
-			if (true) { // if debug
+			if (false) { // if debug
 				drawCollider(gob);
 			}
 		}
@@ -314,23 +368,26 @@ namespace Shard {
 		m_shaderManager.SetMat4x4(shader, mvpMatrix, "u_MVP");
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		GLuint vao;
-		GLuint vbo;
-		GLuint ebo;
+		static GLuint vao = 0;
+		static GLuint vbo = 0;
+		static GLuint ebo = 0;
 
 		glDisable(GL_CULL_FACE);
 		
-		glGenVertexArrays(1, &vao);
+		if (vao == 0)
+			glGenVertexArrays(1, &vao);
 		glBindVertexArray(vao);
 
-		glGenBuffers(1, &vbo);
+		if (vbo == 0)
+			glGenBuffers(1, &vbo);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
 		glEnableVertexAttribArray(0);
 
-		glGenBuffers(1, &ebo);
+		if (ebo == 0)
+			glGenBuffers(1, &ebo);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 

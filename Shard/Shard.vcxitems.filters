@@ -142,6 +142,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)include\TextureManager.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\heightfield.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\noise.h">
+      <Filter>include</Filter>
+    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glad\include\KHR\khrplatform.h">
       <Filter>vendor\glad\include\KHR</Filter>
     </ClInclude>
@@ -1026,6 +1032,12 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)src\TextureManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\heightfield.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\noise.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\glad\glad.c">
       <Filter>vendor\glad</Filter>
     </ClCompile>
@@ -1053,9 +1065,5 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui\imgui_widgets.cpp">
       <Filter>vendor\imgui</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)res\shaders\background.frag" />
-    <None Include="$(MSBuildThisFileDirectory)res\shaders\background.vert" />
   </ItemGroup>
 </Project>

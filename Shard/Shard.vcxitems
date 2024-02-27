@@ -40,6 +40,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)include\ShaderManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\StringUtility.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\TextureManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\heightfield.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\noise.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glad\include\KHR\khrplatform.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glad\include\glad\glad.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glfw\include\GLFW\glfw3.h" />
@@ -336,6 +338,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)src\SceneManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\ShaderManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\TextureManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\heightfield.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\noise.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\glad\glad.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\glm\detail\glm.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui\imgui.cpp" />
@@ -345,9 +349,5 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui\imgui_tables.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui\imgui_widgets.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)res\shaders\background.frag" />
-    <None Include="$(MSBuildThisFileDirectory)res\shaders\background.vert" />
   </ItemGroup>
 </Project>

@@ -544,9 +544,27 @@ namespace Shard {
 	void Model::Draw() {
 		glBindVertexArray(m_vaob);
 		static ShaderManager& sm = ShaderManager::getInstance();
+		auto shader = sm.getDefaultShader();
 		for (auto& mesh : m_meshes) {
 			const Material& mat = m_materials[mesh.m_material_idx];
-			sm.SetVec3(sm.getDefaultShader(), mat.m_color, "u_ObjectColor");
+			bool hasColor = mat.m_color_texture.valid;
+			sm.SetInteger1(shader, hasColor ? 1 : 0, "has_color_texture");
+			if (hasColor) {
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, mat.m_color_texture.gl_id);
+			}
+			bool hasEmission = mat.m_emission_texture.valid;
+			sm.SetInteger1(shader, hasEmission ? 1 : 0, "has_emission_texture");
+			if (hasEmission) {
+				glActiveTexture(GL_TEXTURE5);
+				glBindTexture(GL_TEXTURE_2D, mat.m_emission_texture.gl_id);
+			}
+			glActiveTexture(0);
+			sm.SetVec3(shader, mat.m_color, "material_color");
+			sm.SetFloat1(shader, mat.m_metalness, "material_metalness");
+			sm.SetFloat1(shader, mat.m_fresnel, "material_fresnel");
+			sm.SetFloat1(shader, mat.m_shininess, "material_shininess");
+			sm.SetVec3(shader, mat.m_emission, "material_emission");
 			glDrawArrays(GL_TRIANGLES, mesh.m_start_index, (GLsizei)mesh.m_number_of_vertices);
 		}
 		glBindVertexArray(0);

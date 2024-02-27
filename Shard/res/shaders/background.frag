@@ -4,7 +4,7 @@
 precision highp float;
 
 layout(location = 0) out vec4 fragmentColor;
-layout(binding = 5) uniform sampler2D environmentMap;
+layout(binding = 10) uniform sampler2D environmentMap;
 in vec2 texCoord;
 uniform mat4 inv_PV;
 uniform vec3 camera_pos;

@@ -37,6 +37,7 @@ namespace Shard {
 	}
 
 	GLuint ShaderManager::loadShader(std::string shader_name, bool allow_errors) {
+		Logger::log("Loading shader: " + shader_name, LOG_LEVEL_ALL);
 
 		std::string path_vertex_shader = m_shaderPath + shader_name + ".vert";
 		std::string path_fragment_shader = m_shaderPath + shader_name + ".frag";
