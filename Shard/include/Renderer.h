@@ -6,6 +6,7 @@
 #include "GUI.h"
 
 #include "CubeMap.h"
+#include "heightfield.h"
 
 #include <glm.hpp>
 
@@ -29,6 +30,7 @@ namespace Shard {
 		TextureManager& m_textureManager;
 		ShaderManager& m_shaderManager;
 		GUI& m_gui;
+		HeightField m_heightfield;
 		const glm::vec2 m_resolution;
 		const float m_fieldOfView;
 		glm::mat4 m_projectionMatrix;
@@ -44,9 +46,19 @@ namespace Shard {
 		GLuint cubemap_tex_id{ 0 };
 		CubeMap* cubemap_model{ nullptr };
 
+		const std::vector<std::string> m_requiredShaders{
+			"background",
+			"collider",
+			"cubemap",
+			"default",
+			"heightfield"
+		};
+
 		GLuint envmap_bg_id{ 0 };
 		GLuint envmap_refmap_id{ 0 };
+		GLuint envmap_irrmap_id{ 0 };
 		
+		void loadRequiredShaders();
 		GLuint LoadCubeMap(std::string cubemap_name);
 		void drawCubeMap();
 		void drawBackground();
