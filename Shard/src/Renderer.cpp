@@ -187,7 +187,7 @@ namespace Shard {
 		glUseProgram(shader);
 		
 		glm::mat4 viewMatrix = m_sceneManager.getCameraViewMatrix();
-		glm::mat4 mvpMatrix = m_projectionMatrix * glm::mat4(glm::mat3(viewMatrix));
+		glm::mat4 mvpMatrix = m_projectionMatrix * viewMatrix;
 		sm.SetMat4x4(shader, mvpMatrix, "u_MVP");
 
 		glDepthFunc(GL_LEQUAL); // depth test passes when values are leq depth buffer's content
