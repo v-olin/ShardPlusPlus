@@ -16,7 +16,7 @@ namespace Shard {
 		Renderer(SceneManager& sceneManager,
 			TextureManager& texManager,
 			ShaderManager& shaderManager,
-			GUI& gui,
+			GUI* gui,
 			GLFWwindow* window);
 
 		void render();
@@ -29,7 +29,7 @@ namespace Shard {
 		SceneManager& m_sceneManager;
 		TextureManager& m_textureManager;
 		ShaderManager& m_shaderManager;
-		GUI& m_gui;
+		GUI* m_gui;
 		HeightField m_heightfield;
 		const glm::vec2 m_resolution;
 		const float m_fieldOfView;

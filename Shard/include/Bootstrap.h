@@ -23,6 +23,7 @@ namespace Shard {
 		inline static  const std::string DEFAULT_CONFIG = "config.cfg";
 		static bool checkEnvironmentVariable(std::string id);
 		static std::string getEnvironmentVariable(std::string id);
+		static void setEnvironmentVariable(std::string id, std::string val);
 		static double timeElapsed();
 		static double getDeltaTime();
 		static long long getCurrentMillis();
@@ -46,6 +47,7 @@ namespace Shard {
 
 		inline static ::GLFWwindow* m_Window;
 
+		inline static GUI* gui;
 
 	private:
 		inline static bool use_path_tracing;

@@ -25,8 +25,11 @@ namespace Shard {
     std::string Bootstrap::getEnvironmentVariable(std::string id) {
         if (en_vars.find(id) != en_vars.end())
             return en_vars[id];
-
         return "";
+    }
+
+    void Bootstrap::setEnvironmentVariable(std::string id, std::string val) {
+        en_vars[id] = val;
     }
 
     double Bootstrap::timeElapsed() {
@@ -194,12 +197,16 @@ namespace Shard {
 
         }
 
+
         ShaderManager& sm = ShaderManager::getInstance();
         sm.loadShader("collider", false);
         sm.loadShader("cubemap", false);
         sm.loadShader("background", false);
         sm.loadShader("simple", false);
         sm.loadShader("copyTexture", false);
+
+
+        gui = new GUI(m_Window);
 
         return;
 
@@ -254,8 +261,7 @@ namespace Shard {
         SceneManager& sm = SceneManager::getInstance();
         TextureManager& tm = TextureManager::getInstance();
         ShaderManager& shm = ShaderManager::getInstance();
-        GUI gui{ m_Window, sm };
-        Renderer renderer{ sm, tm, shm, gui, m_Window };
+        Renderer renderer{ sm, tm, shm, gui, m_Window};
 
         glEnable(GL_DEPTH_TEST);
         glDisable(GL_CULL_FACE);

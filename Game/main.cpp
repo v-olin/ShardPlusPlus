@@ -18,7 +18,7 @@
 #define FAST 100000000000;
 #define SLOW 50;
 
-Shard::CameraView cameraStatus{ Shard::CameraView::FREE };
+int cameraStatus{ Shard::CameraView::FREE };
 std::string cameraStatusStr[] = { "First person", "Third person", "Lock", "Free" };
 
 
@@ -40,41 +40,10 @@ void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 	
 	if (et == Shard::EventType::KeyDown)
 	{
-		if (ie.key == GLFW_KEY_1)
-			sm.camera.status = Shard::CameraView::FIRST_PERSON;
-		if (ie.key == GLFW_KEY_2)
-			sm.camera.status = Shard::CameraView::THIRD_PERSON;
-		if (ie.key == GLFW_KEY_3)
-			sm.camera.status = Shard::CameraView::FREE;
-		if (ie.key == GLFW_KEY_4)
-			sm.camera.status = Shard::CameraView::LOCK;
-		if (ie.key == GLFW_KEY_5)
-			sm.camera.setPlayerGameObj(asteroids[0]);
-		if (ie.key == GLFW_KEY_6)
-			sm.camera.setPlayerGameObj(car);
 		if (ie.key == GLFW_KEY_SPACE)
 			createBullet();
 		if (ie.key == GLFW_KEY_R)
 			sm.camera.setPlayerGameObj(car);
-
-		if (ie.key == GLFW_KEY_P){
-			auto sampling = Shard::PathTracer::settings.subsampling == 1 ? 4 : 1;
-			Shard::PathTracer::settings.subsampling = sampling; 
-			Shard::PathTracer::restart();
-		}
-		if (ie.key == GLFW_KEY_R) {
-			static bool usePathTracing = false;
-			usePathTracing = !usePathTracing;
-			Shard::Bootstrap::setUsePathTracing(usePathTracing);
-		}
-
-
-
-
-		if (cameraStatus != sm.camera.status) {
-			cameraStatus = sm.camera.status;
-			Shard::Logger::log(("Camera status: " + cameraStatusStr[(int)cameraStatus]).c_str());
-		}
 	}
 	car->should_move = !is_rmb_down;// cameraStatus != Shard::CameraView::FREE;
 	if ((cameraStatus == Shard::CameraView::FREE || cameraStatus == Shard::CameraView::LOCK) && is_rmb_down) {
@@ -177,11 +146,37 @@ void GameTest::update() {
 		sm.camera.move(Shard::Movement::DOWN, dt);
 
 
+	/*if(cam_firstPerson == 1)
+		sm.camera.status = Shard::CameraView::FIRST_PERSON;
+	if(cam_thirdPerson == 1)
+		sm.camera.status = Shard::CameraView::THIRD_PERSON;
+	if(cam_free == 1)
+		sm.camera.status = Shard::CameraView::FREE;
+	if(cam_lock == 1)
+		sm.camera.status = Shard::CameraView::LOCK;
+	*/
+
+	sm.camera.status = (Shard::CameraView)cameraStatus;
+
 
 	if (c_forward || c_backward || c_left || c_right || c_up || c_down)
 		Shard::PathTracer::restart();
 
 	sm.camera.updateCameraToPlayer();
+
+	Shard::Bootstrap::setUsePathTracing(usePathTracing);
+	Shard::Bootstrap::setEnvironmentVariable("physics_debug", drawColliders ? "1" : "0");
+
+
+
+	static int oldSampling = 0;
+	if (oldSampling != pathTracingSampling){
+		Shard::PathTracer::settings.subsampling = pathTracingSampling; 
+		Shard::PathTracer::restart();
+		oldSampling = pathTracingSampling;
+	}
+
+
 
 
 	/*Shard::Display* display = Shard::Bootstrap::getDisplay();
@@ -235,10 +230,10 @@ void GameTest::createAsteroid(float x, float y, float z) {
 void GameTest::initalize() {
 	Shard::Logger::log("Initializing game");
 	createCar();
-	int max = 10;
+	int max = 200;
 	parent = std::make_shared<Shard::Model>("models/asteroid_fixed.obj");
-	for (int i = 0; i < 0; i++) {
-		auto pos = glm::vec3(rand() % max, rand() % max, rand() % max) - glm::vec3(max/2);
+	for (int i = 0; i < 300; i++) {
+		auto pos = glm::vec3(rand() % max, rand() % max, rand() % max) - glm::vec3(max/2, 0, max/2);
 		createAsteroid(pos.x, pos.y, pos.z);
 	}
 
@@ -246,6 +241,25 @@ void GameTest::initalize() {
 	Shard::Bootstrap::getInput().addListeners(shared_from_this());
 	static auto &sm = Shard::SceneManager::getInstance();
 	sm.camera.movementSpeed = 100;
+
+	drawColliders = Shard::Bootstrap::getEnvironmentVariable("physics_debug") == "1";
+
+
+	//GUI
+	Shard::Bootstrap::gui->addRadioSelector({ "View",  
+		&cameraStatus,
+		{
+		std::make_tuple("First person", Shard::CameraView::FIRST_PERSON),
+		std::make_tuple("Third person", Shard::CameraView::THIRD_PERSON),
+		std::make_tuple("Lock camera on Obj", Shard::CameraView::LOCK),
+		std::make_tuple("Free Cam", Shard::CameraView::FREE),
+		} });
+
+	Shard::Bootstrap::gui->addCheckBox("Use Path Tracing", &usePathTracing);
+	Shard::Bootstrap::gui->addCheckBox("Draw colliders", &drawColliders);
+
+	Shard::Bootstrap::gui->addIntSlider("Path tracer sampling", &pathTracingSampling, 1, 16);
+
 
 }
 
@@ -256,6 +270,7 @@ int main() {
 
 	auto game = std::make_shared<GameTest>();
 	Shard::Bootstrap::setRunningGame(game);
+	
 
 	Shard::Logger::log("Runnning Bootstrap::Main");
 	Shard::Bootstrap::Main({});

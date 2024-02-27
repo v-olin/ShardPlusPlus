@@ -33,4 +33,9 @@ public:
 	// std::shared_ptr<Spaceship> spaceship;
 	std::shared_ptr<Car> car{ nullptr };
 
+	bool usePathTracing{ false };
+	int pathTracingSampling{ 4 };
+	bool drawColliders{ false };
+
+
 };

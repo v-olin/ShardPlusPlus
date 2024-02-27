@@ -62,6 +62,7 @@ namespace Shard {
 		third_person_offset_set = true;
 	}
 	void Camera::updateCameraToPlayer() {
+		//if camera is free, dont do anything
 		if (status == CameraView::FREE || !player_obj_set) return;
 		
 		if (status == CameraView::FIRST_PERSON && !first_person_offset_set)
@@ -69,20 +70,27 @@ namespace Shard {
 		if (status == CameraView::THIRD_PERSON && !third_person_offset_set)
 			Logger::log("Third person offset not set", LoggerLevel::LOG_LEVEL_WARNING);
 
+
+		//player info
 		auto playerPos = player_game_obj->m_model->position();
 		auto offset = status == CameraView::FIRST_PERSON ? first_person_offset : third_person_offset;
 		auto rotation = player_game_obj->m_model->getRotationMatrix();
+
+		//If lock, dont respect any set values, lock onto object
 		if (status == CameraView::LOCK) {
 			front = normalize(playerPos - pos);
 			right = normalize(glm::cross(front, worldUp));
 			up = glm::normalize(glm::cross(right, front));
 			return;
 		}
+		//move to first person view
 		pos = playerPos + rotation * offset;
 		//TODO, this should not be - very bad!!!
 		front = -player_game_obj->m_model->m_forward;
 		up = player_game_obj->m_model->m_up;
 		right = player_game_obj->m_model->m_right;
+
+		//if in third person, respect offsets
 		if (status == CameraView::THIRD_PERSON) {
 			front = glm::normalize((playerPos + rotation *third_look_at_offset) - pos);
 			right = glm::normalize(glm::cross(front, up));

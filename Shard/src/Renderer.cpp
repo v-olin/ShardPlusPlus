@@ -17,7 +17,7 @@ namespace Shard {
 	Renderer::Renderer(SceneManager& sceneManager,
 		TextureManager& texManager,
 		ShaderManager& shaderManager,
-		GUI& gui,
+		GUI* gui,
 		GLFWwindow* window)
 		: m_sceneManager(sceneManager)
 		, m_textureManager(texManager)
@@ -138,7 +138,7 @@ namespace Shard {
 		// BORING STUFF!! TRUE!
 		/////////////////////////////////////////////////////////////
 		// Do this last, idk why
-		m_gui.draw();
+		m_gui->draw();
 
 		// should check for errors here
 		// surely there are no errors
@@ -458,7 +458,6 @@ namespace Shard {
 			}
 
 			gob->m_model->Draw();
-
 			if (Bootstrap::getEnvironmentVariable("physics_debug") == "1") { // if debug
 				drawCollider(gob);
 			}
