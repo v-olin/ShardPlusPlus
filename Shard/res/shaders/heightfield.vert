@@ -16,7 +16,6 @@ layout(location = 2) in vec2 texCoordIn;
 uniform mat4 normalMatrix;
 uniform mat4 modelViewMatrix;
 uniform mat4 modelViewProjectionMatrix;
-uniform mat4 lightMatrix;
 
 #define LOADED 0
 #define GENERATED 1
@@ -33,7 +32,6 @@ out vec2 texCoord;
 out vec3 colorPosition;
 out vec3 viewSpacePosition;
 out vec3 viewSpaceNormal;
-out vec4 shadowMapCoord;
 
 float getHeight(vec2 pos)
 {
@@ -92,5 +90,4 @@ void main()
 	gl_Position = modelViewProjectionMatrix * vec4(pos, 1.0);
 	viewSpaceNormal = (normalMatrix * vec4(norm, 0.0)).xyz;
 	viewSpacePosition = (modelViewMatrix * vec4(pos, 1)).xyz;
-    shadowMapCoord = lightMatrix * vec4(viewSpacePosition, 1.f);
 }

@@ -31,9 +31,9 @@ namespace Shard {
 		GLuint m_shaderProgram;
 
 		float m_mapSize;
-		float metalness{ 0.f };
-		float fresnel{ 0.f };
-		float shininess{ 1000.f };
+		float metalness{ 1.f };
+		float fresnel{ 1.f };
+		float shininess{ 1.f };
 
 		//GLfloat water_metalness = 0.62f;
 		//GLfloat water_fresnel = 0.68f;
@@ -62,8 +62,7 @@ namespace Shard {
 		/// Render height map
 		void submitTriangles(const glm::mat4& viewMatrix,
 			const glm::mat4& projectionMatrix,
-			GLuint envMap, GLuint irradMap, GLuint refMap,
-			GLuint shadowMap, bool drawingShadowMap = false);
+			GLuint envMap, GLuint irradMap, GLuint refMap);
 
 	private:
 		//SceneContext& sceneContext;

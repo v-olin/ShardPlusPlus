@@ -12,21 +12,17 @@ layout(binding = 4) uniform sampler2D normalMap;
 layout(binding = 6) uniform sampler2D environmentMap;
 layout(binding = 7) uniform sampler2D irradianceMap;
 layout(binding = 8) uniform sampler2D reflectionMap;
-layout(binding = 9) uniform sampler2D shadowMap;
 
 in vec2 texCoord;
 in vec3 colorPosition;
 in vec3 viewSpacePosition;
 in vec3 viewSpaceNormal;
-in vec4 shadowMapCoord;
 
 uniform mat4 viewInverse;
 uniform vec3 viewSpaceLightPosition;
-uniform float material_metalness = 0.0f;
-uniform float material_fresnel = 0.0f;
-uniform float material_shininess = 1000.0f;
-uniform int drawingShadowMap = 0;
-
+uniform float material_metalness;
+uniform float material_fresnel;
+uniform float material_shininess;
 
 #define LOADED 0
 #define GENERATED 1
@@ -135,18 +131,6 @@ vec3 calculateIndirectIllumination(vec3 wo, vec3 n, vec3 base_color)
 void main() {
 	vec3 texColor = vec3(1.0f, 0, 0);
 
-	if (drawingShadowMap != 0) {
-		return vec4(gl_FragCoord.z);
-	}
-
-	float visibility = 1.0f;
-	float attenuation = 1.0f;
-
-	float depth = texture(shadowMap, shadowMapCoord.xy / shadowMapCoord.w).r;
-	visibility = (depth >= (shadowMapCoord.z / shadowMapCoord.w)) ? 1.0 : 0.0;
-
-	
-
 	if (mapType == GENERATED) {
 		texColor = (texture2D(baseColorMap, (texCoord.xy * 50))).rgb;
 	}
@@ -157,12 +141,13 @@ void main() {
 	vec3 wo = -normalize(viewSpacePosition);
 	vec3 n = normalize(viewSpaceNormal);
 
-	vec3 final = visibility * calculateDirectIllumiunation(wo, n, texColor);
+	vec3 final = calculateDirectIllumiunation(wo, n, texColor);
 	vec3 indirect = calculateIndirectIllumination(wo, n, texColor);
 
 	float shininess = texture2D(shinyTexture, texCoord.xy).r;
 
 	final += indirect * shininess;
+	final += 0.5 * texColor;
 
 	if (any(isnan(final)))
 	{
