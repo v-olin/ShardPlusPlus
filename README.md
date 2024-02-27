@@ -13,3 +13,4 @@ The project is about rewriting the game-engine "Shard" supplied in the course "T
 - Possible to set your own default shader
 - Possible to click on screen and check if object is clicked
 - Custom environment mapping
+- Heightfields and procedurally generated terrain 
