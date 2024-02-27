@@ -23,6 +23,7 @@ namespace Shard {
 
 		float m_nearPlane = 1.f;
 		float m_farPlane = 300.f;
+		bool m_usePathTracing = true;
 
 	private:
 		SceneManager& m_sceneManager;
@@ -35,6 +36,12 @@ namespace Shard {
 		glm::mat4 m_projectionMatrix;
 		bool m_drawColliders;
 		GLFWwindow* m_window;
+		int m_windowHeight;
+		int m_windowWidth;
+
+		uint32_t m_pathtracerTxtId;
+
+
 
 		GLuint cubemap_tex_id{ 0 };
 		CubeMap* cubemap_model{ nullptr };
@@ -44,7 +51,8 @@ namespace Shard {
 			"collider",
 			"cubemap",
 			"default",
-			"heightfield"
+			"heightfield",
+			"copyTexture"
 		};
 
 		GLuint envmap_bg_id{ 0 };
@@ -59,5 +67,7 @@ namespace Shard {
 		void drawModels();
 		void drawCollider(std::shared_ptr<GameObject> toDraw);
 		void configureDefaultShader();
+
+		void drawPathTracedScene();
 	};
 }

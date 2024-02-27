@@ -38,6 +38,7 @@ namespace Shard {
 		 static void ScrollCallback(GLFWwindow* window, double x_offset, double y_offset);
 		 static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
+
 		std::queue<std::pair<InputEvent, EventType>> event_queue;
 	private:
 		std::vector<std::shared_ptr<InputListener>> myListeners;

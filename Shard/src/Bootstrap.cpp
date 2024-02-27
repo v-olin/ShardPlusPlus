@@ -102,6 +102,12 @@ namespace Shard {
        millis_per_frame = 1000 / target_frame_rate;
        running_game_set = true;
     }
+    void Bootstrap::setUsePathTracing(bool enabled) {
+        use_path_tracing = enabled;
+    }
+    bool Bootstrap::getUsePathTracing() {
+        return use_path_tracing;
+    }
 
     void Bootstrap::setup() {
 
@@ -189,6 +195,11 @@ namespace Shard {
         }
 
         ShaderManager& sm = ShaderManager::getInstance();
+        sm.loadShader("collider", false);
+        sm.loadShader("cubemap", false);
+        sm.loadShader("background", false);
+        sm.loadShader("simple", false);
+        sm.loadShader("copyTexture", false);
 
         return;
 
@@ -235,7 +246,7 @@ namespace Shard {
         time_in_milliseconds_start = start_time;
         last_tick = start_time;
 
-        phys.gravity_modifier = 0.1f;
+        phys.gravity_modifier = 10.f;
 
         phys_debug = getEnvironmentVariable("physics_debug") == "1";
 
@@ -256,6 +267,8 @@ namespace Shard {
             running_game->update();
 
             if(running_game->isRunning()){
+
+                renderer.m_usePathTracing = use_path_tracing;
 
 				// Get input, which works at 50 FPS to make sure it doesn't interfere with the 
 				// variable frame rates.

@@ -1,8 +1,11 @@
 #include "../common.h"
 
 #include "Renderer.h"
+#include "Pathtracer.h"
+#include "embree.h"
 
 #include "GameObjectManager.h"
+#include "Bootstrap.h"
 #include "Logger.h"
 
 #include <filesystem>
@@ -60,6 +63,38 @@ namespace Shard {
 		for (const auto& shader : m_requiredShaders) {
 			m_shaderManager.loadShader(shader, allow_errors);
 		}
+
+		///////////////////////////////////////////////////////////////////////////
+		// Generate result texture
+		///////////////////////////////////////////////////////////////////////////
+		glGenTextures(1, &m_pathtracerTxtId);
+		glActiveTexture(GL_TEXTURE0 + 7);
+		glBindTexture(GL_TEXTURE_2D, m_pathtracerTxtId);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		///////////////////////////////////////////////////////////////////////////
+		// Initial path-tracer settings
+		///////////////////////////////////////////////////////////////////////////
+		PathTracer::settings.max_bounces = 2;
+		PathTracer::settings.max_paths_per_pixel = 0; // 0 = Infinite
+		PathTracer::settings.subsampling = 4;
+
+		///////////////////////////////////////////////////////////////////////////
+		// Set up light sources
+		///////////////////////////////////////////////////////////////////////////
+		PathTracer::point_light.intensity_multiplier = 100.0f;
+		PathTracer::point_light.color = vec3(1.f, 1.f, 1.f);
+		PathTracer::point_light.position = vec3(10.0f, 25.0f, 20.0f);
+
+		///////////////////////////////////////////////////////////////////////////
+		// Load environment map
+		///////////////////////////////////////////////////////////////////////////
+		//todo, use texturemanager
+		PathTracer::environment.map.load("../Shard/res/envmaps/001.hdr");
+		PathTracer::environment.multiplier = 1.0f;
+
 	}
 
 	void Renderer::render() {
@@ -180,6 +215,9 @@ namespace Shard {
 	}
 
 	void Renderer::drawBackground() {
+		
+
+
 		static auto& sm = ShaderManager::getInstance();
 		auto bg_shader = sm.getShader("background");
 		glUseProgram(bg_shader);
@@ -236,22 +274,138 @@ namespace Shard {
 	}
 
 	void Renderer::drawScene() {
-		glm::mat4 viewMat = glm::lookAt(
+		static bool loadedObjs = false;
+		if (!loadedObjs && m_usePathTracing) {
+			PathTracer::reinitScene();
+
+			// Add models to PathTracer scene
+
+			auto& gobs = GameObjectManager::getInstance().getObjects();
+			for (auto& gob : gobs)
+			{
+				PathTracer::addModel(gob->m_model.get(), gob->m_model->getModelMatrix());
+			}
+			PathTracer::buildBVH();
+			PathTracer::restart();
+			loadedObjs = true;
+		}
+	
+		if (m_usePathTracing) {
+			//assuming initializing and all objects have been added
+			drawPathTracedScene();
+		}
+		else {
+			glm::mat4 viewMat = glm::lookAt(
 			m_sceneManager.camera.pos,
 			m_sceneManager.camera.pos + m_sceneManager.camera.front,
 			glm::vec3(0.f, 1.f, 0.f)
-		);
+			);
 
-		glm::mat4 projMat = glm::perspective(
-			glm::radians(m_sceneManager.camera.fov),
-			float(m_resolution.x) / float(m_resolution.y),
-			m_nearPlane, m_farPlane
-		);
+			glm::mat4 projMat = glm::perspective(
+				glm::radians(m_sceneManager.camera.fov),
+				float(m_resolution.x) / float(m_resolution.y),
+				m_nearPlane, m_farPlane
+			);
 
-		m_heightfield.submitTriangles(viewMat, projMat, envmap_bg_id, envmap_irrmap_id, envmap_refmap_id);
-		drawModels();
+			m_heightfield.submitTriangles(viewMat, projMat, envmap_bg_id, envmap_irrmap_id, envmap_refmap_id);
+			drawModels();
+		}
 	}
 
+	void Renderer::drawPathTracedScene(){
+
+		{ ///////////////////////////////////////////////////////////////////////
+			// If first frame, or window resized, or subsampling changes,
+			// inform the PathTracer
+			///////////////////////////////////////////////////////////////////////
+			int w, h;
+			glfwGetWindowSize(m_window, &w, &h);
+			static int old_subsampling;
+			if (m_windowWidth != w || m_windowHeight != h || old_subsampling != PathTracer::settings.subsampling)
+			{
+				PathTracer::resize(w, h);
+				m_windowWidth = w;
+				m_windowWidth = h;
+				old_subsampling = PathTracer::settings.subsampling;
+			}
+		}
+
+		///////////////////////////////////////////////////////////////////////////
+		// Trace one path per pixel
+		///////////////////////////////////////////////////////////////////////////
+		auto& camera = SceneManager::getInstance().camera;
+		mat4 viewMatrix = glm::lookAt(camera.pos, camera.pos + camera.front, camera.worldUp);
+		mat4 projMatrix = glm::perspective(radians(45.0f),
+			float(PathTracer::rendered_image.width)
+			/ float(PathTracer::rendered_image.height),
+			0.1f, 100.0f);
+		PathTracer::tracePaths(viewMatrix, projMatrix);
+
+		///////////////////////////////////////////////////////////////////////////
+		// Copy pathtraced image to texture for display
+		///////////////////////////////////////////////////////////////////////////
+		glActiveTexture(GL_TEXTURE7);
+		glBindTexture(GL_TEXTURE_2D, m_pathtracerTxtId);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, PathTracer::rendered_image.width,
+			PathTracer::rendered_image.height, 0, GL_RGB, GL_FLOAT, PathTracer::rendered_image.getPtr());
+
+		///////////////////////////////////////////////////////////////////////////
+		// Render a fullscreen quad, textured with our pathtraced image.
+		///////////////////////////////////////////////////////////////////////////
+		glViewport(0, 0, m_windowWidth, m_windowHeight);
+		glClearColor(0.1f, 0.1f, 0.6f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_CULL_FACE);
+		//SDL_GetWindowSize(g_window, &windowWidth, &windowHeight);
+		glfwGetWindowSize(m_window, &m_windowWidth, &m_windowHeight);
+		//glUseProgram(shaderProgram);
+		//labhelper::drawFullScreenQuad();
+
+
+		static auto& sm = ShaderManager::getInstance();
+		auto bg_shader = sm.getShader("copyTexture");
+		glUseProgram(bg_shader);
+		
+		GLboolean previous_depth_state;
+		glGetBooleanv(GL_DEPTH_TEST, &previous_depth_state);
+		glDisable(GL_DEPTH_TEST);
+
+		static GLuint VAO = 0;
+		static GLuint VBO = 0;
+		static int nofVertices = 6;
+		
+		if (VAO == 0)
+		{ // do this initialization first time the function is called.
+			static const float positions[] = { -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 1.0f,
+												   -1.0f, -1.0f, 1.0f, 1.0f,  -1.0f, 1.0f };
+			
+			glGenVertexArrays(1, &VAO);
+			glBindVertexArray(VAO);
+			
+			glGenBuffers(1, &VBO);
+			glBindBuffer(GL_ARRAY_BUFFER, VBO);
+			glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), positions, GL_STATIC_DRAW);
+
+			glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0);
+			glEnableVertexAttribArray(0);
+			
+			glBindVertexArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		}
+		glBindVertexArray(VAO);
+		glDrawArrays(GL_TRIANGLES, 0, nofVertices);
+
+		if (previous_depth_state)
+			glEnable(GL_DEPTH_TEST);
+		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glUseProgram(0);
+
+
+	}
 	void Renderer::drawModels() {
 		auto& gobs = GameObjectManager::getInstance().getObjects();
 		auto& sun = SceneManager::getInstance().sun;
@@ -305,7 +459,7 @@ namespace Shard {
 
 			gob->m_model->Draw();
 
-			if (false) { // if debug
+			if (Bootstrap::getEnvironmentVariable("physics_debug") == "1") { // if debug
 				drawCollider(gob);
 			}
 		}
@@ -341,6 +495,8 @@ namespace Shard {
 			max.x,	max.y, max.z	// v7
 		};
 
+		
+
 		GLuint indices[] = {
 			0, 2, 3,
 			0, 1, 2,
@@ -357,7 +513,7 @@ namespace Shard {
 		};
 
 		glm::mat4 modelMatrix = toDraw->m_model->getModelMatrix();
-		auto ma = glm::translate(glm::mat4(1.0f), toDraw->m_model->position());
+		glm::mat4 ma = glm::translate(glm::mat4(1.0f), toDraw->m_model->position());
 		glm::mat4 viewMatrix = m_sceneManager.getCameraViewMatrix();
 		glm::mat4 mvpMatrix = m_projectionMatrix * viewMatrix;// *ma;
 
@@ -366,6 +522,7 @@ namespace Shard {
 
 		m_shaderManager.SetVec3(shader, toDraw->m_body->m_debugColor, "colorIn");
 		m_shaderManager.SetMat4x4(shader, mvpMatrix, "u_MVP");
+
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		static GLuint vao = 0;
@@ -391,15 +548,12 @@ namespace Shard {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
+
 		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-
-		glDeleteBuffers(1, &vao);
-		glDeleteBuffers(1, &vbo);
-		glDeleteBuffers(1, &ebo);
-
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glUseProgram(0);
 	}
 
 	void Renderer::configureDefaultShader() {

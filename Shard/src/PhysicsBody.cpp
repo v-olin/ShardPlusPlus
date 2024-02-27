@@ -136,9 +136,19 @@ namespace Shard {
 		m_force += incoming_force;
 
 		// Cap the force
-		m_force.x = std::min(m_force.x, m_maxForce.x);
-		m_force.y = std::min(m_force.y, m_maxForce.y);
-		m_force.z = std::min(m_force.z, m_maxForce.z);
+		if (m_force.x > 0)
+			m_force.x = std::min(m_force.x, m_maxForce.x);
+		else
+			m_force.x = std::max(m_force.x, -m_maxForce.x);
+		if (m_force.y > 0)
+			m_force.y = std::min(m_force.y, m_maxForce.y);
+		else
+			m_force.y = std::max(m_force.y, -m_maxForce.y);
+		if (m_force.z > 0)
+			m_force.z = std::min(m_force.z, m_maxForce.z);
+		else
+			m_force.z = std::max(m_force.z, -m_maxForce.z);
+
 	}
 
 	void PhysicsBody::recalculateColliders() {

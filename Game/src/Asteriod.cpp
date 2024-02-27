@@ -18,11 +18,9 @@ Asteroid::Asteroid() : GameObject() {
 
 void Asteroid::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
     if (et == Shard::EventType::MouseDown && ie.button == GLFW_MOUSE_BUTTON_1) {
-        auto point = Shard::PhysicsManager::getInstance().clickHitsBody(ie, m_body->shared_from_this());
-        if (point.has_value()) {
-            Shard::Logger::log(("Click intersected at: " + glm::to_string(point.value())).c_str());
-
-
+        if (ie.body == m_body) {
+	        static auto &sm = Shard::SceneManager::getInstance();
+            sm.camera.setPlayerGameObj(shared_from_this());
         }
     }
 
@@ -35,18 +33,19 @@ void Asteroid::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 
 void Asteroid::initialize()
 {
-    m_model = std::make_shared<Shard::Model>("models/cube.obj");
+    //m_model = std::make_shared<Shard::Model>("models/asteroid_fixed.obj");
     setPhysicsEnabled();
-    m_body->m_mass = 10.f;
-    m_body->m_maxForce = glm::vec3{ 0.2f };
-    m_body->m_angularDrag = glm::vec3{ 0.01f };
+    m_body->m_mass = .1f;
+    m_body->m_maxForce = glm::vec3{ 0.1f };
+    m_body->m_angularDrag = glm::vec3{ 0.f };
     m_body->m_maxTorque = glm::vec3{ 10.0f, 10.0f, 10.0f };
-	m_body->m_drag = 0.1f;
+	m_body->m_drag = 0.f;
 	m_body->m_stopOnCollision = true;
 	m_body->m_reflectOnCollision = true;
 	m_body->m_impartForce = true;
 	m_body->m_isKinematic = false;
     m_body->m_passThrough = false;
+    m_body->m_usesGravity = false;
 
     m_body->m_bodyModel = m_model;
     m_body->setBoxCollider();
@@ -56,20 +55,21 @@ void Asteroid::initialize()
 
 }
 void Asteroid::update(){
+    //restart camera
 }
 
 void Asteroid::physicsUpdate() {
-  }
+ }
 
 void Asteroid::onCollisionEnter(std::shared_ptr<Shard::PhysicsBody> body) {
 
-       m_body->m_debugColor = { 1.0f, 0.0f, 0.0f };
+    m_body->m_debugColor = { 1.0f, 0.0f, 0.0f };
     Shard::Logger::log("on collsision ENTER ASTEROID");
 
-  /*  if (body->m_parent->hasTag("Bullet")) {
-        to_be_destroyed_ = true;
+    if (body->m_parent->hasTag("Bullet")) {
+        m_toBeDestroyed = true;
 		Shard::Logger::log("Boom!");
-    }*/
+    }
 
 }
 

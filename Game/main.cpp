@@ -5,9 +5,11 @@
 #include "Car.h"
 #include "Asteriod.h"
 #include "GameObjectManager.h"
+#include "Pathtracer.h"
 #include <iostream>
 #include <memory>
 #include <conio.h>
+#include <math.h>
 #include "main.h"
 
 #include "SceneManager.h"
@@ -16,60 +18,115 @@
 #define FAST 100000000000;
 #define SLOW 50;
 
-bool active{ false };
+Shard::CameraView cameraStatus{ Shard::CameraView::FREE };
+std::string cameraStatusStr[] = { "First person", "Third person", "Lock", "Free" };
+
 
 bool is_rmb_down{ false };
 bool is_first_mouse{ false };
 float last_x{ 0.0f }, last_y{ 0.0f };
 
+bool c_forward;
+bool c_backward;
+bool c_left;
+bool c_right;
+bool c_up;
+bool c_down;
+
 void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 
 
 	static auto &sm = Shard::SceneManager::getInstance();
-	if (et == Shard::EventType::KeyUp)
-		return;
-
+	
 	if (et == Shard::EventType::KeyDown)
 	{
-		if (ie.key == GLFW_KEY_TAB) {
-			active = !active;
-			Shard::Logger::log(("active status: " + std::to_string(active)).c_str());
+		if (ie.key == GLFW_KEY_1)
+			sm.camera.status = Shard::CameraView::FIRST_PERSON;
+		if (ie.key == GLFW_KEY_2)
+			sm.camera.status = Shard::CameraView::THIRD_PERSON;
+		if (ie.key == GLFW_KEY_3)
+			sm.camera.status = Shard::CameraView::FREE;
+		if (ie.key == GLFW_KEY_4)
+			sm.camera.status = Shard::CameraView::LOCK;
+		if (ie.key == GLFW_KEY_5)
+			sm.camera.setPlayerGameObj(asteroids[0]);
+		if (ie.key == GLFW_KEY_6)
+			sm.camera.setPlayerGameObj(car);
+		if (ie.key == GLFW_KEY_SPACE)
+			createBullet();
+		if (ie.key == GLFW_KEY_R)
+			sm.camera.setPlayerGameObj(car);
+
+		if (ie.key == GLFW_KEY_P){
+			auto sampling = Shard::PathTracer::settings.subsampling == 1 ? 4 : 1;
+			Shard::PathTracer::settings.subsampling = sampling; 
+			Shard::PathTracer::restart();
+		}
+		if (ie.key == GLFW_KEY_R) {
+			static bool usePathTracing = false;
+			usePathTracing = !usePathTracing;
+			Shard::Bootstrap::setUsePathTracing(usePathTracing);
+		}
+
+
+
+
+		if (cameraStatus != sm.camera.status) {
+			cameraStatus = sm.camera.status;
+			Shard::Logger::log(("Camera status: " + cameraStatusStr[(int)cameraStatus]).c_str());
 		}
 	}
-	car->should_move = !active;
-	if (active) {
-		if (ie.key == GLFW_KEY_W)
-			sm.camera.move(Shard::Movement::FORWARD, 1.0f);
-
-		if (ie.key == GLFW_KEY_S)
-			sm.camera.move(Shard::Movement::BACKWARD, 1.0f);
-
-		if (ie.key == GLFW_KEY_A)
-			sm.camera.move(Shard::Movement::LEFT, 1.0f);
-
-		if (ie.key == GLFW_KEY_D)
-			sm.camera.move(Shard::Movement::RIGHT, 1.0f);
-
-		if (ie.key == GLFW_KEY_LEFT_SHIFT)
-			sm.camera.move(Shard::Movement::UP, 1.0f);
-
-		if (ie.key == GLFW_KEY_RIGHT_SHIFT)
-			sm.camera.move(Shard::Movement::DOWN, 1.0f);
+	car->should_move = !is_rmb_down;// cameraStatus != Shard::CameraView::FREE;
+	if ((cameraStatus == Shard::CameraView::FREE || cameraStatus == Shard::CameraView::LOCK) && is_rmb_down) {
+		auto keyDown = et == Shard::EventType::KeyDown;
+		if (et == Shard::EventType::KeyDown || et == Shard::EventType::KeyUp) {
+		
 
 
-		//MouseCallback(GLFWwindow * window, double xpos, double ypos)
-		float xpos = static_cast<float>(ie.x);
-		float ypos = static_cast<float>(ie.y);
+			if (ie.key == GLFW_KEY_W) 
+				c_forward = keyDown;
+			if (ie.key == GLFW_KEY_S) 
+				c_backward = keyDown;
+			if (ie.key == GLFW_KEY_A)
+				c_left = keyDown;
+			if (ie.key == GLFW_KEY_D)
+				c_right = keyDown;
+			if (ie.key == GLFW_KEY_LEFT_SHIFT)
+				c_up = keyDown;
+			if (ie.key == GLFW_KEY_LEFT_CONTROL)
+				c_down = keyDown;
+			if (keyDown && ie.key == GLFW_KEY_UP)
+				sm.camera.movementSpeed += 100;
+			if (keyDown && ie.key == GLFW_KEY_DOWN)
+				sm.camera.movementSpeed -= 100;
 
-		if (ie.button == GLFW_MOUSE_BUTTON_RIGHT && et == Shard::EventType::MouseUp) {
-			is_rmb_down = false;
-			is_first_mouse = true;
 		}
-		if (ie.button == GLFW_MOUSE_BUTTON_RIGHT && et == Shard::EventType::MouseDown) {
-			is_rmb_down = true;
-			last_x = xpos;
-			last_y = ypos;
-		}
+	}
+
+
+	//MouseCallback(GLFWwindow * window, double xpos, double ypos)
+	float xpos = static_cast<float>(ie.x);
+	float ypos = static_cast<float>(ie.y);
+
+	if (ie.button == GLFW_MOUSE_BUTTON_RIGHT && et == Shard::EventType::MouseUp) {
+		is_rmb_down = false;
+		is_first_mouse = true;
+		c_forward = false;
+		c_backward = false;
+		c_left = false;
+		c_right = false;
+		c_up = false;
+		c_down = false;
+
+	}
+	if (ie.button == GLFW_MOUSE_BUTTON_RIGHT && et == Shard::EventType::MouseDown) {
+		is_rmb_down = true;
+		last_x = xpos;
+		last_y = ypos;
+	}
+
+		
+	if (cameraStatus == Shard::CameraView::FREE) {
 		if (et == Shard::EventType::MouseMotion){
 
 			if (is_first_mouse) {
@@ -88,6 +145,7 @@ void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 				delta_x *= sensitivity;
 				delta_y *= sensitivity;
 				sm.camera.rotate(delta_x, delta_y);
+				Shard::PathTracer::restart();
 			}
 
 		}
@@ -103,6 +161,29 @@ void GameTest::update() {
 	std::string second_fps = std::to_string(Shard::Bootstrap::getSecondFPS());
 	std::string fps = std::to_string(Shard::Bootstrap::getFPS());
 
+	static auto &sm = Shard::SceneManager::getInstance();
+	auto dt = Shard::Bootstrap::getDeltaTime();
+	if(c_forward)
+		sm.camera.move(Shard::Movement::FORWARD, dt);
+	if(c_backward)
+		sm.camera.move(Shard::Movement::BACKWARD, dt);
+	if(c_left)
+		sm.camera.move(Shard::Movement::LEFT, dt);
+	if(c_right)
+		sm.camera.move(Shard::Movement::RIGHT, dt);
+	if(c_up)
+		sm.camera.move(Shard::Movement::UP, dt);
+	if(c_down)
+		sm.camera.move(Shard::Movement::DOWN, dt);
+
+
+
+	if (c_forward || c_backward || c_left || c_right || c_up || c_down)
+		Shard::PathTracer::restart();
+
+	sm.camera.updateCameraToPlayer();
+
+
 	/*Shard::Display* display = Shard::Bootstrap::getDisplay();
 	display->showText(("FPS: " + second_fps + " / " + fps).c_str(), 10, 10, 12, 255, 255, 255);*/
 }
@@ -112,38 +193,60 @@ void GameTest::createCar() {
 	car->initialize();
 	car->m_body->recalculateColliders();
 	Shard::Bootstrap::getInput().addListeners(car);
+	static auto &sm = Shard::SceneManager::getInstance();
+	sm.camera.setPlayerGameObj(car);
+	sm.camera.setFirstPersonOffset(glm::vec3(-9, 8, 0));
+	sm.camera.setThirdPersonOffset(glm::vec3(50, 25, 0), glm::vec3(0, 15, 0));
 }
 
+
+void GameTest::createBullet() {
+	auto bullet = std::make_shared<Bullet>();
+	bullet->initialize();
+	bullet->m_model->scale({10, 10, 10});
+	bullet->m_model->translate(car->m_model->position());
+	bullet->m_model->m_rotMatrix = car->m_model->getRotationMatrix();
+	bullet->m_body->recalculateColliders();
+	bullets.push_back(bullet);
+}
+float randf() {
+	return static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+}
 void GameTest::createAsteroid(float x, float y, float z) {
-		
 	auto asteroid = std::make_shared<Asteroid>();
+	asteroid->m_model = std::make_shared<Shard::Model>(parent);
 	asteroid->initialize();
 	asteroid->m_model->translate({ x, y, z });
-	asteroid->m_model->scale({ 10.0f, 10.0f, 10.0f });
+	float scale = ((rand() % 50) +1) / 100.f;
+	asteroid->m_model->scale({ scale, scale, scale });
 	asteroid->m_body->recalculateColliders();
-
+	int posX = (rand() % 10 > 5) ? 1 : -1;
+	int posY = (rand() % 10 > 5) ? 1 : -1;
+	int posZ = (rand() % 10 > 5) ? 1 : -1;
+	auto dir = normalize(glm::vec3(rand()*posX, rand()*posY, rand()*posZ));
+	asteroid->m_body->addForce(dir, 0.2f);
+	asteroid->m_body->addTorque({ 1*randf(), 1*randf(), 1*randf()});
     Shard::Bootstrap::getInput().addListeners(asteroid);
-	asteroids.push_back(asteroid);
 
+	asteroids.push_back(asteroid);
 }
 
-void GameTest::createFlatPlane(float x, float y, float z) {
-
-	auto asteroid = std::make_shared<Asteroid>();
-	asteroid->initialize();
-	asteroid->m_model->translate({ x, y, z });
-	asteroid->m_model->scale({ 250.0f, 1.0f, 250.0f });
-	asteroid->m_body->recalculateColliders();
-	asteroids.push_back(asteroid);
-
-}
 
 void GameTest::initalize() {
 	Shard::Logger::log("Initializing game");
 	createCar();
-	createAsteroid(10, 0, -10);
+	int max = 10;
+	parent = std::make_shared<Shard::Model>("models/asteroid_fixed.obj");
+	for (int i = 0; i < 0; i++) {
+		auto pos = glm::vec3(rand() % max, rand() % max, rand() % max) - glm::vec3(max/2);
+		createAsteroid(pos.x, pos.y, pos.z);
+	}
+
 	//createFlatPlane(0, -12, 0);
 	Shard::Bootstrap::getInput().addListeners(shared_from_this());
+	static auto &sm = Shard::SceneManager::getInstance();
+	sm.camera.movementSpeed = 100;
+
 }
 
 int main() {

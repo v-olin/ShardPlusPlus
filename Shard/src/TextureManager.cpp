@@ -1,5 +1,6 @@
 #include "TextureManager.h"
 #include "Logger.h"
+#include "HDRImage.h"
 
 #include <assert.h>
 

@@ -1,5 +1,5 @@
 workspace "Project"
-	architecture "x32"
+	architecture "x64"
 	
 	configurations
 	{
@@ -34,6 +34,7 @@ project "Shard"
 		"%{prj.name}/vendor/glew/include",
 		"%{prj.name}/vendor/glfw/include",
 		"%{prj.name}/vendor/imgui",
+		"%{prj.name}/vendor/embree2/include",
 		"%{prj.name}/include"
 	}
 
@@ -63,6 +64,7 @@ project "Game"
 		"%{wks.location}/Shard/vendor/glad/include",
 		"%{wks.location}/Shard/vendor/glfw/include",
 		"%{wks.location}/Shard/vendor/imgui",
+		"%{wks.location}/Shard/vendor/embree2/include",
 		"%{wks.location}/Shard/include",
 		"%{wks.location}/Shard/common.h",
 		"%{prj.name}/include"
@@ -70,13 +72,15 @@ project "Game"
 
     libdirs
 	{
-		"%{wks.location}/Shard/vendor/glfw/lib-vc2022"
+		"%{wks.location}/Shard/vendor/glfw/lib-vc2022",
+		"%{wks.location}/Shard/vendor/embree2/lib"
 	}
 	
 	links
 	{
 		"glfw3_mt.lib",
-		"opengl32.lib"
+		"opengl32.lib",
+		"embree.lib"
 	}
 
     dependson
@@ -91,6 +95,11 @@ project "Game"
 		
 		postbuildcommands
 		{
+			-- copy embree dll, tbb and tbbmalloc
+			("{COPY} %{wks.location}/Shard/vendor/embree2/lib/tbb.dll %{cfg.targetdir}"),
+			("{COPY} %{wks.location}/Shard/vendor/embree2/lib/tbbmalloc.dll %{cfg.targetdir}"),
+			("{COPY} %{wks.location}/Shard/vendor/embree2/lib/embree.dll %{cfg.targetdir}")
+
 		}
 	
 	filter "configurations:Debug"

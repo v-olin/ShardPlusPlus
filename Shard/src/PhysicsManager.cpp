@@ -16,6 +16,8 @@
 
 #include "gtx/transform.hpp"
 
+#define MAX std::numeric_limits<float>::max()
+
 namespace Shard {
 
 	PhysicsManager::PhysicsManager() { }
@@ -56,6 +58,7 @@ namespace Shard {
 
 		auto interval = std::make_shared<Interval>(false, gob_body);
 		intervals.push_back(interval);
+		interval->idx = intervals.size() - 1;
 		IntervalEdge b{ min_max_vals[0], true, interval };
 		IntervalEdge e{ min_max_vals[1], false, interval };
 		edge_list.push_back(b);
@@ -154,9 +157,18 @@ namespace Shard {
 			}
 		}
 
+		resetIdx(AXIS_X);
+		resetIdx(AXIS_Y);
+		resetIdx(AXIS_Z);
+
 		traverse_edge_list_x = true;
 		traverse_edge_list_y = true;
 		traverse_edge_list_z = true;
+	}
+	void PhysicsManager::resetIdx(int axis) {
+		auto interval_list = getInterval(axis);
+		for (size_t i = 0; i < interval_list.size(); i++)
+			interval_list[i]->idx = i;
 	}
 
 	bool PhysicsManager::willTick() {
@@ -270,14 +282,15 @@ namespace Shard {
 		return false;
 	}
 
-	int PhysicsManager::findIntervalIdx(int axis, std::shared_ptr<Interval> interval) {
+	//TODO, remove this and move ids into an intervall, and set ids in add/remove object
+	/*int PhysicsManager::findIntervalIdx(int axis, std::shared_ptr<Interval> interval) {
 		auto& intervals = getInterval(axis);
 		for (size_t i = 0; i < intervals.size(); i++) {
 			if (intervals[i]->gob_body == interval->gob_body)
 				return i;
 		}
 		return -1;
-	}
+	}*/
 
 	std::vector<IntervalEdge>& PhysicsManager::getEdgeList(int axis) {
 		if (axis == AXIS_X)
@@ -353,8 +366,8 @@ namespace Shard {
 					// If more than one interval in active_interval_list, then update the overlap_matrix in right position
 					for (size_t j = 0; j < active_interval_list.size(); j++) {
 						for (size_t k = j; k < active_interval_list.size(); k++) {
-							auto interval_a = findIntervalIdx(axis, active_interval_list[j]);
-							auto interval_b = findIntervalIdx(axis, active_interval_list[k]);
+							auto interval_a = active_interval_list[j]->idx; //findIntervalIdx(axis, active_interval_list[j]);
+							auto interval_b = active_interval_list[k]->idx;//findIntervalIdx(axis, active_interval_list[k]);
 							auto a = std::min(interval_a, interval_b);
 							auto b = std::max(interval_a, interval_b);
 							overlap_matrix[a][b] = 1; // TODO: should dis be 1??
@@ -407,8 +420,8 @@ namespace Shard {
 					if (edge_list[j + 1].val < edge_list[j].val) {
 
 						if (edge_list[j + 1].is_b != edge_list[j].is_b) {
-							int interval_a = findIntervalIdx(axis, edge_list[j].interval);
-							int interval_b = findIntervalIdx(axis, edge_list[j + 1].interval);
+							int interval_a = edge_list[j].interval->idx; //findIntervalIdx(axis, edge_list[j].interval);
+							int interval_b = edge_list[j+1].interval->idx;//findIntervalIdx(axis, edge_list[j + 1].interval);
 
 							if (interval_a == -1 || interval_b == -1) {
 								Logger::log("oh fuck...(inside sweepAndMotherFuckingPrune\n");
@@ -663,10 +676,36 @@ namespace Shard {
 	}
 
 
+
+
+	std::optional<std::shared_ptr<PhysicsBody>> PhysicsManager::getClickedBody(InputEvent ie) {
+
+	    static auto &sm = Shard::SceneManager::getInstance();
+		glm::vec3 closest_hit(MAX);
+		auto min_dist = glm::length(sm.camera.pos - closest_hit);
+		std::shared_ptr<PhysicsBody> hit_bod{ nullptr };
+		
+		for (auto& body : all_physics_objects) {
+			auto point = clickHitsBody(ie, body);
+			if (point.has_value()) {
+				auto new_dist = glm::length(sm.camera.pos - point.value());
+				if (new_dist < min_dist) {
+					hit_bod = body;
+					closest_hit = point.value();
+					min_dist = new_dist;
+				}
+			}
+		}
+		if (hit_bod == nullptr)
+			return std::nullopt;
+		return std::optional<std::shared_ptr<PhysicsBody>>(hit_bod);
+			
+	}
 	//Klick -> collision with body
 
 	std::optional<glm::vec3> PhysicsManager::clickHitsBody(InputEvent ie, std::shared_ptr<PhysicsBody> body) {
 		auto ray = getRayFromClick(ie);
+
 		return body->checkCollision(ray);
 	}
 
@@ -689,7 +728,7 @@ namespace Shard {
 
 		// Invert the projection matrix to get view-to-world transformation
 		// PV^(-1)
-		auto P = glm::perspective(45.0f, 1280.0f / 760.0f, 1.f, 300.f);
+		auto P = glm::perspective(45.0f, 1280.0f / 760.0f, 1.f, 5000.f);
 		auto V = SceneManager::getInstance().getCameraViewMatrix();
 		glm::mat4 invProjectionMatrix = glm::inverse(P*V);
 

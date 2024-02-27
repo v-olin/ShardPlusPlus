@@ -10,6 +10,15 @@
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vendor\embree2">
+      <UniqueIdentifier>{24708731-103E-7B37-F9D1-EB5DE53E579C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\embree2\include">
+      <UniqueIdentifier>{977B0496-8375-2DE8-6CE2-C3F8587B9354}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\embree2\include\embree2">
+      <UniqueIdentifier>{081CF69D-F441-C004-DD87-45D0C94CE5D0}</UniqueIdentifier>
+    </Filter>
     <Filter Include="vendor\glad">
       <UniqueIdentifier>{9A8E79C1-0644-F2B6-8F38-EC8DFBECE8BA}</UniqueIdentifier>
     </Filter>
@@ -30,6 +39,15 @@
     </Filter>
     <Filter Include="vendor\glfw\include\GLFW">
       <UniqueIdentifier>{24E7751C-100C-C59C-3957-AA2C25DBC3BA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\glfw_win32">
+      <UniqueIdentifier>{042B8F8E-7041-8D24-B9B8-1846250E5EAC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\glfw_win32\include">
+      <UniqueIdentifier>{77160961-E3D8-3CEB-2C89-CB77988A15C9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\glfw_win32\include\GLFW">
+      <UniqueIdentifier>{167437D9-029A-0140-EBDF-860BD7A4260C}</UniqueIdentifier>
     </Filter>
     <Filter Include="vendor\glm">
       <UniqueIdentifier>{829FC5A8-6E57-07F6-D75E-E051C335A2E6}</UniqueIdentifier>
@@ -106,6 +124,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)include\GameObjectManager.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\HDRImage.h">
+      <Filter>include</Filter>
+    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)include\InputEvent.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -116,6 +137,9 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Model.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\Pathtracer.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)include\PhysicsBody.h">
@@ -142,11 +166,41 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)include\TextureManager.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\embree.h">
+      <Filter>include</Filter>
+    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)include\heightfield.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\material.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)include\noise.h">
       <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\sampling.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\embree2\include\embree2\rtcore.h">
+      <Filter>vendor\embree2\include\embree2</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\embree2\include\embree2\rtcore_builder.h">
+      <Filter>vendor\embree2\include\embree2</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\embree2\include\embree2\rtcore_geometry.h">
+      <Filter>vendor\embree2\include\embree2</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\embree2\include\embree2\rtcore_geometry_user.h">
+      <Filter>vendor\embree2\include\embree2</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\embree2\include\embree2\rtcore_ray.h">
+      <Filter>vendor\embree2\include\embree2</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\embree2\include\embree2\rtcore_scene.h">
+      <Filter>vendor\embree2\include\embree2</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\embree2\include\embree2\rtcore_version.h">
+      <Filter>vendor\embree2\include\embree2</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glad\include\KHR\khrplatform.h">
       <Filter>vendor\glad\include\KHR</Filter>
@@ -159,6 +213,12 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glfw\include\GLFW\glfw3native.h">
       <Filter>vendor\glfw\include\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glfw_win32\include\GLFW\glfw3.h">
+      <Filter>vendor\glfw_win32\include\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glfw_win32\include\GLFW\glfw3native.h">
+      <Filter>vendor\glfw_win32\include\GLFW</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\glm\common.hpp">
       <Filter>vendor\glm</Filter>
@@ -1005,6 +1065,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)src\GameObjectManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\HDRImage.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)src\InputManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -1012,6 +1075,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Model.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\Pathtracer.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)src\PhysicsBody.cpp">
@@ -1032,10 +1098,19 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)src\TextureManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\embree.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)src\heightfield.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\material.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)src\noise.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\sampling.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\glad\glad.c">

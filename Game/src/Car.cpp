@@ -45,6 +45,7 @@ void Car::handleEvent(Shard::InputEvent ev, Shard::EventType et) {
 
         if (ev.key == GLFW_KEY_LEFT_SHIFT)
             pitch_down = true;
+            
     }
     else if (et == Shard::EventType::KeyUp)
     {
@@ -126,17 +127,18 @@ void Car::physicsUpdate() {
     if (!should_move)
         return;
     if (turn_left)
-        m_body->addTorque({ 0, 0.05f, 0 });
+        m_body->addTorque({ 0, 0.02f, 0 });
     if (turn_right)
-        m_body->addTorque({ 0, -0.05f, 0 });
+        m_body->addTorque({ 0, -0.02f, 0 });
     if (backward)
         m_body->addForce(m_model->m_forward, 0.1f);
     if (forward)
         m_body->addForce(m_model->m_forward, -0.1f);
     if (pitch_up)
-        m_body->addTorque({ 0, 0, 0.05f });
+        m_body->addTorque({ 0, 0, 0.02f });
     if (pitch_down)
-        m_body->addTorque({ 0, 0, -0.05f });
+        m_body->addTorque({ 0, 0, -0.02f });
+    //restart camera
 }
 
 void Car::prePhysicsUpdate() {
@@ -152,8 +154,9 @@ void Car::checkDestroyMe() {
 
 void Car::onCollisionEnter(std::shared_ptr<Shard::PhysicsBody> body) {
     Shard::Logger::log("on collsision ENTER CAR");
-    if (!body->m_parent->hasTag("Bullet"))
+    if (!body->m_parent->hasTag("Bullet")) {
         m_body->m_debugColor = { 1.0f, 0.0f, 0.0f };
+    }
     // TODO: Lower HP?
 }
 

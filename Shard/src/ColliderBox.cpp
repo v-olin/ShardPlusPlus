@@ -125,6 +125,8 @@ namespace Shard {
 			return std::nullopt;
 
 		auto len = tmin >= 0 ? tmin : tmax;
+		if (len < 0)
+			return std::nullopt;
 		return ray.origin + ray.dir * (float)len;
 
 
