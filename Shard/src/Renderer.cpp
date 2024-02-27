@@ -42,9 +42,9 @@ namespace Shard {
 		envmap_irrmap_id = m_textureManager.loadHdrTexture("001_irradiance.hdr");
 
 		//TODO, fix material values, now we have ice mountains
-		m_heightfield.loadHeightField("L3123F.png", "L3123F_downscaled.jpg", "L3123F_shininess.png");
+		//m_heightfield.loadHeightField("L3123F.png", "L3123F_downscaled.jpg", "L3123F_shininess.png");
 		const float size = 1000.f;
-		m_heightfield.generateMesh(size, size, 0);
+		m_heightfield.generateMesh(size, size, 982374);
 
 		glEnable(GL_DEPTH_TEST); // z-buffering
 		glEnable(GL_CULL_FACE); // backface culling

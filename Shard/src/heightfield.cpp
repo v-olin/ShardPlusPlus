@@ -35,6 +35,7 @@ namespace Shard {
 		, m_customNormals(UINT32_MAX)
 		, m_texid_shininess(UINT32_MAX)
 		, m_map_type(-1)
+		, m_octaves(9)
 	{
 		/*
 		loadHeightField(&m_texid_hf_goth, "../scenes/gothenburg/gothenburg_resized.jpg");
@@ -42,7 +43,7 @@ namespace Shard {
 		loadDiffuseTexture(&m_texid_diffuse_goth, "../scenes/gothenburg/gothenburg_diffuse.png");
 		*/
 
-		//loadCustomTextures();
+		loadCustomTextures();
 	}
 
 	
@@ -140,14 +141,13 @@ namespace Shard {
 
 	void HeightField::loadCustomTextures()
 	{
-		loadTexture(&m_customBaseColor, "../scenes/textures/grass_basecolor.jpg");
-		loadTexture(&m_customRoughness, "../scenes/textures/grass_rough.jpg");
-		loadTexture(&m_customNormals, "../scenes/textures/grass_normal.jpg");
+		loadTexture(&m_customBaseColor, "../Shard/res/textures/grass_basecolor.jpg");
+		loadTexture(&m_customRoughness, "../Shard/res/textures/grass_rough.jpg");
+		loadTexture(&m_customNormals, "../Shard/res/textures/grass_normal.jpg");
 	}
 
 	void HeightField::generateMesh(int tesselation, float size, int seed)
 	{
-
 		//loadCustomTextures();
 		if(m_map_type == -1)
 			m_map_type = GENERATED;
@@ -170,7 +170,7 @@ namespace Shard {
 			for (int j = 0; j < tesselation; j++)
 			{
 				float z = -size / 2 + j * sideLen;
-				float y = Noise::perlin(x, z, size, seed, m_octaves) * m_height_scale;
+				float y = Noise::perlin(x, z, size, seed, m_octaves) * 70.f;
 				
 				vertices.push_back({ x, y, z });
 
