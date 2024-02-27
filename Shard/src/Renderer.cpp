@@ -27,7 +27,7 @@ namespace Shard {
 		, m_nearPlane(1.f)
 		, m_farPlane(1000.f)
 		, m_fieldOfView(sceneManager.camera.fov)
-		, m_projectionMatrix(glm::mat4(1.f)) // recomputed every frame anyway
+		, m_projectionMatrix(glm::perspective(sceneManager.camera.fov, float(m_resolution.x) / float(m_resolution.y), m_nearPlane, m_farPlane))
 		, m_drawColliders(true)
 		, m_window(window)
 		, m_heightfield(sceneManager)
@@ -106,22 +106,6 @@ namespace Shard {
 		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// TODO: this is very weird!! need to recompute it every frame anyway!!
-		m_projectionMatrix = glm::perspective(m_sceneManager.camera.fov, m_resolution.x / m_resolution.y, m_nearPlane, m_farPlane);
-
-		glm::mat4 camViewMat = glm::lookAt(
-			m_sceneManager.camera.pos,
-			m_sceneManager.camera.pos + m_sceneManager.camera.front,
-			glm::vec3(0.f, 1.f, 0.f)
-		);
-
-		glm::mat4 camProjMat = glm::perspective(
-			glm::radians(45.f),
-			float(m_resolution.x) / float(m_resolution.y),
-			m_nearPlane, m_farPlane
-		);
-
-		
 		/////////////////////////////////////////////////////////////
 		// Render main pass
 		/////////////////////////////////////////////////////////////
@@ -302,7 +286,7 @@ namespace Shard {
 			);
 
 			glm::mat4 projMat = glm::perspective(
-				glm::radians(m_sceneManager.camera.fov),
+				m_sceneManager.camera.fov,
 				float(m_resolution.x) / float(m_resolution.y),
 				m_nearPlane, m_farPlane
 			);
@@ -335,7 +319,7 @@ namespace Shard {
 		///////////////////////////////////////////////////////////////////////////
 		auto& camera = SceneManager::getInstance().camera;
 		mat4 viewMatrix = glm::lookAt(camera.pos, camera.pos + camera.front, camera.worldUp);
-		mat4 projMatrix = glm::perspective(radians(45.0f),
+		mat4 projMatrix = glm::perspective(45.0f,
 			float(PathTracer::rendered_image.width)
 			/ float(PathTracer::rendered_image.height),
 			0.1f, 100.0f);
@@ -417,7 +401,7 @@ namespace Shard {
 		);
 
 		glm::mat4 projMatrix = glm::perspective(
-			glm::radians(45.f),
+			45.f,
 			float(m_resolution.x) / float(m_resolution.y),
 			m_nearPlane, m_farPlane
 		);
