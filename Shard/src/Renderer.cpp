@@ -199,9 +199,6 @@ namespace Shard {
 	}
 
 	void Renderer::drawBackground() {
-		
-
-
 		static auto& sm = ShaderManager::getInstance();
 		auto bg_shader = sm.getShader("background");
 		glUseProgram(bg_shader);
