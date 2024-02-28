@@ -1,12 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FlightSim", "FlightSim\FlightSim.vcxproj", "{2C836A02-98ED-1E79-E12B-D01E4DD5FCCD}"
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "Game\Game.vcxproj", "{7FA9857C-6BE0-860D-14CD-6C1000E3020F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shard", "Shard\Shard.vcxitems", "{17A5170E-83B9-3FBF-4C3B-E31EB80E3CF0}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+	Shard\Shard.vcxitems*{2c836a02-98ed-1e79-e12b-d01e4dd5fccd}*SharedItemsImports = 4
 	Shard\Shard.vcxitems*{7fa9857c-6be0-860d-14cd-6c1000e3020f}*SharedItemsImports = 4
 	Shard\Shard.vcxitems*{17a5170e-83b9-3fbf-4c3b-e31eb80e3cf0}*SharedItemsImports = 9
 	EndGlobalSection
@@ -15,6 +18,10 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2C836A02-98ED-1E79-E12B-D01E4DD5FCCD}.Debug|x64.ActiveCfg = Debug|x64
+		{2C836A02-98ED-1E79-E12B-D01E4DD5FCCD}.Debug|x64.Build.0 = Debug|x64
+		{2C836A02-98ED-1E79-E12B-D01E4DD5FCCD}.Release|x64.ActiveCfg = Release|x64
+		{2C836A02-98ED-1E79-E12B-D01E4DD5FCCD}.Release|x64.Build.0 = Release|x64
 		{7FA9857C-6BE0-860D-14CD-6C1000E3020F}.Debug|x64.ActiveCfg = Debug|x64
 		{7FA9857C-6BE0-860D-14CD-6C1000E3020F}.Debug|x64.Build.0 = Debug|x64
 		{7FA9857C-6BE0-860D-14CD-6C1000E3020F}.Release|x64.ActiveCfg = Release|x64
