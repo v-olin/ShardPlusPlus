@@ -417,8 +417,8 @@ namespace Shard {
 			}
 
 			gob->m_model->Draw();
-			if (Bootstrap::getEnvironmentVariable("physics_debug") == "1") { // if debug
-				drawCollider(gob);
+			if (Bootstrap::getEnvironmentVariable("physics_debug") == "1" || gob->m_drawCollider) { // if debug
+				m_drawCollider(gob);
 				glUseProgram(shader);
 			}
 		}
@@ -426,7 +426,7 @@ namespace Shard {
 		glUseProgram(0);
 	}
 
-	void Renderer::drawCollider(std::shared_ptr<GameObject> toDraw) {
+	void Renderer::m_drawCollider(std::shared_ptr<GameObject> toDraw) {
 
 		std::vector<glm::vec2> minMax = toDraw->m_body->m_collider->getTransformedMinMaxDims();
 

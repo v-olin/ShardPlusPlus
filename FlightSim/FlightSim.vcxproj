@@ -12,8 +12,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\AIPlane.cpp" />
+    <ClCompile Include="src\Bullet.cpp" />
+    <ClCompile Include="src\PlayerPlane.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\AIPlane.h" />
+    <ClInclude Include="include\Bullet.h" />
+    <ClInclude Include="include\PlayerPlane.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

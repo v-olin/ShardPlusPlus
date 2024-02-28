@@ -65,7 +65,7 @@ namespace Shard {
 		void drawBackground();
 		void drawScene();
 		void drawModels();
-		void drawCollider(std::shared_ptr<GameObject> toDraw);
+		void m_drawCollider(std::shared_ptr<GameObject> toDraw);
 		void configureDefaultShader();
 
 		void drawPathTracedScene();

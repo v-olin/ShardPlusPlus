@@ -6,12 +6,12 @@
 #include "GameObjectManager.h"
 
 
-Car::Car() : GameObject() {
+PlayerPlane::PlayerPlane() : GameObject() {
 	//initialize();
 	//Shard::GameObjectManager::getInstance().addGameObject(shared_from_this());
 }
 
-void Car::fireBullet() {
+void PlayerPlane::fireBullet() {
     //Bullet* b = new Bullet()
     //std::shared_ptr<Bullet> b(new Bullet);
     //Shard::GameObjectManager::getInstance().addGameObject(b->shared_from_this());
@@ -24,7 +24,7 @@ void Car::fireBullet() {
     //Shard::Bootstrap::getSound().playSound("fire.wav");
 }
 
-void Car::handleEvent(Shard::InputEvent ev, Shard::EventType et) {
+void PlayerPlane::handleEvent(Shard::InputEvent ev, Shard::EventType et) {
 
     if (et == Shard::EventType::KeyDown)
     {
@@ -70,7 +70,7 @@ void Car::handleEvent(Shard::InputEvent ev, Shard::EventType et) {
 
 }
 
-void Car::initialize() {
+void PlayerPlane::initialize() {
     m_model = std::make_shared<Shard::Model>("models/space-ship.obj");
 
     setPhysicsEnabled(); // sets body_ to a new PhysicBody(this ) and populates transform_
@@ -117,13 +117,13 @@ void Car::initialize() {
     //Shard::Bootstrap::getInput().addListeners(shared_from_this());
 }
 
-void Car::update() {
+void PlayerPlane::update() {
  
     //Shard::Bootstrap::getDisplay()->addToDraw(shared_from_this());
 }
 
 
-void Car::physicsUpdate() {
+void PlayerPlane::physicsUpdate() {
     if (!should_move)
         return;
     if (turn_left)
@@ -141,18 +141,18 @@ void Car::physicsUpdate() {
     //restart camera
 }
 
-void Car::prePhysicsUpdate() {
+void PlayerPlane::prePhysicsUpdate() {
     // TODO: Should this be empty?
 }
 
-void Car::killMe() {
+void PlayerPlane::killMe() {
     // TODO: Clean up!!!
 }
-void Car::checkDestroyMe() {
+void PlayerPlane::checkDestroyMe() {
 
  }
 
-void Car::onCollisionEnter(std::shared_ptr<Shard::PhysicsBody> body) {
+void PlayerPlane::onCollisionEnter(std::shared_ptr<Shard::PhysicsBody> body) {
     Shard::Logger::log("on collsision ENTER CAR");
     if (!body->m_parent->hasTag("Bullet")) {
         m_body->m_debugColor = { 1.0f, 0.0f, 0.0f };
@@ -160,13 +160,13 @@ void Car::onCollisionEnter(std::shared_ptr<Shard::PhysicsBody> body) {
     // TODO: Lower HP?
 }
 
-void Car::onCollisionExit(std::shared_ptr<Shard::PhysicsBody> body) {
+void PlayerPlane::onCollisionExit(std::shared_ptr<Shard::PhysicsBody> body) {
     Shard::Logger::log("on collsision EXIT CAR");
     m_body->m_debugColor = { 0, 1.0, 0.0f};
     // TODO: Not sure...
 }
 
-void Car::onCollisionStay(std::shared_ptr<Shard::PhysicsBody> body) {
+void PlayerPlane::onCollisionStay(std::shared_ptr<Shard::PhysicsBody> body) {
     // TODO: Not sure...
     Shard::Logger::log("on collsision STAY CAR");
     if (!body->m_parent->hasTag("Bullet"))
