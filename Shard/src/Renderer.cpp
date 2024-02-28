@@ -276,19 +276,7 @@ namespace Shard {
 			drawPathTracedScene();
 		}
 		else {
-			glm::mat4 viewMat = glm::lookAt(
-			m_sceneManager.camera.pos,
-			m_sceneManager.camera.pos + m_sceneManager.camera.front,
-			glm::vec3(0.f, 1.f, 0.f)
-			);
-
-			glm::mat4 projMat = glm::perspective(
-				m_sceneManager.camera.fov,
-				float(m_resolution.x) / float(m_resolution.y),
-				m_nearPlane, m_farPlane
-			);
-
-			m_heightfield.submitTriangles(viewMat, projMat, envmap_bg_id, envmap_irrmap_id, envmap_refmap_id);
+			m_heightfield.submitTriangles(m_sceneManager.getCameraViewMatrix(), m_projectionMatrix, envmap_bg_id, envmap_irrmap_id, envmap_refmap_id);
 			drawModels();
 		}
 	}
@@ -391,18 +379,6 @@ namespace Shard {
 		auto& gobs = GameObjectManager::getInstance().getObjects();
 		auto& sun = SceneManager::getInstance().sun;
 
-		glm::mat4 viewMatrix = glm::lookAt(
-			m_sceneManager.camera.pos,
-			m_sceneManager.camera.pos + m_sceneManager.camera.front,
-			glm::vec3(0.f, 1.f, 0.f)
-		);
-
-		glm::mat4 projMatrix = glm::perspective(
-			45.f,
-			float(m_resolution.x) / float(m_resolution.y),
-			m_nearPlane, m_farPlane
-		);
-
 		const auto shader = m_shaderManager.getDefaultShader();
 		glUseProgram(shader);
 
@@ -414,7 +390,9 @@ namespace Shard {
 		glBindTexture(GL_TEXTURE_2D, envmap_refmap_id);
 		glActiveTexture(0);
 
-		auto pv = projMatrix * viewMatrix;
+
+		auto viewMatrix = m_sceneManager.getCameraViewMatrix();
+		auto pv = m_projectionMatrix * viewMatrix;
 		auto camera_pos = m_sceneManager.camera.pos;
 		auto& sm = m_shaderManager;
 
@@ -441,6 +419,7 @@ namespace Shard {
 			gob->m_model->Draw();
 			if (Bootstrap::getEnvironmentVariable("physics_debug") == "1") { // if debug
 				drawCollider(gob);
+				glUseProgram(shader);
 			}
 		}
 

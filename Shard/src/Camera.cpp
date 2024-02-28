@@ -26,7 +26,7 @@ namespace Shard {
 
 	glm::mat4 Camera::viewMatrix()
 	{
-		return glm::lookAt(pos, pos + front, glm::vec3(0.0f, 1.0f, 0.0f));
+		return glm::lookAt(pos, pos + normalize(front), up);
 	}
 
 	void Camera::move(Movement direction, float deltaTime)
