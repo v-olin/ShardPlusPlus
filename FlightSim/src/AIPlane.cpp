@@ -36,7 +36,7 @@ void AIPlane::initialize()
     //m_model = std::make_shared<Shard::Model>("models/asteroid_fixed.obj");
     setPhysicsEnabled();
     m_body->m_mass = 1.f;
-    m_body->m_maxForce = glm::vec3{ .8f };
+    m_body->m_maxForce = glm::vec3{ 8.f };
     m_body->m_angularDrag = glm::vec3{ 0.02f };
     m_body->m_maxTorque = glm::vec3{ 0.4 };
     m_body->m_drag = .1f;

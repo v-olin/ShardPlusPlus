@@ -7,10 +7,9 @@
 #include <cstdlib>
 
 Bullet::Bullet() : GameObject()
-	,m_spawntime(0)
-	,m_lifetime(20*1000)
+	, m_spawntime(0)
+	, m_lifetime(20*1000)
 	, lockedTarget(nullptr)
-	, lockedCount(0)
 {
 }
 
@@ -18,7 +17,7 @@ void Bullet::initialize() {
 	m_model = std::make_shared<Shard::Model>("models/bullet_best.obj");
     setPhysicsEnabled();
     m_body->m_mass = 1.f;
-    m_body->m_maxForce = glm::vec3{ 2.f };
+    m_body->m_maxForce = glm::vec3{ 80.f };
     m_body->m_angularDrag = glm::vec3{ 1.f };
     m_body->m_maxTorque = glm::vec3{ 10.0f, 10.0f, 10.0f };
 	m_body->m_drag = 1.f;
@@ -49,7 +48,7 @@ void Bullet::physicsUpdate() {
 			glm::vec4(m_model->m_up, 0),
 			{ 0,0,0,1 });
 	}
-	m_body->addForce(m_model->m_forward, 1.f);
+	m_body->addForce(m_model->m_forward, 10.f);
 }
 
 void Bullet::update() {

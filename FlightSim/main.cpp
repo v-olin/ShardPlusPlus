@@ -17,7 +17,7 @@
 #define FAST 100000000000;
 #define SLOW 50;
 
-int cameraStatus{ Shard::CameraView::FREE };
+int cameraStatus{ Shard::CameraView::LOCK };
 std::string cameraStatusStr[] = { "First person", "Third person", "Lock", "Free" };
 
 
@@ -120,7 +120,7 @@ void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 
 }
 int GameTest::getTargetFrameRate() {
-	return 500	;
+	return target_framerate;
 }
 
 void GameTest::update() {
@@ -167,6 +167,7 @@ void GameTest::createPlayerPlane() {
 	playerPlane = std::make_shared<PlayerPlane>();
 	playerPlane->initialize();
 	playerPlane->m_body->recalculateColliders();
+	playerPlane->m_model->translate({ 0, 100, 0 });
 	Shard::Bootstrap::getInput().addListeners(playerPlane);
 	static auto &sm = Shard::SceneManager::getInstance();
 	sm.camera.setPlayerGameObj(playerPlane);
@@ -219,7 +220,7 @@ void GameTest::initalize() {
 	parent = std::make_shared<Shard::Model>("models/cube.obj");
 	createAIPlane(50, 50, 50);
 	static auto &sm = Shard::SceneManager::getInstance();
-	sm.camera.movementSpeed = 100;
+	//sm.camera.movementSpeed = 100;
 	drawColliders = Shard::Bootstrap::getEnvironmentVariable("physics_debug") == "1";
 	//GUI
 	Shard::Bootstrap::gui->addRadioSelector({ "View",  
@@ -234,6 +235,7 @@ void GameTest::initalize() {
 	Shard::Bootstrap::gui->addCheckBox("Use Path Tracing", &usePathTracing);
 	Shard::Bootstrap::gui->addCheckBox("Draw colliders", &drawColliders);
 	Shard::Bootstrap::gui->addIntSlider("Path tracer sampling", &pathTracingSampling, 1, 16);
+	Shard::Bootstrap::gui->addIntSlider("Framerate (0 is uncapped)", &target_framerate, 0, 999);
 }
 
 int main() {

@@ -177,7 +177,7 @@ namespace Shard {
 		return Bootstrap::getCurrentMillis() - last_update > time_interval;
 	}
 
-	bool PhysicsManager::update() {
+	bool PhysicsManager::update(float delta_time) {
 		std::list<size_t> to_remove;
 
 		if (!willTick())
@@ -187,9 +187,9 @@ namespace Shard {
 
 		for (auto &body : all_physics_objects) {
 			if (body->m_usesGravity)
-				body->applyGravity(gravity_dir, gravity_modifier);
+				body->applyGravity(gravity_dir, gravity_modifier, delta_time);
 
-			body->physicsTick();
+			body->physicsTick(delta_time);
 			body->recalculateColliders();
 		}
 

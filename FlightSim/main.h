@@ -39,6 +39,7 @@ public:
 	bool usePathTracing{ false };
 	int pathTracingSampling{ 4 };
 	bool drawColliders{ false };
+	int target_framerate{ 144 };
 
 
 };

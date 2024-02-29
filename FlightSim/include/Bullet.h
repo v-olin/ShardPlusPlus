@@ -32,7 +32,6 @@ public:
 		long long m_spawntime;
 		long long m_lifetime;
 
-		int lockedCount;
 
 
 

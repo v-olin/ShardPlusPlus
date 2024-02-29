@@ -87,8 +87,8 @@ void PlayerPlane::initialize() {
     turn_right = false;
     pitch_down = false;
     pitch_up = false;
-	m_body->m_mass = 1.f;
-    m_body->m_maxForce = glm::vec3{ 0.2f };
+	m_body->m_mass = 100.f;
+    m_body->m_maxForce = glm::vec3{ 2000.f };
     m_body->m_angularDrag = glm::vec3{ 0.01f };
     m_body->m_maxTorque = glm::vec3{ 10.0f, 10.0f, 10.0f };
 	m_body->m_drag = 0.1f;
@@ -97,6 +97,7 @@ void PlayerPlane::initialize() {
 	m_body->m_impartForce = true;
 	m_body->m_isKinematic = false;
     m_body->m_passThrough = false;
+    m_body->m_usesGravity = true;
     m_body->m_bodyModel = m_model;
 
     /*
@@ -127,13 +128,15 @@ void PlayerPlane::physicsUpdate() {
     if (!should_move)
         return;
     if (turn_left)
-        m_body->addTorque({ 0, 0.02f, 0 });
+        m_body->addTorque({ 0, 0.2f, 0 });
     if (turn_right)
-        m_body->addTorque({ 0, -0.02f, 0 });
+        m_body->addTorque({ 0, -.2f, 0 });
     if (backward)
-        m_body->addForce(m_model->m_forward, -0.1f);
-    if (forward)
-        m_body->addForce(m_model->m_forward, 0.1f);
+        m_body->addForce(m_model->m_forward, -20.f);
+    if (forward) {
+        m_body->addForce(m_model->m_forward, 20.f);
+        m_body->addForce(m_model->m_up, 10.f);
+    }
     if (pitch_up)
         m_body->addTorque({ 0, 0, 0.02f });
     if (pitch_down)

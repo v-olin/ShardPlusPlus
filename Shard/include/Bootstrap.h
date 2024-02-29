@@ -56,8 +56,8 @@ namespace Shard {
 		inline static InputManager input;
 		inline static PhysicsManager& phys{ PhysicsManager::getInstance() };
 		inline static AssetManager& asset{ AssetManager::getInstance() };
-		inline static int target_frame_rate;
-        inline static int millis_per_frame;
+		//inline static int target_frame_rate;
+        //inline static int millis_per_frame;
         inline static double delta_time;
         inline static double time_elapsed;
         inline static int frames;

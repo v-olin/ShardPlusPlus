@@ -7,7 +7,7 @@
 #include "GameObject.h"
 
 // Default camera values
-const float SPEED = 10.0f;
+const float SPEED = 100.0f;
 const float YAW = -90.0f;
 const float PITCH = 0.0f;
 const float ROTATION_SPEED = 0.1f;

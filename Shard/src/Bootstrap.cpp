@@ -101,8 +101,8 @@ namespace Shard {
 
     void Bootstrap::setRunningGame(std::shared_ptr<Game> game) {
        running_game = game;
-       target_frame_rate = running_game->getTargetFrameRate();
-       millis_per_frame = 1000 / target_frame_rate;
+       //target_frame_rate = running_game->getTargetFrameRate();
+       //millis_per_frame = 1000 / target_frame_rate;
        running_game_set = true;
     }
     void Bootstrap::setUsePathTracing(bool enabled) {
@@ -266,18 +266,35 @@ namespace Shard {
         glEnable(GL_DEPTH_TEST);
         glDisable(GL_CULL_FACE);
 
+        float delta_time_acc{ 0.0f };
+        auto last_frame = static_cast<float>(glfwGetTime());
         while (!glfwWindowShouldClose(m_Window)) {
-            frames += 1;
+            auto target_frame =running_game->getTargetFrameRate(); 
+            delta_time = target_frame == 0 ? 0 : 1.0 / target_frame;
+
+            float current_frame = static_cast<float>(glfwGetTime());
+            delta_time_acc += current_frame - last_frame;
+            last_frame = current_frame;
             time_in_milliseconds_start = getCurrentMillis();
+            frames += 1;
+
+            if (delta_time_acc < delta_time && target_frame != 0)
+                continue;
+            if (target_frame == 0)
+                delta_time = delta_time_acc;
+
+            delta_time_acc = 0;
 
             running_game->update();
 
             if(running_game->isRunning()){
-
+             
                 renderer.m_usePathTracing = use_path_tracing;
 
 				// Get input, which works at 50 FPS to make sure it doesn't interfere with the 
 				// variable frame rates.
+                glfwPollEvents();
+                delta_time_acc = 0;
 				input.getInput();
 
 				// Update runs as fast as the system lets it.  Any kind of movement or counter 
@@ -293,7 +310,7 @@ namespace Shard {
 
 				// Update the physics.  If it's too soon, it'll return false.   Otherwise 
 				// it'll return true.
-				phys_update = phys.update();
+				phys_update = phys.update(delta_time);
 
 				if (phys_update)
 				{
@@ -314,28 +331,26 @@ namespace Shard {
                 // Render code goes here
                 renderer.render();
 
-                // this should be done in InputManager, very bad!!
-                glfwPollEvents();
-
+                
                 //////////////////////////////////////
 
                 // Clean up objects that are to be deleted
                 GameObjectManager::getInstance().cleanup();
 
-                time_in_milliseconds_end = getCurrentMillis();
+                //time_in_milliseconds_end = getCurrentMillis();
 
-                frame_times.push_back(time_in_milliseconds_end);
-                interval = time_in_milliseconds_end - time_in_milliseconds_start;
-                time_elapsed += delta_time;
-                sleep = (int)(millis_per_frame - interval);
+                //frame_times.push_back(time_in_milliseconds_end);
+                //interval = time_in_milliseconds_end - time_in_milliseconds_start;
+                //time_elapsed += delta_time;
+                //sleep = (int)(millis_per_frame - interval);
 
-                if (sleep >= 0)
-                    std::this_thread::sleep_for(std::chrono::milliseconds(sleep));
-                    //SDL_Delay(sleep); 
-                
-                time_in_milliseconds_end = getCurrentMillis();
-                delta_time = (time_in_milliseconds_end - time_in_milliseconds_start) / 1000.0f;
-                last_tick = time_in_milliseconds_start;
+                //if (sleep >= 0)
+                //    std::this_thread::sleep_for(std::chrono::milliseconds(sleep));
+                //    //SDL_Delay(sleep); 
+                //
+                //time_in_milliseconds_end = getCurrentMillis();
+                //delta_time = (time_in_milliseconds_end - time_in_milliseconds_start) / 1000.0f;
+                //last_tick = time_in_milliseconds_start;
                 
             }
         }

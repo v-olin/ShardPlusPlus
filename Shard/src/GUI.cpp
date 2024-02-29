@@ -49,7 +49,6 @@ namespace Shard {
 
 	void GUI::draw() {
 		
-		float fps = Shard::Bootstrap::getFPS();
 
 		// potentially needed
 		ImGui_ImplOpenGL3_NewFrame();
@@ -59,7 +58,6 @@ namespace Shard {
 		if (ImGui::BeginMainMenuBar()) {
 			if (ImGui::BeginMenu("Menu")) {
 				m_guiIsFocused = true;
-				ImGui::Text("FPS: %.1f", fps);
 
 				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate,
 					ImGui::GetIO().Framerate);

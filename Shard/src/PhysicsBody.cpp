@@ -58,7 +58,7 @@ namespace Shard {
 		, m_timeInterval(PhysicsManager::getInstance().time_interval)
 	{ }
 
-	void PhysicsBody::applyGravity(glm::vec3 dir, const float multiplier) {
+	void PhysicsBody::applyGravity(glm::vec3 dir, const float multiplier, float delta_time) {
 		addForce(dir * multiplier);
 	}
 
@@ -155,11 +155,11 @@ namespace Shard {
 		m_collider->recalculateBoundingBox();
 	}
 
-	void PhysicsBody::physicsTick() {
+	void PhysicsBody::physicsTick(float delta_time) {
 		std::vector<glm::vec2> toRemove;
-		float rotx = m_torque.x;
-		float roty = m_torque.y;
-		float rotz = m_torque.z;
+		float rotx = m_torque.x * delta_time;
+		float roty = m_torque.y * delta_time;
+		float rotz = m_torque.z * delta_time;
 
 		static auto get_sign_bit = [](float n) {
 			return n == 0 ? 0 : (n > 0 ? 1 : -1);
@@ -187,14 +187,14 @@ namespace Shard {
 		//m_bodyModel->rotate(m_torque.x, glm::vec3{1.0, 0.0, 0.0});
 		//m_bodyModel->rotate(m_torque.y, glm::vec3{0.0, 1.0, 0.0});
 		//m_bodyModel->rotate(m_torque.z, glm::vec3{0.0, 0.0, 1.0});
-		float force_mag = glm::length(m_force);
-		m_bodyModel->translate(m_force);
+		m_bodyModel->translate(m_force * delta_time);
 		
 		m_bodyModel->rotate(rotx, m_bodyModel->m_forward);
 		m_bodyModel->rotate(roty, m_bodyModel->m_up);
 		m_bodyModel->rotate(rotz, m_bodyModel->m_right);
 
 
+		float force_mag = glm::length(m_force);
 		if (force_mag < m_drag) {
 			stopForces();
 		}
