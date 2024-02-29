@@ -15,3 +15,5 @@ The project is about rewriting the game-engine "Shard" supplied in the course "T
 - Custom environment mapping
 - Heightfields and procedurally generated terrain 
 - Pathtracing and the ability to change renderer runtime
+- Variable refreshrate runtime
+- Physics works the same no matter the framerate
