@@ -149,6 +149,7 @@ namespace Shard {
 	void HeightField::generateMesh(int tesselation, float size, int seed)
 	{
 		//loadCustomTextures();
+		Logger::log("Generating mesh for heightfield");
 		if(m_map_type == -1)
 			m_map_type = GENERATED;
 

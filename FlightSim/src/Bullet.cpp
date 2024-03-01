@@ -19,8 +19,8 @@ void Bullet::initialize() {
     m_body->m_mass = 1.f;
     m_body->m_maxForce = glm::vec3{ 80.f };
     m_body->m_angularDrag = glm::vec3{ 1.f };
-    m_body->m_maxTorque = glm::vec3{ 10.0f, 10.0f, 10.0f };
-	m_body->m_drag = 1.f;
+    m_body->m_maxTorque = glm::vec3{ 100.0f, 100.0f, 100.0f };
+	m_body->m_drag = 8.f;
 	m_body->m_stopOnCollision = true;
 	m_body->m_reflectOnCollision = true;
 	m_body->m_impartForce = true;
@@ -39,7 +39,7 @@ void Bullet::initialize() {
 void Bullet::physicsUpdate() {
 	if (lockedTarget != nullptr && !lockedTarget->m_toBeDestroyed) {
 		auto target = normalize(lockedTarget->m_model->position() + -m_model->position());
-		m_model->m_forward = m_model->m_forward + (target - m_model->m_forward) / glm::vec3(30);
+		m_model->m_forward = m_model->m_forward + (target - m_model->m_forward) / glm::vec3(10);
 		m_model->m_right = glm::normalize(glm::cross(m_model->m_forward, m_model->m_up));
 		m_model->m_up = glm::normalize(glm::cross(m_model->m_right, m_model->m_forward));
 		m_model->m_rotMatrix = glm::mat4(

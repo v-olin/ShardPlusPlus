@@ -29,16 +29,16 @@ void PlayerPlane::handleEvent(Shard::InputEvent ev, Shard::EventType et) {
     if (et == Shard::EventType::KeyDown)
     {
         if (ev.key == GLFW_KEY_W)
-            forward = true;
+            throttle = true;
 
         if (ev.key == GLFW_KEY_S)
             backward = true;
 
         if (ev.key == GLFW_KEY_A)
-            turn_left = true;
+            roll_left = true;
 
         if (ev.key == GLFW_KEY_D)
-            turn_right = true;
+            roll_right = true;
 
         if (ev.key == GLFW_KEY_LEFT_CONTROL)
             pitch_up = true;
@@ -50,16 +50,16 @@ void PlayerPlane::handleEvent(Shard::InputEvent ev, Shard::EventType et) {
     else if (et == Shard::EventType::KeyUp)
     {
         if (ev.key == GLFW_KEY_W)
-            forward = false;
+            throttle = false;
 
         if (ev.key == GLFW_KEY_S)
             backward = false;
 
         if (ev.key == GLFW_KEY_A)
-            turn_left = false;
+            roll_left = false;
 
         if (ev.key == GLFW_KEY_D)
-            turn_right = false;
+            roll_right = false;
 
         if (ev.key == GLFW_KEY_LEFT_CONTROL)
             pitch_up = false;
@@ -81,10 +81,10 @@ void PlayerPlane::initialize() {
 
     // if you move this stuff above transform_ init ^ then colliders will not be drawn
     // why? ... you figure it out!
-	forward = false;
+	throttle = false;
 	backward = false;
-    turn_left = false;
-    turn_right = false;
+    roll_left = false;
+    roll_right = false;
     pitch_down = false;
     pitch_up = false;
 	m_body->m_mass = 1.f;
@@ -126,13 +126,13 @@ void PlayerPlane::update() {
 void PlayerPlane::physicsUpdate() {
     if (!should_move)
         return;
-    if (turn_left)
+    if (roll_left)
         m_body->addTorque({ 0, 0.02f, 0 });
-    if (turn_right)
+    if (roll_right)
         m_body->addTorque({ 0, -0.02f, 0 });
     if (backward)
         m_body->addForce(m_model->m_forward, 0.1f);
-    if (forward)
+    if (throttle)
         m_body->addForce(m_model->m_forward, -0.1f);
     if (pitch_up)
         m_body->addTorque({ 0, 0, 0.02f });

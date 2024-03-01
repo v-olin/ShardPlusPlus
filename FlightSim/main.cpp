@@ -17,7 +17,7 @@
 #define FAST 100000000000;
 #define SLOW 50;
 
-int cameraStatus{ Shard::CameraView::LOCK };
+int cameraStatus{ Shard::CameraView::THIRD_PERSON };
 std::string cameraStatusStr[] = { "First person", "Third person", "Lock", "Free" };
 
 
@@ -46,7 +46,6 @@ void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 			playerPlane->m_drawCollider = !playerPlane->m_drawCollider;
 
 	}
-	playerPlane->should_move = !is_rmb_down;
 	if ((cameraStatus == Shard::CameraView::FREE || cameraStatus == Shard::CameraView::LOCK) && is_rmb_down) {
 		auto keyDown = et == Shard::EventType::KeyDown;
 		if (et == Shard::EventType::KeyDown || et == Shard::EventType::KeyUp) {
@@ -173,6 +172,7 @@ void GameTest::createPlayerPlane() {
 	sm.camera.setPlayerGameObj(playerPlane);
 	sm.camera.setFirstPersonOffset(glm::vec3(9, 8, 0));
 	sm.camera.setThirdPersonOffset(glm::vec3(-50, 25, 0), glm::vec3(0, 15, 0));
+	Shard::Bootstrap::setPlane(playerPlane->m_model);
 }
 
 

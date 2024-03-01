@@ -7,8 +7,8 @@
 
 class PlayerPlane : public Shard::InputListener, public Shard::GameObject, public Shard::CollisionHandler {
 public:
-	bool forward, backward, turn_left, turn_right, pitch_up, pitch_down;
-	bool should_move;
+	bool throttle_forward, throttle_back, roll_left, roll_right, pitch_up, pitch_down, yaw_left, yaw_right;
+	float throttle, throttle_change;
 
 	PlayerPlane();
 

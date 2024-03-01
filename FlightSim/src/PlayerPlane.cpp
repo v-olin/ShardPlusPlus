@@ -29,45 +29,41 @@ void PlayerPlane::handleEvent(Shard::InputEvent ev, Shard::EventType et) {
     if (et == Shard::EventType::KeyDown)
     {
         if (ev.key == GLFW_KEY_W)
-            forward = true;
-
+            throttle_forward = true;
         if (ev.key == GLFW_KEY_S)
-            backward = true;
-
+            throttle_back = true;
         if (ev.key == GLFW_KEY_A)
-            turn_left = true;
-
+            roll_left = true;
         if (ev.key == GLFW_KEY_D)
-            turn_right = true;
-
+            roll_right = true;
+        if (ev.key == GLFW_KEY_Q)
+            yaw_left = true;
+        if (ev.key == GLFW_KEY_E)
+            yaw_right = true;
         if (ev.key == GLFW_KEY_LEFT_CONTROL)
             pitch_up = true;
-
         if (ev.key == GLFW_KEY_LEFT_SHIFT)
             pitch_down = true;
-            
     }
     else if (et == Shard::EventType::KeyUp)
     {
         if (ev.key == GLFW_KEY_W)
-            forward = false;
-
+            throttle_forward = false;
         if (ev.key == GLFW_KEY_S)
-            backward = false;
-
+            throttle_back = false;
         if (ev.key == GLFW_KEY_A)
-            turn_left = false;
-
+            roll_left = false;
         if (ev.key == GLFW_KEY_D)
-            turn_right = false;
-
+            roll_right = false;
+        if (ev.key == GLFW_KEY_Q)
+            yaw_left = false;
+        if (ev.key == GLFW_KEY_E)
+            yaw_right = false;
         if (ev.key == GLFW_KEY_LEFT_CONTROL)
             pitch_up = false;
-
         if (ev.key == GLFW_KEY_LEFT_SHIFT)
             pitch_down = false;
     }
-
 }
 
 void PlayerPlane::initialize() {
@@ -81,23 +77,25 @@ void PlayerPlane::initialize() {
 
     // if you move this stuff above transform_ init ^ then colliders will not be drawn
     // why? ... you figure it out!
-	forward = false;
-	backward = false;
-    turn_left = false;
-    turn_right = false;
+	throttle = 0;
+    throttle_change = 0.1f;
+    roll_left = false;
+    roll_right = false;
     pitch_down = false;
     pitch_up = false;
+    yaw_left = false;
+    yaw_right = false;
 	m_body->m_mass = 100.f;
-    m_body->m_maxForce = glm::vec3{ 2000.f };
-    m_body->m_angularDrag = glm::vec3{ 0.01f };
-    m_body->m_maxTorque = glm::vec3{ 10.0f, 10.0f, 10.0f };
+    m_body->m_maxForce = glm::vec3{ 200.f };
+    m_body->m_angularDrag = glm::vec3{ 1.f };
+    m_body->m_maxTorque = glm::vec3{ 1000.0f, 1000.0f, 1000.0f };
 	m_body->m_drag = 0.1f;
 	m_body->m_stopOnCollision = true;
 	m_body->m_reflectOnCollision = true;
 	m_body->m_impartForce = true;
 	m_body->m_isKinematic = false;
     m_body->m_passThrough = false;
-    m_body->m_usesGravity = true;
+    m_body->m_usesGravity = false;
     m_body->m_bodyModel = m_model;
 
     /*
@@ -125,23 +123,24 @@ void PlayerPlane::update() {
 
 
 void PlayerPlane::physicsUpdate() {
-    if (!should_move)
-        return;
-    if (turn_left)
-        m_body->addTorque({ 0, 0.2f, 0 });
-    if (turn_right)
-        m_body->addTorque({ 0, -.2f, 0 });
-    if (backward)
-        m_body->addForce(m_model->m_forward, -20.f);
-    if (forward) {
-        m_body->addForce(m_model->m_forward, 20.f);
-        m_body->addForce(m_model->m_up, 10.f);
-    }
+    if (yaw_left)
+        m_body->addTorque({ 0, 2.f, 0 });
+    if (yaw_right)
+        m_body->addTorque({ 0, -2.f, 0 });
     if (pitch_up)
-        m_body->addTorque({ 0, 0, 0.02f });
+        m_body->addTorque({ 0, 0, 2.f });
     if (pitch_down)
-        m_body->addTorque({ 0, 0, -0.02f });
-    //restart camera
+        m_body->addTorque({ 0, 0, -2.f });
+    if (roll_left)
+        m_body->addTorque({ -2.f, 0, 0 });
+    if (roll_right)
+        m_body->addTorque({ 2.f, 0, 0 });
+    if (throttle_forward)
+        m_body->addForce(m_model->m_forward, 100.0);
+    if (throttle_back)
+        m_body->addForce(m_model->m_forward, -10.0);
+    //calculate lift here and apply force in m_up
+
 }
 
 void PlayerPlane::prePhysicsUpdate() {

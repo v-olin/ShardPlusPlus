@@ -80,7 +80,7 @@ vec2 adjustTexCoords() {
 		}
 	}
 
-	vec2 rollAdjusted = rotateVec2(pitchAdjusted, planeRollRad);
+	rollAdjusted = rotateVec2(pitchAdjusted, planeRollRad);
 
 	return rollAdjusted;
 }
