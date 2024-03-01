@@ -14,6 +14,7 @@ uniform float planePitchRad;
 uniform float planeRollRad;
 
 #define PI 3.14159265359
+#define MAGICAL_VALUE 0.38888888f
 
 vec2 rotateVec2(vec2 toRotate, float angle) {
 	vec2 p = vec2(toRotate.x, toRotate.y);
@@ -78,7 +79,7 @@ vec2 adjustTexCoords() {
 	//	}
 	//}
 
-	pitchAdjusted.y += 0.38888888f;
+	pitchAdjusted.y += MAGICAL_VALUE;
 
 	return pitchAdjusted;
 }
