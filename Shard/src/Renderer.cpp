@@ -84,6 +84,11 @@ namespace Shard {
 			//3, 2, 1
 		};
 
+		glm::vec2 bl = glm::vec2(0.0f, 0.5f - (0.5f * 800.f / 3600.f));
+		glm::vec2 br = glm::vec2(1.0f, 0.5f - (0.5f * 800.f / 3600.f));
+		glm::vec2 tl = glm::vec2(0.0f, 0.5f + (0.5f * 800.f / 3600.f));
+		glm::vec2 tr = glm::vec2(1.0f, 0.5f + (0.5f * 800.f / 3600.f));
+
 		const std::vector<glm::vec2> texCoords = {
 			{ 0, 0 },
 			{ 1, 0 },
@@ -126,6 +131,7 @@ namespace Shard {
 		return m_vao;
 	}
 
+#define PI 3.14159265359
 	void Renderer::getPlaneAngles(float *pitch, float *roll) {
 		//assert(m_plane != nullptr && "THIS IS SO FUCKING BAD!!!");
 		//if (m_plane == nullptr)
@@ -136,16 +142,27 @@ namespace Shard {
 		glm::vec3 angles = plane->rotation();
 
 		// NOTE TO SELF: THIS IS IN RADIANS 
-		*pitch = -angles.z;
-		*roll = angles.x;
+		*pitch = -angles.z; // this is relative
+		*roll = -angles.y;
+
+		if (*pitch > PI / 2) {
+			*pitch = PI - *pitch;
+			*roll += PI;
+		}
+		else if (*pitch < -PI / 2) {
+			*pitch = *pitch + PI;
+			*roll -= PI;
+		}
 
 		/*
 		glm::vec3 dir = normalize(plane->m_forward);
 		// project direction on ground
 		glm::vec3 projDir = normalize(proj(dir, glm::vec3(0.0f, 1.0f, 0.0f)));
 		// calculate angle between these vectors to get pitch and convert to degrees
-		*pitch = glm::degrees(glm::acos(glm::dot(dir, projDir)));
+		*pitch = -acos(glm::dot(dir, projDir));
 		*/
+
+
 
 		/*
 		
@@ -182,7 +199,7 @@ namespace Shard {
 		float roll = 0.f;
 		getPlaneAngles(&pitch, &roll);
 
-		// m_shaderManager.SetFloat1(shader, pitch, "planePitchRad");
+		m_shaderManager.SetFloat1(shader, pitch, "planePitchRad");
 		m_shaderManager.SetFloat1(shader, roll, "planeRollRad");
 
 		glActiveTexture(GL_TEXTURE15);

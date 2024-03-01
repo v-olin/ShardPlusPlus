@@ -547,6 +547,7 @@ namespace Shard {
 
 		// x = [1], y = [2], z = [3]
 		// x = P = arcsin(-rot[3][2])
+		/*
 		float x = asin(-rotMatrix[2].y);
 		// y = H = arctan(rot[3][1]/rot[3][3])
 		float y = atan2(rotMatrix[2].x, rotMatrix[2].z);
@@ -554,6 +555,13 @@ namespace Shard {
 		float z = atan2(rotMatrix[0].y, rotMatrix[1].y);
 
 		return { x, y, z };
+		*/
+
+		float theta = -asin(rotMatrix[2][0]);
+		float phi = atan2(rotMatrix[1][0] / cos(theta), rotMatrix[0][0] / cos(theta));
+		float psi = atan2(rotMatrix[2][1] / cos(theta), rotMatrix[2][2] / cos(theta));
+
+		return { theta, psi, phi };
 	}
 
 	glm::vec3 Model::size() {

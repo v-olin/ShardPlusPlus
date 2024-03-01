@@ -37,24 +37,10 @@ vec2 adjustTexCoords() {
 	// background texture aspect ratio is 800:3600
 	float aspectRatio = 800.0f / 3600.f;
 
+	// this gives correct roll
 	vec2 rollAdjusted = rotateVec2(texCoord, planeRollRad);
 
-	float diff = distance(vec2(0.5f, 0.5f), texCoord);
-
-	vec2 aspectAdjusted = vec2(texCoord.x, texCoord.y);
-	
-
-	// i want the uv.v value of 0.5f to equal 0 degrees of pitch
-	// so anything else has to be adjusted by the aspect ratio
-	if (texCoord.y != 0.5f) {
-		if (texCoord.y > 0.5f) {
-			float diff = texCoord.y - 0.5f;
-			aspectAdjusted.y = 0.5f + diff * aspectRatio;
-		} else {
-			float diff = 0.5f - texCoord.y;
-			aspectAdjusted.y = 0.5f - diff * aspectRatio;
-		}
-	}
+	vec2 aspectAdjusted = vec2(rollAdjusted.x, rollAdjusted.y * aspectRatio);
 
 	vec2 pitchAdjusted = vec2(aspectAdjusted.x, aspectAdjusted.y);
 
@@ -80,9 +66,21 @@ vec2 adjustTexCoords() {
 		}
 	}
 
-	rollAdjusted = rotateVec2(pitchAdjusted, planeRollRad);
+	// i want the uv.v value of 0.5f to equal 0 degrees of pitch
+	// so anything else has to be adjusted by the aspect ratio
+	//if (texCoord.y != 0.5f) {
+	//	if (texCoord.y > 0.5f) {
+	//		float diff = texCoord.y - 0.5f;
+	//		pitchAdjusted.y = 0.5f + diff * aspectRatio;
+	//	} else {
+	//		float diff = 0.5f - texCoord.y;
+	//		pitchAdjusted.y = 0.5f - diff * aspectRatio;
+	//	}
+	//}
 
-	return rollAdjusted;
+	pitchAdjusted.y += 0.38888888f;
+
+	return pitchAdjusted;
 }
 
 void main()
