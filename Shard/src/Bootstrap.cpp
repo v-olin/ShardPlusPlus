@@ -197,13 +197,14 @@ namespace Shard {
 
         }
 
-
+        /* this is done in the Renderer constructor!!
         ShaderManager& sm = ShaderManager::getInstance();
         sm.loadShader("collider", false);
         sm.loadShader("cubemap", false);
         sm.loadShader("background", false);
         sm.loadShader("simple", false);
         sm.loadShader("copyTexture", false);
+        */
 
 
         gui = new GUI(m_Window);
@@ -262,9 +263,6 @@ namespace Shard {
         TextureManager& tm = TextureManager::getInstance();
         ShaderManager& shm = ShaderManager::getInstance();
         Renderer renderer{ sm, tm, shm, gui, m_Window};
-
-        glEnable(GL_DEPTH_TEST);
-        glDisable(GL_CULL_FACE);
 
         float delta_time_acc{ 0.0f };
         auto last_frame = static_cast<float>(glfwGetTime());

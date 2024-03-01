@@ -26,6 +26,7 @@ namespace Shard {
 
 		void loadTexture(GLuint* target, const std::string& path);
 		GLuint loadTexture(const std::string& path);
+		GLuint loadTextureRGBA(const std::string& path);
 		GLuint getTexture(const std::string& path);
 		GLuint loadHdrTexture(const std::string& filename);
 

@@ -20,7 +20,7 @@ namespace Shard {
 	class Bootstrap {
 
 	public:
-		inline static  const std::string DEFAULT_CONFIG = "config.cfg";
+		inline static const std::string DEFAULT_CONFIG = "config.cfg";
 		static bool checkEnvironmentVariable(std::string id);
 		static std::string getEnvironmentVariable(std::string id);
 		static void setEnvironmentVariable(std::string id, std::string val);
@@ -32,6 +32,13 @@ namespace Shard {
 		static int getCurrentFrame();
 		static void Main(std::string[]);
 
+		static void setPlane(std::shared_ptr<Model> plane) {
+			planeModel = plane;
+		}
+
+		static std::shared_ptr<Model> getPlane() {
+			return planeModel;
+		}
 
 		static const std::string getBaseDir();
 		
@@ -65,5 +72,7 @@ namespace Shard {
         inline static long long start_time;
         inline static std::string base_dir;
 		inline static std::unordered_map<std::string, std::string> en_vars;
+		// i hate this so fucking bad
+		inline static std::shared_ptr<Model> planeModel;
 	};
 }

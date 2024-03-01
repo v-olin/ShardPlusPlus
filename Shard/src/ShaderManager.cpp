@@ -73,7 +73,7 @@ namespace Shard {
 		glGetShaderiv(f_shader, GL_COMPILE_STATUS, &compile_ok);
 
 		if (!compile_ok) {
-			std::string msg = getShaderInfoLog(v_shader);
+			std::string msg = getShaderInfoLog(f_shader);
 			LoggerLevel lvl = allow_errors ? LOG_LEVEL_ERROR : LOG_LEVEL_FATAL;
 			Logger::log(msg.c_str());
 		}

@@ -7,6 +7,9 @@
 #include "GameObjectManager.h"
 #include "Bootstrap.h"
 #include "Logger.h"
+#include "Model.h"
+
+#include "gtx/projection.hpp"
 
 #include <filesystem>
 
@@ -38,7 +41,14 @@ namespace Shard {
 		}
 		initialized = true;
 
+		m_plane = nullptr;
 		loadRequiredShaders();
+
+		att_background = m_textureManager.loadTextureRGBA("../Shard/res/textures/attitude_background.png");
+		att_overlay = m_textureManager.loadTextureRGBA("../Shard/res/textures/attitude_overlay.png");
+		att_transmap = m_textureManager.loadTextureRGBA("../Shard/res/textures/attitude_transmap.png");
+
+		att_vao = createGauges();
 		
 		envmap_bg_id = m_textureManager.loadHdrTexture("001.hdr");
 		envmap_refmap_id = m_textureManager.loadHdrTexture("001_dl_0.hdr");
@@ -51,6 +61,152 @@ namespace Shard {
 
 		glEnable(GL_DEPTH_TEST); // z-buffering
 		glEnable(GL_CULL_FACE); // backface culling
+	}
+
+	GLuint Renderer::createGauges() {
+		const float size = 150.f;
+		const float z = 2.f;
+		const static std::vector<glm::vec3> vertices{
+			{ -size, -size, z },
+			{ size, -size, z },
+			{ size, size, z },
+			{ -size, size, z },
+			//{ 0, 0, z },
+			//{ 20, 0, z },
+			//{ 20, 20, z },
+			//{ 0, 20, z },
+		};
+
+		const static std::vector<int> indices = {
+			0, 1, 3,
+			3, 1, 2
+			//0, 3, 1,
+			//3, 2, 1
+		};
+
+		const std::vector<glm::vec2> texCoords = {
+			{ 0, 0 },
+			{ 1, 0 },
+			{ 1, 1 },
+			{ 0, 1 }
+		};
+
+		GLuint m_vao = 0;
+		GLuint m_pbo = 0;
+		GLuint m_uvb = 0;
+		GLuint m_ibo = 0;
+
+		glGenVertexArrays(1, &m_vao);
+		glBindVertexArray(m_vao);
+
+		glGenBuffers(1, &m_pbo);
+		glBindBuffer(GL_ARRAY_BUFFER, m_pbo);
+		glBufferData(GL_ARRAY_BUFFER,
+			vertices.size() * sizeof(glm::vec3),
+			vertices.data(), GL_STATIC_DRAW);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
+		glEnableVertexAttribArray(0);
+
+		glGenBuffers(1, &m_uvb);
+		glBindBuffer(GL_ARRAY_BUFFER, m_uvb);
+		glBufferData(GL_ARRAY_BUFFER,
+			texCoords.size() * sizeof(glm::vec2),
+			texCoords.data(), GL_STATIC_DRAW);
+
+		glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, 0);
+		glEnableVertexAttribArray(1);
+
+		glGenBuffers(1, &m_ibo);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+			indices.size() * sizeof(int),
+			indices.data(), GL_STATIC_DRAW);
+
+		return m_vao;
+	}
+
+	void Renderer::getPlaneAngles(float *pitch, float *roll) {
+		//assert(m_plane != nullptr && "THIS IS SO FUCKING BAD!!!");
+		//if (m_plane == nullptr)
+		//	return;
+
+		std::shared_ptr<Model> plane{ Bootstrap::getPlane() };
+
+		glm::vec3 angles = plane->rotation();
+
+		// NOTE TO SELF: THIS IS IN RADIANS 
+		*pitch = -angles.z;
+		*roll = angles.x;
+
+		/*
+		glm::vec3 dir = normalize(plane->m_forward);
+		// project direction on ground
+		glm::vec3 projDir = normalize(proj(dir, glm::vec3(0.0f, 1.0f, 0.0f)));
+		// calculate angle between these vectors to get pitch and convert to degrees
+		*pitch = glm::degrees(glm::acos(glm::dot(dir, projDir)));
+		*/
+
+		/*
+		
+
+		// I KNEW ROTATION MATRICES WAS THE WAY TO GO :DDDDDDDDDD
+		// nevermind i fucking hate this so bad
+		glm::mat3 R = plane->getRotationMatrix();
+
+		//*pitch = -1 * asin(R[2][0]); // this is theta, not correct!!! very bad!! (this is turning)
+		//*pitch = atan2(R[2][1], R[2][2]); // this is psi, also incorrect wtf???
+		float theta = -1 * asin(R[2][0]);
+		//*pitch = atan2(R[1][0] / cos(theta), R[0][0] / cos(theta)); // this worked somewhat ok
+
+		// NEW SOLUTION!!! TIDIN TIDIN TIDIN
+		*pitch = atan2(-R[2][0], sqrt(pow(R[2][1], 2) + pow(R[2][2], 2)));
+		*roll = atan2(R[2][1], R[2][2]); // TODO
+		*/
+	}
+
+	void Renderer::drawGauges() {
+		const glm::vec2 size{ 300, 300 };
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glViewport(0, 0, size.x, size.y);
+		glEnable(GL_SCISSOR_TEST);
+		glDisable(GL_CULL_FACE);
+		glScissor(0, 0, size.x, size.y);
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		auto shader = m_shaderManager.getShader("gauge");
+		glUseProgram(shader);
+
+		float pitch = 0.f;
+		float roll = 0.f;
+		getPlaneAngles(&pitch, &roll);
+
+		// m_shaderManager.SetFloat1(shader, pitch, "planePitchRad");
+		m_shaderManager.SetFloat1(shader, roll, "planeRollRad");
+
+		glActiveTexture(GL_TEXTURE15);
+		glBindTexture(GL_TEXTURE_2D, att_overlay);
+		glActiveTexture(GL_TEXTURE16);
+		glBindTexture(GL_TEXTURE_2D, att_background);
+
+		glm::mat4 viewMatrix = glm::lookAt(
+			vec3(0.f), // set camera at origin
+			vec3(0.f, 0.f, 1.f), // triangles are centered around the (0, 0, z) axis at +2.f z, so look at +z
+			vec3(0.f, 1.f, 0.f)
+		);
+		//glm::mat4 viewMatrix = m_sceneManager.getCameraViewMatrix();
+		float xp = size.x / 2, yp = size.y / 2;
+		glm::mat4 projMatrix = glm::ortho(-xp, xp, -yp, yp, m_nearPlane, m_farPlane); //m_projectionMatrix; //glm::ortho(0.f, xp, 0.f, yp);
+
+		m_shaderManager.SetMat4x4(shader, projMatrix * viewMatrix, "projMatrix");
+
+		glBindVertexArray(att_vao);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+		glEnable(GL_CULL_FACE);
+		glDisable(GL_SCISSOR_TEST);
+		glUseProgram(0);
 	}
 
 	void Renderer::loadRequiredShaders() {
@@ -101,10 +257,10 @@ namespace Shard {
 		/////////////////////////////////////////////////////////////
 		// Reset viewport
 		/////////////////////////////////////////////////////////////
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glViewport(0, 0, (int)(m_resolution.x), (int)(m_resolution.y));
-		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		//glViewport(0, 0, (int)(m_resolution.x), (int)(m_resolution.y));
+		//glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		/////////////////////////////////////////////////////////////
 		// Render main pass
@@ -117,6 +273,7 @@ namespace Shard {
 
 		drawBackground();
 		drawScene();
+		drawGauges();
 
 		/////////////////////////////////////////////////////////////
 		// BORING STUFF!! TRUE!

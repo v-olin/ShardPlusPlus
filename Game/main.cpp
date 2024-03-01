@@ -187,6 +187,7 @@ void GameTest::createPlayerPlane() {
 	playerPlane = std::make_shared<PlayerPlane>();
 	playerPlane->initialize();
 	playerPlane->m_body->recalculateColliders();
+	Shard::Bootstrap::setPlane(playerPlane->m_model);
 	Shard::Bootstrap::getInput().addListeners(playerPlane);
 	static auto &sm = Shard::SceneManager::getInstance();
 	sm.camera.setPlayerGameObj(playerPlane);
@@ -232,7 +233,7 @@ void GameTest::initalize() {
 	createPlayerPlane();
 	int max = 100;
 	parent = std::make_shared<Shard::Model>("models/asteroid_fixed.obj");
-	for (int i = 0; i < 400; i++) {
+	for (int i = 0; i < 1; i++) {
 		auto pos = glm::vec3(rand() % max, rand() % max, rand() % max) - glm::vec3(max/2, 0, max/2);
 		createAsteroid(pos.x, pos.y, pos.z);
 	}
