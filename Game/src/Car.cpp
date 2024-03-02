@@ -41,10 +41,10 @@ void PlayerPlane::handleEvent(Shard::InputEvent ev, Shard::EventType et) {
             roll_right = true;
 
         if (ev.key == GLFW_KEY_LEFT_CONTROL)
-            pitch_up = true;
+            height_up = true;
 
         if (ev.key == GLFW_KEY_LEFT_SHIFT)
-            pitch_down = true;
+            height_down = true;
             
     }
     else if (et == Shard::EventType::KeyUp)
@@ -62,10 +62,10 @@ void PlayerPlane::handleEvent(Shard::InputEvent ev, Shard::EventType et) {
             roll_right = false;
 
         if (ev.key == GLFW_KEY_LEFT_CONTROL)
-            pitch_up = false;
+            height_up = false;
 
         if (ev.key == GLFW_KEY_LEFT_SHIFT)
-            pitch_down = false;
+            height_down = false;
     }
 
 }
@@ -85,8 +85,8 @@ void PlayerPlane::initialize() {
 	backward = false;
     roll_left = false;
     roll_right = false;
-    pitch_down = false;
-    pitch_up = false;
+    height_down = false;
+    height_up = false;
 	m_body->m_mass = 1.f;
     m_body->m_maxForce = glm::vec3{ 0.2f };
     m_body->m_angularDrag = glm::vec3{ 0.01f };
@@ -134,9 +134,9 @@ void PlayerPlane::physicsUpdate() {
         m_body->addForce(m_model->m_forward, 0.1f);
     if (throttle)
         m_body->addForce(m_model->m_forward, -0.1f);
-    if (pitch_up)
+    if (height_up)
         m_body->addTorque({ 0, 0, 0.02f });
-    if (pitch_down)
+    if (height_down)
         m_body->addTorque({ 0, 0, -0.02f });
     //restart camera
 }

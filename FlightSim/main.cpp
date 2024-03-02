@@ -141,6 +141,10 @@ void GameTest::update() {
 	if(c_down)
 		sm.camera.move(Shard::Movement::DOWN, dt);
 
+	if (sm.camera.player_game_obj->m_toBeDestroyed) {
+		cameraStatus = Shard::CameraView::THIRD_PERSON;
+		sm.camera.setPlayerGameObj(playerPlane);
+	}
 	sm.camera.status = (Shard::CameraView)cameraStatus;
 
 
@@ -167,6 +171,8 @@ void GameTest::createPlayerPlane() {
 	playerPlane->initialize();
 	playerPlane->m_body->recalculateColliders();
 	playerPlane->m_model->translate({ 0, 100, 0 });
+	playerPlane->m_model->scale({ 5, 5, 5 });
+	playerPlane->rmb_down = &is_rmb_down;
 	Shard::Bootstrap::getInput().addListeners(playerPlane);
 	static auto &sm = Shard::SceneManager::getInstance();
 	sm.camera.setPlayerGameObj(playerPlane);
@@ -196,7 +202,7 @@ void GameTest::createAIPlane(float x, float y, float z) {
 void GameTest::createBullet() {
 	auto bullet = std::make_shared<Bullet>();
 	bullet->initialize();
-	bullet->m_model->scale({10, 10, 10});
+	bullet->m_model->scale(glm::vec3(5));
 	bullet->m_model->translate(playerPlane->m_model->position());
 	bullet->m_model->m_rotMatrix = playerPlane->m_model->getRotationMatrix();
 	//bullet->m_model->rotate(180, { 0, 1, 0 });
@@ -205,7 +211,10 @@ void GameTest::createBullet() {
 	bullet->lockedTarget = lockedTarget;
 
 	static auto &sm = Shard::SceneManager::getInstance();
-	sm.camera.setPlayerGameObj(bullet);
+	if (lockedTarget != nullptr && !lockedTarget->m_toBeDestroyed) {
+		cameraStatus = Shard::CameraView::LOCK;
+		sm.camera.setPlayerGameObj(bullet);
+	}
 	bullets.push_back(bullet);
 }
 float randf() {

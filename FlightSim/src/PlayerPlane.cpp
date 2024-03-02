@@ -26,6 +26,8 @@ void PlayerPlane::fireBullet() {
 
 void PlayerPlane::handleEvent(Shard::InputEvent ev, Shard::EventType et) {
 
+    if (*rmb_down)
+        return;
     if (et == Shard::EventType::KeyDown)
     {
         if (ev.key == GLFW_KEY_W)
@@ -41,9 +43,9 @@ void PlayerPlane::handleEvent(Shard::InputEvent ev, Shard::EventType et) {
         if (ev.key == GLFW_KEY_E)
             yaw_right = true;
         if (ev.key == GLFW_KEY_LEFT_CONTROL)
-            pitch_up = true;
+            height_down = true;
         if (ev.key == GLFW_KEY_LEFT_SHIFT)
-            pitch_down = true;
+            height_up = true;
     }
     else if (et == Shard::EventType::KeyUp)
     {
@@ -60,15 +62,14 @@ void PlayerPlane::handleEvent(Shard::InputEvent ev, Shard::EventType et) {
         if (ev.key == GLFW_KEY_E)
             yaw_right = false;
         if (ev.key == GLFW_KEY_LEFT_CONTROL)
-            pitch_up = false;
+            height_down = false;
         if (ev.key == GLFW_KEY_LEFT_SHIFT)
-            pitch_down = false;
+            height_up = false;
     }
 }
 
 void PlayerPlane::initialize() {
-    m_model = std::make_shared<Shard::Model>("models/space-ship.obj");
-
+    m_model = std::make_shared<Shard::Model>("models/chopper.obj");
     setPhysicsEnabled(); // sets body_ to a new PhysicBody(this ) and populates transform_
     /*body_->trans->x = 500.f;
     body_->trans->y = 300.f;*/
@@ -81,8 +82,8 @@ void PlayerPlane::initialize() {
     throttle_change = 0.1f;
     roll_left = false;
     roll_right = false;
-    pitch_down = false;
-    pitch_up = false;
+    height_down = false;
+    height_up = false;
     yaw_left = false;
     yaw_right = false;
 	m_body->m_mass = 100.f;
@@ -95,7 +96,8 @@ void PlayerPlane::initialize() {
 	m_body->m_impartForce = true;
 	m_body->m_isKinematic = false;
     m_body->m_passThrough = false;
-    m_body->m_usesGravity = false;
+    m_body->m_usesGravity = true;
+    m_body->m_clickable = false;
     m_body->m_bodyModel = m_model;
 
     /*
@@ -123,22 +125,41 @@ void PlayerPlane::update() {
 
 
 void PlayerPlane::physicsUpdate() {
+
+    float up_force = 100;
     if (yaw_left)
         m_body->addTorque({ 0, 2.f, 0 });
     if (yaw_right)
         m_body->addTorque({ 0, -2.f, 0 });
-    if (pitch_up)
-        m_body->addTorque({ 0, 0, 2.f });
-    if (pitch_down)
-        m_body->addTorque({ 0, 0, -2.f });
-    if (roll_left)
+    if (height_up)
+        up_force += 50;
+        //m_body->addTorque({ 0, 0, 2.f });
+    if (height_down)
+        up_force -= 50;
+        //m_body->addTorque({ 0, 0, -2.f });
+    auto max_roll = 30 * (3.14159265358979 / 180);
+    auto rot_x = m_model->rotation()[1];
+    if (roll_left && rot_x < max_roll)
         m_body->addTorque({ -2.f, 0, 0 });
-    if (roll_right)
+    if (roll_right && rot_x > -max_roll)
         m_body->addTorque({ 2.f, 0, 0 });
-    if (throttle_forward)
-        m_body->addForce(m_model->m_forward, 100.0);
-    if (throttle_back)
-        m_body->addForce(m_model->m_forward, -10.0);
+    float rot_z = m_model->rotation()[2];
+    if (throttle_forward&& rot_z < max_roll) {
+        //up_force += 20,
+        m_body->addTorque({ 0,0, -2 });
+        m_body->addForce({ 0, 1, 0 }, 20);
+    }
+        //m_body->addForce(m_model->m_forward, 100.0);
+    if (throttle_back && rot_z > -max_roll) {
+        //up_force += 20,
+        m_body->addTorque({ 0,0, 2 });
+        m_body->addForce({ 0, 1, 0 }, 20);
+     
+    }
+        //m_body->addForce(m_model->m_forward, -10.0);
+
+    m_body->addForce(m_model->m_up, up_force);
+
     //calculate lift here and apply force in m_up
 
 }

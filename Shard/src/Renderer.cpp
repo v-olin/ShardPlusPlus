@@ -28,7 +28,7 @@ namespace Shard {
 		, m_gui(gui)
 		, m_resolution({ 1280, 760 })
 		, m_nearPlane(1.f)
-		, m_farPlane(1000.f)
+		, m_farPlane(10000.f)
 		, m_fieldOfView(sceneManager.camera.fov)
 		, m_projectionMatrix(glm::perspective(sceneManager.camera.fov, float(m_resolution.x) / float(m_resolution.y), m_nearPlane, m_farPlane))
 		, m_drawColliders(true)
@@ -56,8 +56,10 @@ namespace Shard {
 
 		//TODO, fix material values, now we have ice mountains
 		//m_heightfield.loadHeightField("L3123F.png", "L3123F_downscaled.jpg", "L3123F_shininess.png");
-		const float size = 1000.f;
-		m_heightfield.generateMesh(size, size, 982374);
+		const float size = 10000.f;
+		const float tesselation = 1000.f;
+
+		m_heightfield.generateMesh(tesselation, size, 982374);
 
 		glEnable(GL_DEPTH_TEST); // z-buffering
 		glEnable(GL_CULL_FACE); // backface culling

@@ -24,6 +24,7 @@ namespace Shard {
 		bool m_stopOnCollision;
 		bool m_reflectOnCollision;
 		bool m_impartForce;
+		bool m_clickable;
 
 		std::shared_ptr<GameObject> m_parent;
 		std::shared_ptr<Collider> m_collider;

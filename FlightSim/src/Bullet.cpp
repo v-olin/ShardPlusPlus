@@ -17,7 +17,7 @@ void Bullet::initialize() {
 	m_model = std::make_shared<Shard::Model>("models/bullet_best.obj");
     setPhysicsEnabled();
     m_body->m_mass = 1.f;
-    m_body->m_maxForce = glm::vec3{ 80.f };
+    m_body->m_maxForce = glm::vec3{ 100.f };
     m_body->m_angularDrag = glm::vec3{ 1.f };
     m_body->m_maxTorque = glm::vec3{ 100.0f, 100.0f, 100.0f };
 	m_body->m_drag = 8.f;
@@ -48,7 +48,7 @@ void Bullet::physicsUpdate() {
 			glm::vec4(m_model->m_up, 0),
 			{ 0,0,0,1 });
 	}
-	m_body->addForce(m_model->m_forward, 10.f);
+	m_body->addForce(m_model->m_forward, 100.f);
 }
 
 void Bullet::update() {

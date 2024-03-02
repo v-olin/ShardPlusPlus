@@ -705,6 +705,8 @@ namespace Shard {
 
 	std::optional<glm::vec3> PhysicsManager::clickHitsBody(InputEvent ie, std::shared_ptr<PhysicsBody> body) {
 		auto ray = getRayFromClick(ie);
+		if (!body->m_clickable)
+			return std::nullopt;
 
 		return body->checkCollision(ray);
 	}

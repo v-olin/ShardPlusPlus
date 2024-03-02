@@ -59,12 +59,12 @@ namespace Shard {
 		void move(Movement direction, float deltaTime);
 		void rotate(float delta_x, float delta_y);
 		void updateCameraToPlayer();
+		std::shared_ptr<GameObject> player_game_obj;
 	private:
 		glm::vec3 third_person_offset;
 		glm::vec3 third_look_at_offset;
 
 		glm::vec3 first_person_offset;
-		std::shared_ptr<GameObject> player_game_obj;
 
 		bool third_person_offset_set;
 		bool first_person_offset_set;

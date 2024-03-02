@@ -7,7 +7,7 @@
 
 class PlayerPlane : public Shard::InputListener, public Shard::GameObject, public Shard::CollisionHandler {
 public:
-	bool throttle, backward, roll_left, roll_right, pitch_up, pitch_down;
+	bool throttle, backward, roll_left, roll_right, height_up, height_down;
 	bool should_move;
 
 	PlayerPlane();
