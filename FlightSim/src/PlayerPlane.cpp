@@ -137,20 +137,21 @@ void PlayerPlane::physicsUpdate() {
     if (height_down)
         up_force -= 50;
         //m_body->addTorque({ 0, 0, -2.f });
-    auto max_roll = 30 * (3.14159265358979 / 180);
-    auto rot_x = m_model->rotation()[1];
-    if (roll_left && rot_x < max_roll)
+    auto max_roll = 45 * (3.14159265358979 / 180);
+    auto rot_x = m_model->rotation()[0];
+    if (roll_left && rot_x > -max_roll)
         m_body->addTorque({ -2.f, 0, 0 });
-    if (roll_right && rot_x > -max_roll)
+    if (roll_right && rot_x < max_roll)
         m_body->addTorque({ 2.f, 0, 0 });
     float rot_z = m_model->rotation()[2];
-    if (throttle_forward&& rot_z < max_roll) {
+    auto max_pitch = 30 * (3.14159265358979 / 180);
+    if (throttle_forward&& rot_z >  -max_pitch) {
         //up_force += 20,
         m_body->addTorque({ 0,0, -2 });
         m_body->addForce({ 0, 1, 0 }, 20);
     }
         //m_body->addForce(m_model->m_forward, 100.0);
-    if (throttle_back && rot_z > -max_roll) {
+    if (throttle_back && rot_z < max_pitch) {
         //up_force += 20,
         m_body->addTorque({ 0,0, 2 });
         m_body->addForce({ 0, 1, 0 }, 20);
