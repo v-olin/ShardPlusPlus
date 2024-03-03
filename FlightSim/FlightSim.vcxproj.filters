@@ -20,6 +20,7 @@
     </ClInclude>
     <ClInclude Include="main.h" />
     <ClInclude Include="include\AttitudeIndicator.h" />
+    <ClInclude Include="include\HeadingIndicator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -33,5 +34,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\AttitudeIndicator.cpp" />
+    <ClCompile Include="src\HeadingIndicator.cpp" />
   </ItemGroup>
 </Project>

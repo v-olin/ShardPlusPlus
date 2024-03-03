@@ -4,9 +4,9 @@
 #include "Model.h"
 #include "RenderableObject.h"
 
-class AttitudeIndicator : public Shard::RenderableObject {
+class HeadingIndicator : public Shard::RenderableObject {
 public:
-	AttitudeIndicator(std::shared_ptr<Shard::Model> plane);
+	HeadingIndicator(std::shared_ptr<Shard::Model> plane);
 
 	void render();
 
@@ -19,5 +19,5 @@ private:
 	GLuint m_background;
 
 	void createGeometry();
-	void getPlaneAngles(float *pitch, float *roll);
+	float getPlaneHeading(); // RADIANS!!!!
 };

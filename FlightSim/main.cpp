@@ -228,7 +228,9 @@ void GameTest::initalize() {
 
 	createPlayerPlane();
 	planeAI = std::make_shared<AttitudeIndicator>(playerPlane->m_model);
+	planeHI = std::make_shared<HeadingIndicator>(playerPlane->m_model);
 	Shard::Bootstrap::addRenderObject(planeAI);
+	Shard::Bootstrap::addRenderObject(planeHI);
 	
 	Shard::Bootstrap::getInput().addListeners(shared_from_this());
 	parent = std::make_shared<Shard::Model>("models/cube.obj");

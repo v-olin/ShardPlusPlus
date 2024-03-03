@@ -1,14 +1,16 @@
-#include "AttitudeIndicator.h"
+#include "HeadingIndicator.h"
 
 #include "ShaderManager.h"
 #include "TextureManager.h"
 
+#define GLM_ENABLE_EXPERIMENTAL
+
 #include <glm.hpp>
+#include <gtx/projection.hpp>
+#include <gtx/vector_angle.hpp>
 #include <gtc/matrix_transform.hpp>
 
-#define PI 3.14159265359
-
-AttitudeIndicator::AttitudeIndicator(std::shared_ptr<Shard::Model> plane)
+HeadingIndicator::HeadingIndicator(std::shared_ptr<Shard::Model> plane)
 	: m_plane(plane)
 	, m_size(100.f)
 	, m_vao(SIZE_MAX)
@@ -16,14 +18,14 @@ AttitudeIndicator::AttitudeIndicator(std::shared_ptr<Shard::Model> plane)
 	createGeometry();
 
 	Shard::ShaderManager& sm = Shard::ShaderManager::getInstance();
-	sm.loadShader("../FlightSim/shaders/", "attitudeGauge", false);
+	sm.loadShader("../FlightSim/shaders/", "headingGauge", false);
 
 	Shard::TextureManager& tm = Shard::TextureManager::getInstance();
-	m_background = tm.loadTextureRGBA("../FlightSim/textures/attitude_background.png");
-	m_overlay = tm.loadTextureRGBA("../FlightSim/textures/attitude_overlay.png");
+	m_background = tm.loadTextureRGBA("../FlightSim/textures/heading_background.png");
+	m_overlay = tm.loadTextureRGBA("../FlightSim/textures/heading_overlay.png");
 }
 
-void AttitudeIndicator::createGeometry() {
+void HeadingIndicator::createGeometry() {
 	const float z = 2.f;
 	const std::vector<glm::vec3> vertices{
 		{ -m_size, -m_size, z },
@@ -47,7 +49,7 @@ void AttitudeIndicator::createGeometry() {
 	GLuint m_pbo = 0;
 	GLuint m_uvbo = 0;
 	GLuint m_ibo = 0;
-	
+
 	glGenVertexArrays(1, &m_vao);
 	glBindVertexArray(m_vao);
 
@@ -76,47 +78,41 @@ void AttitudeIndicator::createGeometry() {
 		indices.data(), GL_STATIC_DRAW);
 }
 
-void AttitudeIndicator::getPlaneAngles(float* pitch, float* roll) {
-	glm::vec3 angles = m_plane->rotation();
+// IN RADIANS!!!
+float HeadingIndicator::getPlaneHeading() {
+	glm::vec3 dir = m_plane->m_forward;
+	glm::vec3 projDir = glm::proj(dir, glm::normalize(glm::vec3{ 1.0f, 0.0f, 1.0f }));
 
-	*pitch = angles.z;
-	*roll = angles.x;
+	glm::vec2 refDir = glm::normalize(glm::vec2{ 1.0f, 0.0f });
+	glm::vec2 dir2D = glm::normalize(glm::vec2{ dir.x, dir.z });
 
-	if (*pitch > PI / 2) {
-		*pitch = PI - *pitch;
-		*roll += PI;
-	}
-	else if (*pitch < -PI / 2) {
-		*pitch = *pitch + PI;
-		*roll -= PI;
-	}
+	auto angle = glm::orientedAngle(refDir, dir2D);
+
+	return angle;
 }
 
-void AttitudeIndicator::render() {
+void HeadingIndicator::render() {
 	const glm::vec2 size{ m_size * 2 };
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glViewport(0, 0, size.x, size.y);
+	glViewport(size.x, 0, size.x, size.y);
 	glEnable(GL_SCISSOR_TEST);
 	glDisable(GL_CULL_FACE);
-	glScissor(0, 0, size.x, size.y);
+	glScissor(size.x, 0, size.x, size.y);
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	auto sm = Shard::ShaderManager::getInstance();
 
-	auto shader = sm.getShader("attitudeGauge");
+	auto shader = sm.getShader("headingGauge");
 	glUseProgram(shader);
 
-	float pitch = 0.f;
-	float roll = 0.f;
-	getPlaneAngles(&pitch, &roll);
+	float headingRad = getPlaneHeading();
 
-	sm.SetFloat1(shader, pitch, "planePitchRad");
-	sm.SetFloat1(shader, roll, "planeRollRad");
+	sm.SetFloat1(shader, headingRad, "planeHeadingRad");
 
-	glActiveTexture(GL_TEXTURE15);
+	glActiveTexture(GL_TEXTURE17);
 	glBindTexture(GL_TEXTURE_2D, m_overlay);
-	glActiveTexture(GL_TEXTURE16);
+	glActiveTexture(GL_TEXTURE18);
 	glBindTexture(GL_TEXTURE_2D, m_background);
 
 	glm::mat4 viewMatrix = glm::lookAt(

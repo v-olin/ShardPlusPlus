@@ -110,6 +110,7 @@ IF EXIST $(SolutionDir)\Shard\vendor\embree2\lib\embree.dll\ (xcopy /Q /E /Y /I 
     <ClInclude Include="include\AIPlane.h" />
     <ClInclude Include="include\AttitudeIndicator.h" />
     <ClInclude Include="include\Bullet.h" />
+    <ClInclude Include="include\HeadingIndicator.h" />
     <ClInclude Include="include\PlayerPlane.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
@@ -118,6 +119,7 @@ IF EXIST $(SolutionDir)\Shard\vendor\embree2\lib\embree.dll\ (xcopy /Q /E /Y /I 
     <ClCompile Include="src\AIPlane.cpp" />
     <ClCompile Include="src\AttitudeIndicator.cpp" />
     <ClCompile Include="src\Bullet.cpp" />
+    <ClCompile Include="src\HeadingIndicator.cpp" />
     <ClCompile Include="src\PlayerPlane.cpp" />
   </ItemGroup>
   <ImportGroup Label="Shared">
