@@ -144,8 +144,8 @@ namespace Shard {
 		glm::vec3 angles = plane->rotation();
 
 		// NOTE TO SELF: THIS IS IN RADIANS 
-		*pitch = -angles.z; // this is relative
-		*roll = -angles.y;
+		*pitch = angles.z; // this is relative
+		*roll = angles.x;
 
 		if (*pitch > PI / 2) {
 			*pitch = PI - *pitch;
