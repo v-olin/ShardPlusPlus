@@ -17,23 +17,24 @@
 
 namespace Shard {
 
-	Renderer::Renderer(SceneManager& sceneManager,
+	Renderer::Renderer() 
+		: m_resolution({ 1280, 760 })
+		, m_nearPlane(1.f)
+		, m_farPlane(10000.f)
+		, m_drawColliders(true)
+		, m_fieldOfView(45.f)
+		, m_gui(nullptr)
+		, m_heightfield(nullptr)
+		, m_pathtracerTxtId(SIZE_MAX)
+		, m_renderObjects({})
+	{ }
+
+	void Renderer::initialize(SceneManager& sceneManager,
 		TextureManager& texManager,
 		ShaderManager& shaderManager,
 		GUI* gui,
 		GLFWwindow* window)
-		: m_sceneManager(sceneManager)
-		, m_textureManager(texManager)
-		, m_shaderManager(shaderManager)
-		, m_gui(gui)
-		, m_resolution({ 1280, 760 })
-		, m_nearPlane(1.f)
-		, m_farPlane(10000.f)
-		, m_fieldOfView(sceneManager.camera.fov)
-		, m_projectionMatrix(glm::perspective(sceneManager.camera.fov, float(m_resolution.x) / float(m_resolution.y), m_nearPlane, m_farPlane))
-		, m_drawColliders(true)
-		, m_window(window)
-		, m_heightfield(sceneManager)
+		
 	{
 		static bool initialized = false;
 		if (initialized) {
@@ -41,191 +42,35 @@ namespace Shard {
 		}
 		initialized = true;
 
-		m_plane = nullptr;
+		m_sceneManager = &sceneManager;
+		m_textureManager = &texManager;
+		m_shaderManager = &shaderManager;
+		m_gui = gui;
+		m_fieldOfView = sceneManager.camera.fov;
+		m_projectionMatrix = glm::perspective(m_fieldOfView, m_resolution.x / m_resolution.y, m_nearPlane, m_farPlane);
+		m_window = window;
+		
+		m_heightfield = new HeightField(sceneManager);
+
 		loadRequiredShaders();
 
-		att_background = m_textureManager.loadTextureRGBA("../Shard/res/textures/attitude_background.png");
-		att_overlay = m_textureManager.loadTextureRGBA("../Shard/res/textures/attitude_overlay.png");
-		att_transmap = m_textureManager.loadTextureRGBA("../Shard/res/textures/attitude_transmap.png");
-
-		att_vao = createGauges();
-		
-		envmap_bg_id = m_textureManager.loadHdrTexture("001.hdr");
-		envmap_refmap_id = m_textureManager.loadHdrTexture("001_dl_0.hdr");
-		envmap_irrmap_id = m_textureManager.loadHdrTexture("001_irradiance.hdr");
+		envmap_bg_id = m_textureManager->loadHdrTexture("001.hdr");
+		envmap_refmap_id = m_textureManager->loadHdrTexture("001_dl_0.hdr");
+		envmap_irrmap_id = m_textureManager->loadHdrTexture("001_irradiance.hdr");
 
 		//TODO, fix material values, now we have ice mountains
 		//m_heightfield.loadHeightField("L3123F.png", "L3123F_downscaled.jpg", "L3123F_shininess.png");
 		const float size = 10000.f;
 		const float tesselation = 1000.f;
 
-		m_heightfield.generateMesh(tesselation, size, 982374);
+		m_heightfield->generateMesh(tesselation, size, 982374);
 
 		glEnable(GL_DEPTH_TEST); // z-buffering
 		glEnable(GL_CULL_FACE); // backface culling
 	}
 
-	GLuint Renderer::createGauges() {
-		const float size = 150.f;
-		const float z = 2.f;
-		const static std::vector<glm::vec3> vertices{
-			{ -size, -size, z },
-			{ size, -size, z },
-			{ size, size, z },
-			{ -size, size, z },
-			//{ 0, 0, z },
-			//{ 20, 0, z },
-			//{ 20, 20, z },
-			//{ 0, 20, z },
-		};
-
-		const static std::vector<int> indices = {
-			0, 1, 3,
-			3, 1, 2
-			//0, 3, 1,
-			//3, 2, 1
-		};
-
-		glm::vec2 bl = glm::vec2(0.0f, 0.5f - (0.5f * 800.f / 3600.f));
-		glm::vec2 br = glm::vec2(1.0f, 0.5f - (0.5f * 800.f / 3600.f));
-		glm::vec2 tl = glm::vec2(0.0f, 0.5f + (0.5f * 800.f / 3600.f));
-		glm::vec2 tr = glm::vec2(1.0f, 0.5f + (0.5f * 800.f / 3600.f));
-
-		const std::vector<glm::vec2> texCoords = {
-			{ 0, 0 },
-			{ 1, 0 },
-			{ 1, 1 },
-			{ 0, 1 }
-		};
-
-		GLuint m_vao = 0;
-		GLuint m_pbo = 0;
-		GLuint m_uvb = 0;
-		GLuint m_ibo = 0;
-
-		glGenVertexArrays(1, &m_vao);
-		glBindVertexArray(m_vao);
-
-		glGenBuffers(1, &m_pbo);
-		glBindBuffer(GL_ARRAY_BUFFER, m_pbo);
-		glBufferData(GL_ARRAY_BUFFER,
-			vertices.size() * sizeof(glm::vec3),
-			vertices.data(), GL_STATIC_DRAW);
-
-		glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
-		glEnableVertexAttribArray(0);
-
-		glGenBuffers(1, &m_uvb);
-		glBindBuffer(GL_ARRAY_BUFFER, m_uvb);
-		glBufferData(GL_ARRAY_BUFFER,
-			texCoords.size() * sizeof(glm::vec2),
-			texCoords.data(), GL_STATIC_DRAW);
-
-		glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, 0);
-		glEnableVertexAttribArray(1);
-
-		glGenBuffers(1, &m_ibo);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-			indices.size() * sizeof(int),
-			indices.data(), GL_STATIC_DRAW);
-
-		return m_vao;
-	}
-
-#define PI 3.14159265359
-	void Renderer::getPlaneAngles(float *pitch, float *roll) {
-		//assert(m_plane != nullptr && "THIS IS SO FUCKING BAD!!!");
-		//if (m_plane == nullptr)
-		//	return;
-
-		std::shared_ptr<Model> plane{ Bootstrap::getPlane() };
-
-		glm::vec3 angles = plane->rotation();
-
-		// NOTE TO SELF: THIS IS IN RADIANS 
-		*pitch = angles.z; // this is relative
-		*roll = angles.x;
-
-		if (*pitch > PI / 2) {
-			*pitch = PI - *pitch;
-			*roll += PI;
-		}
-		else if (*pitch < -PI / 2) {
-			*pitch = *pitch + PI;
-			*roll -= PI;
-		}
-
-		/*
-		glm::vec3 dir = normalize(plane->m_forward);
-		// project direction on ground
-		glm::vec3 projDir = normalize(proj(dir, glm::vec3(0.0f, 1.0f, 0.0f)));
-		// calculate angle between these vectors to get pitch and convert to degrees
-		*pitch = -acos(glm::dot(dir, projDir));
-		*/
-
-
-
-		/*
-		
-
-		// I KNEW ROTATION MATRICES WAS THE WAY TO GO :DDDDDDDDDD
-		// nevermind i fucking hate this so bad
-		glm::mat3 R = plane->getRotationMatrix();
-
-		//*pitch = -1 * asin(R[2][0]); // this is theta, not correct!!! very bad!! (this is turning)
-		//*pitch = atan2(R[2][1], R[2][2]); // this is psi, also incorrect wtf???
-		float theta = -1 * asin(R[2][0]);
-		//*pitch = atan2(R[1][0] / cos(theta), R[0][0] / cos(theta)); // this worked somewhat ok
-
-		// NEW SOLUTION!!! TIDIN TIDIN TIDIN
-		*pitch = atan2(-R[2][0], sqrt(pow(R[2][1], 2) + pow(R[2][2], 2)));
-		*roll = atan2(R[2][1], R[2][2]); // TODO
-		*/
-	}
-
-	void Renderer::drawGauges() {
-		const glm::vec2 size{ 300, 300 };
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glViewport(0, 0, size.x, size.y);
-		glEnable(GL_SCISSOR_TEST);
-		glDisable(GL_CULL_FACE);
-		glScissor(0, 0, size.x, size.y);
-		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		auto shader = m_shaderManager.getShader("gauge");
-		glUseProgram(shader);
-
-		float pitch = 0.f;
-		float roll = 0.f;
-		getPlaneAngles(&pitch, &roll);
-
-		m_shaderManager.SetFloat1(shader, pitch, "planePitchRad");
-		m_shaderManager.SetFloat1(shader, roll, "planeRollRad");
-
-		glActiveTexture(GL_TEXTURE15);
-		glBindTexture(GL_TEXTURE_2D, att_overlay);
-		glActiveTexture(GL_TEXTURE16);
-		glBindTexture(GL_TEXTURE_2D, att_background);
-
-		glm::mat4 viewMatrix = glm::lookAt(
-			vec3(0.f), // set camera at origin
-			vec3(0.f, 0.f, 1.f), // triangles are centered around the (0, 0, z) axis at +2.f z, so look at +z
-			vec3(0.f, 1.f, 0.f)
-		);
-		//glm::mat4 viewMatrix = m_sceneManager.getCameraViewMatrix();
-		float xp = size.x / 2, yp = size.y / 2;
-		glm::mat4 projMatrix = glm::ortho(-xp, xp, -yp, yp, m_nearPlane, m_farPlane); //m_projectionMatrix; //glm::ortho(0.f, xp, 0.f, yp);
-
-		m_shaderManager.SetMat4x4(shader, projMatrix * viewMatrix, "projMatrix");
-
-		glBindVertexArray(att_vao);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-		glEnable(GL_CULL_FACE);
-		glDisable(GL_SCISSOR_TEST);
-		glUseProgram(0);
+	void Renderer::addRenderObject(std::shared_ptr<RenderableObject> robj) {
+		m_renderObjects.push_back(robj); 
 	}
 
 	void Renderer::loadRequiredShaders() {
@@ -236,7 +81,7 @@ namespace Shard {
 #endif
 
 		for (const auto& shader : m_requiredShaders) {
-			m_shaderManager.loadShader(shader, allow_errors);
+			m_shaderManager->loadShader(shader, allow_errors);
 		}
 
 		///////////////////////////////////////////////////////////////////////////
@@ -269,7 +114,6 @@ namespace Shard {
 		//todo, use texturemanager
 		PathTracer::environment.map.load("../Shard/res/envmaps/001.hdr");
 		PathTracer::environment.multiplier = 1.0f;
-
 	}
 
 	void Renderer::render() {
@@ -292,7 +136,11 @@ namespace Shard {
 
 		drawBackground();
 		drawScene();
-		drawGauges();
+
+		for (const auto obj : m_renderObjects)
+			obj->render();
+
+		//drawGauges();
 
 		/////////////////////////////////////////////////////////////
 		// BORING STUFF!! TRUE!
@@ -362,7 +210,7 @@ namespace Shard {
 		
 		glUseProgram(shader);
 		
-		glm::mat4 viewMatrix = m_sceneManager.getCameraViewMatrix();
+		glm::mat4 viewMatrix = m_sceneManager->getCameraViewMatrix();
 		glm::mat4 mvpMatrix = m_projectionMatrix * viewMatrix;
 		sm.SetMat4x4(shader, mvpMatrix, "u_MVP");
 
@@ -383,9 +231,9 @@ namespace Shard {
 		glBindTexture(GL_TEXTURE_2D, envmap_bg_id);
 
 		static float environment_multiplier = 1.0f;
-		glm::mat4 viewMatrix = m_sceneManager.getCameraViewMatrix();
+		glm::mat4 viewMatrix = m_sceneManager->getCameraViewMatrix();
 		auto VP = m_projectionMatrix * viewMatrix;
-		auto camera_pos = m_sceneManager.camera.pos;
+		auto camera_pos = m_sceneManager->camera.pos;
 
 		sm.SetFloat1(bg_shader, environment_multiplier, "environment_multiplier");
 		sm.SetMat4x4(bg_shader, inverse(VP), "inv_PV");
@@ -452,7 +300,7 @@ namespace Shard {
 			drawPathTracedScene();
 		}
 		else {
-			m_heightfield.submitTriangles(m_sceneManager.getCameraViewMatrix(), m_projectionMatrix, envmap_bg_id, envmap_irrmap_id, envmap_refmap_id);
+			m_heightfield->submitTriangles(m_sceneManager->getCameraViewMatrix(), m_projectionMatrix, envmap_bg_id, envmap_irrmap_id, envmap_refmap_id);
 			drawModels();
 		}
 	}
@@ -555,7 +403,7 @@ namespace Shard {
 		auto& gobs = GameObjectManager::getInstance().getObjects();
 		auto& sun = SceneManager::getInstance().sun;
 
-		const auto shader = m_shaderManager.getDefaultShader();
+		const auto shader = m_shaderManager->getDefaultShader();
 		glUseProgram(shader);
 
 		glActiveTexture(GL_TEXTURE6);
@@ -567,14 +415,14 @@ namespace Shard {
 		glActiveTexture(0);
 
 
-		auto viewMatrix = m_sceneManager.getCameraViewMatrix();
+		auto viewMatrix = m_sceneManager->getCameraViewMatrix();
 		auto pv = m_projectionMatrix * viewMatrix;
-		auto camera_pos = m_sceneManager.camera.pos;
+		auto camera_pos = m_sceneManager->camera.pos;
 		auto& sm = m_shaderManager;
 
-		glm::vec4 viewSpaceLightPosition = viewMatrix * glm::vec4(m_sceneManager.sun.light_position, 1.0f);
-		sm.SetVec3(shader, viewSpaceLightPosition, "viewSpaceLightPosition");
-		sm.SetMat4x4(shader, glm::inverse(viewMatrix), "viewInverse");
+		glm::vec4 viewSpaceLightPosition = viewMatrix * glm::vec4(m_sceneManager->sun.light_position, 1.0f);
+		sm->SetVec3(shader, viewSpaceLightPosition, "viewSpaceLightPosition");
+		sm->SetMat4x4(shader, glm::inverse(viewMatrix), "viewInverse");
 
 		for (std::shared_ptr<GameObject> gob : gobs) {
 
@@ -584,11 +432,11 @@ namespace Shard {
 
 			if (!gob->m_model->m_hasDedicatedShader) [[likely]] {
 				glm::mat4 normalMat = glm::inverse(glm::transpose(viewMatrix * modelMatrix));
-				sm.SetMat4x4(shader, normalMat, "normalMatrix");
-				sm.SetMat4x4(shader, viewMatrix * modelMatrix, "modelViewMatrix");
-				sm.SetMat4x4(shader, mvp, "modelViewProjMatrix");
-				sm.SetFloat1(shader, 1.f, "environment_multiplier");
-				sm.SetFloat1(shader, 1000.f, "point_light_intensity_multiplier");
+				sm->SetMat4x4(shader, normalMat, "normalMatrix");
+				sm->SetMat4x4(shader, viewMatrix * modelMatrix, "modelViewMatrix");
+				sm->SetMat4x4(shader, mvp, "modelViewProjMatrix");
+				sm->SetFloat1(shader, 1.f, "environment_multiplier");
+				sm->SetFloat1(shader, 1000.f, "point_light_intensity_multiplier");
 				
 			}
 
@@ -649,14 +497,14 @@ namespace Shard {
 
 		glm::mat4 modelMatrix = toDraw->m_model->getModelMatrix();
 		glm::mat4 ma = glm::translate(glm::mat4(1.0f), toDraw->m_model->position());
-		glm::mat4 viewMatrix = m_sceneManager.getCameraViewMatrix();
+		glm::mat4 viewMatrix = m_sceneManager->getCameraViewMatrix();
 		glm::mat4 mvpMatrix = m_projectionMatrix * viewMatrix;// *ma;
 
-		auto shader = m_shaderManager.getShader("collider");
+		auto shader = m_shaderManager->getShader("collider");
 		glUseProgram(shader);
 
-		m_shaderManager.SetVec3(shader, toDraw->m_body->m_debugColor, "colorIn");
-		m_shaderManager.SetMat4x4(shader, mvpMatrix, "u_MVP");
+		m_shaderManager->SetVec3(shader, toDraw->m_body->m_debugColor, "colorIn");
+		m_shaderManager->SetMat4x4(shader, mvpMatrix, "u_MVP");
 
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -691,7 +539,8 @@ namespace Shard {
 		glUseProgram(0);
 	}
 
+	// smol cute cozy function :^)
 	void Renderer::configureDefaultShader() {
-		glUseProgram(m_shaderManager.getDefaultShader());
+		glUseProgram(m_shaderManager->getDefaultShader());
 	}
 }

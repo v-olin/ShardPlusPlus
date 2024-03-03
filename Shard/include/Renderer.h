@@ -4,7 +4,7 @@
 #include "TextureManager.h"
 #include "ShaderManager.h"
 #include "GUI.h"
-
+#include "RenderableObject.h"
 #include "CubeMap.h"
 #include "heightfield.h"
 
@@ -13,12 +13,14 @@
 namespace Shard {
 	class Renderer {
 	public:
-		Renderer(SceneManager& sceneManager,
+		Renderer();
+
+		void initialize(SceneManager& sceneManager,
 			TextureManager& texManager,
 			ShaderManager& shaderManager,
 			GUI* gui,
 			GLFWwindow* window);
-
+		void addRenderObject(std::shared_ptr<RenderableObject> robj);
 		void render();
 		
 		float m_nearPlane = 1.f;
@@ -26,13 +28,13 @@ namespace Shard {
 		bool m_usePathTracing = true;
 
 	private:
-		SceneManager& m_sceneManager;
-		TextureManager& m_textureManager;
-		ShaderManager& m_shaderManager;
+		SceneManager* m_sceneManager;
+		TextureManager* m_textureManager;
+		ShaderManager* m_shaderManager;
 		GUI* m_gui;
-		HeightField m_heightfield;
-		const glm::vec2 m_resolution;
-		const float m_fieldOfView;
+		HeightField* m_heightfield;
+		glm::vec2 m_resolution;
+		float m_fieldOfView;
 		glm::mat4 m_projectionMatrix;
 		bool m_drawColliders;
 		GLFWwindow* m_window;
@@ -44,33 +46,20 @@ namespace Shard {
 		GLuint cubemap_tex_id{ 0 };
 		CubeMap* cubemap_model{ nullptr };
 
-		GLuint att_vao{ 0 };
-		GLuint att_pbo{ 0 };
-		GLuint att_tbo{ 0 };
-		GLuint att_ibo{ 0 };
-
-		GLuint att_overlay{ 0 };
-		GLuint att_background{ 0 };
-		GLuint att_transmap{ 0 };
-		std::shared_ptr<Model> m_plane{ nullptr };
-
-		GLuint createGauges();
-		void drawGauges();
-		void getPlaneAngles(float* pitch, float* roll);
-
 		const std::vector<std::string> m_requiredShaders{
 			"background",
 			"collider",
 			"cubemap",
 			"default",
 			"heightfield",
-			"copyTexture",
-			"gauge"
+			"copyTexture"
 		};
 
 		GLuint envmap_bg_id{ 0 };
 		GLuint envmap_refmap_id{ 0 };
 		GLuint envmap_irrmap_id{ 0 };
+
+		std::vector<std::shared_ptr<RenderableObject>> m_renderObjects;
 		
 		void loadRequiredShaders();
 		GLuint LoadCubeMap(std::string cubemap_name);

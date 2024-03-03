@@ -8,6 +8,7 @@
 #include "Bullet.h"
 #include "PlayerPlane.h"
 #include "AIPlane.h"
+#include "AttitudeIndicator.h"
 
 #include <vector>
 #include <memory>
@@ -31,6 +32,7 @@ public:
 	std::vector<std::shared_ptr<AIPlane>> aiPlanes{};
 	std::vector<std::shared_ptr<Bullet>> bullets{};
 	std::shared_ptr<PlayerPlane> playerPlane{ nullptr };
+	std::shared_ptr<AttitudeIndicator> planeAI{ nullptr };
 
 	std::shared_ptr <Shard::GameObject> lockedTarget;
 

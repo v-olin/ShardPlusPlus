@@ -64,6 +64,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -90,6 +91,7 @@ IF EXIST $(SolutionDir)\Shard\vendor\embree2\lib\embree.dll\ (xcopy /Q /E /Y /I 
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -106,6 +108,7 @@ IF EXIST $(SolutionDir)\Shard\vendor\embree2\lib\embree.dll\ (xcopy /Q /E /Y /I 
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\AIPlane.h" />
+    <ClInclude Include="include\AttitudeIndicator.h" />
     <ClInclude Include="include\Bullet.h" />
     <ClInclude Include="include\PlayerPlane.h" />
     <ClInclude Include="main.h" />
@@ -113,6 +116,7 @@ IF EXIST $(SolutionDir)\Shard\vendor\embree2\lib\embree.dll\ (xcopy /Q /E /Y /I 
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\AIPlane.cpp" />
+    <ClCompile Include="src\AttitudeIndicator.cpp" />
     <ClCompile Include="src\Bullet.cpp" />
     <ClCompile Include="src\PlayerPlane.cpp" />
   </ItemGroup>

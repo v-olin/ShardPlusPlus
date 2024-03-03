@@ -18,6 +18,10 @@
 
 namespace Shard {
 
+    void Bootstrap::addRenderObject(std::shared_ptr<RenderableObject> robj) {
+        renderer.addRenderObject(robj);
+    }
+
     bool Bootstrap::checkEnvironmentVariable(std::string id) {
         return en_vars.find(id) != en_vars.end();
     }
@@ -262,7 +266,8 @@ namespace Shard {
         SceneManager& sm = SceneManager::getInstance();
         TextureManager& tm = TextureManager::getInstance();
         ShaderManager& shm = ShaderManager::getInstance();
-        Renderer renderer{ sm, tm, shm, gui, m_Window};
+        //Renderer renderer{ sm, tm, shm, gui, m_Window};
+        renderer.initialize(sm, tm, shm, gui, m_Window);
 
         float delta_time_acc{ 0.0f };
         auto last_frame = static_cast<float>(glfwGetTime());

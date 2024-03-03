@@ -8,11 +8,13 @@
 namespace Shard {
 
 
-	typedef struct RadioSelector {
+	struct RadioSelector {
 		const char * text;
 		int* value;
 		std::vector<std::tuple<const char *, int>>selctables;
 	};
+
+
 	class GUI {
 	public:
 		GUI(GLFWwindow* window);

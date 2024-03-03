@@ -14,12 +14,12 @@
 #include "Logger.h"
 
 namespace Shard {
-
-
-
 	class TextureManager {
 	public:
-		static TextureManager& getInstance();
+		static TextureManager& getInstance() {
+			static TextureManager instance;
+			return instance;
+		}
 
 		TextureManager(TextureManager const&) = delete;
 		TextureManager& operator=(TextureManager const&) = delete;

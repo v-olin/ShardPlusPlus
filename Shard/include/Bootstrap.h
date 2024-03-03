@@ -7,6 +7,8 @@
 #include "InputManager.h"
 #include "PhysicsManager.h"
 #include "GUI.h"
+#include "Renderer.h"
+#include "RenderableObject.h"
 
 #include <memory>
 #include <string>
@@ -52,7 +54,9 @@ namespace Shard {
 		static void setup();
 		static void setupEnvironmentVariables(std::string path);
 
-		inline static ::GLFWwindow* m_Window;
+		static void addRenderObject(std::shared_ptr<RenderableObject> robj);
+
+		inline static GLFWwindow* m_Window;
 
 		inline static GUI* gui;
 
@@ -63,6 +67,7 @@ namespace Shard {
 		inline static InputManager input;
 		inline static PhysicsManager& phys{ PhysicsManager::getInstance() };
 		inline static AssetManager& asset{ AssetManager::getInstance() };
+		inline static Renderer renderer;
 		//inline static int target_frame_rate;
         //inline static int millis_per_frame;
         inline static double delta_time;

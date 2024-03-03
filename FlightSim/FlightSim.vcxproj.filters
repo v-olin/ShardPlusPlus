@@ -19,6 +19,7 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="main.h" />
+    <ClInclude Include="include\AttitudeIndicator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -31,5 +32,6 @@
     <ClCompile Include="src\PlayerPlane.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\AttitudeIndicator.cpp" />
   </ItemGroup>
 </Project>

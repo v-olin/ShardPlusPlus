@@ -36,6 +36,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Pathtracer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\PhysicsBody.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\PhysicsManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\RenderableObject.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\Renderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\SAPEntry.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\SceneManager.h" />

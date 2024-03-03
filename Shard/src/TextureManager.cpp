@@ -7,11 +7,6 @@
 #include <stb_image.h>
 
 namespace Shard {
-	TextureManager& TextureManager::getInstance() {
-		static TextureManager instance;
-		return instance;
-	}
-
 	void TextureManager::loadTexture(GLuint* target, const std::string& path) {
 		int w, h, c;
 		stbi_set_flip_vertically_on_load(true);

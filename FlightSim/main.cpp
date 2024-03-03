@@ -118,6 +118,7 @@ void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 	}
 
 }
+
 int GameTest::getTargetFrameRate() {
 	return target_framerate;
 }
@@ -181,7 +182,6 @@ void GameTest::createPlayerPlane() {
 	Shard::Bootstrap::setPlane(playerPlane->m_model);
 }
 
-
 void GameTest::createAIPlane(float x, float y, float z) {
 	auto aiPlane = std::make_shared<AIPlane>();
 	aiPlane->m_model = std::make_shared<Shard::Model>(parent);
@@ -199,6 +199,7 @@ void GameTest::createAIPlane(float x, float y, float z) {
 
 	aiPlanes.push_back(aiPlane);
 }
+
 void GameTest::createBullet() {
 	auto bullet = std::make_shared<Bullet>();
 	bullet->initialize();
@@ -217,21 +218,27 @@ void GameTest::createBullet() {
 	}
 	bullets.push_back(bullet);
 }
+
 float randf() {
 	return static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 }
 
-
 void GameTest::initalize() {
 	Shard::Logger::log("Initializing game");
+
 	createPlayerPlane();
+	planeAI = std::make_shared<AttitudeIndicator>(playerPlane->m_model);
+	Shard::Bootstrap::addRenderObject(planeAI);
+	
 	Shard::Bootstrap::getInput().addListeners(shared_from_this());
 	parent = std::make_shared<Shard::Model>("models/cube.obj");
+	
 	createAIPlane(50, 50, 50);
+	
 	static auto &sm = Shard::SceneManager::getInstance();
-	//sm.camera.movementSpeed = 100;
+	
 	drawColliders = Shard::Bootstrap::getEnvironmentVariable("physics_debug") == "1";
-	//GUI
+	
 	Shard::Bootstrap::gui->addRadioSelector({ "View",  
 		&cameraStatus,
 		{
@@ -239,7 +246,8 @@ void GameTest::initalize() {
 		std::make_tuple("Third person", Shard::CameraView::THIRD_PERSON),
 		std::make_tuple("Lock camera on Obj", Shard::CameraView::LOCK),
 		std::make_tuple("Free Cam", Shard::CameraView::FREE),
-		} });
+		} 
+	});
 
 	Shard::Bootstrap::gui->addCheckBox("Use Path Tracing", &usePathTracing);
 	Shard::Bootstrap::gui->addCheckBox("Draw colliders", &drawColliders);
