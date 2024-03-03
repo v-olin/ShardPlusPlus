@@ -1,21 +1,28 @@
 #include <string>
-//#include <GL/glew.h>
-//#include <glm/glm.hpp>
 #include "../common.h"
 #include "glm.hpp"
 #include "SceneManager.h"
-//#include "sceneContext.h"
-
-//using namespace glm;
 
 namespace Shard {
 	enum MapType {
 		LOADED,
 		GENERATED
 	};
+
+	class House {
+	public:
+		House(glm::vec3 pos, float size, int seed, float octaves, float mult);
+
+		void render(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix);
+	private:
+		GLuint m_vao;
+		glm::vec3 m_position;
+		glm::vec3 m_size;
+
+		void createGeometry();
+	};
 		
-	class HeightField
-	{
+	class HeightField {
 	public:
 		int m_meshResolution; // triangles edges per quad side
 		GLuint m_texid_hf;
@@ -65,6 +72,8 @@ namespace Shard {
 			GLuint envMap, GLuint irradMap, GLuint refMap);
 
 	private:
+		std::vector<House> m_houses{};
+		
 		//SceneContext& sceneContext;
 		SceneManager& m_scene_manager;
 		void loadTexture(GLuint* target, const std::string& path);

@@ -454,16 +454,16 @@ namespace Shard {
 
 		std::vector<glm::vec2> minMax = toDraw->m_body->m_collider->getTransformedMinMaxDims();
 
-		glm::vec3 max = glm::vec3{
-			minMax[0].y,
-			minMax[1].y,
-			minMax[2].y
-		};
-
 		glm::vec3 min = glm::vec3{
 			minMax[0].x,
 			minMax[1].x,
 			minMax[2].x
+		};
+
+		glm::vec3 max = glm::vec3{
+			minMax[0].y,
+			minMax[1].y,
+			minMax[2].y
 		};
 
 		//removed - signs since min can already be negativ if neede, very bad!!
@@ -477,8 +477,6 @@ namespace Shard {
 			max.x,	max.y, min.z,	// v6
 			max.x,	max.y, max.z	// v7
 		};
-
-		
 
 		GLuint indices[] = {
 			0, 2, 3,

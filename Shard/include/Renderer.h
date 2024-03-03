@@ -52,7 +52,8 @@ namespace Shard {
 			"cubemap",
 			"default",
 			"heightfield",
-			"copyTexture"
+			"copyTexture",
+			"simple"
 		};
 
 		GLuint envmap_bg_id{ 0 };

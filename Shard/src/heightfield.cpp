@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include <vector>
 #include <stb_image.h>
+#include <ranges>
 
 #include "Logger.h"
 #include "ShaderManager.h"
@@ -18,6 +19,101 @@ using namespace glm;
 using std::string;
 
 namespace Shard {
+
+	House::House(glm::vec3 pos, float size, int seed, float octaves, float mult)
+		: m_position(pos)
+		, m_vao(0)
+		, m_size({ 80, 70, 100 })
+	{
+		float hx = m_size.x / 2;
+		float hz = m_size.z / 2;
+
+		float x = pos.x, z = pos.z;
+
+		std::vector<float> cornerHeights{
+			Noise::perlin(x - hx, z - hz, size, seed, octaves) * mult,
+			Noise::perlin(x + hx, z - hz, size, seed, octaves) * mult,
+			Noise::perlin(x - hx, z + hz, size, seed, octaves) * mult,
+			Noise::perlin(x + hx, z + hz, size, seed, octaves) * mult
+		};
+
+		auto min = *std::ranges::min_element(cornerHeights);
+		m_position.y = min;
+
+		createGeometry();
+	}
+
+	void House::createGeometry() {
+		const float hx = m_size.x / 2;
+		const float hz = m_size.z / 2;
+		const glm::vec3 pos = m_position;
+
+		glm::vec3 min{ pos.x - hx, pos.y, pos.z - hz };
+		glm::vec3 max{ pos.x + hx, pos.y + m_size.y, pos.z + hz };
+
+		const std::vector<glm::vec3> vertices{
+			{min.x,	min.y, max.z},	// v0
+			{min.x,	min.y, min.z},	// v1
+			{max.x,	min.y, min.z},	// v2
+			{max.x,	min.y, max.z},	// v3
+			{min.x,	max.y, max.z},	// v4
+			{min.x,	max.y, min.z},	// v5
+			{max.x,	max.y, min.z},	// v6
+			{max.x,	max.y, max.z}	// v7
+		};
+
+		// whoever wrote these indices, git blame!!!
+		const std::vector<int> indices{
+			0, 2, 3,
+			0, 1, 2,
+			0, 1, 4,
+			1, 5, 4,
+			4, 5, 7,
+			6, 5, 7,
+			3, 2, 7,
+			6, 7, 2,
+			0, 3, 4,
+			4, 7, 3,
+			1, 6, 2,
+			1, 5, 6
+		};
+
+		GLuint vbo, ibo;
+
+		glGenVertexArrays(1, &m_vao);
+		glBindVertexArray(m_vao);
+
+		glGenBuffers(1, &vbo);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBufferData(GL_ARRAY_BUFFER,
+			vertices.size() * sizeof(glm::vec3),
+			vertices.data(), GL_STATIC_DRAW);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
+		glEnableVertexAttribArray(0);
+
+		glGenBuffers(1, &ibo);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+			indices.size() * sizeof(int),
+			indices.data(), GL_STATIC_DRAW);
+	}
+
+	void House::render(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) {
+		glDisable(GL_CULL_FACE);
+		auto sm = ShaderManager::getInstance();
+		auto shader = sm.getShader("simple");
+		glUseProgram(shader);
+
+		sm.SetMat4x4(shader, projectionMatrix * viewMatrix * glm::mat4(1.f), "modelViewProjectionMatrix");
+		sm.SetVec3(shader, glm::vec3{ 0.2f, 0.3f, 0.8f }, "material_color"); // blue :^)
+
+		glBindVertexArray(m_vao);
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+		glEnable(GL_CULL_FACE);
+		glUseProgram(0);
+	}
 
 	HeightField::HeightField(SceneManager& scene_manager)//TODO, take path to all files used, maybe
 		: m_meshResolution(0)
@@ -45,7 +141,6 @@ namespace Shard {
 
 		loadCustomTextures();
 	}
-
 	
 	void HeightField::loadHeightField(std::string heightFieldName, std::string diffuseName, std::string shinyName) {
 
@@ -148,7 +243,6 @@ namespace Shard {
 
 	void HeightField::generateMesh(int tesselation, float size, int seed)
 	{
-		//loadCustomTextures();
 		Logger::log("Generating mesh for heightfield");
 		if(m_map_type == -1)
 			m_map_type = GENERATED;
@@ -266,8 +360,6 @@ namespace Shard {
 			}
 		}
 
-		//std::reverse(normals.begin(), normals.end());
-
 		m_numIndices = indices.size();
 
 		glGenVertexArrays(1, &m_vao);
@@ -291,8 +383,6 @@ namespace Shard {
 
 		glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, 0);
 		glEnableVertexAttribArray(1);
-
-	
 	
 		glGenBuffers(1, &m_uvBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, m_uvBuffer);
@@ -311,6 +401,22 @@ namespace Shard {
 
 
 		m_shaderProgram = ShaderManager::getInstance().getShader("heightfield");
+
+		if (m_map_type == GENERATED) {
+			// I BUILD THE HOUSES :DDDD
+			for (int i = 0; i < 100; i++) {
+				float LO = -size / 2 + size * 0.01f;
+				float HI = size / 2 - size * 0.01f;
+				float x = LO + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (HI - LO)));
+				float z = LO + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (HI - LO)));
+
+				// glm::vec3 pos, float size, int seed, float octaves, float mult
+				m_houses.emplace_back(
+					glm::vec3{ x, 0.f, z },
+					size, seed, m_octaves, 70.f
+				);
+			}
+		}
 	}
 
 	void HeightField::submitTriangles(const glm::mat4& viewMatrix, 
@@ -392,6 +498,10 @@ namespace Shard {
 		glDrawElements(GL_TRIANGLES, m_numIndices, GL_UNSIGNED_INT, 0);
 
 		glUseProgram(0);
+
+		for (House &house : m_houses) {
+			house.render(viewMatrix, projectionMatrix);
+		}
 	}
 
 } // end namespace
