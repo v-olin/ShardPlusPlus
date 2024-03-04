@@ -206,6 +206,11 @@ void GameTest::createBullet() {
 	bullet->m_model->scale(glm::vec3(5));
 	bullet->m_model->translate(playerPlane->m_model->position());
 	bullet->m_model->m_rotMatrix = playerPlane->m_model->getRotationMatrix();
+	bullet->m_model->m_forward = playerPlane->m_model->m_forward;
+	bullet->m_model->m_up = playerPlane->m_model->m_up;
+	bullet->m_model->m_right = playerPlane->m_model->m_right;
+	bullet->m_model->translate({ 0,0,0 });
+
 	//bullet->m_model->rotate(180, { 0, 1, 0 });
 	bullet->m_body->recalculateColliders();
 	bullet->lockedTarget = lockedTarget;
