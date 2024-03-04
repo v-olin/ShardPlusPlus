@@ -45,7 +45,7 @@ public:
 	int pathTracingSampling{ 4 };
 	bool drawColliders{ false };
 	int target_framerate{ 144 };
-	glm::vec3 fp_offset{ 0 };
+	glm::vec3 fp_offset{7, 2.8f, 0};
 
 
 };

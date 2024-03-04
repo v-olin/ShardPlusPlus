@@ -180,7 +180,7 @@ void GameTest::createPlayerPlane() {
 	Shard::Bootstrap::getInput().addListeners(playerPlane);
 	static auto &sm = Shard::SceneManager::getInstance();
 	sm.camera.setPlayerGameObj(playerPlane);
-	sm.camera.setFirstPersonOffset(glm::vec3(9, 8, 0));
+	sm.camera.setFirstPersonOffset(glm::vec3(7, 2.8f, 0));
 	sm.camera.setThirdPersonOffset(glm::vec3(-50, 25, 0), glm::vec3(0, 15, 0));
 	Shard::Bootstrap::setPlane(playerPlane->m_model);
 }
@@ -240,8 +240,8 @@ void GameTest::initalize() {
 	Shard::Bootstrap::getInput().addListeners(shared_from_this());
 	AI_parent = std::make_shared<Shard::Model>("models/chopper.obj");
 	bullet_parent = std::make_shared<Shard::Model>("models/AIM120D.obj");
-	int max = 500;
-	for (int i = 0; i < 0; i++) {
+	int max = 5000;
+	for (int i = 0; i < 500; i++) {
 		auto pos = glm::vec3(rand() % max, rand() % max, rand() % max) - glm::vec3(max/2, 0, max/2);
 		createAIPlane(pos.x, pos.y, pos.z);
 	}
