@@ -158,6 +158,8 @@ void GameTest::update() {
 	Shard::Bootstrap::setEnvironmentVariable("physics_debug", drawColliders ? "1" : "0");
 
 
+	if(lockedTarget != nullptr && !lockedTarget->m_toBeDestroyed)
+		lockedTarget->m_body->m_debugColor = { 1, 0, 0 };
 
 	static int oldSampling = 0;
 	if (oldSampling != pathTracingSampling){
@@ -184,16 +186,12 @@ void GameTest::createPlayerPlane() {
 
 void GameTest::createAIPlane(float x, float y, float z) {
 	auto aiPlane = std::make_shared<AIPlane>();
-	aiPlane->m_model = std::make_shared<Shard::Model>(parent);
+	aiPlane->m_model = std::make_shared<Shard::Model>(AI_parent);
 	aiPlane->initialize();
 	aiPlane->m_model->translate({ x, y, z });
 	float scale = 5;
 	aiPlane->m_model->scale({ scale, scale, scale });
 	aiPlane->m_body->recalculateColliders();
-	int posX = (rand() % 10 > 5) ? 1 : -1;
-	int posY = (rand() % 10 > 5) ? 1 : -1;
-	int posZ = (rand() % 10 > 5) ? 1 : -1;
-	aiPlane->m_body->addForce(aiPlane->m_model->m_forward, 1.f);
 
 	Shard::Bootstrap::getInput().addListeners(aiPlane);
 
@@ -202,14 +200,15 @@ void GameTest::createAIPlane(float x, float y, float z) {
 
 void GameTest::createBullet() {
 	auto bullet = std::make_shared<Bullet>();
+	bullet->m_model = std::make_shared<Shard::Model>(bullet_parent);
 	bullet->initialize();
-	bullet->m_model->scale(glm::vec3(5));
+	bullet->m_model->scale(glm::vec3(.5f));
 	bullet->m_model->translate(playerPlane->m_model->position());
 	bullet->m_model->m_rotMatrix = playerPlane->m_model->getRotationMatrix();
-	bullet->m_model->m_forward = playerPlane->m_model->m_forward;
-	bullet->m_model->m_up = playerPlane->m_model->m_up;
-	bullet->m_model->m_right = playerPlane->m_model->m_right;
-	bullet->m_model->translate({ 0,0,0 });
+	//bullet->m_model->m_forward = playerPlane->m_model->m_forward;
+	//bullet->m_model->m_up = playerPlane->m_model->m_up;
+	//bullet->m_model->m_right = playerPlane->m_model->m_right;
+	//bullet->m_model->translate({ 0,0,0 });
 
 	//bullet->m_model->rotate(180, { 0, 1, 0 });
 	bullet->m_body->recalculateColliders();
@@ -217,7 +216,7 @@ void GameTest::createBullet() {
 
 	static auto &sm = Shard::SceneManager::getInstance();
 	if (lockedTarget != nullptr && !lockedTarget->m_toBeDestroyed) {
-		cameraStatus = Shard::CameraView::LOCK;
+		cameraStatus = Shard::CameraView::THIRD_PERSON;
 		sm.camera.setPlayerGameObj(bullet);
 	}
 	bullets.push_back(bullet);
@@ -238,9 +237,15 @@ void GameTest::initalize() {
 	Shard::Bootstrap::addRenderObject(planeHI);
 	
 	Shard::Bootstrap::getInput().addListeners(shared_from_this());
-	parent = std::make_shared<Shard::Model>("models/cube.obj");
+	AI_parent = std::make_shared<Shard::Model>("models/chopper.obj");
+	bullet_parent = std::make_shared<Shard::Model>("models/AIM120D.obj");
+	int max = 500;
+	for (int i = 0; i < 50; i++) {
+		auto pos = glm::vec3(rand() % max, rand() % max, rand() % max) - glm::vec3(max/2, 0, max/2);
+		createAIPlane(pos.x, pos.y, pos.z);
+	}
+
 	
-	createAIPlane(50, 50, 50);
 	
 	static auto &sm = Shard::SceneManager::getInstance();
 	
@@ -261,6 +266,8 @@ void GameTest::initalize() {
 	Shard::Bootstrap::gui->addIntSlider("Path tracer sampling", &pathTracingSampling, 1, 16);
 	Shard::Bootstrap::gui->addIntSlider("Framerate (0 is uncapped)", &target_framerate, 0, 999);
 }
+
+
 
 int main() {
 	Shard::Logger::log("Hello from game?!?!?");

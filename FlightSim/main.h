@@ -29,7 +29,8 @@ public:
 	void handleEvent(Shard::InputEvent ev, Shard::EventType et);
 
 	//parent can be used if we want to create many enemy planes
-	std::shared_ptr<Shard::Model> parent{nullptr};
+	std::shared_ptr<Shard::Model> AI_parent{nullptr};
+	std::shared_ptr<Shard::Model> bullet_parent{nullptr};
 	std::vector<std::shared_ptr<AIPlane>> aiPlanes{};
 	std::vector<std::shared_ptr<Bullet>> bullets{};
 	std::shared_ptr<PlayerPlane> playerPlane{ nullptr };

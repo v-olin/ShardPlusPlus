@@ -14,10 +14,10 @@ Bullet::Bullet() : GameObject()
 }
 
 void Bullet::initialize() {
-	m_model = std::make_shared<Shard::Model>("models/bullet_best.obj");
+	//m_model = std::make_shared<Shard::Model>("models/bullet_best.obj");
     setPhysicsEnabled();
     m_body->m_mass = 1.f;
-    m_body->m_maxForce = glm::vec3{ 100.f };
+    m_body->m_maxForce = glm::vec3{ 400.f };
     m_body->m_angularDrag = glm::vec3{ 1.f };
     m_body->m_maxTorque = glm::vec3{ 100.0f, 100.0f, 100.0f };
 	m_body->m_drag = 8.f;
@@ -26,6 +26,8 @@ void Bullet::initialize() {
 	m_body->m_impartForce = true;
 	m_body->m_isKinematic = false;
     m_body->m_passThrough = true;
+	m_body->m_usesGravity = false;
+	m_drawCollider = false;
 
     m_body->m_bodyModel = m_model;
     m_body->setBoxCollider();
@@ -39,16 +41,16 @@ void Bullet::initialize() {
 void Bullet::physicsUpdate() {
 	if (lockedTarget != nullptr && !lockedTarget->m_toBeDestroyed) {
 		auto target = normalize(lockedTarget->m_model->position() + -m_model->position());
-		m_model->m_forward = m_model->m_forward + (target - m_model->m_forward) / glm::vec3(10);
+		m_model->m_forward = m_model->m_forward + (target - m_model->m_forward) / glm::vec3(40);
 		m_model->m_right = glm::normalize(glm::cross(m_model->m_forward, m_model->m_up));
 		m_model->m_up = glm::normalize(glm::cross(m_model->m_right, m_model->m_forward));
 		m_model->m_rotMatrix = glm::mat4(
 			glm::vec4(m_model->m_forward, 0),
-			glm::vec4(m_model->m_right, 0),
 			glm::vec4(m_model->m_up, 0),
+			glm::vec4(m_model->m_right, 0),
 			{ 0,0,0,1 });
 	}
-	m_body->addForce(m_model->m_forward, 100.f);
+	m_body->addForce(m_model->m_forward, 10.f);
 }
 
 void Bullet::update() {

@@ -16,6 +16,7 @@ class AIPlane
 public:
 
 	AIPlane();
+	void generateTargetPonts();
 
 	// inherited from InputListener
 	void handleEvent(Shard::InputEvent ie, Shard::EventType et);
@@ -31,6 +32,12 @@ public:
 	void onCollisionEnter(std::shared_ptr<Shard::PhysicsBody> body) override;
 	void onCollisionExit(std::shared_ptr<Shard::PhysicsBody> body) override;
 	void onCollisionStay(std::shared_ptr<Shard::PhysicsBody> body) override;
+
+	std::vector<glm::vec3> target_points;	
+	long long m_hunt_start_time;
+	long long target_hunt_time;
+	int m_hunt_index;
+
 
 
 

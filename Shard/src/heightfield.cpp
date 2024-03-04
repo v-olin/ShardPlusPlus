@@ -67,7 +67,7 @@ namespace Shard {
 		m_body->m_passThrough = false;
 		m_body->m_usesGravity = false;
 		m_body->m_clickable = false;
-		m_drawCollider = true;
+		m_drawCollider = false;
 	
 		m_body->m_bodyModel = m_model;
 		m_body->setBoxCollider();
