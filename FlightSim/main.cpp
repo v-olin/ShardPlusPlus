@@ -17,7 +17,7 @@
 #define FAST 100000000000;
 #define SLOW 50;
 
-int cameraStatus{ Shard::CameraView::THIRD_PERSON };
+int cameraStatus{ Shard::CameraView::FREE };
 std::string cameraStatusStr[] = { "First person", "Third person", "Lock", "Free" };
 
 
@@ -171,7 +171,7 @@ void GameTest::createPlayerPlane() {
 	playerPlane = std::make_shared<PlayerPlane>();
 	playerPlane->initialize();
 	playerPlane->m_body->recalculateColliders();
-	playerPlane->m_model->translate({ 0, 100, 0 });
+	playerPlane->m_model->translate({ 0, 1000, 0 });
 	playerPlane->m_model->scale({ 5, 5, 5 });
 	playerPlane->rmb_down = &is_rmb_down;
 	Shard::Bootstrap::getInput().addListeners(playerPlane);
@@ -207,7 +207,6 @@ void GameTest::createBullet() {
 	bullet->m_model->translate(playerPlane->m_model->position());
 	bullet->m_model->m_rotMatrix = playerPlane->m_model->getRotationMatrix();
 	//bullet->m_model->rotate(180, { 0, 1, 0 });
-
 	bullet->m_body->recalculateColliders();
 	bullet->lockedTarget = lockedTarget;
 
@@ -218,6 +217,7 @@ void GameTest::createBullet() {
 	}
 	bullets.push_back(bullet);
 }
+
 
 float randf() {
 	return static_cast <float> (rand()) / static_cast <float> (RAND_MAX);

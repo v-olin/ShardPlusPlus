@@ -9,15 +9,32 @@ namespace Shard {
 		GENERATED
 	};
 
-	class House {
+	class House : public GameObject, public CollisionHandler {
 	public:
 		House(glm::vec3 pos, float size, int seed, float octaves, float mult);
+		//void render(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix);
+		
+		// inherited from GameObject
+		void checkDestroyMe() override;
+		void initialize() override;
+		void physicsUpdate() override;
+		void prePhysicsUpdate() override;
+		void update() override;
+		void killMe() override;
 
-		void render(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix);
+		//Inherit from collisionhandler
+		void onCollisionEnter(std::shared_ptr<Shard::PhysicsBody> body) override;
+		void onCollisionExit(std::shared_ptr<Shard::PhysicsBody> body) override ;
+		void onCollisionStay(std::shared_ptr<Shard::PhysicsBody> body) override;
+
+
 	private:
 		GLuint m_vao;
 		glm::vec3 m_position;
-		glm::vec3 m_size;
+		float m_size;
+		int m_seed;
+		float m_octaves;
+		float m_mult;
 
 		void createGeometry();
 	};
@@ -72,7 +89,7 @@ namespace Shard {
 			GLuint envMap, GLuint irradMap, GLuint refMap);
 
 	private:
-		std::vector<House> m_houses{};
+		std::vector<std::shared_ptr<House>> m_houses{};
 		
 		//SceneContext& sceneContext;
 		SceneManager& m_scene_manager;

@@ -12,28 +12,38 @@
     <ClInclude Include="include\AIPlane.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\AttitudeIndicator.h">
+      <Filter>include</Filter>
+    </ClInclude>
     <ClInclude Include="include\Bullet.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HeadingIndicator.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\PlayerPlane.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="main.h" />
-    <ClInclude Include="include\AttitudeIndicator.h" />
-    <ClInclude Include="include\HeadingIndicator.h" />
+    <ClInclude Include="include\building.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\AIPlane.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\AttitudeIndicator.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="src\Bullet.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HeadingIndicator.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\PlayerPlane.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\AttitudeIndicator.cpp" />
-    <ClCompile Include="src\HeadingIndicator.cpp" />
+    <ClCompile Include="src\Building.cpp" />
   </ItemGroup>
 </Project>

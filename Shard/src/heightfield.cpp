@@ -12,6 +12,7 @@
 
 #include "Logger.h"
 #include "ShaderManager.h"
+#include "GameObjectManager.h"
 
 #include "noise.h"
 
@@ -20,29 +21,61 @@ using std::string;
 
 namespace Shard {
 
-	House::House(glm::vec3 pos, float size, int seed, float octaves, float mult)
-		: m_position(pos)
+	House::House(glm::vec3 pos, float size, int seed, float octaves, float mult) : GameObject()
+		, m_position(pos)
 		, m_vao(0)
-		, m_size({ 80, 70, 100 })
+		, m_size(size)
+		, m_seed(seed)
+		, m_octaves(octaves)
+		, m_mult(mult)
 	{
-		float hx = m_size.x / 2;
-		float hz = m_size.z / 2;
+	}
+	void House::initialize() {
+		auto modelSize = m_model->size();
 
-		float x = pos.x, z = pos.z;
+
+		float hx = modelSize.x / 2;
+		float hz = modelSize.z / 2;
+
+
+		float x = m_position.x, z = m_position.z;
 
 		std::vector<float> cornerHeights{
-			Noise::perlin(x - hx, z - hz, size, seed, octaves) * mult,
-			Noise::perlin(x + hx, z - hz, size, seed, octaves) * mult,
-			Noise::perlin(x - hx, z + hz, size, seed, octaves) * mult,
-			Noise::perlin(x + hx, z + hz, size, seed, octaves) * mult
+			Noise::perlin(x - hx, z - hz, m_size, m_seed, m_octaves) * m_mult,
+			Noise::perlin(x + hx, z - hz, m_size, m_seed, m_octaves) * m_mult,
+			Noise::perlin(x - hx, z + hz, m_size, m_seed, m_octaves) * m_mult,
+			Noise::perlin(x + hx, z + hz, m_size, m_seed, m_octaves) * m_mult
 		};
 
 		auto min = *std::ranges::min_element(cornerHeights);
 		m_position.y = min;
 
-		createGeometry();
+	// translate matrix
+		m_model->scale(glm::vec3(10.0f));
+		m_model->translate(m_position);
+	
+		setPhysicsEnabled();
+		m_body->m_mass = 10000000000.f;
+		m_body->m_maxForce = glm::vec3{ 0.f };
+		m_body->m_angularDrag = glm::vec3{ 10000.f };
+		m_body->m_maxTorque = glm::vec3{0};
+		m_body->m_drag = 100000.f;
+		m_body->m_stopOnCollision = true;
+		m_body->m_reflectOnCollision = true;
+		m_body->m_impartForce = true;
+		m_body->m_isKinematic = false;
+		m_body->m_passThrough = false;
+		m_body->m_usesGravity = false;
+		m_body->m_clickable = false;
+		m_drawCollider = true;
+	
+		m_body->m_bodyModel = m_model;
+		m_body->setBoxCollider();
+	
+		GameObject::addTag("House");
 	}
-
+	
+	/*
 	void House::createGeometry() {
 		const float hx = m_size.x / 2;
 		const float hz = m_size.z / 2;
@@ -114,6 +147,7 @@ namespace Shard {
 		glEnable(GL_CULL_FACE);
 		glUseProgram(0);
 	}
+	*/
 
 	HeightField::HeightField(SceneManager& scene_manager)//TODO, take path to all files used, maybe
 		: m_meshResolution(0)
@@ -178,6 +212,18 @@ namespace Shard {
 
 		std::cout << "Successfully loaded heigh field texture: " << heigtFieldPath << ".\n";
 	}
+
+		// inherited from GameObject
+	void House::checkDestroyMe() {}
+	void House::physicsUpdate() {}
+	void House::prePhysicsUpdate() {}
+	void House::update() {}
+	void House::killMe() {}
+	//Inherit from colldsionhandler
+	void House::onCollisionEnter(std::shared_ptr<Shard::PhysicsBody> body) {}
+	void House::onCollisionExit(std::shared_ptr<Shard::PhysicsBody> body) {}
+	void House::onCollisionStay(std::shared_ptr<Shard::PhysicsBody> body) {}
+
 
 	void HeightField::loadDiffuseTexture(GLuint* target, const std::string& diffusePath)
 	{
@@ -402,19 +448,37 @@ namespace Shard {
 
 		m_shaderProgram = ShaderManager::getInstance().getShader("heightfield");
 
+		std::vector<std::shared_ptr<Model>> houseModels {
+			std::make_shared<Model>("models/city/ResidentialBuildings001.obj"),
+			std::make_shared<Model>("models/city/ResidentialBuildings002.obj"),
+			std::make_shared<Model>("models/city/ResidentialBuildings003.obj"),
+			std::make_shared<Model>("models/city/ResidentialBuildings004.obj"),
+			std::make_shared<Model>("models/city/ResidentialBuildings005.obj"),
+			std::make_shared<Model>("models/city/ResidentialBuildings006.obj"),
+			std::make_shared<Model>("models/city/ResidentialBuildings007.obj"),
+			std::make_shared<Model>("models/city/ResidentialBuildings008.obj"),
+			std::make_shared<Model>("models/city/ResidentialBuildings009.obj"),
+			std::make_shared<Model>("models/city/ResidentialBuildings010.obj")
+		};
+
 		if (m_map_type == GENERATED) {
 			// I BUILD THE HOUSES :DDDD
 			for (int i = 0; i < 100; i++) {
+				auto num = rand() % 10;
+				//num = 1;
 				float LO = -size / 2 + size * 0.01f;
 				float HI = size / 2 - size * 0.01f;
 				float x = LO + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (HI - LO)));
 				float z = LO + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (HI - LO)));
 
 				// glm::vec3 pos, float size, int seed, float octaves, float mult
-				m_houses.emplace_back(
+				auto house = std::make_shared<House>(
 					glm::vec3{ x, 0.f, z },
 					size, seed, m_octaves, 70.f
 				);
+				house->m_model = std::make_shared<Model>(houseModels[num]);
+				house->initialize();
+				GameObjectManager::getInstance().addGameObject(house);
 			}
 		}
 	}
@@ -499,9 +563,9 @@ namespace Shard {
 
 		glUseProgram(0);
 
-		for (House &house : m_houses) {
+	/*	for (House &house : m_houses) {
 			house.render(viewMatrix, projectionMatrix);
-		}
+		}*/
 	}
 
 } // end namespace
