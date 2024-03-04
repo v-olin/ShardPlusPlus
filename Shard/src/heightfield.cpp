@@ -448,7 +448,7 @@ namespace Shard {
 
 		m_shaderProgram = ShaderManager::getInstance().getShader("heightfield");
 
-		std::vector<std::shared_ptr<Model>> houseModels {
+		m_houseModels =  {
 			std::make_shared<Model>("models/city/ResidentialBuildings001.obj"),
 			std::make_shared<Model>("models/city/ResidentialBuildings002.obj"),
 			std::make_shared<Model>("models/city/ResidentialBuildings003.obj"),
@@ -476,7 +476,7 @@ namespace Shard {
 					glm::vec3{ x, 0.f, z },
 					size, seed, m_octaves, 70.f
 				);
-				house->m_model = std::make_shared<Model>(houseModels[num]);
+				house->m_model = std::make_shared<Model>(m_houseModels[num]);
 				house->initialize();
 				GameObjectManager::getInstance().addGameObject(house);
 			}

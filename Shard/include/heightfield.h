@@ -53,6 +53,7 @@ namespace Shard {
 		GLuint m_normalBuffer;
 		std::string m_diffuseTexturePath;
 		GLuint m_shaderProgram;
+		std::vector<std::shared_ptr<Model>> m_houseModels;
 
 		float m_mapSize;
 		float metalness{ 1.f };
