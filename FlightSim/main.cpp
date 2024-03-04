@@ -128,6 +128,7 @@ void GameTest::update() {
 	std::string fps = std::to_string(Shard::Bootstrap::getFPS());
 
 	static auto &sm = Shard::SceneManager::getInstance();
+	sm.camera.setFirstPersonOffset(fp_offset);
 	auto dt = Shard::Bootstrap::getDeltaTime();
 	if(c_forward)
 		sm.camera.move(Shard::Movement::FORWARD, dt);
@@ -240,7 +241,7 @@ void GameTest::initalize() {
 	AI_parent = std::make_shared<Shard::Model>("models/chopper.obj");
 	bullet_parent = std::make_shared<Shard::Model>("models/AIM120D.obj");
 	int max = 500;
-	for (int i = 0; i < 50; i++) {
+	for (int i = 0; i < 0; i++) {
 		auto pos = glm::vec3(rand() % max, rand() % max, rand() % max) - glm::vec3(max/2, 0, max/2);
 		createAIPlane(pos.x, pos.y, pos.z);
 	}
@@ -265,6 +266,10 @@ void GameTest::initalize() {
 	Shard::Bootstrap::gui->addCheckBox("Draw colliders", &drawColliders);
 	Shard::Bootstrap::gui->addIntSlider("Path tracer sampling", &pathTracingSampling, 1, 16);
 	Shard::Bootstrap::gui->addIntSlider("Framerate (0 is uncapped)", &target_framerate, 0, 999);
+
+	Shard::Bootstrap::gui->addFloatSlider("First persoin offset x", &fp_offset.x, -10, 10);
+	Shard::Bootstrap::gui->addFloatSlider("First persoin offset y", &fp_offset.y, -10, 10);
+	Shard::Bootstrap::gui->addFloatSlider("First persoin offset z", &fp_offset.z, -10, 10);
 }
 
 

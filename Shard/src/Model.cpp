@@ -135,7 +135,9 @@ namespace Shard {
 		filename = file_util::normalise(_filename);
 		directory = file_util::normalise(_directory);
 		valid = true;
+		// this should be done by the texturemanager, very bad!!
 		int components;
+		stbi_set_flip_vertically_on_load(true);
 		data = stbi_load((directory + filename).c_str(), &width, &height, &components, _components);
 		if (data == nullptr)
 		{
@@ -598,6 +600,7 @@ namespace Shard {
 			}
 			bool hasEmission = mat.m_emission_texture.valid;
 			sm.SetInteger1(shader, hasEmission ? 1 : 0, "has_emission_texture");
+
 			if (hasEmission) {
 				glActiveTexture(GL_TEXTURE5);
 				glBindTexture(GL_TEXTURE_2D, mat.m_emission_texture.gl_id);

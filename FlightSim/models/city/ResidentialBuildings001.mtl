@@ -10,9 +10,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd textures\Hotel_Hous_AO.png
-map_Bump -bm 0.172933 -s 10.000000 10.000000 1.000000 textures\\Steel_N.jpg
-map_Ks textures\\Steel_S.jpg
+map_Kd Hotel_Hous_AO.png
+map_Bump -bm 0.172933 -s 10.000000 10.000000 1.000000 Steel_N.jpg
+map_Ks Steel_S.jpg
 
 newmtl hotel_glas
 Ns 96.078431
@@ -23,4 +23,4 @@ Ke 0.344000 0.344000 0.344000
 Ni 1.000000
 d 0.300000
 illum 1
-refl -s 0.800000 0.800000 1.000000 textures\\REF 1.jpg
+refl -s 0.800000 0.800000 1.000000 REF 1.jpg

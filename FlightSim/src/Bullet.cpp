@@ -50,7 +50,7 @@ void Bullet::physicsUpdate() {
 			glm::vec4(m_model->m_right, 0),
 			{ 0,0,0,1 });
 	}
-	m_body->addForce(m_model->m_forward, 10.f);
+	//m_body->addForce(m_model->m_forward, 10.f);
 }
 
 void Bullet::update() {

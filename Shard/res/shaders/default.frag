@@ -185,7 +185,7 @@ void main()
 	vec3 base_color = material_color;
 	if(has_color_texture != 0)
 	{
-		base_color *= texture(colorMap, texCoord).rgb;
+		base_color = texture(colorMap, texCoord).rgb;
 	}
 
 	vec3 direct_illumination_term = vec3(0.0);
