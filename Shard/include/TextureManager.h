@@ -29,6 +29,7 @@ namespace Shard {
 		GLuint loadTextureRGBA(const std::string& path);
 		GLuint getTexture(const std::string& path);
 		GLuint loadHdrTexture(const std::string& filename);
+		GLuint loadHdrMipMap(const std::vector<std::string> filenames);
 
 	private:
 		TextureManager() = default;

@@ -101,7 +101,7 @@ vec3 calculateDirectIllumiunation(vec3 wo, vec3 n, vec3 base_color)
 
 	vec3 dielectric_term = brdf * ndotwi * Li + (1-F) * diffuse_term;
 
-	vec3 metal_term = brdf * base_color * dot(n, wi) * Li;
+	vec3 metal_term = brdf * base_color * ndotwi * Li;
 
 	direct_illum = material_metalness * metal_term + (1-material_metalness) * dielectric_term;
 
@@ -205,8 +205,11 @@ void main()
 	if (has_emission_texture != 0) {
 		emission_term = texture(emissionMap, texCoord).rgb;
 	}
+	vec3 indirect = (indirect_illumination_term + emission_term);
 
-	vec3 final_color = direct_illumination_term + indirect_illumination_term + emission_term;
+	vec3 final_color = direct_illumination_term + indirect;
+	if(indirect.r > 1000000)
+		final_color = vec3(0,0,0);
 
 	// Check if we got invalid results in the operations
 	if(any(isnan(final_color)))

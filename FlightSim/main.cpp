@@ -241,7 +241,7 @@ void GameTest::initalize() {
 	AI_parent = std::make_shared<Shard::Model>("models/chopper.obj");
 	bullet_parent = std::make_shared<Shard::Model>("models/AIM120D.obj");
 	int max = 5000;
-	for (int i = 0; i < 500; i++) {
+	for (int i = 0; i < 50; i++) {
 		auto pos = glm::vec3(rand() % max, rand() % max, rand() % max) - glm::vec3(max/2, 0, max/2);
 		createAIPlane(pos.x, pos.y, pos.z);
 	}

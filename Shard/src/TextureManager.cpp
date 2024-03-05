@@ -101,6 +101,29 @@ namespace Shard {
 
 		return loadTexture(path);
 	}
+	GLuint TextureManager::loadHdrMipMap(const std::vector<std::string> filenames) {
+		GLuint texId;
+		glGenTextures(1, &texId);
+		glBindTexture(GL_TEXTURE_2D, texId);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+
+		auto dir = "../Shard/res/envmaps/";
+		const int roughnesses = filenames.size();
+		for (int i = 0; i < roughnesses; i++)
+		{
+			HDRImage image(dir + filenames[i]);
+			glTexImage2D(GL_TEXTURE_2D, i, GL_RGB32F, image.width, image.height, 0, GL_RGB, GL_FLOAT,
+				image.data);
+			if(i == 0)
+				glGenerateMipmap(GL_TEXTURE_2D);
+		}
+		return texId;
+	}
+
+
 	GLuint TextureManager::loadHdrTexture(const std::string& filename)
 	{
 

@@ -55,7 +55,10 @@ namespace Shard {
 		loadRequiredShaders();
 
 		envmap_bg_id = m_textureManager->loadHdrTexture("001.hdr");
-		envmap_refmap_id = m_textureManager->loadHdrTexture("001_dl_0.hdr");
+		envmap_refmap_id = m_textureManager->loadHdrMipMap({ "001_dl_0.hdr"
+			, "001_dl_1.hdr" , "001_dl_2.hdr", "001_dl_3.hdr" , "001_dl_4.hdr"
+			, "001_dl_5.hdr", "001_dl_6.hdr", "001_dl_7.hdr"});
+					
 		envmap_irrmap_id = m_textureManager->loadHdrTexture("001_irradiance.hdr");
 
 		//TODO, fix material values, now we have ice mountains

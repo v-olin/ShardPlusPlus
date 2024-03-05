@@ -463,8 +463,8 @@ namespace Shard {
 
 		if (m_map_type == GENERATED) {
 			// I BUILD THE HOUSES :DDDD
-			for (int i = 0; i < 100; i++) {
-				auto num = rand() % 10;
+			for (int i = 0; i < 200; i++) {
+				auto num = rand() % m_houseModels.size();
 				//num = 1;
 				float LO = -size / 2 + size * 0.01f;
 				float HI = size / 2 - size * 0.01f;

@@ -607,6 +607,7 @@ namespace Shard {
 			}
 			glActiveTexture(0);
 			sm.SetVec3(shader, mat.m_color, "material_color");
+
 			sm.SetFloat1(shader, mat.m_metalness, "material_metalness");
 			sm.SetFloat1(shader, mat.m_fresnel, "material_fresnel");
 			sm.SetFloat1(shader, mat.m_shininess, "material_shininess");
