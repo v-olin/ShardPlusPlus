@@ -7,6 +7,7 @@
 #include "RenderableObject.h"
 #include "CubeMap.h"
 #include "heightfield.h"
+#include "WaterField.h"
 
 #include <glm.hpp>
 
@@ -33,6 +34,7 @@ namespace Shard {
 		ShaderManager* m_shaderManager;
 		GUI* m_gui;
 		HeightField* m_heightfield;
+		WaterField* m_waterfield;
 		glm::vec2 m_resolution;
 		float m_fieldOfView;
 		glm::mat4 m_projectionMatrix;
@@ -52,6 +54,7 @@ namespace Shard {
 			"cubemap",
 			"default",
 			"heightfield",
+			"waterfield",
 			"copyTexture",
 			"simple"
 		};

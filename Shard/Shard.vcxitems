@@ -48,6 +48,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)include\material.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\noise.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)include\sampling.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)include\WaterField.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\embree2\include\embree2\rtcore.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\embree2\include\embree2\rtcore_builder.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)vendor\embree2\include\embree2\rtcore_geometry.h" />
@@ -360,6 +361,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)src\material.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\noise.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\sampling.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\WaterField.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\glad\glad.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\glm\detail\glm.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)vendor\imgui\imgui.cpp" />
