@@ -32,6 +32,7 @@ namespace Shard {
 
 		//void Draw();
 		glm::mat4 getCameraViewMatrix();
+		float currentTime{ 0.f };
 
 		Camera camera{};
 		Sun sun{};

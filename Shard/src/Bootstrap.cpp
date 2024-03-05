@@ -269,6 +269,12 @@ namespace Shard {
         //Renderer renderer{ sm, tm, shm, gui, m_Window};
         renderer.initialize(sm, tm, shm, gui, m_Window);
 
+        /*
+        return std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+        ).count();
+        */
+
         float delta_time_acc{ 0.0f };
         auto last_frame = static_cast<float>(glfwGetTime());
         while (!glfwWindowShouldClose(m_Window)) {
@@ -283,11 +289,16 @@ namespace Shard {
 
             if (delta_time_acc < delta_time && target_frame != 0)
                 continue;
-            if (target_frame == 0)
-                delta_time = delta_time_acc;
-                
 
+            delta_time = delta_time_acc;
             delta_time_acc = 0;
+
+            sm.currentTime = current_frame;
+                /*
+                std::chrono::duration<float>(
+                std::chrono::system_clock::now().time_since_epoch()
+            ).count();
+                */
 
             running_game->update();
 

@@ -25,6 +25,7 @@ namespace Shard {
 		, m_fieldOfView(45.f)
 		, m_gui(nullptr)
 		, m_heightfield(nullptr)
+		, m_waterfield(nullptr)
 		, m_pathtracerTxtId(SIZE_MAX)
 		, m_renderObjects({})
 	{ }
@@ -51,6 +52,7 @@ namespace Shard {
 		m_window = window;
 		
 		m_heightfield = new HeightField(sceneManager);
+		m_waterfield = new WaterField(sceneManager);
 
 		loadRequiredShaders();
 
@@ -66,7 +68,8 @@ namespace Shard {
 		const float size = 10000.f;
 		const float tesselation = 1000.f;
 
-		m_heightfield->generateMesh(tesselation, size, 982374);
+		m_heightfield->generateMesh(tesselation, size, 981723);
+		m_waterfield->generateMesh(tesselation, size);
 
 		glEnable(GL_DEPTH_TEST); // z-buffering
 		glEnable(GL_CULL_FACE); // backface culling
@@ -304,6 +307,7 @@ namespace Shard {
 		}
 		else {
 			m_heightfield->submitTriangles(m_sceneManager->getCameraViewMatrix(), m_projectionMatrix, envmap_bg_id, envmap_irrmap_id, envmap_refmap_id);
+			m_waterfield->submitTriangles(m_sceneManager->getCameraViewMatrix(), m_projectionMatrix, envmap_bg_id, envmap_irrmap_id, envmap_refmap_id);
 			drawModels();
 		}
 	}

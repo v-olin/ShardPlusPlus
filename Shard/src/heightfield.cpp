@@ -19,6 +19,13 @@
 using namespace glm;
 using std::string;
 
+/*
+	- En till mesh för vattnet
+	- En ny shader för vattnet
+
+
+*/
+
 namespace Shard {
 
 	House::House(glm::vec3 pos, float size, int seed, float octaves, float mult) : GameObject()
@@ -32,8 +39,6 @@ namespace Shard {
 	}
 	void House::initialize() {
 		auto modelSize = m_model->size();
-
-
 		float hx = modelSize.x / 2;
 		float hz = modelSize.z / 2;
 
@@ -74,80 +79,6 @@ namespace Shard {
 	
 		GameObject::addTag("House");
 	}
-	
-	/*
-	void House::createGeometry() {
-		const float hx = m_size.x / 2;
-		const float hz = m_size.z / 2;
-		const glm::vec3 pos = m_position;
-
-		glm::vec3 min{ pos.x - hx, pos.y, pos.z - hz };
-		glm::vec3 max{ pos.x + hx, pos.y + m_size.y, pos.z + hz };
-
-		const std::vector<glm::vec3> vertices{
-			{min.x,	min.y, max.z},	// v0
-			{min.x,	min.y, min.z},	// v1
-			{max.x,	min.y, min.z},	// v2
-			{max.x,	min.y, max.z},	// v3
-			{min.x,	max.y, max.z},	// v4
-			{min.x,	max.y, min.z},	// v5
-			{max.x,	max.y, min.z},	// v6
-			{max.x,	max.y, max.z}	// v7
-		};
-
-		// whoever wrote these indices, git blame!!!
-		const std::vector<int> indices{
-			0, 2, 3,
-			0, 1, 2,
-			0, 1, 4,
-			1, 5, 4,
-			4, 5, 7,
-			6, 5, 7,
-			3, 2, 7,
-			6, 7, 2,
-			0, 3, 4,
-			4, 7, 3,
-			1, 6, 2,
-			1, 5, 6
-		};
-
-		GLuint vbo, ibo;
-
-		glGenVertexArrays(1, &m_vao);
-		glBindVertexArray(m_vao);
-
-		glGenBuffers(1, &vbo);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER,
-			vertices.size() * sizeof(glm::vec3),
-			vertices.data(), GL_STATIC_DRAW);
-
-		glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
-		glEnableVertexAttribArray(0);
-
-		glGenBuffers(1, &ibo);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-			indices.size() * sizeof(int),
-			indices.data(), GL_STATIC_DRAW);
-	}
-
-	void House::render(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) {
-		glDisable(GL_CULL_FACE);
-		auto sm = ShaderManager::getInstance();
-		auto shader = sm.getShader("simple");
-		glUseProgram(shader);
-
-		sm.SetMat4x4(shader, projectionMatrix * viewMatrix * glm::mat4(1.f), "modelViewProjectionMatrix");
-		sm.SetVec3(shader, glm::vec3{ 0.2f, 0.3f, 0.8f }, "material_color"); // blue :^)
-
-		glBindVertexArray(m_vao);
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-
-		glEnable(GL_CULL_FACE);
-		glUseProgram(0);
-	}
-	*/
 
 	HeightField::HeightField(SceneManager& scene_manager)//TODO, take path to all files used, maybe
 		: m_meshResolution(0)
@@ -315,7 +246,7 @@ namespace Shard {
 			for (int j = 0; j < tesselation; j++)
 			{
 				float z = -size / 2 + j * sideLen;
-				float y = Noise::perlin(x, z, size, seed, m_octaves) * 70.f;
+				float y = Noise::perlin(x, z, size, seed, m_octaves) * 200.f;
 				
 				vertices.push_back({ x, y, z });
 
@@ -476,9 +407,14 @@ namespace Shard {
 				float z = LO + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (HI - LO)));
 
 				// glm::vec3 pos, float size, int seed, float octaves, float mult
+				float projectedHeight = Noise::perlin(x, z, size, seed, m_octaves) * 200.f;
+
+				if (projectedHeight < -10.f)
+					continue;
+
 				auto house = std::make_shared<House>(
-					glm::vec3{ x, 0.f, z },
-					size, seed, m_octaves, 70.f
+					glm::vec3{ x, projectedHeight, z },
+					size, seed, m_octaves, 200.f
 				);
 				house->m_model = std::make_shared<Model>(m_houseModels[num]);
 				house->initialize();
