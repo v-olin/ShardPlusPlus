@@ -262,7 +262,7 @@ namespace Shard {
 
 		if (data == nullptr)
 		{
-			Logger::log("Could not load texture: " + path + "Heightfield", LOG_LEVEL_FATAL);
+			Logger::log("Could not load texture: " + path + "\n Heightfield", LOG_LEVEL_FATAL);
 		}
 
 		if (*target == UINT32_MAX)
@@ -282,6 +282,10 @@ namespace Shard {
 
 	void HeightField::loadCustomTextures()
 	{
+		//loadTexture(&m_customBaseColor, "../Shard/res/textures/patchy-meadow1_albedo.png");
+		//loadTexture(&m_customRoughness, "../Shard/res/textures/patchy-meadow1_roughness.png");
+		//loadTexture(&m_customNormals, "../Shard/res/textures/patchy-meadow1_normal-ogl.png");
+
 		loadTexture(&m_customBaseColor, "../Shard/res/textures/grass_basecolor.jpg");
 		loadTexture(&m_customRoughness, "../Shard/res/textures/grass_rough.jpg");
 		loadTexture(&m_customNormals, "../Shard/res/textures/grass_normal.jpg");

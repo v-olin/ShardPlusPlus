@@ -285,6 +285,7 @@ namespace Shard {
                 continue;
             if (target_frame == 0)
                 delta_time = delta_time_acc;
+                
 
             delta_time_acc = 0;
 

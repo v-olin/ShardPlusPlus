@@ -18,7 +18,7 @@
 namespace Shard {
 
 	Renderer::Renderer() 
-		: m_resolution({ 1280, 760 })
+		: m_resolution({ 3440, 1440 })
 		, m_nearPlane(1.f)
 		, m_farPlane(10000.f)
 		, m_drawColliders(true)
