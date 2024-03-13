@@ -13,6 +13,7 @@ namespace Shard {
 		, m_visible(false)
 		, m_body(nullptr)
 		, m_model(nullptr)
+		, m_drawCollider(false)
 	{
 	}
 

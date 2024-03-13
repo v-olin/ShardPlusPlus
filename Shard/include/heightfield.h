@@ -1,21 +1,45 @@
 #include <string>
-//#include <GL/glew.h>
-//#include <glm/glm.hpp>
 #include "../common.h"
 #include "glm.hpp"
 #include "SceneManager.h"
-//#include "sceneContext.h"
-
-//using namespace glm;
 
 namespace Shard {
 	enum MapType {
 		LOADED,
 		GENERATED
 	};
+
+	class House : public GameObject, public CollisionHandler {
+	public:
+		House(glm::vec3 pos, float size, int seed, float octaves, float mult);
+		//void render(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix);
 		
-	class HeightField
-	{
+		// inherited from GameObject
+		void checkDestroyMe() override;
+		void initialize() override;
+		void physicsUpdate() override;
+		void prePhysicsUpdate() override;
+		void update() override;
+		void killMe() override;
+
+		//Inherit from collisionhandler
+		void onCollisionEnter(std::shared_ptr<Shard::PhysicsBody> body) override;
+		void onCollisionExit(std::shared_ptr<Shard::PhysicsBody> body) override ;
+		void onCollisionStay(std::shared_ptr<Shard::PhysicsBody> body) override;
+
+
+	private:
+		GLuint m_vao;
+		glm::vec3 m_position;
+		float m_size;
+		int m_seed;
+		float m_octaves;
+		float m_mult;
+
+		void createGeometry();
+	};
+		
+	class HeightField {
 	public:
 		int m_meshResolution; // triangles edges per quad side
 		GLuint m_texid_hf;
@@ -29,6 +53,7 @@ namespace Shard {
 		GLuint m_normalBuffer;
 		std::string m_diffuseTexturePath;
 		GLuint m_shaderProgram;
+		std::vector<std::shared_ptr<Model>> m_houseModels;
 
 		float m_mapSize;
 		float metalness{ 1.f };
@@ -65,6 +90,8 @@ namespace Shard {
 			GLuint envMap, GLuint irradMap, GLuint refMap);
 
 	private:
+		std::vector<std::shared_ptr<House>> m_houses{};
+		
 		//SceneContext& sceneContext;
 		SceneManager& m_scene_manager;
 		void loadTexture(GLuint* target, const std::string& path);

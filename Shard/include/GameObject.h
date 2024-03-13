@@ -14,6 +14,7 @@ namespace Shard {
         std::shared_ptr<PhysicsBody> m_body;
         std::shared_ptr<Model> m_model;
         std::vector<const char*> m_tags;
+        bool m_drawCollider;
 
         GameObject();
 

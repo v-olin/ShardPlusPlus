@@ -16,15 +16,15 @@ namespace Shard {
 
 	void InputManager::getInput() {
 		
-		tick += Bootstrap::getDeltaTime();
+	/*	tick += Bootstrap::getDeltaTime();
 		if (tick < time_interval)
-			return;
+			return;*/
 	
-		while (!event_queue.empty() && tick >= time_interval) {
+		while (!event_queue.empty()){ //&& tick >= time_interval) {
 			auto &[ie, ev] = event_queue.front();
 			informListeners(ie, ev);
 			event_queue.pop();
-			tick -= time_interval;
+			//tick -= time_interval;
 		}
 
 	}

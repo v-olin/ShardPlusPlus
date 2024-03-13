@@ -43,6 +43,6 @@ namespace Shard {
 	private:
 		std::vector<std::shared_ptr<InputListener>> myListeners;
 		double tick{0.0};
-		double time_interval{1.0/60.0};
+		double time_interval{1.0/50.0};
 	};
 }

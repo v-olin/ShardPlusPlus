@@ -7,6 +7,9 @@
 #include "GameObjectManager.h"
 #include "Bootstrap.h"
 #include "Logger.h"
+#include "Model.h"
+
+#include "gtx/projection.hpp"
 
 #include <filesystem>
 
@@ -14,23 +17,25 @@
 
 namespace Shard {
 
-	Renderer::Renderer(SceneManager& sceneManager,
+	Renderer::Renderer() 
+		: m_resolution({1280, 760})
+		, m_nearPlane(1.f)
+		, m_farPlane(10000.f)
+		, m_drawColliders(true)
+		, m_fieldOfView(45.f)
+		, m_gui(nullptr)
+		, m_heightfield(nullptr)
+		, m_waterfield(nullptr)
+		, m_pathtracerTxtId(SIZE_MAX)
+		, m_renderObjects({})
+	{ }
+
+	void Renderer::initialize(SceneManager& sceneManager,
 		TextureManager& texManager,
 		ShaderManager& shaderManager,
 		GUI* gui,
 		GLFWwindow* window)
-		: m_sceneManager(sceneManager)
-		, m_textureManager(texManager)
-		, m_shaderManager(shaderManager)
-		, m_gui(gui)
-		, m_resolution({ 1280, 760 })
-		, m_nearPlane(1.f)
-		, m_farPlane(1000.f)
-		, m_fieldOfView(sceneManager.camera.fov)
-		, m_projectionMatrix(glm::perspective(sceneManager.camera.fov, float(m_resolution.x) / float(m_resolution.y), m_nearPlane, m_farPlane))
-		, m_drawColliders(true)
-		, m_window(window)
-		, m_heightfield(sceneManager)
+		
 	{
 		static bool initialized = false;
 		if (initialized) {
@@ -38,19 +43,40 @@ namespace Shard {
 		}
 		initialized = true;
 
-		loadRequiredShaders();
+		m_sceneManager = &sceneManager;
+		m_textureManager = &texManager;
+		m_shaderManager = &shaderManager;
+		m_gui = gui;
+		m_fieldOfView = sceneManager.camera.fov;
+		m_projectionMatrix = glm::perspective(m_fieldOfView, m_resolution.x / m_resolution.y, m_nearPlane, m_farPlane);
+		m_window = window;
 		
-		envmap_bg_id = m_textureManager.loadHdrTexture("001.hdr");
-		envmap_refmap_id = m_textureManager.loadHdrTexture("001_dl_0.hdr");
-		envmap_irrmap_id = m_textureManager.loadHdrTexture("001_irradiance.hdr");
+		m_heightfield = new HeightField(sceneManager);
+		m_waterfield = new WaterField(sceneManager);
+
+		loadRequiredShaders();
+
+		envmap_bg_id = m_textureManager->loadHdrTexture("001.hdr");
+		envmap_refmap_id = m_textureManager->loadHdrMipMap({ "001_dl_0.hdr"
+			, "001_dl_1.hdr" , "001_dl_2.hdr", "001_dl_3.hdr" , "001_dl_4.hdr"
+			, "001_dl_5.hdr", "001_dl_6.hdr", "001_dl_7.hdr"});
+					
+		envmap_irrmap_id = m_textureManager->loadHdrTexture("001_irradiance.hdr");
 
 		//TODO, fix material values, now we have ice mountains
 		//m_heightfield.loadHeightField("L3123F.png", "L3123F_downscaled.jpg", "L3123F_shininess.png");
-		const float size = 1000.f;
-		m_heightfield.generateMesh(size, size, 982374);
+		const float size = 10000.f;
+		const float tesselation = 1000.f;
+
+		m_heightfield->generateMesh(tesselation, size, 981723);
+		m_waterfield->generateMesh(tesselation, size);
 
 		glEnable(GL_DEPTH_TEST); // z-buffering
 		glEnable(GL_CULL_FACE); // backface culling
+	}
+
+	void Renderer::addRenderObject(std::shared_ptr<RenderableObject> robj) {
+		m_renderObjects.push_back(robj); 
 	}
 
 	void Renderer::loadRequiredShaders() {
@@ -61,7 +87,7 @@ namespace Shard {
 #endif
 
 		for (const auto& shader : m_requiredShaders) {
-			m_shaderManager.loadShader(shader, allow_errors);
+			m_shaderManager->loadShader(shader, allow_errors);
 		}
 
 		///////////////////////////////////////////////////////////////////////////
@@ -94,17 +120,16 @@ namespace Shard {
 		//todo, use texturemanager
 		PathTracer::environment.map.load("../Shard/res/envmaps/001.hdr");
 		PathTracer::environment.multiplier = 1.0f;
-
 	}
 
 	void Renderer::render() {
 		/////////////////////////////////////////////////////////////
 		// Reset viewport
 		/////////////////////////////////////////////////////////////
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glViewport(0, 0, (int)(m_resolution.x), (int)(m_resolution.y));
-		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		//glViewport(0, 0, (int)(m_resolution.x), (int)(m_resolution.y));
+		//glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		/////////////////////////////////////////////////////////////
 		// Render main pass
@@ -117,6 +142,11 @@ namespace Shard {
 
 		drawBackground();
 		drawScene();
+
+		for (const auto obj : m_renderObjects)
+			obj->render();
+
+		//drawGauges();
 
 		/////////////////////////////////////////////////////////////
 		// BORING STUFF!! TRUE!
@@ -186,7 +216,7 @@ namespace Shard {
 		
 		glUseProgram(shader);
 		
-		glm::mat4 viewMatrix = m_sceneManager.getCameraViewMatrix();
+		glm::mat4 viewMatrix = m_sceneManager->getCameraViewMatrix();
 		glm::mat4 mvpMatrix = m_projectionMatrix * viewMatrix;
 		sm.SetMat4x4(shader, mvpMatrix, "u_MVP");
 
@@ -207,9 +237,9 @@ namespace Shard {
 		glBindTexture(GL_TEXTURE_2D, envmap_bg_id);
 
 		static float environment_multiplier = 1.0f;
-		glm::mat4 viewMatrix = m_sceneManager.getCameraViewMatrix();
+		glm::mat4 viewMatrix = m_sceneManager->getCameraViewMatrix();
 		auto VP = m_projectionMatrix * viewMatrix;
-		auto camera_pos = m_sceneManager.camera.pos;
+		auto camera_pos = m_sceneManager->camera.pos;
 
 		sm.SetFloat1(bg_shader, environment_multiplier, "environment_multiplier");
 		sm.SetMat4x4(bg_shader, inverse(VP), "inv_PV");
@@ -276,7 +306,8 @@ namespace Shard {
 			drawPathTracedScene();
 		}
 		else {
-			m_heightfield.submitTriangles(m_sceneManager.getCameraViewMatrix(), m_projectionMatrix, envmap_bg_id, envmap_irrmap_id, envmap_refmap_id);
+			m_heightfield->submitTriangles(m_sceneManager->getCameraViewMatrix(), m_projectionMatrix, envmap_bg_id, envmap_irrmap_id, envmap_refmap_id);
+			m_waterfield->submitTriangles(m_sceneManager->getCameraViewMatrix(), m_projectionMatrix, envmap_bg_id, envmap_irrmap_id, envmap_refmap_id);
 			drawModels();
 		}
 	}
@@ -379,7 +410,7 @@ namespace Shard {
 		auto& gobs = GameObjectManager::getInstance().getObjects();
 		auto& sun = SceneManager::getInstance().sun;
 
-		const auto shader = m_shaderManager.getDefaultShader();
+		const auto shader = m_shaderManager->getDefaultShader();
 		glUseProgram(shader);
 
 		glActiveTexture(GL_TEXTURE6);
@@ -391,14 +422,14 @@ namespace Shard {
 		glActiveTexture(0);
 
 
-		auto viewMatrix = m_sceneManager.getCameraViewMatrix();
+		auto viewMatrix = m_sceneManager->getCameraViewMatrix();
 		auto pv = m_projectionMatrix * viewMatrix;
-		auto camera_pos = m_sceneManager.camera.pos;
+		auto camera_pos = m_sceneManager->camera.pos;
 		auto& sm = m_shaderManager;
 
-		glm::vec4 viewSpaceLightPosition = viewMatrix * glm::vec4(m_sceneManager.sun.light_position, 1.0f);
-		sm.SetVec3(shader, viewSpaceLightPosition, "viewSpaceLightPosition");
-		sm.SetMat4x4(shader, glm::inverse(viewMatrix), "viewInverse");
+		glm::vec4 viewSpaceLightPosition = viewMatrix * glm::vec4(m_sceneManager->sun.light_position, 1.0f);
+		sm->SetVec3(shader, viewSpaceLightPosition, "viewSpaceLightPosition");
+		sm->SetMat4x4(shader, glm::inverse(viewMatrix), "viewInverse");
 
 		for (std::shared_ptr<GameObject> gob : gobs) {
 
@@ -408,17 +439,17 @@ namespace Shard {
 
 			if (!gob->m_model->m_hasDedicatedShader) [[likely]] {
 				glm::mat4 normalMat = glm::inverse(glm::transpose(viewMatrix * modelMatrix));
-				sm.SetMat4x4(shader, normalMat, "normalMatrix");
-				sm.SetMat4x4(shader, viewMatrix * modelMatrix, "modelViewMatrix");
-				sm.SetMat4x4(shader, mvp, "modelViewProjMatrix");
-				sm.SetFloat1(shader, 1.f, "environment_multiplier");
-				sm.SetFloat1(shader, 1000.f, "point_light_intensity_multiplier");
+				sm->SetMat4x4(shader, normalMat, "normalMatrix");
+				sm->SetMat4x4(shader, viewMatrix * modelMatrix, "modelViewMatrix");
+				sm->SetMat4x4(shader, mvp, "modelViewProjMatrix");
+				sm->SetFloat1(shader, 1.f, "environment_multiplier");
+				sm->SetFloat1(shader, 1000.f, "point_light_intensity_multiplier");
 				
 			}
 
 			gob->m_model->Draw();
-			if (Bootstrap::getEnvironmentVariable("physics_debug") == "1") { // if debug
-				drawCollider(gob);
+			if (Bootstrap::getEnvironmentVariable("physics_debug") == "1" || gob->m_drawCollider) { // if debug
+				m_drawCollider(gob);
 				glUseProgram(shader);
 			}
 		}
@@ -426,20 +457,20 @@ namespace Shard {
 		glUseProgram(0);
 	}
 
-	void Renderer::drawCollider(std::shared_ptr<GameObject> toDraw) {
+	void Renderer::m_drawCollider(std::shared_ptr<GameObject> toDraw) {
 
 		std::vector<glm::vec2> minMax = toDraw->m_body->m_collider->getTransformedMinMaxDims();
-
-		glm::vec3 max = glm::vec3{
-			minMax[0].y,
-			minMax[1].y,
-			minMax[2].y
-		};
 
 		glm::vec3 min = glm::vec3{
 			minMax[0].x,
 			minMax[1].x,
 			minMax[2].x
+		};
+
+		glm::vec3 max = glm::vec3{
+			minMax[0].y,
+			minMax[1].y,
+			minMax[2].y
 		};
 
 		//removed - signs since min can already be negativ if neede, very bad!!
@@ -453,8 +484,6 @@ namespace Shard {
 			max.x,	max.y, min.z,	// v6
 			max.x,	max.y, max.z	// v7
 		};
-
-		
 
 		GLuint indices[] = {
 			0, 2, 3,
@@ -473,14 +502,14 @@ namespace Shard {
 
 		glm::mat4 modelMatrix = toDraw->m_model->getModelMatrix();
 		glm::mat4 ma = glm::translate(glm::mat4(1.0f), toDraw->m_model->position());
-		glm::mat4 viewMatrix = m_sceneManager.getCameraViewMatrix();
+		glm::mat4 viewMatrix = m_sceneManager->getCameraViewMatrix();
 		glm::mat4 mvpMatrix = m_projectionMatrix * viewMatrix;// *ma;
 
-		auto shader = m_shaderManager.getShader("collider");
+		auto shader = m_shaderManager->getShader("collider");
 		glUseProgram(shader);
 
-		m_shaderManager.SetVec3(shader, toDraw->m_body->m_debugColor, "colorIn");
-		m_shaderManager.SetMat4x4(shader, mvpMatrix, "u_MVP");
+		m_shaderManager->SetVec3(shader, toDraw->m_body->m_debugColor, "colorIn");
+		m_shaderManager->SetMat4x4(shader, mvpMatrix, "u_MVP");
 
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -515,7 +544,8 @@ namespace Shard {
 		glUseProgram(0);
 	}
 
+	// smol cute cozy function :^)
 	void Renderer::configureDefaultShader() {
-		glUseProgram(m_shaderManager.getDefaultShader());
+		glUseProgram(m_shaderManager->getDefaultShader());
 	}
 }

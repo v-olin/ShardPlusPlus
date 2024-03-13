@@ -8,16 +8,77 @@
 #include <stdint.h>
 #include <vector>
 #include <stb_image.h>
+#include <ranges>
 
 #include "Logger.h"
 #include "ShaderManager.h"
+#include "GameObjectManager.h"
 
 #include "noise.h"
 
 using namespace glm;
 using std::string;
 
+/*
+	- En till mesh för vattnet
+	- En ny shader för vattnet
+
+
+*/
+
 namespace Shard {
+
+	House::House(glm::vec3 pos, float size, int seed, float octaves, float mult) : GameObject()
+		, m_position(pos)
+		, m_vao(0)
+		, m_size(size)
+		, m_seed(seed)
+		, m_octaves(octaves)
+		, m_mult(mult)
+	{
+	}
+	void House::initialize() {
+		auto modelSize = m_model->size();
+		float hx = modelSize.x / 2;
+		float hz = modelSize.z / 2;
+
+
+		float x = m_position.x, z = m_position.z;
+
+		std::vector<float> cornerHeights{
+			Noise::perlin(x - hx, z - hz, m_size, m_seed, m_octaves) * m_mult,
+			Noise::perlin(x + hx, z - hz, m_size, m_seed, m_octaves) * m_mult,
+			Noise::perlin(x - hx, z + hz, m_size, m_seed, m_octaves) * m_mult,
+			Noise::perlin(x + hx, z + hz, m_size, m_seed, m_octaves) * m_mult
+		};
+
+		auto min = *std::ranges::min_element(cornerHeights);
+		m_position.y = min;
+
+	// translate matrix
+		m_model->scale(glm::vec3(10.0f));
+		m_model->translate(m_position);
+	
+		setPhysicsEnabled();
+		m_body->m_mass = 10000000000.f;
+		m_body->m_maxForce = glm::vec3{ 0.f };
+		m_body->m_angularDrag = glm::vec3{ 10000.f };
+		m_body->m_maxTorque = glm::vec3{0};
+		m_body->m_drag = 100000.f;
+		m_body->m_stopOnCollision = true;
+		m_body->m_reflectOnCollision = true;
+		m_body->m_impartForce = true;
+		m_body->m_isKinematic = false;
+		m_body->m_passThrough = false;
+		m_body->m_usesGravity = false;
+		m_body->m_clickable = false;
+		m_drawCollider = false;
+	
+		m_body->m_bodyModel = m_model;
+		m_body->setBoxCollider();
+	
+		GameObject::addTag("House");
+	}
 
 	HeightField::HeightField(SceneManager& scene_manager)//TODO, take path to all files used, maybe
 		: m_meshResolution(0)
@@ -45,7 +106,6 @@ namespace Shard {
 
 		loadCustomTextures();
 	}
-
 	
 	void HeightField::loadHeightField(std::string heightFieldName, std::string diffuseName, std::string shinyName) {
 
@@ -84,6 +144,18 @@ namespace Shard {
 		std::cout << "Successfully loaded heigh field texture: " << heigtFieldPath << ".\n";
 	}
 
+		// inherited from GameObject
+	void House::checkDestroyMe() {}
+	void House::physicsUpdate() {}
+	void House::prePhysicsUpdate() {}
+	void House::update() {}
+	void House::killMe() {}
+	//Inherit from colldsionhandler
+	void House::onCollisionEnter(std::shared_ptr<Shard::PhysicsBody> body) {}
+	void House::onCollisionExit(std::shared_ptr<Shard::PhysicsBody> body) {}
+	void House::onCollisionStay(std::shared_ptr<Shard::PhysicsBody> body) {}
+
+
 	void HeightField::loadDiffuseTexture(GLuint* target, const std::string& diffusePath)
 	{
 		int width, height, components;
@@ -121,7 +193,7 @@ namespace Shard {
 
 		if (data == nullptr)
 		{
-			Logger::log("Could not load texture: " + path + "Heightfield", LOG_LEVEL_FATAL);
+			Logger::log("Could not load texture: " + path + "\n Heightfield", LOG_LEVEL_FATAL);
 		}
 
 		if (*target == UINT32_MAX)
@@ -141,6 +213,10 @@ namespace Shard {
 
 	void HeightField::loadCustomTextures()
 	{
+		//loadTexture(&m_customBaseColor, "../Shard/res/textures/patchy-meadow1_albedo.png");
+		//loadTexture(&m_customRoughness, "../Shard/res/textures/patchy-meadow1_roughness.png");
+		//loadTexture(&m_customNormals, "../Shard/res/textures/patchy-meadow1_normal-ogl.png");
+
 		loadTexture(&m_customBaseColor, "../Shard/res/textures/grass_basecolor.jpg");
 		loadTexture(&m_customRoughness, "../Shard/res/textures/grass_rough.jpg");
 		loadTexture(&m_customNormals, "../Shard/res/textures/grass_normal.jpg");
@@ -148,7 +224,7 @@ namespace Shard {
 
 	void HeightField::generateMesh(int tesselation, float size, int seed)
 	{
-		//loadCustomTextures();
+		Logger::log("Generating mesh for heightfield");
 		if(m_map_type == -1)
 			m_map_type = GENERATED;
 
@@ -170,7 +246,7 @@ namespace Shard {
 			for (int j = 0; j < tesselation; j++)
 			{
 				float z = -size / 2 + j * sideLen;
-				float y = Noise::perlin(x, z, size, seed, m_octaves) * 70.f;
+				float y = Noise::perlin(x, z, size, seed, m_octaves) * 200.f;
 				
 				vertices.push_back({ x, y, z });
 
@@ -265,8 +341,6 @@ namespace Shard {
 			}
 		}
 
-		//std::reverse(normals.begin(), normals.end());
-
 		m_numIndices = indices.size();
 
 		glGenVertexArrays(1, &m_vao);
@@ -290,8 +364,6 @@ namespace Shard {
 
 		glVertexAttribPointer(1, 3, GL_FLOAT, false, 0, 0);
 		glEnableVertexAttribArray(1);
-
-	
 	
 		glGenBuffers(1, &m_uvBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, m_uvBuffer);
@@ -310,6 +382,45 @@ namespace Shard {
 
 
 		m_shaderProgram = ShaderManager::getInstance().getShader("heightfield");
+
+		m_houseModels =  {
+			std::make_shared<Model>("models/city/ResidentialBuildings001.obj"),
+			std::make_shared<Model>("models/city/ResidentialBuildings002.obj"),
+			std::make_shared<Model>("models/city/ResidentialBuildings003.obj"),
+			std::make_shared<Model>("models/city/ResidentialBuildings004.obj"),
+			std::make_shared<Model>("models/city/ResidentialBuildings005.obj"),
+			std::make_shared<Model>("models/city/ResidentialBuildings006.obj"),
+			std::make_shared<Model>("models/city/ResidentialBuildings007.obj"),
+			std::make_shared<Model>("models/city/ResidentialBuildings008.obj"),
+			std::make_shared<Model>("models/city/ResidentialBuildings009.obj"),
+			std::make_shared<Model>("models/city/ResidentialBuildings010.obj")
+		};
+
+		if (m_map_type == GENERATED) {
+			// I BUILD THE HOUSES :DDDD
+			for (int i = 0; i < 200; i++) {
+				auto num = rand() % m_houseModels.size();
+				//num = 1;
+				float LO = -size / 2 + size * 0.01f;
+				float HI = size / 2 - size * 0.01f;
+				float x = LO + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (HI - LO)));
+				float z = LO + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (HI - LO)));
+
+				// glm::vec3 pos, float size, int seed, float octaves, float mult
+				float projectedHeight = Noise::perlin(x, z, size, seed, m_octaves) * 200.f;
+
+				if (projectedHeight < -10.f)
+					continue;
+
+				auto house = std::make_shared<House>(
+					glm::vec3{ x, projectedHeight, z },
+					size, seed, m_octaves, 200.f
+				);
+				house->m_model = std::make_shared<Model>(m_houseModels[num]);
+				house->initialize();
+				GameObjectManager::getInstance().addGameObject(house);
+			}
+		}
 	}
 
 	void HeightField::submitTriangles(const glm::mat4& viewMatrix, 
@@ -391,6 +502,10 @@ namespace Shard {
 		glDrawElements(GL_TRIANGLES, m_numIndices, GL_UNSIGNED_INT, 0);
 
 		glUseProgram(0);
+
+	/*	for (House &house : m_houses) {
+			house.render(viewMatrix, projectionMatrix);
+		}*/
 	}
 
 } // end namespace

@@ -85,14 +85,14 @@ namespace Shard {
 		}
 		//move to first person view
 		pos = playerPos + rotation * offset;
-		//TODO, this should not be - very bad!!!
-		front = -player_game_obj->m_model->m_forward;
+		//TODO, this should not be - very bad!!!, fixed but moidel is ugly
+		front = player_game_obj->m_model->m_forward;
 		up = player_game_obj->m_model->m_up;
 		right = player_game_obj->m_model->m_right;
 
 		//if in third person, respect offsets
 		if (status == CameraView::THIRD_PERSON) {
-			front = glm::normalize((playerPos + rotation *third_look_at_offset) - pos);
+			front = glm::normalize((playerPos + rotation * third_look_at_offset) - pos);
 			right = glm::normalize(glm::cross(front, up));
 			up = glm::normalize(glm::cross(right, front));
 		}

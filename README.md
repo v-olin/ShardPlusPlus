@@ -15,3 +15,6 @@ and extending it with new features.
 - Ray-object collision testing (e.g. clicking on an object on your screen)
 - Heightfields and procedurally generated terrain.
 - Pathtracing.
+- Variable refreshrate runtime
+- Physics works the same no matter the framerate
+

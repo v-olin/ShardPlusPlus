@@ -7,6 +7,8 @@
 #include "InputManager.h"
 #include "PhysicsManager.h"
 #include "GUI.h"
+#include "Renderer.h"
+#include "RenderableObject.h"
 
 #include <memory>
 #include <string>
@@ -20,7 +22,7 @@ namespace Shard {
 	class Bootstrap {
 
 	public:
-		inline static  const std::string DEFAULT_CONFIG = "config.cfg";
+		inline static const std::string DEFAULT_CONFIG = "config.cfg";
 		static bool checkEnvironmentVariable(std::string id);
 		static std::string getEnvironmentVariable(std::string id);
 		static void setEnvironmentVariable(std::string id, std::string val);
@@ -32,6 +34,13 @@ namespace Shard {
 		static int getCurrentFrame();
 		static void Main(std::string[]);
 
+		static void setPlane(std::shared_ptr<Model> plane) {
+			planeModel = plane;
+		}
+
+		static std::shared_ptr<Model> getPlane() {
+			return planeModel;
+		}
 
 		static const std::string getBaseDir();
 		
@@ -45,7 +54,9 @@ namespace Shard {
 		static void setup();
 		static void setupEnvironmentVariables(std::string path);
 
-		inline static ::GLFWwindow* m_Window;
+		static void addRenderObject(std::shared_ptr<RenderableObject> robj);
+
+		inline static GLFWwindow* m_Window;
 
 		inline static GUI* gui;
 
@@ -56,8 +67,9 @@ namespace Shard {
 		inline static InputManager input;
 		inline static PhysicsManager& phys{ PhysicsManager::getInstance() };
 		inline static AssetManager& asset{ AssetManager::getInstance() };
-		inline static int target_frame_rate;
-        inline static int millis_per_frame;
+		inline static Renderer renderer;
+		//inline static int target_frame_rate;
+        //inline static int millis_per_frame;
         inline static double delta_time;
         inline static double time_elapsed;
         inline static int frames;
@@ -65,5 +77,7 @@ namespace Shard {
         inline static long long start_time;
         inline static std::string base_dir;
 		inline static std::unordered_map<std::string, std::string> en_vars;
+		// i hate this so fucking bad
+		inline static std::shared_ptr<Model> planeModel;
 	};
 }

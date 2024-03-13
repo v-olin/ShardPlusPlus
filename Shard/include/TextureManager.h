@@ -14,20 +14,22 @@
 #include "Logger.h"
 
 namespace Shard {
-
-
-
 	class TextureManager {
 	public:
-		static TextureManager& getInstance();
+		static TextureManager& getInstance() {
+			static TextureManager instance;
+			return instance;
+		}
 
 		TextureManager(TextureManager const&) = delete;
 		TextureManager& operator=(TextureManager const&) = delete;
 
 		void loadTexture(GLuint* target, const std::string& path);
 		GLuint loadTexture(const std::string& path);
+		GLuint loadTextureRGBA(const std::string& path);
 		GLuint getTexture(const std::string& path);
 		GLuint loadHdrTexture(const std::string& filename);
+		GLuint loadHdrMipMap(const std::vector<std::string> filenames);
 
 	private:
 		TextureManager() = default;

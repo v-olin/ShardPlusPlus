@@ -34,6 +34,7 @@ namespace Shard {
 		}
 
 		GLuint loadShader(std::string shader_name, bool allow_errors);
+		GLuint loadShader(std::string shader_path, std::string shader_name, bool allow_errors);
 
 		GLuint getShader(std::string shader_name) { 
 			return m_Shaders.at(shader_name);  
@@ -60,7 +61,7 @@ namespace Shard {
 		// very bad!!
 		GLuint m_defaultShader;
 		const std::string m_shaderPath;
-		std::unordered_map<GLuint, std::unique_ptr<ShaderUniformCache>> m_shaderCaches;
+		std::unordered_map<GLuint, std::shared_ptr<ShaderUniformCache>> m_shaderCaches{};
 		std::unordered_map<std::string, GLuint> m_Shaders{};
 	};
 }

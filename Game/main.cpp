@@ -43,9 +43,9 @@ void GameTest::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
 		if (ie.key == GLFW_KEY_SPACE)
 			createBullet();
 		if (ie.key == GLFW_KEY_R)
-			sm.camera.setPlayerGameObj(car);
+			sm.camera.setPlayerGameObj(playerPlane);
 	}
-	car->should_move = !is_rmb_down;// cameraStatus != Shard::CameraView::FREE;
+	playerPlane->should_move = !is_rmb_down;// cameraStatus != Shard::CameraView::FREE;
 	if ((cameraStatus == Shard::CameraView::FREE || cameraStatus == Shard::CameraView::LOCK) && is_rmb_down) {
 		auto keyDown = et == Shard::EventType::KeyDown;
 		if (et == Shard::EventType::KeyDown || et == Shard::EventType::KeyUp) {
@@ -183,13 +183,14 @@ void GameTest::update() {
 	display->showText(("FPS: " + second_fps + " / " + fps).c_str(), 10, 10, 12, 255, 255, 255);*/
 }
 
-void GameTest::createCar() {
-	car = std::make_shared<Car>();
-	car->initialize();
-	car->m_body->recalculateColliders();
-	Shard::Bootstrap::getInput().addListeners(car);
+void GameTest::createPlayerPlane() {
+	playerPlane = std::make_shared<PlayerPlane>();
+	playerPlane->initialize();
+	playerPlane->m_body->recalculateColliders();
+	Shard::Bootstrap::setPlane(playerPlane->m_model);
+	Shard::Bootstrap::getInput().addListeners(playerPlane);
 	static auto &sm = Shard::SceneManager::getInstance();
-	sm.camera.setPlayerGameObj(car);
+	sm.camera.setPlayerGameObj(playerPlane);
 	sm.camera.setFirstPersonOffset(glm::vec3(-9, 8, 0));
 	sm.camera.setThirdPersonOffset(glm::vec3(50, 25, 0), glm::vec3(0, 15, 0));
 }
@@ -199,8 +200,8 @@ void GameTest::createBullet() {
 	auto bullet = std::make_shared<Bullet>();
 	bullet->initialize();
 	bullet->m_model->scale({10, 10, 10});
-	bullet->m_model->translate(car->m_model->position());
-	bullet->m_model->m_rotMatrix = car->m_model->getRotationMatrix();
+	bullet->m_model->translate(playerPlane->m_model->position());
+	bullet->m_model->m_rotMatrix = playerPlane->m_model->getRotationMatrix();
 	bullet->m_body->recalculateColliders();
 	bullets.push_back(bullet);
 }
@@ -229,10 +230,10 @@ void GameTest::createAsteroid(float x, float y, float z) {
 
 void GameTest::initalize() {
 	Shard::Logger::log("Initializing game");
-	createCar();
+	createPlayerPlane();
 	int max = 100;
 	parent = std::make_shared<Shard::Model>("models/asteroid_fixed.obj");
-	for (int i = 0; i < 400; i++) {
+	for (int i = 0; i < 1; i++) {
 		auto pos = glm::vec3(rand() % max, rand() % max, rand() % max) - glm::vec3(max/2, 0, max/2);
 		createAsteroid(pos.x, pos.y, pos.z);
 	}

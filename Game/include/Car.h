@@ -5,12 +5,12 @@
 #include "InputEvent.h"
 #include "InputManager.h"
 
-class Car : public Shard::InputListener, public Shard::GameObject, public Shard::CollisionHandler {
+class PlayerPlane : public Shard::InputListener, public Shard::GameObject, public Shard::CollisionHandler {
 public:
-	bool forward, backward, turn_left, turn_right, pitch_up, pitch_down;
+	bool throttle, backward, roll_left, roll_right, height_up, height_down;
 	bool should_move;
 
-	Car();
+	PlayerPlane();
 
 	void fireBullet();
 	void onCollisionEnter(std::shared_ptr<Shard::PhysicsBody> body) override;

@@ -37,10 +37,14 @@ namespace Shard {
 	}
 
 	GLuint ShaderManager::loadShader(std::string shader_name, bool allow_errors) {
+		return loadShader(m_shaderPath, shader_name, allow_errors);
+	}
+
+	GLuint ShaderManager::loadShader(std::string shader_path, std::string shader_name, bool allow_errors) {
 		Logger::log("Loading shader: " + shader_name, LOG_LEVEL_ALL);
 
-		std::string path_vertex_shader = m_shaderPath + shader_name + ".vert";
-		std::string path_fragment_shader = m_shaderPath + shader_name + ".frag";
+		std::string path_vertex_shader = shader_path + shader_name + ".vert";
+		std::string path_fragment_shader = shader_path + shader_name + ".frag";
 
 		std::ifstream vs_file(path_vertex_shader);
 		std::string vs_src((std::istreambuf_iterator<char>(vs_file)), std::istreambuf_iterator<char>());
@@ -73,7 +77,7 @@ namespace Shard {
 		glGetShaderiv(f_shader, GL_COMPILE_STATUS, &compile_ok);
 
 		if (!compile_ok) {
-			std::string msg = getShaderInfoLog(v_shader);
+			std::string msg = getShaderInfoLog(f_shader);
 			LoggerLevel lvl = allow_errors ? LOG_LEVEL_ERROR : LOG_LEVEL_FATAL;
 			Logger::log(msg.c_str());
 		}

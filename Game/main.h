@@ -18,7 +18,7 @@ public:
 
 	void initalize();
 	// void createShip();
-	void createCar();
+	void createPlayerPlane();
 	void createAsteroid(float x, float y, float z);
 	void createBullet();
 
@@ -31,7 +31,7 @@ public:
 	std::vector<std::shared_ptr<Asteroid>> asteroids{};
 	std::vector<std::shared_ptr<Bullet>> bullets{};
 	// std::shared_ptr<Spaceship> spaceship;
-	std::shared_ptr<Car> car{ nullptr };
+	std::shared_ptr<PlayerPlane> playerPlane{ nullptr };
 
 	bool usePathTracing{ false };
 	int pathTracingSampling{ 4 };

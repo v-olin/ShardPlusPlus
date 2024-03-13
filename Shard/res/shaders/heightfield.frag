@@ -132,7 +132,7 @@ void main() {
 	vec3 texColor = vec3(1.0f, 0, 0);
 
 	if (mapType == GENERATED) {
-		texColor = (texture2D(baseColorMap, (texCoord.xy * 50))).rgb;
+		texColor = (texture2D(baseColorMap, (texCoord.xy * 150))).rgb;
 	}
 	else {
 		texColor = (texture2D(diffTexture, texCoord.xy)).rgb;

@@ -135,7 +135,9 @@ namespace Shard {
 		filename = file_util::normalise(_filename);
 		directory = file_util::normalise(_directory);
 		valid = true;
+		// this should be done by the texturemanager, very bad!!
 		int components;
+		stbi_set_flip_vertically_on_load(true);
 		data = stbi_load((directory + filename).c_str(), &width, &height, &components, _components);
 		if (data == nullptr)
 		{
@@ -545,12 +547,13 @@ namespace Shard {
 
 		*/
 
-		// x = [1], y = [2], z = [3]
-		// x = P = arcsin(-rot[3][2])
+		/* x = [1], y = [2], z = [3]
+		 x = P = arcsin(-rot[3][2])*/
+		
 		float x = asin(-rotMatrix[2].y);
-		// y = H = arctan(rot[3][1]/rot[3][3])
+		 //y = H = arctan(rot[3][1]/rot[3][3])
 		float y = atan2(rotMatrix[2].x, rotMatrix[2].z);
-		// z = B = arctan(rot[1][2]/rot[2][2])
+		 //z = B = arctan(rot[1][2]/rot[2][2])
 		float z = atan2(rotMatrix[0].y, rotMatrix[1].y);
 
 		return { x, y, z };
@@ -589,12 +592,14 @@ namespace Shard {
 			}
 			bool hasEmission = mat.m_emission_texture.valid;
 			sm.SetInteger1(shader, hasEmission ? 1 : 0, "has_emission_texture");
+
 			if (hasEmission) {
 				glActiveTexture(GL_TEXTURE5);
 				glBindTexture(GL_TEXTURE_2D, mat.m_emission_texture.gl_id);
 			}
 			glActiveTexture(0);
 			sm.SetVec3(shader, mat.m_color, "material_color");
+
 			sm.SetFloat1(shader, mat.m_metalness, "material_metalness");
 			sm.SetFloat1(shader, mat.m_fresnel, "material_fresnel");
 			sm.SetFloat1(shader, mat.m_shininess, "material_shininess");

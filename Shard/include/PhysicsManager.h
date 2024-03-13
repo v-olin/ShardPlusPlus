@@ -45,7 +45,7 @@ namespace Shard {
 		void addPhysicsObject(std::shared_ptr<PhysicsBody> body);
 		void removePhysicsObject(std::shared_ptr<PhysicsBody> body);
 		bool willTick();
-		bool update();
+		bool update(float delta_time);
 		void drawDebugColliders();
 		bool findColliding(std::shared_ptr<PhysicsBody> a, std::shared_ptr<PhysicsBody> b);
 
