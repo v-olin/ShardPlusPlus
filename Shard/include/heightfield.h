@@ -12,7 +12,6 @@ namespace Shard {
 	class House : public GameObject, public CollisionHandler {
 	public:
 		House(glm::vec3 pos, float size, int seed, float octaves, float mult);
-		//void render(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix);
 		
 		// inherited from GameObject
 		void checkDestroyMe() override;
@@ -35,8 +34,6 @@ namespace Shard {
 		int m_seed;
 		float m_octaves;
 		float m_mult;
-
-		void createGeometry();
 	};
 		
 	class HeightField {
@@ -60,9 +57,6 @@ namespace Shard {
 		float fresnel{ 1.f };
 		float shininess{ 1.f };
 
-		//GLfloat water_metalness = 0.62f;
-		//GLfloat water_fresnel = 0.68f;
-		//GLfloat water_shininess = 5300.0f;
 		float m_octaves;
 		float m_height_scale;
 		int m_map_type;
@@ -92,7 +86,6 @@ namespace Shard {
 	private:
 		std::vector<std::shared_ptr<House>> m_houses{};
 		
-		//SceneContext& sceneContext;
 		SceneManager& m_scene_manager;
 		void loadTexture(GLuint* target, const std::string& path);
 	};

@@ -39,7 +39,6 @@ float getHeight(vec2 pos)
     return h;
 }
 
-// fix normals!! (dont use texCoords you dumbass)
 vec3 calcNormalFromTexture(vec2 pos)
 {
     float x = texCoordIn.x, y = texCoordIn.y;
@@ -84,8 +83,6 @@ void main()
     }
 
 	colorPosition = pos;
-	//pos.y = (pos.y - 20.f) * heightScale + pos.y;
-	//pos.y = pos.y * heightScale - 20;
 
 	gl_Position = modelViewProjectionMatrix * vec4(pos, 1.0);
 	viewSpaceNormal = (normalMatrix * vec4(norm, 0.0)).xyz;

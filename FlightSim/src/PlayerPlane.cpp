@@ -6,23 +6,7 @@
 #include "GameObjectManager.h"
 
 
-PlayerPlane::PlayerPlane() : GameObject() {
-	//initialize();
-	//Shard::GameObjectManager::getInstance().addGameObject(shared_from_this());
-}
-
-void PlayerPlane::fireBullet() {
-    //Bullet* b = new Bullet()
-    //std::shared_ptr<Bullet> b(new Bullet);
-    //Shard::GameObjectManager::getInstance().addGameObject(b->shared_from_this());
-    //Shard::Logger::log("FIRE");
-
-    //// THIS SHOULD NOT BE DONE HERE,
-    //// https://tenor.com/view/oh-no-oh-no-anyway-gif-18887547 
-    //b->setupBullet(body_->trans->centre.x, body_->trans->centre.y);
-    //b->body_->trans->rotate(body_->trans->rotz);
-    //Shard::Bootstrap::getSound().playSound("fire.wav");
-}
+PlayerPlane::PlayerPlane() : GameObject() { }
 
 void PlayerPlane::handleEvent(Shard::InputEvent ev, Shard::EventType et) {
 
@@ -71,10 +55,6 @@ void PlayerPlane::handleEvent(Shard::InputEvent ev, Shard::EventType et) {
 void PlayerPlane::initialize() {
     m_model = std::make_shared<Shard::Model>("models/chopper.obj");
     setPhysicsEnabled(); // sets body_ to a new PhysicBody(this ) and populates transform_
-    /*body_->trans->x = 500.f;
-    body_->trans->y = 300.f;*/
-    //auto path = Shard::Bootstrap::getAssetManager().getAssetPath("PlayerPlane.png");
-    //body_->trans->sprite_path = path;
 
     // if you move this stuff above transform_ init ^ then colliders will not be drawn
     // why? ... you figure it out!
@@ -105,23 +85,21 @@ void PlayerPlane::initialize() {
             A car has a physicsbody and a model
             But the physicsbody also has a pointer to the same model
             The physicsbody also has a collider WHICH ALSO HAS A POINTER TO THE SAME MODEL
-            so the dependencies and order is fucked
+            so the dependencies and order is borked
             this specific order is the only correct initialization
             someone please fix this
             i hate this
             god help me
+
+            thanks faton for fix :^)
     */
     m_body->setBoxCollider();
     
     GameObject::addTag("PlayerPlane");
     Shard::GameObjectManager::getInstance().addGameObject(shared_from_this());
-    //Shard::Bootstrap::getInput().addListeners(shared_from_this());
 }
 
-void PlayerPlane::update() {
- 
-    //Shard::Bootstrap::getDisplay()->addToDraw(shared_from_this());
-}
+void PlayerPlane::update() { }
 
 
 void PlayerPlane::physicsUpdate() {
@@ -133,10 +111,8 @@ void PlayerPlane::physicsUpdate() {
         m_body->addTorque({ 0, -2.f, 0 });
     if (height_up)
         up_force += 50;
-        //m_body->addTorque({ 0, 0, 2.f });
     if (height_down)
         up_force -= 50;
-        //m_body->addTorque({ 0, 0, -2.f });
     auto max_roll = 45 * (3.14159265358979 / 180);
     auto rot_x = m_model->rotation()[0];
     if (roll_left && rot_x > -max_roll)
@@ -146,23 +122,16 @@ void PlayerPlane::physicsUpdate() {
     float rot_z = m_model->rotation()[2];
     auto max_pitch = 30 * (3.14159265358979 / 180);
     if (throttle_forward&& rot_z >  -max_pitch) {
-        //up_force += 20,
         m_body->addTorque({ 0,0, -2 });
         m_body->addForce({ 0, 1, 0 }, 20);
     }
-        //m_body->addForce(m_model->m_forward, 100.0);
     if (throttle_back && rot_z < max_pitch) {
-        //up_force += 20,
         m_body->addTorque({ 0,0, 2 });
         m_body->addForce({ 0, 1, 0 }, 20);
      
     }
-        //m_body->addForce(m_model->m_forward, -10.0);
 
     m_body->addForce(m_model->m_up, up_force);
-
-    //calculate lift here and apply force in m_up
-
 }
 
 void PlayerPlane::prePhysicsUpdate() {

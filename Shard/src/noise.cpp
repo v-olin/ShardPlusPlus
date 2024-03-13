@@ -29,7 +29,6 @@ float Noise::perlin(float x, float y, float size, int seed, int octaves)
 float Noise::perlin(float x, float y, float size, int seed)
 {
     // shift to positive coordinates
-    // noise is fcked with negative coords
     x = x + (size / 2); 
     y = y + (size / 2);
 

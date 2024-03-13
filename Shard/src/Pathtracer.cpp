@@ -1,6 +1,5 @@
 #include "Pathtracer.h"
 #include "embree.h"
-//#include "labhelper.h"
 #include "material.h"
 #include "sampling.h"
 #include <algorithm>
@@ -10,22 +9,15 @@
 
 using namespace std;
 using namespace glm;
-//using namespace labhelper;
 
 namespace Shard {
 namespace PathTracer {
-	///////////////////////////////////////////////////////////////////////////////
-	// Global variables
-	///////////////////////////////////////////////////////////////////////////////
 	Settings settings;
 	Environment environment;
 	Image rendered_image;
 	PointLight point_light;
 	std::vector<DiscLight> disc_lights;
 
-	///////////////////////////////////////////////////////////////////////////
-	// Restart rendering of image
-	///////////////////////////////////////////////////////////////////////////
 	void restart() {
 		// No need to clear image,
 		rendered_image.number_of_samples = 0;
@@ -35,10 +27,6 @@ namespace PathTracer {
 		return std::max(rendered_image.number_of_samples - 1, 0);
 	}
 
-	///////////////////////////////////////////////////////////////////////////
-	// On window resize, window size is passed in, actual size of pathtraced
-	// image may be smaller (if we're subsampling for speed)
-	///////////////////////////////////////////////////////////////////////////
 	void resize(int w, int h) {
 		rendered_image.width = w / settings.subsampling;
 		rendered_image.height = h / settings.subsampling;
@@ -46,10 +34,6 @@ namespace PathTracer {
 		restart();
 	}
 
-	///////////////////////////////////////////////////////////////////////////
-	/// Return the radiance from a certain direction wi from the environment
-	/// map.
-	///////////////////////////////////////////////////////////////////////////
 	vec3 Lenvironment(const vec3& wi) {
 		const float theta = acos(std::max(-1.0f, std::min(1.0f, wi.y)));
 		float phi = atan(wi.z, wi.x);
@@ -93,8 +77,6 @@ namespace PathTracer {
 				Ray light_ray(hit.position + hit.shading_normal * EPSILON, wi);
 
 				if (!occluded(light_ray)) {
-					// const float falloff_factor =
-					// 	1.0f / dot(wi_unnorm, wi_unnorm);
 					const float distance_to_light =
 						length(point_light.position - hit.position);
 					const float falloff_factor =
@@ -136,21 +118,14 @@ namespace PathTracer {
 				return L + path_throughput * Lenvironment(current_ray.d);
 			}
 
-			// path_throughput *= (f * cosineterm) / pdf
 		}
 		return L;
 	}
 
-	///////////////////////////////////////////////////////////////////////////
-	/// Used to homogenize points transformed with projection matrices
-	///////////////////////////////////////////////////////////////////////////
 	inline static glm::vec3 homogenize(const glm::vec4& p) {
 		return glm::vec3(p * (1.f / p.w));
 	}
 
-	///////////////////////////////////////////////////////////////////////////
-	/// Trace one path per pixel and accumulate the result in an image
-	///////////////////////////////////////////////////////////////////////////
 	void tracePaths(const glm::mat4& V, const glm::mat4& P) {
 		// Stop here if we have as many samples as we want
 		if ((int(rendered_image.number_of_samples) > settings.max_paths_per_pixel)
@@ -166,7 +141,6 @@ namespace PathTracer {
 			rendered_image.width * rendered_image.height, vec4(0.0f)
 		);
 
-		// TODO: parallel Z-curve/loop blocking, more efficient multisampling
 #pragma omp parallel for
 		for (int y = 0; y < rendered_image.height; y++) {
 			for (int x = 0; x < rendered_image.width; x++) {

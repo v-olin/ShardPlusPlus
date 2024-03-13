@@ -7,7 +7,6 @@ namespace Shard {
 	public:
 		std::shared_ptr<PhysicsBody> owner;
 		float start, end;
-		//SAPEntry &prev, &next; // use std::list idiot
 		
 		bool operator==(const SAPEntry& other) {
 			return (start == other.start) && (end == other.end) && (owner == other.owner);

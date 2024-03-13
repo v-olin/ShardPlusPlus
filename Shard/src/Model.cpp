@@ -135,16 +135,12 @@ namespace Shard {
 		filename = file_util::normalise(_filename);
 		directory = file_util::normalise(_directory);
 		valid = true;
-		// this should be done by the texturemanager, very bad!!
 		int components;
 		stbi_set_flip_vertically_on_load(true);
 		data = stbi_load((directory + filename).c_str(), &width, &height, &components, _components);
 		if (data == nullptr)
 		{
 			Logger::log("ERROR: loadModelFromOBJ(): Failed to load texture: " + filename + " in " + directory, LOG_LEVEL_FATAL);
-			//std::cout << "ERROR: loadModelFromOBJ(): Failed to load texture: " << filename << " in " << directory
-			//	<< "\n";
-			//exit(1);
 		}
 		glGenTextures(1, &gl_id_internal);
 		gl_id = gl_id_internal;
@@ -169,8 +165,6 @@ namespace Shard {
 		else
 		{
 			Logger::log("Texture loading not implemented for this number of compenents.\n", LOG_LEVEL_FATAL);
-			//std::cout << "Texture loading not implemented for this number of compenents.\n";
-			//exit(1);
 		}
 		glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
@@ -178,7 +172,6 @@ namespace Shard {
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		//glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 16);
 
 		stbi_image_free(data);
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -204,9 +197,6 @@ namespace Shard {
 		}
 	}
 
-	///////////////////////////////////////////////////////////////////////////
-	// Destructor
-	///////////////////////////////////////////////////////////////////////////
 	Model::~Model()
 	{
 		for (auto& material : m_materials)
@@ -253,8 +243,6 @@ namespace Shard {
 	}
 	Model::Model(std::string path)
 		: m_hasDedicatedShader(false)
-		//, m_transformMatrix(glm::mat4(1.f))
-		//, m_lastTransformMatrix(glm::mat4(1.f))
 		, m_transMatrix(glm::mat4(1.f))
 		, m_rotMatrix(glm::mat4(1.f))
 		, m_lastTransMatrix(glm::mat4(1.f))
@@ -278,9 +266,6 @@ namespace Shard {
 			exit(1);
 		}
 
-		///////////////////////////////////////////////////////////////////////
-		// Parse the OBJ file using tinyobj
-		///////////////////////////////////////////////////////////////////////
 		std::cout << "Loading " << path << "..." << std::flush;
 		tinyobj::attrib_t attrib;
 		std::vector<tinyobj::shape_t> shapes;
@@ -302,9 +287,6 @@ namespace Shard {
 		m_name = filename;
 		m_filename = path;
 
-		///////////////////////////////////////////////////////////////////////
-		// Transform all materials into our datastructure
-		///////////////////////////////////////////////////////////////////////
 		for (const auto& m : materials)
 		{
 			Material material;
@@ -339,28 +321,16 @@ namespace Shard {
 			m_materials.push_back(material);
 		}
 
-		///////////////////////////////////////////////////////////////////////
-		// A vertex in the OBJ file may have different indices for position,
-		// normal and texture coordinate. We will not even attempt to use
-		// indexed lookups, but will store a simple vertex stream per mesh.
-		///////////////////////////////////////////////////////////////////////
 		uint64_t number_of_vertices = 0;
 		for (const auto& shape : shapes)
 		{
 			number_of_vertices += shape.mesh.indices.size();
 		}
-		//std::vector<glm::vec3> m_positions;
-		//std::vector<glm::vec3> m_normals;
-		//std::vector<glm::vec2> m_texture_coordinates;
 
 		m_positions.resize(number_of_vertices);
 		m_normals.resize(number_of_vertices);
 		m_texture_coordinates.resize(number_of_vertices);
-
-		///////////////////////////////////////////////////////////////////////
-		// For each vertex _position_ auto generate a normal that will be used
-		// if no normal is supplied.
-		///////////////////////////////////////////////////////////////////////
+		
 		std::vector<glm::vec4> auto_normals(attrib.vertices.size() / 3);
 		for (const auto& shape : shapes)
 		{
@@ -390,18 +360,10 @@ namespace Shard {
 			normal = (1.0f / normal.w) * normal;
 		}
 
-		///////////////////////////////////////////////////////////////////////
-		// Now we will turn all shapes into Meshes. A shape that has several
-		// materials will be split into several meshes with unique names
-		///////////////////////////////////////////////////////////////////////
 		int vertices_so_far = 0;
 		for (int s = 0; s < shapes.size(); ++s)
 		{
 			const auto& shape = shapes[s];
-			///////////////////////////////////////////////////////////////////
-			// The shapes in an OBJ file may several different materials.
-			// If so, we will split the shape into one Mesh per Material
-			///////////////////////////////////////////////////////////////////
 			int next_material_index = shape.mesh.material_ids[0];
 			int next_material_starting_face = 0;
 			std::vector<bool> finished_materials(materials.size(), false);
@@ -436,9 +398,6 @@ namespace Shard {
 					}
 					else
 					{
-						///////////////////////////////////////////////////////
-						// Now we generate the vertices
-						///////////////////////////////////////////////////////
 						for (int j = 0; j < 3; j++)
 						{
 							int v = shape.mesh.indices[i * 3 + j].vertex_index;
@@ -478,16 +437,13 @@ namespace Shard {
 						vertices_so_far += 3;
 					}
 				}
-				///////////////////////////////////////////////////////////////
-				// Finalize and push this mesh to the list
-				///////////////////////////////////////////////////////////////
+				
 				mesh.m_number_of_vertices = vertices_so_far - mesh.m_start_index;
 				m_meshes.push_back(mesh);
 				finished_materials[current_material_index] = true;
 			}
 			if (number_of_materials_in_shape == 1)
 			{
-				// If there's only one material, we don't need the material name in the mesh name
 				m_meshes.back().m_name = shape.name;
 			}
 		}
@@ -495,9 +451,6 @@ namespace Shard {
 		std::sort(m_meshes.begin(), m_meshes.end(),
 			[](const Mesh& a, const Mesh& b) { return a.m_name < b.m_name; });
 
-		///////////////////////////////////////////////////////////////////////
-		// Upload to GPU
-		///////////////////////////////////////////////////////////////////////
 		glGenVertexArrays(1, &m_vaob);
 		glBindVertexArray(m_vaob);
 		glGenBuffers(1, &m_positions_bo);
@@ -612,17 +565,12 @@ namespace Shard {
 	void Model::translate(const glm::vec3& force) {
 		m_lastTransMatrix = m_transMatrix;
 		m_transMatrix = glm::translate(force) * m_transMatrix;
-		//m_transMatrix = glm::translate(m_transMatrix, force);
 	}
 
-	// why is the angle in degrees and not radians? very bad!!
 	void Model::rotate(const float angle_deg, const glm::vec3& axis) {
 		m_rotMatrix = glm::rotate(glm::radians(angle_deg), axis) * m_rotMatrix;
-		// m_transformMatrix = glm::rotate(m_transformMatrix, glm::radians(angle_deg), axis);
 		glm::mat3 rot = getRotationMatrix();
 
-		// we also need to rotate the axis vectors of the transform
-		// TDIL this is fucked, unlucky
 		m_forward = glm::normalize(rot * glm::vec3{ 1.f, 0, 0 });
 		m_up = glm::normalize(rot * glm::vec3{ 0, 1.f, 0 });
 		m_right = glm::normalize(rot * glm::vec3{ 0, 0, 1.f });
@@ -638,9 +586,6 @@ namespace Shard {
 
 	void saveModelMaterialsToMTL(Model* model, std::string filename)
 	{
-		///////////////////////////////////////////////////////////////////////
-		// Save Materials
-		///////////////////////////////////////////////////////////////////////
 		std::ofstream mat_file(filename);
 		if (!mat_file.is_open())
 		{

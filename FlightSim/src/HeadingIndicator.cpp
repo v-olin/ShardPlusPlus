@@ -122,7 +122,7 @@ void HeadingIndicator::render() {
 	);
 	//glm::mat4 viewMatrix = m_sceneManager.getCameraViewMatrix();
 	float xp = size.x / 2, yp = size.y / 2;
-	glm::mat4 projMatrix = glm::ortho(-xp, xp, -yp, yp, 1.f, 3.f); //m_projectionMatrix; //glm::ortho(0.f, xp, 0.f, yp);
+	glm::mat4 projMatrix = glm::ortho(-xp, xp, -yp, yp, 1.f, 3.f);
 
 	sm.SetMat4x4(shader, projMatrix * viewMatrix, "projMatrix");
 

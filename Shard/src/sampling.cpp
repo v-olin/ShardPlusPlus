@@ -1,6 +1,5 @@
 #include "sampling.h"
 #include <random>
-//#include "labhelper.h"
 #include <omp.h>
 #include <iostream>
 #include <glm.hpp>
@@ -13,29 +12,19 @@ namespace Shard
 	namespace PathTracer
 	{
 
-///////////////////////////////////////////////////////////////////////////////
-// Get a random float. Note that we need one "generator" per thread, or we
-// would need to lock everytime someone called randf().
-///////////////////////////////////////////////////////////////////////////////
 std::mt19937 generators[24]; // Assuming no more than 24 cores
 float randf()
 {
 	return float(generators[omp_get_thread_num()]() / double(generators[omp_get_thread_num()].max()));
 }
 
-///////////////////////////////////////////////////////////////////////////
-// Generate uniform points on a disc
-///////////////////////////////////////////////////////////////////////////
 glm::vec2 concentricSampleDisk()
 {
 	float r, theta;
 	float u1 = randf();
 	float u2 = randf();
-	// Map uniform random numbers to $[-1,1]^2$
 	float sx = 2 * u1 - 1;
 	float sy = 2 * u2 - 1;
-	// Map square to $(r,\theta)$
-	// Handle degeneracy at the origin
 	if(sx == 0.0 && sy == 0.0)
 	{
 		return glm::vec2(0, 0);
@@ -73,9 +62,6 @@ glm::vec2 concentricSampleDisk()
 	return r * glm::vec2(cosf(theta), sinf(theta));
 }
 
-///////////////////////////////////////////////////////////////////////////
-// Generate points with a cosine distribution on the hemisphere
-///////////////////////////////////////////////////////////////////////////
 glm::vec3 cosineSampleHemisphere()
 {
 	glm::vec3 ret(concentricSampleDisk(), 0);
@@ -83,9 +69,6 @@ glm::vec3 cosineSampleHemisphere()
 	return ret;
 }
 
-///////////////////////////////////////////////////////////////////////////
-// Check if wi and wo are on the same side of the plane defined by n
-///////////////////////////////////////////////////////////////////////////
 bool sameHemisphere(const vec3& i, const vec3& o, const vec3& n)
 {
 	return sign(dot(o, n)) == sign(dot(i, n));

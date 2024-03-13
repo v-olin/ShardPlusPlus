@@ -34,27 +34,19 @@ namespace Shard {
 		PhysicsBody();
 		PhysicsBody(std::shared_ptr<GameObject> gameObj);
 
-		// TODO: this should be const reference!!
 		void applyGravity(glm::vec3 dir, const float multiplier, float delta_time);
 		void draw();
-		// TODO: no implementation, very bad!!
-		glm::vec2 getMinAndMax(const bool x);
-		// TODO: this should be const reference!!
 		void addTorque(glm::vec3 torque);
 		void reverseForces(const float prop);
 		void impartForces(std::shared_ptr<PhysicsBody> other, const float massProp);
 		void stopForces();
-		// TODO: this should be const reference!!
 		void reflectForces(glm::vec3 impulse);
 		void reduceForces(const float prop);
-		// TODO: this should be const reference!!
 		void addForce(glm::vec3 dir, const float force);
-		// TODO: this should be const reference!!
 		void addForce(glm::vec3 dir);
 		void recalculateColliders();
 		void physicsTick(float delta_time);
 		void setBoxCollider();
-		// TODO: this should be const reference!!
 		std::optional<glm::vec3> checkCollision(Ray& ray);
 
 		bool operator==(PhysicsBody& other){

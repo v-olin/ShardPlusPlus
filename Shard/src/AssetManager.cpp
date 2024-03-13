@@ -6,11 +6,7 @@
 namespace fs = std::filesystem;
 
 namespace Shard {
-	AssetManager::AssetManager() {
-		// get from env var
-		//asset_path_ = "some/path";
-		//asset_path_ = Bootstrap::getEnvironmentVariable("assetpath");
-	}
+	AssetManager::AssetManager() { }
 
 	void AssetManager::loadAssetPath() {
 		asset_path_ = Bootstrap::getEnvironmentVariable("assetpath");

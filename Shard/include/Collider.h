@@ -30,11 +30,9 @@ namespace Shard {
         Collider(std::shared_ptr<CollisionHandler> gameObj, std::shared_ptr<Model> model);
 
         virtual void recalculateBoundingBox() = 0;
-        //virtual std::optional<glm::vec3> checkCollision(Ray& ray) = 0;
         virtual	std::optional<glm::vec3> checkCollision(Ray& ray) = 0;
         virtual std::vector<glm::vec2> getMinMaxDims() = 0;
         virtual std::vector<glm::vec2> getTransformedMinMaxDims() = 0;
-        //virtual void draw(glm::vec3 color) = 0;
         
     protected:
         bool m_fromModel;

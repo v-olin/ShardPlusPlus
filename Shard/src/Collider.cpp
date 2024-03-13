@@ -17,10 +17,4 @@ namespace Shard {
 		, m_gameObject(gameObj)
 		, m_fromModel(true) // TODO, is this false or true? it was false previously...
 	{ }
-
-    //Collider::Collider(std::shared_ptr<CollisionHandler> game_obj, std::shared_ptr<Transform> transform)
-    //    : transform(transform)
-    //    , game_object(game_obj)
-    //{}
-
 }

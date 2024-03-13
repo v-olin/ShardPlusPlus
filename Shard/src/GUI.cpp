@@ -48,9 +48,6 @@ namespace Shard {
 
 
 	void GUI::draw() {
-		
-
-		// potentially needed
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();

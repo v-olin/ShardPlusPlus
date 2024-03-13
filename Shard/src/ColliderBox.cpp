@@ -50,7 +50,6 @@ namespace Shard {
 		glm::vec3 max = m_model->max;
 		glm::vec3 min = m_model->min;
 
-		//removed - signs since min can already be negativ if neede, very bad!!
 		std::vector<glm::vec3> vertices {
 			{min.x,	min.y, max.z},	// v0
 			{min.x,	min.y, min.z},	// v1
@@ -62,12 +61,7 @@ namespace Shard {
 			{max.x,	max.y, max.z}	// v7
 		};
 
-		// ymax stuck 0
-		// xmax stuck 0
-		// zmax stuck 0
-	
 		for (auto &vertex : vertices)
-			//cant remember if it should be one or zero here v, so this might fuck shit up
 			vertex = glm::vec3(m_model->getModelMatrix() * glm::vec4(vertex, 1.0));
 
 		auto min_trans = glm::vec3{ 9999999.0f,  9999999.0f,  9999999.0f };
@@ -91,7 +85,6 @@ namespace Shard {
 
 	std::optional<glm::vec3> ColliderBox::checkCollision(Ray& ray)
 	{
-
 		// impl from: https://tavianator.com/2011/ray_box.html
 		auto min = m_transformed_boxBottomLeft;
 		auto max = m_transformed_boxTopRight;
@@ -133,10 +126,6 @@ namespace Shard {
 	}
 
 	std::vector<glm::vec2> ColliderBox::getMinMaxDims() {
-		// TODO: If we notice weird box sizes when e.g. rotating around origin
-		// check this stuff because box_bottom_left becomes box_bottom_right
-		// and vice versa. U got this, right?
-		// Re: rotations may be fucked, very bad!!
 		return {
 			{ m_boxBottomLeft.x, m_boxTopRight.x },
 			{ m_boxBottomLeft.y, m_boxTopRight.y },
@@ -149,18 +138,5 @@ namespace Shard {
 			{ m_transformed_boxBottomLeft.y, m_transformed_boxTopRight.y },
 			{ m_transformed_boxBottomLeft.z, m_transformed_boxTopRight.z }
 		};
-
-		////TODO, WHY TF does * change the value of the vectors it takes in????
-		//auto bbl_copy = m_boxBottomLeft;
-		//auto btr_copy = m_boxTopRight;
-
-		//auto trans_boxBottomLeft = glm::vec3(m_model->getModelMatrix() * glm::vec4(bbl_copy, 1.0));
-		//auto trans_boxTopRight = glm::vec3(m_model->getModelMatrix() * glm::vec4(btr_copy, 1.0));
-		//return {
-		//	{ trans_boxBottomLeft.x, trans_boxTopRight.x },
-		//	{ trans_boxBottomLeft.y, trans_boxTopRight.y },
-		//	{ trans_boxBottomLeft.z, trans_boxTopRight.z }
-		//};
 	}
-
 }

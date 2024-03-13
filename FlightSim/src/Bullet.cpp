@@ -14,7 +14,6 @@ Bullet::Bullet() : GameObject()
 }
 
 void Bullet::initialize() {
-	//m_model = std::make_shared<Shard::Model>("models/bullet_best.obj");
     setPhysicsEnabled();
     m_body->m_mass = 1.f;
     m_body->m_maxForce = glm::vec3{ 400.f };

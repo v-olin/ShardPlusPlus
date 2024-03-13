@@ -27,7 +27,6 @@ namespace Shard {
 
 	class ShaderManager {
 	public:
-		// TODO: move to source file
 		static ShaderManager& getInstance() {
 			static ShaderManager instance;
 			return instance;
@@ -48,7 +47,6 @@ namespace Shard {
 		GLint GetUniformLoc(GLuint shaderProgram, const std::string& uniform_name);
 		const GLuint getDefaultShader();
 
-		// GLuint current_shader_id;
 	private:
 		ShaderManager();
 
@@ -56,9 +54,6 @@ namespace Shard {
 		std::string getShaderInfoLog(GLuint shaderProgram);
 		std::string getShaderProgramInfoLog(GLuint shaderProgram);
 
-		// this default shader should be a const string somewhere
-		// to stop IO from fucking around at startup
-		// very bad!!
 		GLuint m_defaultShader;
 		const std::string m_shaderPath;
 		std::unordered_map<GLuint, std::shared_ptr<ShaderUniformCache>> m_shaderCaches{};

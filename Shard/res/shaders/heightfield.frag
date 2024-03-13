@@ -35,10 +35,6 @@ uniform float environment_multiplier = 1.0f;
 
 #define PI 3.14159265359
 
-// This simple fragment shader is meant to be used for debug purposes
-// When the geometry is ok, we will migrate to use shading.frag instead.
-
-
 vec3 calculateDirectIllumiunation(vec3 wo, vec3 n, vec3 base_color)
 {
 	vec3 direct_illum = base_color;

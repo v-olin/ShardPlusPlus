@@ -124,9 +124,8 @@ void AttitudeIndicator::render() {
 		glm::vec3(0.f, 0.f, 1.f), // triangles are centered around the (0, 0, z) axis at +2.f z, so look at +z
 		glm::vec3(0.f, 1.f, 0.f)
 	);
-	//glm::mat4 viewMatrix = m_sceneManager.getCameraViewMatrix();
 	float xp = size.x / 2, yp = size.y / 2;
-	glm::mat4 projMatrix = glm::ortho(-xp, xp, -yp, yp, 1.f, 3.f); //m_projectionMatrix; //glm::ortho(0.f, xp, 0.f, yp);
+	glm::mat4 projMatrix = glm::ortho(-xp, xp, -yp, yp, 1.f, 3.f);
 
 	sm.SetMat4x4(shader, projMatrix * viewMatrix, "projMatrix");
 

@@ -17,7 +17,5 @@ namespace Shard {
 		std::optional<glm::vec3> checkCollision(Ray& ray) override;
 		std::vector<glm::vec2> getMinMaxDims() override;
         std::vector<glm::vec2> getTransformedMinMaxDims() override;
-		// TODO: renderer should draw box, not the box itself, very bad!!
-		//void draw(glm::vec3 color) override;
 	};
 }

@@ -20,7 +20,7 @@ namespace Shard {
 	Renderer::Renderer() 
 		: m_resolution({1280, 760})
 		, m_nearPlane(1.f)
-		, m_farPlane(10000.f)
+		, m_farPlane(20000.f)
 		, m_drawColliders(true)
 		, m_fieldOfView(45.f)
 		, m_gui(nullptr)
@@ -63,7 +63,6 @@ namespace Shard {
 					
 		envmap_irrmap_id = m_textureManager->loadHdrTexture("001_irradiance.hdr");
 
-		//TODO, fix material values, now we have ice mountains
 		//m_heightfield.loadHeightField("L3123F.png", "L3123F_downscaled.jpg", "L3123F_shininess.png");
 		const float size = 10000.f;
 		const float tesselation = 1000.f;
@@ -90,9 +89,6 @@ namespace Shard {
 			m_shaderManager->loadShader(shader, allow_errors);
 		}
 
-		///////////////////////////////////////////////////////////////////////////
-		// Generate result texture
-		///////////////////////////////////////////////////////////////////////////
 		glGenTextures(1, &m_pathtracerTxtId);
 		glActiveTexture(GL_TEXTURE0 + 7);
 		glBindTexture(GL_TEXTURE_2D, m_pathtracerTxtId);
@@ -100,37 +96,20 @@ namespace Shard {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		///////////////////////////////////////////////////////////////////////////
-		// Initial path-tracer settings
-		///////////////////////////////////////////////////////////////////////////
+		
 		PathTracer::settings.max_bounces = 2;
 		PathTracer::settings.max_paths_per_pixel = 0; // 0 = Infinite
 		PathTracer::settings.subsampling = 4;
 
-		///////////////////////////////////////////////////////////////////////////
-		// Set up light sources
-		///////////////////////////////////////////////////////////////////////////
 		PathTracer::point_light.intensity_multiplier = 100.0f;
 		PathTracer::point_light.color = vec3(1.f, 1.f, 1.f);
 		PathTracer::point_light.position = vec3(10.0f, 25.0f, 20.0f);
 
-		///////////////////////////////////////////////////////////////////////////
-		// Load environment map
-		///////////////////////////////////////////////////////////////////////////
-		//todo, use texturemanager
 		PathTracer::environment.map.load("../Shard/res/envmaps/001.hdr");
 		PathTracer::environment.multiplier = 1.0f;
 	}
 
 	void Renderer::render() {
-		/////////////////////////////////////////////////////////////
-		// Reset viewport
-		/////////////////////////////////////////////////////////////
-		//glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		//glViewport(0, 0, (int)(m_resolution.x), (int)(m_resolution.y));
-		//glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
-		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 		/////////////////////////////////////////////////////////////
 		// Render main pass
 		/////////////////////////////////////////////////////////////
@@ -146,12 +125,9 @@ namespace Shard {
 		for (const auto obj : m_renderObjects)
 			obj->render();
 
-		//drawGauges();
-
 		/////////////////////////////////////////////////////////////
-		// BORING STUFF!! TRUE!
+		// BORING STUFF!!
 		/////////////////////////////////////////////////////////////
-		// Do this last, idk why
 		m_gui->draw();
 
 		// should check for errors here
@@ -162,7 +138,6 @@ namespace Shard {
 
 	GLuint Renderer::LoadCubeMap(std::string cubemap_name)
 	{
-
 		cubemap_model = new CubeMap();
 
 		auto base_dir = "../Shard/res/cubemaps/" + cubemap_name + "/";
@@ -289,8 +264,6 @@ namespace Shard {
 		if (!loadedObjs && m_usePathTracing) {
 			PathTracer::reinitScene();
 
-			// Add models to PathTracer scene
-
 			auto& gobs = GameObjectManager::getInstance().getObjects();
 			for (auto& gob : gobs)
 			{
@@ -314,10 +287,7 @@ namespace Shard {
 
 	void Renderer::drawPathTracedScene(){
 
-		{ ///////////////////////////////////////////////////////////////////////
-			// If first frame, or window resized, or subsampling changes,
-			// inform the PathTracer
-			///////////////////////////////////////////////////////////////////////
+		{ 
 			int w, h;
 			glfwGetWindowSize(m_window, &w, &h);
 			static int old_subsampling;
@@ -330,9 +300,6 @@ namespace Shard {
 			}
 		}
 
-		///////////////////////////////////////////////////////////////////////////
-		// Trace one path per pixel
-		///////////////////////////////////////////////////////////////////////////
 		auto& camera = SceneManager::getInstance().camera;
 		mat4 viewMatrix = glm::lookAt(camera.pos, camera.pos + camera.front, camera.worldUp);
 		mat4 projMatrix = glm::perspective(45.0f,
@@ -341,27 +308,17 @@ namespace Shard {
 			0.1f, 100.0f);
 		PathTracer::tracePaths(viewMatrix, projMatrix);
 
-		///////////////////////////////////////////////////////////////////////////
-		// Copy pathtraced image to texture for display
-		///////////////////////////////////////////////////////////////////////////
 		glActiveTexture(GL_TEXTURE7);
 		glBindTexture(GL_TEXTURE_2D, m_pathtracerTxtId);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, PathTracer::rendered_image.width,
 			PathTracer::rendered_image.height, 0, GL_RGB, GL_FLOAT, PathTracer::rendered_image.getPtr());
 
-		///////////////////////////////////////////////////////////////////////////
-		// Render a fullscreen quad, textured with our pathtraced image.
-		///////////////////////////////////////////////////////////////////////////
 		glViewport(0, 0, m_windowWidth, m_windowHeight);
 		glClearColor(0.1f, 0.1f, 0.6f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
-		//SDL_GetWindowSize(g_window, &windowWidth, &windowHeight);
 		glfwGetWindowSize(m_window, &m_windowWidth, &m_windowHeight);
-		//glUseProgram(shaderProgram);
-		//labhelper::drawFullScreenQuad();
-
 
 		static auto& sm = ShaderManager::getInstance();
 		auto bg_shader = sm.getShader("copyTexture");
@@ -406,6 +363,7 @@ namespace Shard {
 
 
 	}
+	
 	void Renderer::drawModels() {
 		auto& gobs = GameObjectManager::getInstance().getObjects();
 		auto& sun = SceneManager::getInstance().sun;

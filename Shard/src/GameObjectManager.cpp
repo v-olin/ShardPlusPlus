@@ -19,16 +19,8 @@ namespace Shard{
 	}
 
 	void GameObjectManager::physicsUpdate(){
-
 		for (auto& gob : this->myObjects)
 			gob->physicsUpdate();
-
-		/*
-		auto iter = getInstance()->myObjects.begin();
-		while (iter != getInstance()->myObjects.end()) 
-			(*iter++).physicsUpdate();
-		*/
-
 	}
 
 	void GameObjectManager::prePhysicsUpdate(){
@@ -38,7 +30,6 @@ namespace Shard{
 		while (iter != getInstance().myObjects.end()) {
 			(*iter++)->prePhysicsUpdate();
 		}
-
 	}
 
 	
@@ -53,14 +44,6 @@ namespace Shard{
 			if (gob->m_toBeDestroyed)
 				to_be_deleted.push_back(gob);
 		}
-
-
-		// erase-remove idiom, TODO: we also need to call killMe() on all objects that is goinmg to be deleted
-		//TODO, we need to delete the obects, since this might leek memory
-		//this->myObjects.erase(std::remove_if(this->myObjects.begin(), this->myObjects.end(), [&](const Shard::GameObject* obj) {
-		//	return std::find(to_be_deleted.begin(), to_be_deleted.end(), obj) != to_be_deleted.end();
-		//	}), this->myObjects.end());
-
 	}
 
 	void GameObjectManager::cleanup() {
@@ -69,21 +52,12 @@ namespace Shard{
 
 			std::shared_ptr<InputListener> listener =
 				std::dynamic_pointer_cast<InputListener>(gob);
-			if (listener) // if successful downcast
+			if (listener) // if successful UPCAST
 				Bootstrap::getInput().removeListeners(listener);
 			listener = nullptr;
 			gob->killMe();
-			std::erase(myObjects, gob); // inefficient af.
+			std::erase(myObjects, gob);
 			gob->m_body = nullptr;
-
-			// we need to make sure that the physicsmanager knows that we have deleted some gameObjects
-			// to do this, start with tracking from creation of game object and list all places where the pointer to that object is stored
-			// we need to remove those pointers ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-			// And this is fine since this function is run first in every frame
-			
-			// we shouldn't need to delete gob here since it is now a shared_ptr
-			// which should delete itself (if we're lucky)
-			// delete gob; 
 		}
 		to_be_deleted.clear();
 	}

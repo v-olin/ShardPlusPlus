@@ -49,7 +49,7 @@ namespace Shard {
 		void drawDebugColliders();
 		bool findColliding(std::shared_ptr<PhysicsBody> a, std::shared_ptr<PhysicsBody> b);
 
-		std::vector<CollidingObject> sweepAndMotherfuckingPrune();
+		std::vector<CollidingObject> sweepAndPrune();
 
 		std::vector<std::shared_ptr<Interval>> all_x_intervals{};
 		std::vector<std::shared_ptr<Interval>> all_y_intervals{};

@@ -85,7 +85,6 @@ namespace Shard {
 		}
 		//move to first person view
 		pos = playerPos + rotation * offset;
-		//TODO, this should not be - very bad!!!, fixed but moidel is ugly
 		front = player_game_obj->m_model->m_forward;
 		up = player_game_obj->m_model->m_up;
 		right = player_game_obj->m_model->m_right;

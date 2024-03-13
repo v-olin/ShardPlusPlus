@@ -30,9 +30,6 @@ namespace Shard {
 		glGenerateMipmap(GL_TEXTURE_2D);
 
 		stbi_image_free(data);
-
-		// TODO:
-		//_texture_paths[path] = *target;
 	}
 
 	GLuint TextureManager::loadTexture(const std::string& path) {

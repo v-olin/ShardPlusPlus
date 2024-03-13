@@ -64,9 +64,7 @@ namespace Shard {
 		addForce(dir * multiplier);
 	}
 
-	void PhysicsBody::draw() {
-		//m_collider->draw(m_debugColor);
-	}
+	void PhysicsBody::draw() { }
 
 
 	void PhysicsBody::addTorque(glm::vec3 torque) {
@@ -130,14 +128,12 @@ namespace Shard {
 		if (m_isKinematic)
 			return;
 
-		// TODO: double check if correct?
 		incoming_force /= m_mass;
 		if (glm::length2(incoming_force) < 0.0001)
 			return;
 
 		m_force += incoming_force;
 
-		// Cap the force
 		if (m_force.x > 0)
 			m_force.x = std::min(m_force.x, m_maxForce.x);
 		else
@@ -185,12 +181,7 @@ namespace Shard {
 		else
 			apply_drag(m_angularDrag.z, 2);
 
-		// parent->model->rotate
-		//m_bodyModel->rotate(m_torque.x, glm::vec3{1.0, 0.0, 0.0});
-		//m_bodyModel->rotate(m_torque.y, glm::vec3{0.0, 1.0, 0.0});
-		//m_bodyModel->rotate(m_torque.z, glm::vec3{0.0, 0.0, 1.0});
 		m_bodyModel->translate(m_force * delta_time);
-		
 		m_bodyModel->rotate(rotx, m_bodyModel->m_forward);
 		m_bodyModel->rotate(roty, m_bodyModel->m_up);
 		m_bodyModel->rotate(rotz, m_bodyModel->m_right);
@@ -201,7 +192,6 @@ namespace Shard {
 			stopForces();
 		}
 		else if (force_mag > 0) {
-			// TODO: Make sure below is correct from force = (force / force_mag) * (force_mag - drag); to vvvvvvvv
 			m_force = glm::normalize(m_force) * (force_mag - m_drag);
 		}
 	}

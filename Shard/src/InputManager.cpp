@@ -15,16 +15,10 @@ namespace Shard {
 	}
 
 	void InputManager::getInput() {
-		
-	/*	tick += Bootstrap::getDeltaTime();
-		if (tick < time_interval)
-			return;*/
-	
-		while (!event_queue.empty()){ //&& tick >= time_interval) {
+		while (!event_queue.empty()) {
 			auto &[ie, ev] = event_queue.front();
 			informListeners(ie, ev);
 			event_queue.pop();
-			//tick -= time_interval;
 		}
 
 	}
@@ -49,10 +43,6 @@ namespace Shard {
 
 	void InputManager::FramebufferSizeCallback(GLFWwindow* window, int width, int height) {
 		InputManager* input_manager = reinterpret_cast<InputManager*>(glfwGetWindowUserPointer(window));
-		// TODO: When glfw window is resized, potentially need to send
-		// event to somewhere about the resize?
-		// 
-		// store new width and height somewhere lol, hardcoded atm..............................
 		glViewport(0, 0, width, height);
 	}
 
@@ -62,7 +52,6 @@ namespace Shard {
 		
 		InputEvent ie;
 		ie.key = key;
-		// if GLFW_REPEAT, do nothing
 		if(action == GLFW_PRESS || action == GLFW_RELEASE){
 			EventType type = action == GLFW_PRESS  ? KeyDown : KeyUp;
 			input_manager->event_queue.push({ ie, type });
@@ -72,14 +61,10 @@ namespace Shard {
 	void InputManager::ScrollCallback(GLFWwindow* window, double x_offset, double y_offset)
 	{
 		InputManager* input_manager = reinterpret_cast<InputManager*>(glfwGetWindowUserPointer(window));
-		// x always 0
-		// y -1 if scroll down
-		// y  1 if scroll up
 		InputEvent ie;
 		ie.x = x_offset;
 		ie.y = y_offset,
 		input_manager->event_queue.push({ ie, EventType::MouseWheel });
-		//input_manager->informListeners(ie, EventType::MouseWheel);
 	}
 
 	void InputManager::MouseCallback(GLFWwindow* window, double xpos, double ypos)
@@ -90,7 +75,6 @@ namespace Shard {
 		ie.x = xpos;
 		ie.y = ypos;
 		input_manager->event_queue.push({ ie, EventType::MouseMotion });
-		//input_manager->informListeners(ie, EventType::MouseMotion);
 	}
 
 	void InputManager::MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
@@ -108,8 +92,5 @@ namespace Shard {
 		
 		EventType ev = action == GLFW_PRESS ? MouseDown : MouseUp;
 		input_manager->event_queue.push({ ie, ev });
-		//input_manager->informListeners(ie, ev);
 	}
-
-
 }

@@ -34,14 +34,6 @@ namespace Shard {
 		static int getCurrentFrame();
 		static void Main(std::string[]);
 
-		static void setPlane(std::shared_ptr<Model> plane) {
-			planeModel = plane;
-		}
-
-		static std::shared_ptr<Model> getPlane() {
-			return planeModel;
-		}
-
 		static const std::string getBaseDir();
 		
 		static std::shared_ptr<Game> getRunningGame();
@@ -68,8 +60,6 @@ namespace Shard {
 		inline static PhysicsManager& phys{ PhysicsManager::getInstance() };
 		inline static AssetManager& asset{ AssetManager::getInstance() };
 		inline static Renderer renderer;
-		//inline static int target_frame_rate;
-        //inline static int millis_per_frame;
         inline static double delta_time;
         inline static double time_elapsed;
         inline static int frames;
@@ -77,7 +67,5 @@ namespace Shard {
         inline static long long start_time;
         inline static std::string base_dir;
 		inline static std::unordered_map<std::string, std::string> en_vars;
-		// i hate this so fucking bad
-		inline static std::shared_ptr<Model> planeModel;
 	};
 }

@@ -102,35 +102,24 @@ namespace Shard {
 
 		sm.SetMat4x4(shader, projMatrix * viewMatrix * glm::mat4(1.0f), "modelViewProjectionMatrix");
 
-		//labhelper::setUniformSlow(m_shaderProgram, "currentTime",
-		//	sceneContext.currentTime);
 		sm.SetFloat1(shader, m_sceneManager.currentTime, "currentTime");
 
 		float tWidth = 1.0f / m_tesselation;
-		//labhelper::setUniformSlow(m_shaderProgram, "meshWidth", tWidth);
 
 		sm.SetFloat1(shader, tWidth, "meshWidth");
 
 		// uniform mat4 viewInverse;
-		//labhelper::setUniformSlow(m_shaderProgram, "viewInverse", inverse(viewMatrix));
-
 		sm.SetMat4x4(shader, glm::inverse(viewMatrix), "viewInverse");
 
 		// uniform vec3 viewSpaceLightPosition;
-		//labhelper::setUniformSlow(m_shaderProgram, "viewSpaceLightPosition", vec3(viewSpaceLightPosition));
 		glm::vec4 viewSpaceLightPosition =
 			viewMatrix * glm::vec4(m_sceneManager.sun.light_position, 1.0f);
 		sm.SetVec3(shader, glm::vec3(viewSpaceLightPosition), "viewSpaceLightPosition");
 
 		//uniform mat4 normalMatrix;
-		//labhelper::setUniformSlow(m_shaderProgram, "normalMatrix",
-		//	inverse(transpose(viewMatrix * mat4(1.0f))));
-
 		sm.SetMat4x4(shader, glm::inverse(glm::transpose(viewMatrix * glm::mat4(1.0f))), "normalMatrix");
 
 		//uniform mat4 modelViewMatrix;
-		//labhelper::setUniformSlow(m_shaderProgram, "modelViewMatrix", viewMatrix * mat4(1.0f));
-
 		sm.SetMat4x4(shader, viewMatrix * glm::mat4(1.0f), "modelViewMatrix");
 
 		glBindVertexArray(m_vao);

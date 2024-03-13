@@ -29,11 +29,8 @@ namespace Shard {
 
 	void PhysicsManager::makeInterval(int axis, std::shared_ptr<PhysicsBody> gob_body) {
 
-		// Check penetration level (sus)
-		//auto min_max = gob_body->m_collider->getMinMaxDims();
 		auto min_max = gob_body->m_collider->getTransformedMinMaxDims();
 
-		//	vertex = glm::vec3(m_model->getModelMatrix() * glm::vec4(vertex, 1.0));
 		auto& min_max_x = min_max[0];
 		auto& min_max_y = min_max[1];
 		auto& min_max_z = min_max[2];
@@ -84,8 +81,6 @@ namespace Shard {
 	}
 
 	void PhysicsManager::addPhysicsObject(std::shared_ptr<PhysicsBody> body) {
-		// TODO: std::find? yea.
-		// TODO: std::find? yea.
 		bool exists = false;
 		for (size_t i = 0; i < all_physics_objects.size(); i++) {
 			auto& other = all_physics_objects.at(i);
@@ -103,10 +98,6 @@ namespace Shard {
 	}
 
 	void PhysicsManager::removePhysicsObject(std::shared_ptr<PhysicsBody> body) {
-		// TODO: remove body from all intervals, make sure to remove all edges from all edge_lists also
-		//and set traverse_edge_list = true for all axies
-		//find edges
-
 		auto delete_from_edge_list = [this, body](int axis) {
 			auto &edge_list = this->getEdgeList(axis);
 			edge_list.erase(std::remove_if(edge_list.begin(), edge_list.end(), [&](const IntervalEdge ie) -> bool {
@@ -142,7 +133,6 @@ namespace Shard {
 		shrink_overlap_mat(AXIS_Y);
 		shrink_overlap_mat(AXIS_Z);
 
-		//remove from activeintervalks list
 		active_interval_list.erase(std::remove_if(active_interval_list.begin(), active_interval_list.end(), [&](const std::shared_ptr<Interval>& i) -> bool {
 			return i->gob_body == body;
 			}), active_interval_list.end());
@@ -172,8 +162,6 @@ namespace Shard {
 	}
 
 	bool PhysicsManager::willTick() {
-		// TODO: remove when not testing
-		//return true;
 		return Bootstrap::getCurrentMillis() - last_update > time_interval;
 	}
 
@@ -196,11 +184,6 @@ namespace Shard {
 		int i = 0;
 		bool remove = false;
 		for (CollidingObject& col : collisions) {
-
-			// todo: if decide to translate, don't do that for kinematic objects
-
-			//This is bad since the parents could have been deleted by the GameObjectManager
-			// upcast to shared_ptr
 			auto a_handler = std::dynamic_pointer_cast<CollisionHandler>(col.a->m_parent);
 			auto b_handler = std::dynamic_pointer_cast<CollisionHandler>(col.b->m_parent);
 
@@ -221,10 +204,8 @@ namespace Shard {
 				to_remove.push_back(i++);
 				continue;
 			}
-
 			
 			std::optional<glm::vec3> impulse = getImpulseFromCollision(col.a, col.b);
-			//if we have a collision, run the impulse stuff
 
 			if (impulse.has_value()) {
 				runCollisionReaction(impulse.value(), col);
@@ -242,8 +223,6 @@ namespace Shard {
 
 		}
 
-		// TODO: Batch erase instead of single
-		// Use: erase-remove idiom
 		int removed = 0;
 		for (size_t idx : to_remove) {
 			auto iter = collisions.begin();
@@ -259,7 +238,6 @@ namespace Shard {
 
 		}
 
-		// TODO: don't run if no game objects?
 		if (all_physics_objects.size() > 1)
 			checkForCollisions();
 
@@ -281,16 +259,6 @@ namespace Shard {
 
 		return false;
 	}
-
-	//TODO, remove this and move ids into an intervall, and set ids in add/remove object
-	/*int PhysicsManager::findIntervalIdx(int axis, std::shared_ptr<Interval> interval) {
-		auto& intervals = getInterval(axis);
-		for (size_t i = 0; i < intervals.size(); i++) {
-			if (intervals[i]->gob_body == interval->gob_body)
-				return i;
-		}
-		return -1;
-	}*/
 
 	std::vector<IntervalEdge>& PhysicsManager::getEdgeList(int axis) {
 		if (axis == AXIS_X)
@@ -333,7 +301,6 @@ namespace Shard {
 		for (size_t i = 0; i < n - 1; i++) {
 			for (size_t j = 0; j < n - 1 - i; j++) {
 				if (edge_list[j + 1].val < edge_list[j].val) {
-					//this was not copy, maybe very bad!
 					auto tmp = edge_list[j];
 					edge_list[j] = edge_list[j + 1];
 					edge_list[j + 1] = tmp;
@@ -366,11 +333,11 @@ namespace Shard {
 					// If more than one interval in active_interval_list, then update the overlap_matrix in right position
 					for (size_t j = 0; j < active_interval_list.size(); j++) {
 						for (size_t k = j; k < active_interval_list.size(); k++) {
-							auto interval_a = active_interval_list[j]->idx; //findIntervalIdx(axis, active_interval_list[j]);
-							auto interval_b = active_interval_list[k]->idx;//findIntervalIdx(axis, active_interval_list[k]);
+							auto interval_a = active_interval_list[j]->idx; 
+							auto interval_b = active_interval_list[k]->idx;
 							auto a = std::min(interval_a, interval_b);
 							auto b = std::max(interval_a, interval_b);
-							overlap_matrix[a][b] = 1; // TODO: should dis be 1??
+							overlap_matrix[a][b] = 1; 
 						}
 					}
 				}
@@ -407,7 +374,6 @@ namespace Shard {
 
 		auto& edge_list = getEdgeList(axis);
 		auto& overlap_matrix = getOverlapMatrix(axis);
-		
 
 		//simple/nice case
 		if (!traverse_edge_list) {
@@ -420,23 +386,18 @@ namespace Shard {
 					if (edge_list[j + 1].val < edge_list[j].val) {
 
 						if (edge_list[j + 1].is_b != edge_list[j].is_b) {
-							int interval_a = edge_list[j].interval->idx; //findIntervalIdx(axis, edge_list[j].interval);
-							int interval_b = edge_list[j+1].interval->idx;//findIntervalIdx(axis, edge_list[j + 1].interval);
+							int interval_a = edge_list[j].interval->idx; 
+							int interval_b = edge_list[j+1].interval->idx;
 
 							if (interval_a == -1 || interval_b == -1) {
-								Logger::log("oh fuck...(inside sweepAndMotherFuckingPrune\n");
-								std::exit(1);
+								Logger::log("findOverlaps error!!\n", LOG_LEVEL_FATAL);
 							}
 
 							auto a = std::min(interval_a, interval_b);
 							auto b = std::max(interval_a, interval_b);
 
-							// Toggle between 0 (false) and 1 (true)
 							overlap_matrix[a][b] = overlap_matrix[a][b] == 0 ? 1 : 0;
-							//overlap_matrix[b][a] = overlap_matrix[b][a] == 0 ? 1 : 0;
 						}
-
-						//another unlucky non-copy
 						auto tmp = edge_list[j];
 						edge_list[j] = edge_list[j + 1];
 						edge_list[j + 1] = tmp;
@@ -450,8 +411,7 @@ namespace Shard {
 		}
 	}
 
-	// TODO: return reference
-	std::vector<CollidingObject> PhysicsManager::sweepAndMotherfuckingPrune() {
+	std::vector<CollidingObject> PhysicsManager::sweepAndPrune() {
 
 		updateEdgeList(AXIS_X);
 		updateEdgeList(AXIS_Y);
@@ -498,24 +458,10 @@ namespace Shard {
 
 
 	void PhysicsManager::runCollisionCheck() {
-
-		/*
-		1. call sweep and prune, pupulate collisions to check with ACTUALL coillisions
-
-		2. then what?	
-			Loop over collisions, calculate the impulse between them, and use same "physics" that is already implemented in the loop
-		*/
-
 		glm::vec3 impulse;
 		std::optional<glm::vec3> possible_impulse;
 
-
-		// TODO:
-		/*
-			Add bob-box collision checking with non world-space axis aligned boxes
-			e.g. use SAT or transform one box into the others realm and do standard AABB there, whatever floats your boat bro
-		*/
-		auto cols_to_check = sweepAndMotherfuckingPrune();
+		auto cols_to_check = sweepAndPrune();
 		for (CollidingObject &col_obj : cols_to_check) {
 			possible_impulse = getImpulseFromCollision(col_obj.a, col_obj.b);
 
@@ -534,7 +480,6 @@ namespace Shard {
 
 	void PhysicsManager::checkForCollisions() {
 		collision_last_frame = collisions.size();
-		//collisions.clear();
 		runCollisionCheck();
 		collision_last_frame = collisions.size();
 	}
@@ -544,7 +489,6 @@ namespace Shard {
 		if (a->m_parent->m_toBeDestroyed || b->m_parent->m_toBeDestroyed)
 			return std::nullopt;
 
-		// Check penetration level (sus)
 		const auto min_max_a = a->m_collider->getTransformedMinMaxDims();
 		const auto &min_max_x_a = min_max_a[0];
 		const auto &min_max_y_a = min_max_a[1];
@@ -555,8 +499,6 @@ namespace Shard {
 		const auto &min_max_y_b = min_max_b[1];
 		const auto &min_max_z_b = min_max_b[2];
 		
-		// todo: pray that one object is never contained in the other
-		// otherwise we're PROBABLY completely fucked
 		/*
 			⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣤⣄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 			⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -585,7 +527,6 @@ namespace Shard {
 			float overlap_start = std::max(a_start, b_start);
 			float overlap_end = std::min(a_end, b_end);
 			float overlap_distance = overlap_end - overlap_start;
-			//check if it should be negative
 			if (a_start < b_start)
 				overlap_distance *= -1;
 
@@ -602,7 +543,6 @@ namespace Shard {
 		auto abs_over_z = abs(overlap_z);
 		auto min_overlap = std::min({ abs_over_x, abs_over_y, abs_over_z });
 
-		//branchless programming <3
 		auto x = abs_over_x == min_overlap ? overlap_x : 0;
 		auto y = abs_over_y == min_overlap ? overlap_y : 0;
 		auto z = abs_over_z == min_overlap ? overlap_z : 0;
@@ -613,21 +553,6 @@ namespace Shard {
 
 		auto v = glm::vec3{ x, y, z };
 		return std::optional<glm::vec3>(v + v * glm::vec3(15.0f));
-
-		/*
-		if (overlap_x == min_overlap)
-			return std::optional<glm::vec3>({ overlap_x, 0.0f, 0.0f });
-
-		else if (overlap_y == min_overlap)
-			return std::optional<glm::vec3>({ 0.0f, overlap_y, 0.0f });
-
-		else if (overlap_z == min_overlap)
-			return std::optional<glm::vec3>({ 0.0f, 0.0f, overlap_z });
-		*/
-		
-		// uuuuuuuuuuuuuuhhhh.............. no penetration... but collided?
-		// 100 megawhat?
-
 	}
 
 	void PhysicsManager::runCollisionReaction(glm::vec3 impulse, CollidingObject col_obj) {
@@ -701,7 +626,6 @@ namespace Shard {
 		return std::optional<std::shared_ptr<PhysicsBody>>(hit_bod);
 			
 	}
-	//Klick -> collision with body
 
 	std::optional<glm::vec3> PhysicsManager::clickHitsBody(InputEvent ie, std::shared_ptr<PhysicsBody> body) {
 		auto ray = getRayFromClick(ie);
@@ -716,7 +640,6 @@ namespace Shard {
 		auto mouseX = ie.x;
 		auto mouseY = ie.y;
 		
-		// TODO: Don't hardcode
 		int windowWidth = 1280;
 		int windowHeight = 760;
 		

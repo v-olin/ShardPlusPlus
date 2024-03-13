@@ -152,7 +152,6 @@ namespace Shard {
 
 	void ShaderManager::SetMat4x4(GLuint shader, const glm::mat4x4& mat, const std::string& uniform_name) {
 		GLint tmp;
-		// this is not performant, but idgaf, it is necessary
 		glGetIntegerv(GL_CURRENT_PROGRAM, &tmp);
 		GLuint active = (GLuint)(tmp);
 		assert(shader == active && "Selected shader is not active, very bad!!");
@@ -162,7 +161,6 @@ namespace Shard {
 
 	void ShaderManager::SetVec4(GLuint shader, const glm::vec4& vec, const std::string& uniform_name) {
 		GLint tmp;
-		// this is not performant, but idgaf, it is necessary
 		glGetIntegerv(GL_CURRENT_PROGRAM, &tmp);
 		GLuint active = (GLuint)(tmp);
 		assert(shader == active && "Selected shader is not active, very bad!!");
@@ -172,7 +170,6 @@ namespace Shard {
 
 	void ShaderManager::SetVec3(GLuint shader, const glm::vec3& vec, const std::string& uniform_name) {
 		GLint tmp;
-		// this is not performant, but idgaf, it is necessary
 		glGetIntegerv(GL_CURRENT_PROGRAM, &tmp);
 		GLuint active = (GLuint)(tmp);
 		assert(shader == active && "Selected shader is not active, very bad!!");
@@ -182,7 +179,6 @@ namespace Shard {
 
 	void ShaderManager::SetInteger1(GLuint shader, const int& integer, const std::string& uniform_name) {
 		GLint tmp;
-		// this is not performant, but idgaf, it is necessary
 		glGetIntegerv(GL_CURRENT_PROGRAM, &tmp);
 		GLuint active = (GLuint)(tmp);
 		assert(shader == active && "Selected shader is not active, very bad!!");
@@ -192,7 +188,6 @@ namespace Shard {
 
 	void ShaderManager::SetFloat1(GLuint shader, const float& float_, const std::string& uniform_name) {
 		GLint tmp;
-		// this is not performant, but idgaf, it is necessary
 		glGetIntegerv(GL_CURRENT_PROGRAM, &tmp);
 		GLuint active = (GLuint)(tmp);
 		assert(shader == active && "Selected shader is not active, very bad!!");

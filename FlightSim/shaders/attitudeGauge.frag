@@ -67,18 +67,6 @@ vec2 adjustTexCoords() {
 		}
 	}
 
-	// i want the uv.v value of 0.5f to equal 0 degrees of pitch
-	// so anything else has to be adjusted by the aspect ratio
-	//if (texCoord.y != 0.5f) {
-	//	if (texCoord.y > 0.5f) {
-	//		float diff = texCoord.y - 0.5f;
-	//		pitchAdjusted.y = 0.5f + diff * aspectRatio;
-	//	} else {
-	//		float diff = 0.5f - texCoord.y;
-	//		pitchAdjusted.y = 0.5f - diff * aspectRatio;
-	//	}
-	//}
-
 	pitchAdjusted.y += MAGICAL_VALUE;
 
 	return pitchAdjusted;

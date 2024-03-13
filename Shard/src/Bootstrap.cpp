@@ -58,9 +58,6 @@ namespace Shard {
     float Bootstrap::getSecondFPS() {
         long long now = getCurrentMillis();
 
-        //Logger::log(("Current frametime: " + std::to_string(frame_times.size())).c_str());
-
-
         if (frame_times.empty()) {
             return -1;
         }
@@ -105,8 +102,6 @@ namespace Shard {
 
     void Bootstrap::setRunningGame(std::shared_ptr<Game> game) {
        running_game = game;
-       //target_frame_rate = running_game->getTargetFrameRate();
-       //millis_per_frame = 1000 / target_frame_rate;
        running_game_set = true;
     }
     void Bootstrap::setUsePathTracing(bool enabled) {
@@ -128,14 +123,12 @@ namespace Shard {
 
         // TODO: why are shaders running 4.2 when the engine runs 4.6?
         // I'm moving back to 4.2 for testing
-        //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 
         // TODO: don't hardcode size, this should be moved to the renderer
-        m_Window = glfwCreateWindow(1280, 760, "ENGINE START... NO PROBLEM... 5 MINUTW... TIDIN TIDIN TIDIN... ENGINE KAPUTT!!!! (<game_name_here>)", 0, 0);
+        m_Window = glfwCreateWindow(1280, 760, "ShardPlusPlus Engine", 0, 0);
 
         if (m_Window == nullptr) {
             glfwTerminate();
@@ -153,7 +146,7 @@ namespace Shard {
 
         glfwSetWindowUserPointer(m_Window, reinterpret_cast<void*>(&input));
 
-        // UNLIMITED FPS WHOOOOOOOOOOOO
+        // UNLIMITED FPS ENGINE GO BRRRRRRRRRRRRRRRRRRRRRRR
         glfwSwapInterval(0);
 
         /////////////////////
@@ -168,7 +161,6 @@ namespace Shard {
         ////////////////////////////////////////////////////////////////////////////////
 
         std::string work_dir = std::filesystem::current_path().string();
-        // GAME EXE SHOULD BE IN TOPMOST FOLDER!!!!!
         base_dir = work_dir;
 
         setupEnvironmentVariables(base_dir + "\\" + "envar.cfg");
@@ -183,7 +175,6 @@ namespace Shard {
         asset.loadAssetPath();
 
         bool display_engine_initialized = false;
-        //bool running_game_initialized = false;
 
         // TODO: determine logic and structure of config file
         //       and implement here
@@ -201,19 +192,9 @@ namespace Shard {
 
         }
 
-        /* this is done in the Renderer constructor!!
-        ShaderManager& sm = ShaderManager::getInstance();
-        sm.loadShader("collider", false);
-        sm.loadShader("cubemap", false);
-        sm.loadShader("background", false);
-        sm.loadShader("simple", false);
-        sm.loadShader("copyTexture", false);
-        */
-
-
         gui = new GUI(m_Window);
 
-        return;
+        return; // SKIP :^)
 
         if (!display_engine_initialized) {
             Logger::log("display not initialized", LoggerLevel::LOG_LEVEL_ERROR);
@@ -228,7 +209,6 @@ namespace Shard {
         // Missing key component(s), GET TO THE CHOPPA!!!
         if (bailOut)
             std::exit(0);
-
     }
 
     void Bootstrap::setupEnvironmentVariables(std::string path) {
@@ -248,7 +228,6 @@ namespace Shard {
 		bool phys_update = false;
 		bool phys_debug = false;
 
-        //setup the engine
         setup();
         start_time = getCurrentMillis();
         frames = 0;
@@ -262,18 +241,10 @@ namespace Shard {
 
         phys_debug = getEnvironmentVariable("physics_debug") == "1";
 
-        //SceneManager sm{};
         SceneManager& sm = SceneManager::getInstance();
         TextureManager& tm = TextureManager::getInstance();
         ShaderManager& shm = ShaderManager::getInstance();
-        //Renderer renderer{ sm, tm, shm, gui, m_Window};
         renderer.initialize(sm, tm, shm, gui, m_Window);
-
-        /*
-        return std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::system_clock::now().time_since_epoch()
-        ).count();
-        */
 
         float delta_time_acc{ 0.0f };
         auto last_frame = static_cast<float>(glfwGetTime());
@@ -294,11 +265,6 @@ namespace Shard {
             delta_time_acc = 0;
 
             sm.currentTime = current_frame;
-                /*
-                std::chrono::duration<float>(
-                std::chrono::system_clock::now().time_since_epoch()
-            ).count();
-                */
 
             running_game->update();
 
@@ -306,76 +272,31 @@ namespace Shard {
              
                 renderer.m_usePathTracing = use_path_tracing;
 
-				// Get input, which works at 50 FPS to make sure it doesn't interfere with the 
-				// variable frame rates.
                 glfwPollEvents();
                 delta_time_acc = 0;
 				input.getInput();
 
-				// Update runs as fast as the system lets it.  Any kind of movement or counter 
-				// increment should be based then on the deltaTime variable.
 				GameObjectManager::getInstance().update();
 
-				// This will update every 20 milliseconds or thereabouts.  Our physics system aims 
-				// at a 50 FPS cycle.
 				if (phys.willTick())
 				{
 					GameObjectManager::getInstance().prePhysicsUpdate();
 				}
 
-				// Update the physics.  If it's too soon, it'll return false.   Otherwise 
-				// it'll return true.
 				phys_update = phys.update(delta_time);
 
 				if (phys_update)
 				{
-					// If it did tick, give every object an update
-					// that is pinned to the timing of the physics system.
 					GameObjectManager::getInstance().physicsUpdate();
 				}
-
-                // physicsmanager should not do this, very bad!!
-				//if (phys_debug) {
-				//	// phys.drawDebugColliders();
-				//}
-
-                /////////////////
-                // Render shit //
-                /////////////////
 
                 // Render code goes here
                 renderer.render();
 
-                
-                //////////////////////////////////////
-
-                // Clean up objects that are to be deleted
                 GameObjectManager::getInstance().cleanup();
-
-                //time_in_milliseconds_end = getCurrentMillis();
-
-                //frame_times.push_back(time_in_milliseconds_end);
-                //interval = time_in_milliseconds_end - time_in_milliseconds_start;
-                //time_elapsed += delta_time;
-                //sleep = (int)(millis_per_frame - interval);
-
-                //if (sleep >= 0)
-                //    std::this_thread::sleep_for(std::chrono::milliseconds(sleep));
-                //    //SDL_Delay(sleep); 
-                //
-                //time_in_milliseconds_end = getCurrentMillis();
-                //delta_time = (time_in_milliseconds_end - time_in_milliseconds_start) / 1000.0f;
-                //last_tick = time_in_milliseconds_start;
-                
             }
         }
 
-        // TODO: cleanup!!
-        // Deletes all ImGUI instances
-        // ImGui_ImplOpenGL3_Shutdown();
-        // ImGui_ImplGlfw_Shutdown();
-        // ImGui::DestroyContext();
-        
-        Logger::log("Bing!", LOG_LEVEL_FATAL);
+        Logger::log("Bing!", LOG_LEVEL_ERROR);
     }
 }

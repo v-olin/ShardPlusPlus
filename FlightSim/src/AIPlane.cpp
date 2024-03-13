@@ -29,24 +29,10 @@ void AIPlane::generateTargetPonts() {
 
 }
 
-void AIPlane::handleEvent(Shard::InputEvent ie, Shard::EventType et) {
-    /*if (et == Shard::EventType::MouseDown && ie.button == GLFW_MOUSE_BUTTON_1) {
-        if (ie.body == m_body) {
-            static auto& sm = Shard::SceneManager::getInstance();
-            sm.camera.setPlayerGameObj(shared_from_this());
-        }
-    }*/
-
-    /*if (et == Shard::EventType::MouseDown && ie.button == GLFW_KE) {
-        if ((m_body->checkCollisions(glm::vec2{ ie.x, ie.y })).has_value()) {
-            torque_counter += 10;
-        }
-    }*/
-}
+void AIPlane::handleEvent(Shard::InputEvent ie, Shard::EventType et) { }
 
 void AIPlane::initialize()
 {
-    //m_model = std::make_shared<Shard::Model>("models/AIPLANE_fixed.obj");
     setPhysicsEnabled();
     m_body->m_mass = 1.f;
     m_body->m_maxForce = glm::vec3{ 100.f };
@@ -59,7 +45,6 @@ void AIPlane::initialize()
     m_body->m_isKinematic = false;
     m_body->m_passThrough = false;
     m_body->m_usesGravity = false;
-    //m_body->m_debugColor = { 1, 0, 0 };
 
     m_body->m_bodyModel = m_model;
     m_body->setBoxCollider();
@@ -75,9 +60,6 @@ void AIPlane::update() {
         m_hunt_index = (m_hunt_index + 1) % target_points.size();
         m_hunt_start_time = now;
     }
-    //m_body->m_debugColor = { 1, 0, 0 };
-
-    //restart camera
 }
 
 void AIPlane::physicsUpdate() {
@@ -101,12 +83,7 @@ void AIPlane::physicsUpdate() {
         glm::vec4(m_model->m_right, 0),
         { 0,0,0,1 });
 
-    //m_body->addForce({0,1,0}, 100.f);
     m_body->addForce(target, 100.f);
-
-
-	//m_body->addForce(m_model->m_forward, .1f);
- //   m_body->addTorque({ 0, 0.04, 0 });
 }
 
 void AIPlane::onCollisionEnter(std::shared_ptr<Shard::PhysicsBody> body) {
@@ -131,9 +108,6 @@ void AIPlane::onCollisionStay(std::shared_ptr<Shard::PhysicsBody> body) {
     m_body->m_debugColor = { 0.0f, 0.0f, 1.0f };
 }
 
-void AIPlane::killMe() {
-}
-void AIPlane::prePhysicsUpdate() {}
-void AIPlane::checkDestroyMe() {
-
-}
+void AIPlane::killMe() { }
+void AIPlane::prePhysicsUpdate() { }
+void AIPlane::checkDestroyMe() { }

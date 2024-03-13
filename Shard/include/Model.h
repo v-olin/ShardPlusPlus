@@ -91,10 +91,6 @@ namespace Shard {
 		uint32_t m_vaob;
 		bool m_hasDedicatedShader;
 
-		// merged from transform
-		//glm::mat4 m_transformMatrix;
-		//glm::mat4 m_lastTransformMatrix;
-
 		glm::mat4 m_transMatrix;
 		glm::mat4 m_rotMatrix;
 		glm::mat4 m_lastTransMatrix;

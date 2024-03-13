@@ -49,12 +49,6 @@ layout(location = 0) out vec4 fragmentColor;
 vec3 calculateDirectIllumiunation(vec3 wo, vec3 n, vec3 base_color)
 {
 	vec3 direct_illum = base_color;
-	///////////////////////////////////////////////////////////////////////////
-	// Task 1.2 - Calculate the radiance Li from the light, and the direction
-	//            to the light. If the light is backfacing the triangle,
-	//            return vec3(0);
-	///////////////////////////////////////////////////////////////////////////
-
 	
 	float d = distance(viewSpaceLightPosition, viewSpacePosition);
 
@@ -67,17 +61,7 @@ vec3 calculateDirectIllumiunation(vec3 wo, vec3 n, vec3 base_color)
 	if (dotp <= 0)
 		return vec3(0.0f);
 
-	///////////////////////////////////////////////////////////////////////////
-	// Task 1.3 - Calculate the diffuse term and return that as the result
-	///////////////////////////////////////////////////////////////////////////
 	vec3 diffuse_term = base_color * 1/PI * abs(dotp) * Li;
-
-	//return diffuse_term;
-
-	///////////////////////////////////////////////////////////////////////////
-	// Task 2 - Calculate the Torrance Sparrow BRDF and return the light
-	//          reflected from that instead
-	///////////////////////////////////////////////////////////////////////////
 
 	vec3 wh = normalize(wi + wo); // can be too short
 	float ndotwh = max(0.0001f, dot(n,wh));
@@ -95,10 +79,6 @@ vec3 calculateDirectIllumiunation(vec3 wo, vec3 n, vec3 base_color)
 
 	float brdf = (F*D*G)/(4*ndotwo*ndotwi);
 
-	///////////////////////////////////////////////////////////////////////////
-	// Task 3 - Make your shader respect the parameters of our material model.
-	///////////////////////////////////////////////////////////////////////////
-
 	vec3 dielectric_term = brdf * ndotwi * Li + (1-F) * diffuse_term;
 
 	vec3 metal_term = brdf * base_color * ndotwi * Li;
@@ -111,10 +91,6 @@ vec3 calculateDirectIllumiunation(vec3 wo, vec3 n, vec3 base_color)
 vec3 calculateIndirectIllumination(vec3 wo, vec3 n, vec3 base_color)
 {
 	vec3 indirect_illum = vec3(0.f);
-	///////////////////////////////////////////////////////////////////////////
-	// Task 5 - Lookup the irradiance from the irradiance map and calculate
-	//          the diffuse reflection
-	///////////////////////////////////////////////////////////////////////////
 
 	// Calculate the world-space position of this fragment on the near plane
 	vec3 world_normal = vec3(viewInverse * vec4(n, 0.0));
@@ -135,11 +111,6 @@ vec3 calculateIndirectIllumination(vec3 wo, vec3 n, vec3 base_color)
 
 	indirect_illum = diffuse_term;
 
-	///////////////////////////////////////////////////////////////////////////
-	// Task 6 - Look up in the reflection map from the perfect specular
-	//          direction and calculate the dielectric and metal terms.
-	///////////////////////////////////////////////////////////////////////////
-
 	vec3 wi = normalize(reflect(-wo, n));
 	vec3 wiWorld = normalize(vec3(viewInverse * vec4(wi, 0.0)));
 	theta = acos(max(-1.0f, min(1.0f, wiWorld.y)));
@@ -154,11 +125,7 @@ vec3 calculateIndirectIllumination(vec3 wo, vec3 n, vec3 base_color)
 
 	
 	vec3 wh = normalize(wi + wo); // can be too short
-	//float ndotwh = max(0.0001f, dot(n,wh));
-	//float ndotwo = max(0.0001f, dot(n,wo));
 	float wodotwh = max(0.0001f, dot(wo,wh));
-	//float ndotwi = max(0.0001f, dot(n,wi));
-	//float whdotwi = max(0.0001f, dot(wh,wi));
 
 	float F = material_fresnel + (1 - material_fresnel)*pow(1-wodotwh,5);
 
@@ -173,10 +140,6 @@ vec3 calculateIndirectIllumination(vec3 wo, vec3 n, vec3 base_color)
 
 void main()
 {
-	///////////////////////////////////////////////////////////////////////////
-	// Task 1.1 - Fill in the outgoing direction, wo, and the normal, n. Both
-	//            shall be normalized vectors in view-space.
-	///////////////////////////////////////////////////////////////////////////
 	vec3 cameraPos = vec3(0,0,0);
 	vec3 wo = -normalize(viewSpacePosition);
 	vec3 n = normalize(viewSpaceNormal);
@@ -189,18 +152,15 @@ void main()
 	}
 
 	vec3 direct_illumination_term = vec3(0.0);
-	{ // Direct illumination
+	{ 
 		direct_illumination_term = calculateDirectIllumiunation(wo, n, base_color);
 	}
 
 	vec3 indirect_illumination_term = vec3(0.0);
-	{ // Indirect illumination
+	{ 
 		indirect_illumination_term = calculateIndirectIllumination(wo, n, base_color);
 	}
 
-	///////////////////////////////////////////////////////////////////////////
-	// Task 1.4 - Make glowy things glow!
-	///////////////////////////////////////////////////////////////////////////
 	vec3 emission_term = material_emission;
 	if (has_emission_texture != 0) {
 		emission_term = texture(emissionMap, texCoord).rgb;
